@@ -1,5 +1,10 @@
 # PuzzleSolver
-Projekt z początku hobbystyczny mający na celu rozwiązywanie różnego rodzaju zagadek logicznych, a w ostatnim czasie także **źródło algorytmów będących przedmiotem badań w pracy magisterskiej**
+Projekt z początku hobbystyczny mający na celu rozwiązywanie różnego rodzaju zagadek logicznych, a w ostatnim czasie także **źródło algorytmów będących przedmiotem opisu i badań w pracy magisterskiej**
+
+Użyte technologie i języki:
+* Java(Spring)
+* TypeScript(React + Redux)
+* MySQL (parametry zagadek logicznych, tj. nazwa pliku, trudność, źródło, rozmiar itd.)
 
 Zagadki logiczne zawarte w aplikacji:
 1. Nonogramy
