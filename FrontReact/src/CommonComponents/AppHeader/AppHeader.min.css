@@ -1,0 +1,1 @@
+.puzzle-page-link{cursor:pointer;width:fit-content;padding:5px;font-weight:normal;font-family:"../../../public/resources/fonts/Cinzel-Black.ttf"}#app-header-puzzle-select{display:flex;flex-direction:row;height:69px;min-height:69px;border-bottom:1px solid black;background-color:#b0b0ff}#app-header-puzzle-select .puzzle-page-link:not(:first-child){border-left:1px solid black}

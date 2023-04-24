@@ -1,0 +1,13 @@
+#edit-nonogram-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  margin: 5px;
+  padding: 5px;
+  max-width: fit-content;
+  background-color: #cecece;
+  border-radius: 5px;
+  flex-grow: 1;
+}
