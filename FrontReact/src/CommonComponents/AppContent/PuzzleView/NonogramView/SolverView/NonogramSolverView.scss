@@ -1,0 +1,39 @@
+#selected-nonogram-view {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    //background-color: rgb(214, 231, 173);
+    min-width: 1000px;
+    flex-grow: 20;
+}
+
+#puzzle-view-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 550px;
+    max-height: 550px;
+    min-width: 750px;
+    max-width: 1250px;
+    margin: 5px;
+    overflow-x: "auto";
+    overflow-y: "auto";
+    flex-grow: 12;
+}
+
+.change-puzzle-arrow-wrapper {
+    width: 50px;
+    display: flex;
+    
+    :hover {
+        cursor: pointer;
+        color: #4051e8;
+    }
+
+    .change-puzzle-arrow {
+        width: 50px;
+        height: 50px;
+
+        position: absolute;
+        top: calc(50% - 25px);
+    }
+}

@@ -1,0 +1,12 @@
+#puzzle-filters-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  overflow-x: hidden;
+  min-width: fit-content;
+  max-width: 388px;
+  max-height: fit-content;
+  padding: 5px;
+  border-right: 2px solid black;
+}

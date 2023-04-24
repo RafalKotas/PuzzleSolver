@@ -1,0 +1,9 @@
+.puzzle-options-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.create-button {
+  width: 50%;
+}

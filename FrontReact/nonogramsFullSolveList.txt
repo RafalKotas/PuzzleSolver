@@ -1,0 +1,998 @@
+difficulty 1:
+o01131.json +
+o01306.json +
+o01630.json +
+o01852.json +
+o02175.json +
+o03872.json +
+o03969.json +
+o04128.json +
+o04282.json + same 4282? 2022 07_logi_mix
+o04292.json + same 4292?
+o04328.json +
+o05024.json +
+o06041.json +
+o06044.json +
+o06102.json +
+o06148.json +
+o06220.json +
+o06371.json +
+o06790.json +
+o06872.json +
+o07012.json +
+o07013.json +
+o07023.json +
+o07045.json +
+o07080.json +
+o07098.json +
+o07131.json +
+o07144.json +
+o07152.json +
+o07154.json +
+o07184.json +
+o07188.json +
+o07193.json +
+o07196.json +
+//30
+o07201.json +
+o07255.json +
+o07301.json +
+o07311.json +
+o07312.json +
+o07380.json +
+o07386.json +
+o07387.json +
+o07388.json +
+o07421.json +
+o07447.json +
+o07471.json +
+o07539.json +
+o07553.json +
+o07570.json +
+o07575.json +
+o07598.json +
+o07703.json +
+o07744.json +
+o07745.json +
+o07805.json +
+o07820.json +
+o07821.json +
+o07825.json +
+o07836.json +
+o07851.json +
+o07855.json +
+o07922.json +
+o07928.json +
+o07943.json +
+//60
+o07957.json +
+o07960.json +
+o07974.json +
+o07984.json +
+o07986.json +
+o08000.json +
+o08010.json +
+o08028.json +
+o08042.json +
+o08068.json +
+o08160.json +
+o08181.json +
+o08194.json +
+o08201.json +
+o08219.json +
+o08233.json +
+o08262.json +
+o08309.json +
+o08310.json +
+o08311.json +
+o08317.json +
+o08378.json +
+o08379.json +
+o08389.json +
+o08396.json +
+o08417.json +
+o08428.json +
+o08442.json +
+o08455.json +
+o08467.json +
+//90
+o08476.json +
+o08479.json +
+o08480.json +
+o08485.json +
+o08549.json +
+o08699.json +
+o08931.json +
+o08977.json +
+o09049.json +
+o09281.json +
+o09284.json +
+o09359.json +
+o09491.json +
+o09527.json +
+o09571.json +
+o09747.json +
+o09753.json +
+o09770.json +
+o09794.json +
+o09809.json +
+o09869.json +
+o09872.json +
+o09875.json +
+o09896.json +
+o09917.json +
+o09937.json +
+o09978.json +
+o09980.json +
+o09992.json +
+o10017.json +
+//120
+o10035.json +
+o10081.json +
+o10162.json +
+o10246.json +
+o10251.json +
+o10254.json +
+o10260.json +
+o10270.json +
+o10283.json +
+o10299.json +
+o10323.json +
+o10352.json +
+o10354.json +
+o10358.json +
+o10380.json +
+o10410.json +
+o10413.json +
+o10443.json +
+o10449.json +
+o10450.json +
+o10472.json +
+o10520.json +
+o10522.json +
+o10526.json +
+o10531.json +
+o10574.json +
+o10588.json +
+o10612.json +
+o10642.json +
+o10643.json +
+//150
+o10646.json +
+o10647.json +
+o10660.json +
+o10683.json +
+o10685.json +
+o10819.json +
+o10820.json +
+o10821.json +
+o10822.json +
+o10916.json + 
+o10917.json +
+o10921.json +
+o10994.json +
+o11171.json +
+o11178.json +
+o11191.json +
+o11356.json +
+o11357.json +
+o11358.json +
+o11360.json +
+o11366.json +
+o11371.json +
+o11374.json +
+o11386.json +
+o11420.json +
+o11538.json +
+o11545.json +
+o11592.json +
+o11593.json +
+o11597.json +
+o11666.json +
+o11667.json +
+//180 
+o11805.json +
+o11807.json +
+o11848.json +
+
+difficuty 2:
+o00168.json +
+o01658.json +
+o02119.json +
+o02137.json +
+o02550.json +
+o02701.json +
+o02811.json +
+o03345.json +
+o03429.json +
+o03500.json +
+o03573.json -
+o03757.json +
+o03759.json +
+o03767.json +
+o03810.json +
+o03815.json - (nie mam pojęcia, challenge!) 2018 month 02, Odwrotnie napisany nonogram
+o03843.json - (brak pomysłu póki co year 2018 month 02 height 30, width 25)
+o03873.json - correct column Sequences and place X around longest sequences
+o03877.json +
+o03988.json +
+o04065.json +
+o04388.json +
+o04461.json +
+o04515.json +
+o04678.json -
+o04877.json +
+o04881.json +
+o04932.json +
+//210
+o05411.json +
+o06997.json +
+o07271.json +
+o07277.json +
+o07310.json +
+o07337.json -
+o07390.json +
+o07393.json +
+o07432.json - (columnIdx == 2) placeX rows etc
+o07467.json +
+o07508.json +
+o07519.json +
+o07528.json +
+o07529.json +
+o07535.json +
+o07545.json +
+o07559.json +
+o07571.json + takie samo jak o07702
+o07702.json + takie samo jak o07571
+o07806.json +
+o07808.json +
+o07816.json +
+o07823.json +
+o07830.json +
+o07834.json +
+o07837.json +
+o07923.json +
+o07924.json -
+o07929.json +
+o07942.json +
+//240
+o07975.json +
+o08004.json +
+o08007.json +
+o08049.json +
+o08061.json +
+o08088.json +
+o08164.json +
+o08188.json -
+o08231.json +
+o08312.json +
+o08313.json +
+o08318.json - (hint: columnIdx == 1)
+o08324.json +
+o08336.json - (throwing exception)
+o08340.json +
+o08350.json - (hint: columnIdx == 34)
+o08371.json - (hint: columnIdx == 20, póki co brak pomysłu)
+o08376.json +
+o08436.json +
+o08471.json +
+o08481.json +
+o08482.json +
+o08486.json +
+o08514.json -
+o08517.json +
+o08518.json +
+o08526.json +
+o08687.json +
+o08691.json +
+o08776.json +
+o08825.json +
+//270 HERE
+o09029.json 
+o09107.json 
+o09136.json 
+o09270.json 
+o09353.json 
+o09426.json 
+o09469.json 
+o09513.json 
+o09529.json 
+o09593.json 
+o09608.json 
+o10232.json 
+o10266.json 
+o10370.json +
+o11598.json
+o11675.json
+
+difficulty 3:
+o02232.json +
+o03285.json 
+o03689.json 
+o03700.json 
+o06734.json 
+o06796.json 
+o03697.json 
+o03700.json 
+o03856.json  (zmiana zakresów w kolumnach po napotkaniu pokolorowanego pola)
+o04018.json 
+o04855.json 
+o04988.json 
+o05424.json 
+o05420.json +
+o05540.json 
+o05614.json 
+o05618.json 
+o05735.json 
+o05765.json 
+o05862.json 
+o05985.json 
+o06011.json
+o06063.json - (throwing exception)
+o06085.json
+o06287.json 
+o06749.json 
+o06481.json 
+o06514.json 
+o06554.json
+o06556.json 
+o06582.json 
+o06602.json
+o06655.json 
+o06734.json 
+o06747.json 
+o06796.json (throwing exception)
+o06873.json 
+o06927.json 
+o07058.json 
+o07150.json 
+o07164.json 
+o07270.json 
+o07291.json
+o07296.json 
+o07300.json 
+o07338.json 
+o07351.json 
+o07391.json 
+o07405.json 
+o07473.json 
+o07474.json 
+o07475.json 
+o07479.json 
+o07482.json 
+o07489.json
+o07490.json 
+o07515.json 
+o07532.json 
+o07534.json 
+o07542.json 
+o07544.json 
+o07549.json +
+o07552.json 
+o07556.json 
+o07579.json 
+o07584.json 
+o07586.json 
+o07595.json 
+o07628.json 
+o07632.json 
+o07635.json 
+o07644.json 
+o07705.json 
+o07708.json 
+o07748.json +
+o07750.json +
+o07798.json 
+o07804.json 
+o07811.json 
+o07815.json 
+o07826.json
+o07828.json 
+o07845.json 
+o07849.json
+o07858.json 
+o07908.json 
+o07931.json +
+o07939.json 
+o07940.json 
+o07948.json 
+o07953.json 
+o07956.json 
+o07959.json 
+o07962.json 
+o07966.json 
+o07972.json 
+o07973.json 
+o07982.json 
+o08006.json 
+o08046.json 
+o08048.json 
+o08056.json 
+o08072.json 
+o08136.json 
+o08143.json 
+o08165.json 
+o08173.json 
+o08179.json 
+o08182.json 
+o08196.json
+o08198.json 
+o08214.json
+o08227.json 
+o08232.json 
+o08235.json 
+o08271.json 
+o08327.json 
+o08328.json 
+o08331.json 
+o08342.json 
+o08361.json +
+o08388.json 
+o08393.json 
+o08405.json 
+o08418.json 
+o08466.json 
+o08474.json 
+o08489.json 
+o08531.json 
+o08542.json 
+o08545.json 
+o08553.json 
+o08557.json 
+o08735.json 
+o08777.json 
+o08807.json 
+o08996.json 
+o09144.json 
+o09164.json 
+o09272.json 
+o09390.json +
+o09394.json 
+o09526.json 
+o09728.json 
+o09800.json 
+o09832.json 
+o09951.json 
+o10003.json 
+o10090.json 
+o10113.json 
+o10121.json 
+o10136.json 
+o10328.json 
+o10340.json - null ?
+o10357.json 
+o10389.json 
+o10396.json 
+o10401.json 
+o10429.json 
+o10430.json 
+o10458.json 
+o10476.json 
+o10527.json 
+o10557.json 
+o10617.json 
+o10629.json 
+o10648.json 
+o10651.json 
+o10661.json 
+o10672.json 
+o10782.json 
+o10879.json 
+o10934.json 
+o10936.json 
+o10997.json 
+o11007.json 
+o11023.json 
+o11144.json 
+o11145.json 
+o11152.json 
+o11186.json 
+o11188.json 
+o11206.json
+o11211.json
+o11215.json
+o11278.json - (throwing exception)
+o11283.json
+o11439.json
+o11458.json
+o11465.json
+o11485.json
+o11487.json
+o11503.json
+o11505.json
+o11507.json
+o11517.json
+o11539.json
+o11612.json
+o11672.json
+o11775.json
+o11784.json +
+o11790.json +
+o11831.json +
+
+difficulty 4:
+o03097.json
+o03300.json
+o03656.json
+o04026.json
+o05349.json
+o05747.json
+o06275.json +
+o06376.json
+o06378.json
+o06400.json +
+o06552.json
+o06607.json
+o06608.json
+o06657.json
+o06711.json
+o06741.json
+o06837.json
+o06864.json
+o06900.json
+o06902.json
+o06905.json
+o06909.json
+o06921.json
+o06929.json 
+o06967.json
+o06971.json
+o06990.json +/-
+o06998.json
+o07005.json
+o07028.json
+o07031.json niejednoznaczne rozwiązanie ?
+o07042.json
+o07067.json
+o07136.json
+o07160.json
+o07211.json
+o07253.json
+o07256.json - (throwing exception)
+o07259.json
+o07260.json
+o07274.json
+o07275.json
+o07276.json
+o07278.json
+o07280.json
+o07293.json
+o07307.json
+o07323.json
+o07326.json
+o07328.json
+o07329.json
+o07332.json
+o07333.json
+o07335.json
+o07336.json
+o07343.json
+o07344.json
+o07346.json
+o07389.json
+o07392.json
+o07394.json
+o07395.json
+o07397.json
+o07398.json
+o07399.json
+o07402.json
+o07403.json
+o07406.json
+o07414.json
+o07415.json
+o07420.json
+o07423.json
+o07426.json
+o07430.json
+o07431.json
+o07433.json
+o07440.json
+o07443.json
+o07444.json
+o07445.json
+o07446.json
+o07448.json
+o07450.json
+o07453.json
+o07455.json
+o07456.json niejednoznaczne rozw?
+o07458.json
+o07465.json
+o07469.json
+o07470.json
+o07472.json
+o07476.json
+o07477.json
+o07478.json
+o07483.json
+o07484.json
+o07492.json
+o07494.json
+o07495.json
+o07498.json
+o07499.json
+o07500.json
+o07501.json - (throwing exception)
+o07503.json
+o07504.json nothing nic
+o07507.json
+o07509.json
+o07511.json
+o07512.json
+o07516.json
+o07521.json
+o07522.json
+o07525.json
+o07526.json
+o07527.json
+o07530.json
+o07536.json
+o07537.json
+o07543.json
+o07546.json
+o07548.json
+o07550.json
+o07551.json
+o07555.json
+o07557.json
+o07563.json
+o07564.json
+o07565.json
+o07569.json
+o07572.json
+o07576.json
+o07577.json
+o07582.json
+o07589.json +/-
+o07593.json
+o07594.json
+o07626.json
+o07627.json
+o07638.json
+o07639.json
+o07650.json
+o07704.json
+o07706.json
+o07707.json
+o07710.json
+o07712.json
+o07713.json
+o07716.json
+o07718.json
+o07751.json
+o07788.json
+o07807.json
+o07810.json
+o07814.json nothing nic
+o07818.json
+o07824.json
+o07827.json 
+o07831.json
+o07833.json
+o07838.json
+o07839.json
+o07841.json
+o07843.json
+o07844.json
+o07848.json
+o07850.json
+o07860.json
+o07862.json
+o07865.json
+o07898.json nothing nic
+o07902.json
+o07919.json
+o07945.json
+o07949.json
+o07958.json
+o07967.json
+o07969.json
+o07970.json
+o07976.json
+o07977.json
+o07978.json
+o07985.json
+o07987.json
+o07988.json
+o08001.json
+o08009.json
+o08026.json
+o08029.json
+o08030.json
+o08041.json
+o08050.json
+o08055.json
+o08062.json
+o08067.json +/-
+o08080.json
+o08084.json +/-
+o08087.json
+o08132.json
+o08139.json
+o08142.json +/-
+o08162.json
+o08168.json nic nothing
+o08175.json
+o08176.json
+o08178.json
+o08180.json
+o08185.json
+o08192.json +/-
+o08197.json
+o08205.json
+o08222.json
+o08237.json
+o08261.json
+o08272.json
+o08305.json
+o08307.json
+o08314.json
+o08315.json
+o08316.json
+o08320.json
+o08321.json
+o08322.json
+o08329.json
+o08337.json
+o08343.json
+o08344.json
+o08345.json
+o08346.json
+o08347.json
+o08351.json
+o08354.json +/-
+o08355.json
+o08360.json
+o08362.json +/-
+o08365.json
+o08374.json
+o08395.json
+o08406.json 
+o08421.json
+o08427.json +/-
+o08433.json
+o08434.json
+o08438.json
+o08449.json +/-
+o08464.json
+o08472.json +/-
+o08483.json
+o08484.json
+o08493.json
+o08494.json
+o08495.json
+o08497.json
+o08498.json
+o08499.json
+o08503.json
+o08512.json
+o08513.json
+o08530.json
+o08537.json
+o08547.json
+o08558.json
+o08621.json
+o08676.json
+o08686.json
+o08689.json
+o08695.json
+o08696.json
+o08736.json
+o08743.json
+o08747.json
+o08748.json nic nothing!!!
+o08750.json
+o08752.json
+o08820.json
+o08887.json +/-
+o09093.json
+o09109.json +/-
+o09309.json +/-
+o09381.json
+o09386.json
+o09393.json
+o09395.json
+o09435.json nic nothing!!!
+o09468.json
+o09485.json
+o09564.json
+o09566.json
+o09824.json
+o09825.json
+o09881.json
+o09926.json
+o09940.json
+o09993.json +/-
+o09998.json
+o10006.json
+o10036.json +/-
+o10038.json
+o10041.json
+o10056.json +/-
+o10068.json
+o10069.json
+o10070.json
+o10083.json
+o10092.json
+o10095.json
+o10096.json
+o10100.json
+o10105.json
+o10112.json
+o10114.json
+o10116.json
+o10117.json
+o10122.json 
+o10137.json
+o10140.json
+o10144.json
+o10145.json
+o10153.json
+o10166.json +/-
+o10170.json
+o10176.json 
+o10178.json
+o10191.json
+o10204.json+
+o10274.json
+o10285.json
+o10303.json
+o10329.json
+o10330.json
+o10331.json
+o10332.json
+o10337.json
+o10345.json +/-
+o10363.json +/-
+o10365.json
+o10372.json
+o10378.json
+o10383.json
+o10385.json
+o10386.json
+o10391.json +/-
+o10394.json
+o10421.json
+o10422.json +/-
+o10424.json
+o10431.json
+o10432.json
+o10462.json
+o10466.json +/-
+o10467.json
+o10471.json
+o10481.json +/-
+o10487.json +/-
+o10488.json +/-
+o10489.json 
+o10493.json
+o10529.json
+o10543.json +/-
+o10548.json +/-
+o10550.json +/-
+o10568.json +/-
+o10573.json
+o10577.json
+o10579.json
+o10591.json
+o11177.json - (throwing exception)
+o11608.json - (throwing exception)
+o11628.json - (throwing exception)
+o11801.json - (throwing exception)
+o11820.json - (throwing exception)
+o11822.json - (throwing exception)
+o11823.json +
+o11852.json - (throwing exception)
+o11942.json +
+o11958.json - (throwing exception)
+o11991.json - (throwing exception)
+o12008.json +
+
+difficulty 5:
+o06611.json
+o06941.json
+o07279.json
+o07283.json
+o07299.json
+o07350.json
+o07352.json
+o07396.json
+o07400.json nic nothing
+o07407.json
+o07412.json
+o07418.json
+o07425.json
+o07427.json
+o07436.json
+o07451.json
+o07460.json
+o07464.json +/-
+o07486.json
+o07493.json
+o07502.json
+o07513.json
+o07518.json
+o07524.json
+o07567.json
+o07574.json
+o07596.json
+o07714.json
+o07754.json
+o07803.json
+o07832.json
+o07840.json
+o07856.json
+o07961.json
+o07963.json
+o07980.json
+o08005.json
+o08008.json
+o08069.json
+o08071.json
+o08086.json
+o08134.json
+o08161.json
+o08183.json
+o08298.json
+o08304.json
+o08356.json
+o08409.json +/-
+o08490.json +/-
+o08496.json
+o08520.json
+o08617.json
+o08622.json
+o08623.json
+o08674.json
+o08680.json
+o08740.json
+o09377.json
+o09471.json
+o09476.json
+o09623.json +/-
+o09772.json
+o10032.json +/-
+o10073.json
+o10128.json
+o10138.json
+o10168.json +/-
+o10310.json
+o10311.json
+o10318.json
+o10433.json
+o10459.json
+o10485.json
+o10492.json
+o10640.json
+o10689.json +/-
+o10692.json
+o10841.json
+o10924.json
+o10933.json
+o10981.json
+o10988.json
+o11129.json +/-
+o11370.json +/-
+o11376.json +/-
+o11424.json
+o11479.json
+o11495.json
+o11499.json
+o11502.json
+o11521.json
+o11543.json
+o11609.json
+o11616.json
+o11629.json
+o11674.json
+o11679.json
+o11696.json
+o11780.json
+o11783.json
+o11800.json
+o11803.json
+o11804.json
+o11835.json - (throwing exception)
+o11959.json
+o11964.json - (throwing exception)

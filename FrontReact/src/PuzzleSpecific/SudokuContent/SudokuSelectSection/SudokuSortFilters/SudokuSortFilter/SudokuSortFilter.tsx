@@ -1,0 +1,94 @@
+// mui
+import { Tooltip } from "@mui/material"
+
+// fontawesome
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faArrowUp, faArrowDown} from "@fortawesome/free-solid-svg-icons"
+
+// redux
+import { filterTypeDetails,  filterWithDirectionIncludedSelector, selectFilterAction } from "../../../../../store/filters/sudoku"
+import { AppState } from "../../../../../store"
+import { Dispatch } from "redux"
+import { connect, ConnectedProps, useDispatch} from "react-redux"
+
+
+interface OwnSudokuSortFilterProps {
+    filterDetails : filterTypeDetails,
+    priorityIndicator: number
+}
+
+const mapStateToProps = (state: AppState, ownProps : OwnSudokuSortFilterProps) => ({
+
+    mode: state.displayReducer.mode,
+
+    ascIncluded: filterWithDirectionIncludedSelector(state.sudokuFiltersReducer, 
+        ownProps.filterDetails.filterName, "ascending"),
+
+    descIncluded: filterWithDirectionIncludedSelector(state.sudokuFiltersReducer, 
+            ownProps.filterDetails.filterName, "descending"),
+
+    arrowUpAction: selectFilterAction(state.sudokuFiltersReducer, 
+        {filterName: ownProps.filterDetails.filterName, sortDirection: "ascending"}),
+    
+    arrowDownAction: selectFilterAction(state.sudokuFiltersReducer, 
+        {filterName: ownProps.filterDetails.filterName, sortDirection: "descending"}),
+})
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+
+})
+
+const connector = connect(mapStateToProps, mapDispatchToProps)
+
+type SudokuSortFilterPropsFromRedux = ConnectedProps<typeof connector>
+
+type SudokuSortFilterProps = SudokuSortFilterPropsFromRedux & OwnSudokuSortFilterProps
+
+const SudokuSortFilter : React.FC<SudokuSortFilterProps> = ({filterDetails, arrowUpAction, arrowDownAction,
+ascIncluded, descIncluded, priorityIndicator}) => {
+
+    const dispatch = useDispatch()
+
+    const priorityIndicatorVisible = () => priorityIndicator === 100 ? "sort-filter-priority-masked" : "sort-filter-priority-visible"
+
+    return (
+        <div className="nonogram-sort-filter">
+            <div className="sort-filter-selector">
+                <Tooltip title={filterDetails.helperText.toLocaleUpperCase()} placement="top">
+                    <FontAwesomeIcon 
+                        icon={filterDetails.fontAwesomeIcon}
+                        className="sort-filter-icon"
+                        style={{height: "40px", width: "40px"}}
+                    />
+                </Tooltip>
+                <div className="sort-filter-directions">
+                    <Tooltip title={filterDetails.helperText + " sort ascending"} placement="bottom">
+                        <FontAwesomeIcon
+                            onClick={() => dispatch(arrowUpAction)}
+                            style={{
+                                backgroundColor: ascIncluded ? "#dee888" : ""
+                            }}
+                            className="sort-filter-arrow"
+                            icon={faArrowUp}
+                        />
+                    </Tooltip>
+                    <Tooltip title={filterDetails.helperText + " sort descending"} placement="bottom">
+                        <FontAwesomeIcon
+                            onClick={() => dispatch(arrowDownAction)}
+                            style={{
+                                backgroundColor: descIncluded ? "#dee888" : ""
+                            }}
+                            className="sort-filter-arrow"
+                            icon={faArrowDown}
+                        />
+                    </Tooltip>
+                </div>
+            </div>
+            <div className={"sort-filter-priority-indicator " +  priorityIndicatorVisible()}>
+                {priorityIndicator === 100 ? "X" : priorityIndicator.toString()}
+            </div>
+        </div>
+    )
+}
+
+export default connector(SudokuSortFilter)

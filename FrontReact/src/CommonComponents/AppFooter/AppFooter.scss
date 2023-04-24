@@ -1,0 +1,14 @@
+#app-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    //1st min-height: 79px;
+    min-height: 69px;
+
+    border-bottom: 1px solid black;
+    background-color: #fdf5d0;
+    color: #0000FF;
+    font-weight: bold;
+}

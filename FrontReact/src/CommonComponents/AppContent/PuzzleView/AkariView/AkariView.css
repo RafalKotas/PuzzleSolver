@@ -1,0 +1,14 @@
+#selected-akari-view {
+  min-width: 100%;
+}
+
+#akari-view-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 750px;
+  max-width: 1250px;
+  margin: 5px;
+  overflow-x: "auto";
+  overflow-y: "auto";
+  flex-grow: 12;
+}

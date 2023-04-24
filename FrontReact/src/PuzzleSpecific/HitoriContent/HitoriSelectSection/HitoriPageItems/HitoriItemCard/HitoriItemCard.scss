@@ -1,0 +1,11 @@
+.hitori-card-item {
+    min-width: 300px;
+    margin: 20px;
+    cursor: pointer;
+    :hover {
+        background-color: beige;
+    }
+    -webkit-box-shadow: 0px 5px 10px 1px rgba(0, 7, 255, 0.86)!important;
+    -moz-box-shadow: 0px 5px 10px 1px rgba(0, 7, 255, 0.86)!important;
+    box-shadow: 0px 5px 10px 1px rgba(0, 7, 255, 0.86)!important;
+}

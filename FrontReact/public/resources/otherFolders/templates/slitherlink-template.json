@@ -1,0 +1,20 @@
+{
+	"source": "Logi",
+	"year" : "2023",
+	"month" : "03_logi-Mix",
+	"difficulty" : 2,
+	"height": 10,
+	"width": 15,
+	"board": [
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[]
+	]
+}
