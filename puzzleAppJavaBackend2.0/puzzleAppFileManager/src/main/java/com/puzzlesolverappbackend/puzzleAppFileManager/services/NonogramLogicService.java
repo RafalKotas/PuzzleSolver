@@ -4,18 +4,14 @@ import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzleAppFileManager.NonogramSolutionNode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.NonogramSolver;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class NonogramLogicService {
@@ -27,7 +23,7 @@ public class NonogramLogicService {
     // iterations through all columns
     public NonogramLogic fillOverLappingFieldsInColumnsRange (NonogramLogic nonogramLogicObject, int columnBegin, int columnEnd) {
         NonogramLogic nonogramLogicObjectToChange = nonogramLogicObject;
-        int nonogramWidth = nonogramLogicObject.getColumnsSequences().size();
+        int nonogramWidth = nonogramLogicObject.getColumnsSequencesLengths().size();
         for(int columnIdx = columnBegin; columnIdx < nonogramWidth && columnIdx < columnEnd; columnIdx++) {
             nonogramLogicObjectToChange = fillOverlappingFieldsInColumn(nonogramLogicObjectToChange, columnIdx);
         }
@@ -36,7 +32,7 @@ public class NonogramLogicService {
 
 
     public NonogramLogic fillOverlappingFieldsInColumn (NonogramLogic nonogramLogicObject, int columnIdx) {
-        List<Integer> sequencesInColumn = nonogramLogicObject.getColumnsSequences().get(columnIdx);
+        List<Integer> sequencesInColumn = nonogramLogicObject.getColumnsSequencesLengths().get(columnIdx);
         List<List<Integer>> sequencesInColumnRanges = nonogramLogicObject.getColumnsSequencesRanges().get(columnIdx);
 
         int sequenceLength;
@@ -92,7 +88,7 @@ public class NonogramLogicService {
     // iterations through all rows
     public NonogramLogic fillOverLappingFieldsInRowsRange(NonogramLogic nonogramLogicObject, int rowBegin, int rowEnd) {
         NonogramLogic nonogramLogicObjectToChange = nonogramLogicObject;
-        int nonogramHeight = nonogramLogicObject.getRowsSequences().size();
+        int nonogramHeight = nonogramLogicObject.getRowsSequencesLengths().size();
         for(int rowIdx = rowBegin; rowIdx < nonogramHeight && rowIdx < rowEnd; rowIdx++) {
             nonogramLogicObjectToChange = fillOverlappingFieldsInRow(nonogramLogicObjectToChange, rowIdx);
         }
@@ -100,7 +96,7 @@ public class NonogramLogicService {
     }
 
     public NonogramLogic fillOverlappingFieldsInRow (NonogramLogic nonogramLogicObject, int rowIdx) {
-        List<Integer> sequencesInRow = nonogramLogicObject.getRowsSequences().get(rowIdx);
+        List<Integer> sequencesInRow = nonogramLogicObject.getRowsSequencesLengths().get(rowIdx);
         List<List<Integer>> sequencesInRowRanges = nonogramLogicObject.getRowsSequencesRanges().get(rowIdx);
 
         int sequenceLength;
@@ -167,7 +163,7 @@ public class NonogramLogicService {
         List<Integer> colouredSequenceIndexes;
         int firstSequenceIndex;
         int lastSequenceIndex;
-        List<Integer> rowSequences = nonogramLogicObject.getRowsSequences().get(rowIdx);
+        List<Integer> rowSequences = nonogramLogicObject.getRowsSequencesLengths().get(rowIdx);
         List<List<Integer>> rowSequencesRanges = nonogramLogicObject.getRowsSequencesRanges().get(rowIdx);
         List<Integer> rowSequenceRange;
         int matchingSequencesCount;
@@ -230,7 +226,7 @@ public class NonogramLogicService {
 
                         updatedRangeBeginIndex = Math.max(0,
                                 nonogramLogicObject.minimumColumnIndexWithoutX(rowIdx, lastSequenceIndex, matchingSequenceLength));
-                        updatedRangeEndIndex = Math.min(nonogramLogicObject.getWidth() - 1,
+                        updatedRangeEndIndex = Math.min(nonogramLogicObject.getWidthFromColumnsSequences() - 1,
                                 nonogramLogicObject.maximumColumnIndexWithoutX(rowIdx, firstSequenceIndex, matchingSequenceLength));
                         rowSequenceRange.add( Math.max(oldRangeBeginIndex ,updatedRangeBeginIndex) );
                         rowSequenceRange.add( Math.min(oldRangeEndIndex, updatedRangeEndIndex) );
@@ -273,7 +269,7 @@ public class NonogramLogicService {
         List<Integer> colouredSequenceIndexes;
         int firstSequenceIndex;
         int lastSequenceIndex;
-        List<Integer> columnSequences = nonogramLogicObject.getColumnsSequences().get(columnIdx);
+        List<Integer> columnSequences = nonogramLogicObject.getColumnsSequencesLengths().get(columnIdx);
         List<List<Integer>> columnSequencesRanges = nonogramLogicObject.getColumnsSequencesRanges().get(columnIdx);
         List<Integer> columnSequenceRange;
         int matchingSequencesCount;
@@ -331,7 +327,7 @@ public class NonogramLogicService {
                         updatedRangeBeginIndex = Math.max(0,
                                 nonogramLogicObject.minimumRowIndexWithoutX(columnIdx, lastSequenceIndex, matchingSequenceLength));
 
-                        updatedRangeEndIndex = Math.min(nonogramLogicObject.getHeight() - 1,
+                        updatedRangeEndIndex = Math.min(nonogramLogicObject.getHeightFromRowsSequences() - 1,
                                 nonogramLogicObject.maximumRowIndexWithoutX(columnIdx, firstSequenceIndex, matchingSequenceLength));
 
                         columnSequenceRange = new ArrayList<>();
@@ -375,8 +371,8 @@ public class NonogramLogicService {
         NonogramLogic nonogramLogicDataToChange = nonogramLogicObject;
         List<String> nonogramSolutionBoardRow = nonogramLogicDataToChange.getNonogramSolutionBoard().get(rowIdx);
         List<List<Integer>> rowSequencesRanges = nonogramLogicDataToChange.getRowsSequencesRanges().get(rowIdx);
-        List<Integer> rowSequencesLengths = nonogramLogicDataToChange.getRowsSequences().get(rowIdx);
-        int width = nonogramLogicDataToChange.getWidth();
+        List<Integer> rowSequencesLengths = nonogramLogicDataToChange.getRowsSequencesLengths().get(rowIdx);
+        int width = nonogramLogicDataToChange.getWidthFromColumnsSequences();
 
         List<Integer> colouredSequenceRange;
         List<Integer> rowSequenceRange;
@@ -438,7 +434,7 @@ public class NonogramLogicService {
                                             .addColumnFieldToNotToInclude(firstXIndex, rowIdx)
                                             .addColumnFieldToNotToInclude(lastXIndex, rowIdx)
                                             .changeRowSequenceRange(rowIdx, rowSequencesIndexesIncludingSequenceRange.get(0),
-                                                    colouredSequenceRange.get(0), colouredSequenceRange.get(1));
+                                                    colouredSequenceRange);
                                     for(int sequenceColumnIdx = firstXIndex + 1; sequenceColumnIdx < lastXIndex; sequenceColumnIdx++) {
                                         nonogramLogicDataToChange = nonogramLogicDataToChange
                                                 .addRowFieldToNotToInclude(rowIdx, sequenceColumnIdx);
@@ -498,9 +494,9 @@ public class NonogramLogicService {
         NonogramLogic nonogramLogicDataToChange = nonogramLogicObject;
 
         List<List<Integer>> columnSequencesRanges = nonogramLogicDataToChange.getColumnsSequencesRanges().get(columnIdx);
-        List<Integer> columnSequencesLengths = nonogramLogicDataToChange.getColumnsSequences().get(columnIdx);
+        List<Integer> columnSequencesLengths = nonogramLogicDataToChange.getColumnsSequencesLengths().get(columnIdx);
 
-        int height = nonogramLogicDataToChange.getHeight();
+        int height = nonogramLogicDataToChange.getHeightFromRowsSequences();
 
         List<Integer> colouredSequenceRange;
         List<Integer> columnSequenceRange;
@@ -631,7 +627,7 @@ public class NonogramLogicService {
 
         NonogramLogic nonogramLogicDataToChange = nonogramLogicObject;
         List<List<Integer>> rowSequencesRanges = nonogramLogicDataToChange.getRowsSequencesRanges().get(rowIdx);
-        int width = nonogramLogicDataToChange.getWidth();
+        int width = nonogramLogicDataToChange.getWidthFromColumnsSequences();
         boolean existRangeIncludingColumn;
         List<Integer> fieldAsRange;
 
@@ -673,7 +669,7 @@ public class NonogramLogicService {
 
         NonogramLogic nonogramLogicDataToChange = nonogramLogicObject;
         List<List<Integer>> columnSequencesRanges = nonogramLogicDataToChange.getColumnsSequencesRanges().get(columnIdx);
-        int height = nonogramLogicDataToChange.getHeight();
+        int height = nonogramLogicDataToChange.getHeightFromRowsSequences();
         boolean existRangeIncludingRow;
         List<Integer> fieldAsRange;
 
@@ -714,7 +710,7 @@ public class NonogramLogicService {
     }
 
     public NonogramLogic correctRowSequencesRanges (NonogramLogic nonogramLogicObject, int rowIdx) {
-        List<Integer> rowSequences = nonogramLogicObject.getRowsSequences().get(rowIdx);
+        List<Integer> rowSequences = nonogramLogicObject.getRowsSequencesLengths().get(rowIdx);
         List<List<Integer>> rowSequencesRanges = nonogramLogicObject.getRowsSequencesRanges().get(rowIdx);
         List<Integer> rowFieldsNotToInclude = nonogramLogicObject.getRowsFieldsNotToInclude().get(rowIdx);
 
@@ -842,7 +838,7 @@ public class NonogramLogicService {
         }
 
         //for last sequence in row
-        int width = nonogramLogicObject.getWidth();
+        int width = nonogramLogicObject.getWidthFromColumnsSequences();
         int lastRowSequenceIndex = rowSequencesRanges.size() - 1;
 
         if(!rowSequencesIdsNotToInclude.contains(lastRowSequenceIndex)) {
@@ -865,13 +861,13 @@ public class NonogramLogicService {
 
     public NonogramLogic correctRowSequencesWhenMetColouredFieldFromLeft (NonogramLogic nonogramLogicObject, int rowIdx) {
         List<List<Integer>> rowSequencesRanges = nonogramLogicObject.getRowsSequencesRanges().get(rowIdx);
-        List<Integer> rowSequencesLengths = nonogramLogicObject.getRowsSequences().get(rowIdx);
+        List<Integer> rowSequencesLengths = nonogramLogicObject.getRowsSequencesLengths().get(rowIdx);
         int rowSequenceRangeStart;
         int rowSequenceRangeEnd;
         int maximumPossibleSequenceRangeEnd;
         List<Integer> updatedRange;
         List<String> solutionBoardRow = nonogramLogicObject.getNonogramSolutionBoard().get(rowIdx);
-        int width = nonogramLogicObject.getWidth();
+        int width = nonogramLogicObject.getWidthFromColumnsSequences();
         int sequenceId = 0;
         int sequenceLength = rowSequencesLengths.get(0);
 
@@ -901,13 +897,13 @@ public class NonogramLogicService {
 
     public NonogramLogic correctRowSequencesWhenMetColouredFieldFromRight (NonogramLogic nonogramLogicObject, int rowIdx) {
         List<List<Integer>> rowSequencesRanges = nonogramLogicObject.getRowsSequencesRanges().get(rowIdx);
-        List<Integer> rowSequencesLengths = nonogramLogicObject.getRowsSequences().get(rowIdx);
+        List<Integer> rowSequencesLengths = nonogramLogicObject.getRowsSequencesLengths().get(rowIdx);
         int rowSequenceRangeStart;
         int rowSequenceRangeEnd;
         int minimumPossibleSequenceRangeStart;
         List<Integer> updatedRange;
         List<String> solutionBoardRow = nonogramLogicObject.getNonogramSolutionBoard().get(rowIdx);
-        int width = nonogramLogicObject.getWidth();
+        int width = nonogramLogicObject.getWidthFromColumnsSequences();
         int sequenceId = rowSequencesLengths.size() - 1;
         int sequenceLength = rowSequencesLengths.get(sequenceId);
 
@@ -937,7 +933,7 @@ public class NonogramLogicService {
 
     public NonogramLogic changeRowRangeIndexesIfXOnWay (NonogramLogic nonogramLogicObject, int rowIdx) {
         NonogramLogic nonogramLogicChanged = nonogramLogicObject;
-        List<Integer> rowSequences = nonogramLogicObject.getRowsSequences().get(rowIdx);
+        List<Integer> rowSequences = nonogramLogicObject.getRowsSequencesLengths().get(rowIdx);
         List<List<Integer>> nonogramRowSequencesRanges = nonogramLogicObject.getRowsSequencesRanges().get(rowIdx);
         List<Integer> nonogramRowSequencesIdsNotToInclude = nonogramLogicObject.getRowsSequencesIdsNotToInclude().get(rowIdx);
         List<List<String>> nonogramBoard = nonogramLogicObject.getNonogramSolutionBoard();
@@ -949,6 +945,7 @@ public class NonogramLogicService {
         boolean indexOk;
         int updatedRowRangeStartIndex;
         int updatedRowRangeEndIndex;
+        List<Integer> updatedRowRange = new ArrayList<>();
 
         for(int seqNo = 0; seqNo < nonogramRowSequencesRanges.size(); seqNo++) {
             if(!nonogramRowSequencesIdsNotToInclude.contains(seqNo)) {
@@ -992,7 +989,10 @@ public class NonogramLogicService {
                     }
                 }
 
-                nonogramLogicChanged = nonogramLogicChanged.changeRowSequenceRange(rowIdx, seqNo, updatedRowRangeStartIndex, updatedRowRangeEndIndex);
+                updatedRowRange.add(updatedRowRangeStartIndex);
+                updatedRowRange.add(updatedRowRangeEndIndex);
+
+                nonogramLogicChanged = nonogramLogicChanged.changeRowSequenceRange(rowIdx, seqNo, updatedRowRange);
             }
         }
 
@@ -1014,7 +1014,7 @@ public class NonogramLogicService {
 
     public NonogramLogic correctColumnSequencesRanges (NonogramLogic nonogramLogicObject, int columnIdx) {
 
-        List<Integer> columnSequences = nonogramLogicObject.getColumnsSequences().get(columnIdx);
+        List<Integer> columnSequences = nonogramLogicObject.getColumnsSequencesLengths().get(columnIdx);
         List<List<Integer>> columnSequencesRanges = nonogramLogicObject.getColumnsSequencesRanges().get(columnIdx);
         List<Integer> columnFieldsNotToInclude = nonogramLogicObject.getColumnsFieldsNotToInclude().get(columnIdx);
 
@@ -1079,7 +1079,6 @@ public class NonogramLogicService {
 
             //second range update
             updatedNextSequenceRange = new ArrayList<>();
-            updatedNextSequenceRange.clear();
 
             //rangeBegin
             int oldNextSequenceRangeBegin = columnSequencesRanges.get(sequenceIdx + 1 ).get(0);
@@ -1154,7 +1153,7 @@ public class NonogramLogicService {
         }
 
         //for last sequence in column
-        int height = nonogramLogicObject.getHeight();
+        int height = nonogramLogicObject.getHeightFromRowsSequences();
         int lastColumnSequenceIndex = columnSequencesRanges.size() - 1;
 
         if(!columnSequencesIdsNotToInclude.contains(lastColumnSequenceIndex)) {
@@ -1180,7 +1179,7 @@ public class NonogramLogicService {
     // iterations through all columns
     public NonogramLogic changeColumnRangeIndexesIfXOnWay (NonogramLogic nonogramLogicObject, int columnIdx) {
         NonogramLogic nonogramLogicChanged = nonogramLogicObject;
-        List<Integer> columnSequences = nonogramLogicObject.getColumnsSequences().get(columnIdx);
+        List<Integer> columnSequences = nonogramLogicObject.getColumnsSequencesLengths().get(columnIdx);
         List<List<Integer>> nonogramColumnSequencesRanges = nonogramLogicObject.getColumnsSequencesRanges().get(columnIdx);
         List<Integer> nonogramColumnsSequencesIdsNotToInclude = nonogramLogicObject.getColumnsSequencesIdsNotToInclude().get(columnIdx);
         List<List<String>> nonogramBoard = nonogramLogicObject.getNonogramSolutionBoard();
@@ -1192,6 +1191,7 @@ public class NonogramLogicService {
         boolean indexOk;
         int updatedColumnSequenceRangeStartIndex;
         int updatedColumnSequenceRangeEndIndex;
+        List<Integer> updatedColumnSequenceRange = new ArrayList<>();
 
         for(int seqNo = 0; seqNo < nonogramColumnSequencesRanges.size(); seqNo++) {
             if(!nonogramColumnsSequencesIdsNotToInclude.contains(seqNo)) {
@@ -1235,8 +1235,10 @@ public class NonogramLogicService {
                     }
                 }
 
-                nonogramLogicChanged = nonogramLogicChanged.changeColumnSequenceRange(columnIdx, seqNo,
-                        updatedColumnSequenceRangeStartIndex, updatedColumnSequenceRangeEndIndex);
+                updatedColumnSequenceRange.add(updatedColumnSequenceRangeStartIndex);
+                updatedColumnSequenceRange.add(updatedColumnSequenceRangeEndIndex);
+
+                nonogramLogicChanged = nonogramLogicChanged.changeColumnSequenceRange(columnIdx, seqNo, updatedColumnSequenceRange);
             }
         }
 
@@ -1245,13 +1247,13 @@ public class NonogramLogicService {
 
     public NonogramLogic correctColumnSequencesWhenMetColouredField (NonogramLogic nonogramLogicObject, int columnIdx) {
         List<List<Integer>> columnSequencesRanges = nonogramLogicObject.getColumnsSequencesRanges().get(columnIdx);
-        List<Integer> columnSequencesLengths = nonogramLogicObject.getColumnsSequences().get(columnIdx);
+        List<Integer> columnSequencesLengths = nonogramLogicObject.getColumnsSequencesLengths().get(columnIdx);
         List<List<String>> nonogramSolutionBoard = nonogramLogicObject.getNonogramSolutionBoard();
         int columnSequenceRangeStart;
         int columnSequenceRangeEnd;
         int maximumPossibleSequenceRangeEnd;
         List<Integer> updatedRange;
-        int height = nonogramLogicObject.getHeight();
+        int height = nonogramLogicObject.getHeightFromRowsSequences();
         List<String> solutionBoardColumn = new ArrayList<>();
 
         for(int rowIdx = 0; rowIdx < height; rowIdx++) {

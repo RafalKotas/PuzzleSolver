@@ -27,7 +27,7 @@ public class NonogramLogicController {
     @PostMapping("/init")
     public ResponseEntity<NonogramLogic> initNonogramLogicObject(@Valid @RequestBody NonogramLogic nonogramLogic) {
         NonogramLogic initialNonogramLogicObject = new NonogramLogic(
-                nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences());
+                nonogramLogic.getRowsSequencesLengths(), nonogramLogic.getColumnsSequencesLengths());
 
         return new ResponseEntity<>(initialNonogramLogicObject, HttpStatus.OK);
     }
@@ -96,7 +96,8 @@ public class NonogramLogicController {
     public ResponseEntity<NonogramLogic> customSolutionPart(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String solutionFileName) throws CloneNotSupportedException {
         //nonogramLogicService.listAllNonograms();
 
-        NonogramLogic logicWithAffectedRowsAndColumns = new NonogramLogic(nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences());
+        NonogramLogic logicWithAffectedRowsAndColumns = new NonogramLogic(
+                nonogramLogic.getRowsSequencesLengths(), nonogramLogic.getColumnsSequencesLengths());
 
         return new ResponseEntity<>(
                 nonogramLogicService.runCustomSolverOperationWithCorrectnessCheck(logicWithAffectedRowsAndColumns, solutionFileName),
@@ -105,8 +106,8 @@ public class NonogramLogicController {
 
     @PostMapping("/saveSolution")
     public ResponseEntity<String> saveSolution(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String fileName) {
-        List<List<Integer>> rowsSequences = nonogramLogic.getRowsSequences();
-        List<List<Integer>> columnsSequences = nonogramLogic.getColumnsSequences();
+        List<List<Integer>> rowsSequences = nonogramLogic.getRowsSequencesLengths();
+        List<List<Integer>> columnsSequences = nonogramLogic.getColumnsSequencesLengths();
         List<List<String>> nonogramSolutionBoard = nonogramLogic.getNonogramSolutionBoard();
 
         NonogramLogic solution = new NonogramLogic(rowsSequences, columnsSequences, nonogramSolutionBoard);
@@ -146,8 +147,8 @@ public class NonogramLogicController {
     @PostMapping("/correctRanges")
     public ResponseEntity<NonogramLogic> correctRangesSequences(@Valid @RequestBody NonogramLogic nonogramLogic) {
 
-        NonogramLogic logicObjectModified = nonogramLogicService.correctRowsSequencesRanges(nonogramLogic, 0, nonogramLogic.getHeight());
-        logicObjectModified = nonogramLogicService.correctColumnsSequencesRanges(logicObjectModified, 0, nonogramLogic.getWidth());
+        NonogramLogic logicObjectModified = nonogramLogicService.correctRowsSequencesRanges(nonogramLogic, 0, nonogramLogic.getHeightFromRowsSequences());
+        logicObjectModified = nonogramLogicService.correctColumnsSequencesRanges(logicObjectModified, 0, nonogramLogic.getWidthFromColumnsSequences());
 
         return new ResponseEntity<>(
                 logicObjectModified,
