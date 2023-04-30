@@ -44,8 +44,8 @@ public class NonogramSolver {
 
         this.rootNode = gsonObj.fromJson(gsonObj.toJson(this.solutionNode), NonogramSolutionNode.class);
 
-        this.finalSolutionLogic = new NonogramLogic(nonogramLogic.getRowsSequencesLengths(),
-                nonogramLogic.getColumnsSequencesLengths());
+        this.finalSolutionLogic = new NonogramLogic(nonogramLogic.getRowsSequences(),
+                nonogramLogic.getColumnsSequences());
 
         // optional correct solution
         this.solutionFileName = "r" + fileName;
