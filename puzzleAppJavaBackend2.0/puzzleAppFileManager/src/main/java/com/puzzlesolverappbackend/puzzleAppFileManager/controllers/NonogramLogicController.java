@@ -96,7 +96,8 @@ public class NonogramLogicController {
     public ResponseEntity<NonogramLogic> customSolutionPart(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String solutionFileName) throws CloneNotSupportedException {
         //nonogramLogicService.listAllNonograms();
 
-        NonogramLogic logicWithAffectedRowsAndColumns = new NonogramLogic(nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences());
+        NonogramLogic logicWithAffectedRowsAndColumns = new NonogramLogic(
+                nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences());
 
         return new ResponseEntity<>(
                 nonogramLogicService.runCustomSolverOperationWithCorrectnessCheck(logicWithAffectedRowsAndColumns, solutionFileName),
