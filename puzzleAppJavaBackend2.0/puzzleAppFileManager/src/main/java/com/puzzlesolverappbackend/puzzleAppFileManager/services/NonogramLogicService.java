@@ -4,18 +4,14 @@ import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzleAppFileManager.NonogramSolutionNode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.NonogramSolver;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class NonogramLogicService {
@@ -229,20 +225,20 @@ public class NonogramLogicService {
                         oldRangeEndIndex = nonogramLogicObject.getRowsSequencesRanges().get(rowIdx).get(lastMatchingSequenceIndex).get(1);
 
                         updatedRangeBeginIndex = Math.max(0,
-                                nonogramLogicObject.minimumColumnIndexWithoutX(rowIdx, lastSequenceIndex, matchingSequenceLength));
+                                nonogramLogicObject.getNonogramRowLogic().minimumColumnIndexWithoutX(rowIdx, lastSequenceIndex, matchingSequenceLength));
                         updatedRangeEndIndex = Math.min(nonogramLogicObject.getWidth() - 1,
                                 nonogramLogicObject.maximumColumnIndexWithoutX(rowIdx, firstSequenceIndex, matchingSequenceLength));
                         rowSequenceRange.add( Math.max(oldRangeBeginIndex ,updatedRangeBeginIndex) );
                         rowSequenceRange.add( Math.min(oldRangeEndIndex, updatedRangeEndIndex) );
 
                     }
-                    nonogramLogicObject.updateRowSequenceRange(rowIdx, lastMatchingSequenceIndex, rowSequenceRange);
+                    nonogramLogicObject.getNonogramRowLogic().updateRowSequenceRange(rowIdx, lastMatchingSequenceIndex, rowSequenceRange);
 
                     //mark sequence part
                     sequenceMarker = NonogramLogic.indexToSequenceCharMark(lastMatchingSequenceIndex);
                     for(int sequenceColumnIdx = firstSequenceIndex; sequenceColumnIdx <= lastSequenceIndex; sequenceColumnIdx++) {
                         if(nonogramLogicObject.getNonogramSolutionBoardWithMarks().get(rowIdx).get(sequenceColumnIdx).startsWith("--")) {
-                            nonogramLogicObject.markRowBoardField(rowIdx, sequenceColumnIdx, sequenceMarker);
+                            nonogramLogicObject.getNonogramRowLogic().markRowBoardField(rowIdx, sequenceColumnIdx, sequenceMarker);
                             nonogramLogicObject.increaseStepsMade();
                         } else if(showRepetitions) {
                             System.out.println("Row field was marked before.");
@@ -323,29 +319,32 @@ public class NonogramLogicService {
                     sequenceEqualsColumnSequenceLength = colouredSequenceLength == matchingSequenceLength;
 
                     if(sequenceEqualsColumnSequenceLength) {
-                        nonogramLogicObject.updateColumnSequenceRange(columnIdx, lastMatchingSequenceIndex, colouredSequenceIndexes);
+                        nonogramLogicObject.getNonogramColumnLogic().updateColumnSequenceRange(columnIdx, lastMatchingSequenceIndex, colouredSequenceIndexes);
+                        nonogramLogicObject.copyLogicFromNonogramColumnLogic();
                     } else {
                         oldRangeBeginIndex = nonogramLogicObject.getColumnsSequencesRanges().get(columnIdx).get(lastMatchingSequenceIndex).get(0);
                         oldRangeEndIndex = nonogramLogicObject.getColumnsSequencesRanges().get(columnIdx).get(lastMatchingSequenceIndex).get(1);
 
                         updatedRangeBeginIndex = Math.max(0,
-                                nonogramLogicObject.minimumRowIndexWithoutX(columnIdx, lastSequenceIndex, matchingSequenceLength));
+                                nonogramLogicObject.getNonogramColumnLogic().minimumRowIndexWithoutX(columnIdx, lastSequenceIndex, matchingSequenceLength));
 
                         updatedRangeEndIndex = Math.min(nonogramLogicObject.getHeight() - 1,
-                                nonogramLogicObject.maximumRowIndexWithoutX(columnIdx, firstSequenceIndex, matchingSequenceLength));
+                                nonogramLogicObject.getNonogramColumnLogic().maximumRowIndexWithoutX(columnIdx, firstSequenceIndex, matchingSequenceLength));
 
                         columnSequenceRange = new ArrayList<>();
                         columnSequenceRange.add( Math.max(oldRangeBeginIndex ,updatedRangeBeginIndex) );
                         columnSequenceRange.add( Math.min(oldRangeEndIndex, updatedRangeEndIndex) );
 
-                        nonogramLogicObject.updateColumnSequenceRange(columnIdx, lastMatchingSequenceIndex, columnSequenceRange);
+                        nonogramLogicObject.getNonogramColumnLogic().updateColumnSequenceRange(columnIdx, lastMatchingSequenceIndex, columnSequenceRange);
+                        nonogramLogicObject.copyLogicFromNonogramColumnLogic();
                     }
 
                     //mark sequence part
                     sequenceMarker = NonogramLogic.indexToSequenceCharMark(lastMatchingSequenceIndex);
                     for(int sequenceRowIdx = firstSequenceIndex; sequenceRowIdx <= lastSequenceIndex; sequenceRowIdx++) {
                         if(nonogramLogicObject.getNonogramSolutionBoardWithMarks().get(sequenceRowIdx).get(columnIdx).substring(2).equals("--")) {
-                            nonogramLogicObject.markColumnBoardField(sequenceRowIdx, columnIdx, sequenceMarker);
+                            nonogramLogicObject.getNonogramColumnLogic().markColumnBoardField(sequenceRowIdx, columnIdx, sequenceMarker);
+                            nonogramLogicObject.copyLogicFromNonogramColumnLogic();
                             nonogramLogicObject.increaseStepsMade();
                         } else if (showRepetitions) {
                             System.out.println("Column field was marked before.");
@@ -429,16 +428,17 @@ public class NonogramLogicService {
                             if((firstXIndex > -1 && nonogramLogicDataToChange.getNonogramSolutionBoard().get(rowIdx).get(firstXIndex).equals("-"))
                              || (lastXIndex < width && nonogramLogicDataToChange.getNonogramSolutionBoard().get(rowIdx).get(lastXIndex).equals("-")) ) {
                                 nonogramLogicObject.increaseStepsMade();
-                                    nonogramLogicDataToChange = nonogramLogicDataToChange
-                                            .placeXAtGivenPosittion(rowIdx, firstXIndex)
-                                            .placeXAtGivenPosittion(rowIdx, lastXIndex)
+                                    nonogramLogicDataToChange.getNonogramRowLogic()
+                                            .placeXAtGivenPosition(rowIdx, firstXIndex)
+                                            .placeXAtGivenPosition(rowIdx, lastXIndex)
                                             .addRowSequenceIdxToNotToInclude(rowIdx, rowSequencesIndexesIncludingSequenceRange.get(0))
                                             .addRowFieldToNotToInclude(rowIdx, firstXIndex)
                                             .addRowFieldToNotToInclude(rowIdx, lastXIndex)
                                             .addColumnFieldToNotToInclude(firstXIndex, rowIdx)
                                             .addColumnFieldToNotToInclude(lastXIndex, rowIdx)
                                             .changeRowSequenceRange(rowIdx, rowSequencesIndexesIncludingSequenceRange.get(0),
-                                                    colouredSequenceRange.get(0), colouredSequenceRange.get(1));
+                                                    colouredSequenceRange);
+                                    nonogramLogicDataToChange.copyLogicFromNonogramRowLogic();
                                     for(int sequenceColumnIdx = firstXIndex + 1; sequenceColumnIdx < lastXIndex; sequenceColumnIdx++) {
                                         nonogramLogicDataToChange = nonogramLogicDataToChange
                                                 .addRowFieldToNotToInclude(rowIdx, sequenceColumnIdx);
@@ -549,8 +549,8 @@ public class NonogramLogicService {
                     if(sequenceLength == columnSequencesLengthsIncludingSequenceRange.get(0)) {
 
                         if(!nonogramLogicDataToChange.getColumnsSequencesIdsNotToInclude().get(columnIdx).contains(columnSequenceIdxNotToInclude)) {
-
-                            nonogramLogicDataToChange = nonogramLogicDataToChange.addColumnSequenceIdxToNotToInclude(columnIdx, columnSequenceIdxNotToInclude);
+                            nonogramLogicDataToChange.getNonogramColumnLogic().addColumnSequenceIdxToNotToInclude(columnIdx, columnSequenceIdxNotToInclude);
+                            nonogramLogicDataToChange.copyLogicToNonogramColumnLogic();
 
                             if(firstXIndex > -1) {
                                 if (nonogramLogicDataToChange.getNonogramSolutionBoard().get(firstXIndex).get(columnIdx).equals("-")) {
@@ -949,6 +949,7 @@ public class NonogramLogicService {
         boolean indexOk;
         int updatedRowRangeStartIndex;
         int updatedRowRangeEndIndex;
+        List<Integer> updatedRowRange = new ArrayList<>();
 
         for(int seqNo = 0; seqNo < nonogramRowSequencesRanges.size(); seqNo++) {
             if(!nonogramRowSequencesIdsNotToInclude.contains(seqNo)) {
@@ -992,7 +993,11 @@ public class NonogramLogicService {
                     }
                 }
 
-                nonogramLogicChanged = nonogramLogicChanged.changeRowSequenceRange(rowIdx, seqNo, updatedRowRangeStartIndex, updatedRowRangeEndIndex);
+                updatedRowRange.add(updatedRowRangeStartIndex);
+                updatedRowRange.add(updatedRowRangeEndIndex);
+
+                nonogramLogicChanged.getNonogramRowLogic().changeRowSequenceRange(rowIdx, seqNo, updatedRowRange);
+                nonogramLogicChanged.copyLogicFromNonogramRowLogic();
             }
         }
 
@@ -1079,7 +1084,6 @@ public class NonogramLogicService {
 
             //second range update
             updatedNextSequenceRange = new ArrayList<>();
-            updatedNextSequenceRange.clear();
 
             //rangeBegin
             int oldNextSequenceRangeBegin = columnSequencesRanges.get(sequenceIdx + 1 ).get(0);
@@ -1192,6 +1196,7 @@ public class NonogramLogicService {
         boolean indexOk;
         int updatedColumnSequenceRangeStartIndex;
         int updatedColumnSequenceRangeEndIndex;
+        List<Integer> updatedColumnSequenceRange = new ArrayList<>();
 
         for(int seqNo = 0; seqNo < nonogramColumnSequencesRanges.size(); seqNo++) {
             if(!nonogramColumnsSequencesIdsNotToInclude.contains(seqNo)) {
@@ -1235,8 +1240,11 @@ public class NonogramLogicService {
                     }
                 }
 
+                updatedColumnSequenceRange.add(updatedColumnSequenceRangeStartIndex);
+                updatedColumnSequenceRange.add(updatedColumnSequenceRangeEndIndex);
+
                 nonogramLogicChanged = nonogramLogicChanged.changeColumnSequenceRange(columnIdx, seqNo,
-                        updatedColumnSequenceRangeStartIndex, updatedColumnSequenceRangeEndIndex);
+                        updatedColumnSequenceRange);
             }
         }
 
@@ -1348,8 +1356,8 @@ public class NonogramLogicService {
     }
 
     public static boolean rangesListIncludingAnotherRange (List<List<Integer>> listOfRanges, List<Integer> range) {
-        for(int rangeIdx = 0; rangeIdx < listOfRanges.size(); rangeIdx++) {
-            if(rangeInsideAnotherRange(range, listOfRanges.get(rangeIdx))) {
+        for (List<Integer> listOfRange : listOfRanges) {
+            if (rangeInsideAnotherRange(range, listOfRange)) {
                 return true;
             }
         }
