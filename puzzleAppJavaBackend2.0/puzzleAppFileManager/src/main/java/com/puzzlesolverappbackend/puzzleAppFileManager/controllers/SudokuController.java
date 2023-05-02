@@ -34,13 +34,12 @@ public class SudokuController {
         Set<String> existingFilesNames = commonService
                 .listFilesUsingJavaIO("../../puzzle-solver-app/public/resources/Sudoku/");
 
-        int n = existingFilesNames.size();
-        String[] fileNamesWithoutExtension = existingFilesNames.stream().toArray(String[] ::new);
-        List<String> fileNamesWithoutExtensionArray = Arrays.asList(fileNamesWithoutExtension
+        //int fileNamesSize = existingFilesNames.size();
+        String[] fileNamesWithoutExtension = existingFilesNames.toArray(String[]::new);
+        List<String> fileNamesWithoutExtensionArray = Arrays.stream(fileNamesWithoutExtension
                 .clone())
-                .stream()
                 .map(fN -> fN.substring(0, fN.length() - 5)) // ".json"
-                .collect(Collectors.toList());;
+                .collect(Collectors.toList());
 
         if(fileNamesWithoutExtensionArray.contains(fileName)) {
             return new ResponseEntity<>("Save failed. File with same name already exists.", HttpStatus.OK);
@@ -48,7 +47,7 @@ public class SudokuController {
 
         Gson gson = new Gson();
 
-        FileWriter abc = null;
+        FileWriter abc;
         try {
             abc = new FileWriter("../../puzzle-solver-app/public/resources/Sudoku/" + fileName + ".json");
             gson.toJson(nfd, abc);

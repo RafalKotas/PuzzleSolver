@@ -124,7 +124,6 @@ public class NonogramSolutionNode {
             stepsMadeAtStart = this.getNonogramLogic().getNewStepsMade();
 
             for(int actionNo = 1; actionNo < 19; actionNo++) {
-                //make action depending on actionNo
                 this.getNonogramLogic().basicSolve(actionNo);
             }
 
@@ -135,22 +134,18 @@ public class NonogramSolutionNode {
         } while (
                 stepsCountDiffered && !solutionInvalid
         );
-
-        //System.out.println("Basic actions end!");
     }
 
     public void colourOrPlaceX() {
         //add chosen decision - colour field(O) or place (X)
         NonogramSolutionDecision lastDecision = this.nonogramGuessDecisions.get(this.nonogramGuessDecisions.size() - 1);
 
-        if(true) {
-            if(lastDecision.getDecisionMarker().equals("X")) {
-                this.getNonogramLogic().placeXAtGivenPosittion(lastDecision.getRowIdx(), lastDecision.getColumnIdx());
-                this.getNonogramLogic().addAffectedRowAndColumnAfterPlacingXAtField(lastDecision);
-            } else {
-                this.getNonogramLogic().colourFieldAtGivenPosittion(lastDecision.getRowIdx(), lastDecision.getColumnIdx());
-                this.getNonogramLogic().addAffectedRowAndColumnAfterColouringField(lastDecision);
-            }
+        if (lastDecision.getDecisionMarker().equals("X")) {
+            this.getNonogramLogic().placeXAtGivenPosittion(lastDecision.getRowIdx(), lastDecision.getColumnIdx());
+            this.getNonogramLogic().addAffectedRowAndColumnAfterPlacingXAtField(lastDecision);
+        } else {
+            this.getNonogramLogic().colourFieldAtGivenPosition(lastDecision.getRowIdx(), lastDecision.getColumnIdx());
+            this.getNonogramLogic().addAffectedRowAndColumnAfterColouringField(lastDecision);
         }
     }
 
@@ -159,7 +154,7 @@ public class NonogramSolutionNode {
         System.out.println("Total decisions made: " + this.getNonogramGuessDecisions().size());
         System.out.println("Node decisions: " + this.getNonogramGuessDecisions());
         System.out.println("Stats: ");
-        this.getNonogramLogic().printStatsAfterBasicActionsMade();
+        //this.getNonogramLogic().getNonogramPrinter().printStatsAfterBasicActionsMade(this.getNonogramLogic());
         System.out.println("Subsolution invalid? : " + this.getNonogramLogic().isSolutionInvalid());
         System.out.println("-".repeat(30));
     }
