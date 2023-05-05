@@ -152,10 +152,18 @@ public class NonogramSolutionNode {
     public void printNodeFinalResult() {
         System.out.println("-".repeat(30));
         System.out.println("Total decisions made: " + this.getNonogramGuessDecisions().size());
-        System.out.println("Node decisions: " + this.getNonogramGuessDecisions());
+        printNodeDecisions();
         System.out.println("Stats: ");
         //this.getNonogramLogic().getNonogramPrinter().printStatsAfterBasicActionsMade(this.getNonogramLogic());
         System.out.println("Subsolution invalid? : " + this.getNonogramLogic().isSolutionInvalid());
         System.out.println("-".repeat(30));
+    }
+
+    public void printNodeDecisions() {
+        int decisionNo = 1;
+        for(NonogramSolutionDecision decision : this.getNonogramGuessDecisions()) {
+            System.out.println(decisionNo + " : " + decision);
+            decisionNo++;
+        }
     }
 }

@@ -15,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -94,14 +95,13 @@ public class NonogramLogicController {
 
     @PostMapping("/customSolutionPart")
     public ResponseEntity<NonogramLogic> customSolutionPart(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String solutionFileName) throws CloneNotSupportedException {
-        //nonogramLogicService.listAllNonograms();
-        System.out.println("Custom solver endpoint");
-
         NonogramLogic logicWithAffectedRowsAndColumns = new NonogramLogic(
                 nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences());
 
+        NonogramLogic solvedNonogramLogic = nonogramLogicService.runCustomSolverOperationWithCorrectnessCheck(logicWithAffectedRowsAndColumns, solutionFileName);
+
         return new ResponseEntity<>(
-                nonogramLogicService.runCustomSolverOperationWithCorrectnessCheck(logicWithAffectedRowsAndColumns, solutionFileName),
+                solvedNonogramLogic,
                 HttpStatus.OK);
     }
 

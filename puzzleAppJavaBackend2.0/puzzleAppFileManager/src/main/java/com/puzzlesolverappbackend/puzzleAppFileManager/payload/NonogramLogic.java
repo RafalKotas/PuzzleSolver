@@ -1166,6 +1166,14 @@ public class NonogramLogic extends NonogramLogicParams {
         return this;
     }
 
+    public void printBoard() {
+        System.out.println("BOARD LOGIC START");
+        for(List<String> row : this.getNonogramRowLogic().getNonogramSolutionBoard()) {
+            System.out.println(row);
+        }
+        System.out.println("BOARD LOGIC END");
+    }
+
     /*public boolean isSolved() {
         return this.fieldsColoured() + this.fieldsWithXPlaced() == this.area();
     }*/

@@ -12,7 +12,7 @@ public interface NonogramLogicPrinter {
 
     void printLogs();
 
-    void printStatsAfterBasicActionsMade();
+    void printStatsBeforeRecursion();
 
     void printAffectedRowsAndColumns(boolean printAffectedArrays, boolean printAffectedSum);
 }
