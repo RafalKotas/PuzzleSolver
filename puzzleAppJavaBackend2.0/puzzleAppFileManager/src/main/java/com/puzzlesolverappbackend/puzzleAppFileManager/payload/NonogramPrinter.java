@@ -119,9 +119,9 @@ public class NonogramPrinter extends NonogramLogicParams implements NonogramLogi
     }
 
     /**
-     * function meant to print stats after using only heuristics to solve nonogram
+     * function meant to print stats after using only heuristics + trial and error method to solve nonogram
      */
-    public void printStatsAfterBasicActionsMade() {
+    public void printStatsBeforeRecursion() {
         int fieldsXPlaced = this.fieldsWithXPlaced();
         int fieldsColoured = this.fieldsColoured();
         int fieldsXTotal  = this.fieldsToPlaceXTotal();
