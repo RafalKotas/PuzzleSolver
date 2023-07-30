@@ -53,6 +53,15 @@ public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, Jp
 
     @Query(value = "SELECT *" +
             " FROM nonogram_puzzles_data npd" +
+            " WHERE source IN :sources" +
+            " AND npd.difficulty BETWEEN :minDifficulty and :maxDifficulty",
+            nativeQuery = true)
+    List<Nonogram> selectNonogramBySourceAndDifficulty(@Param("sources") Collection<String> sources,
+                                                      @Param("minDifficulty") Double minDifficulty,
+                                                      @Param("maxDifficulty") Double maxDifficulty);
+
+    @Query(value = "SELECT *" +
+            " FROM nonogram_puzzles_data npd" +
             " WHERE (npd.filename=:filename" + //LIKE %:filename% +
             " AND npd.source LIKE %:source%" +
             " AND npd.year LIKE %:year%" +

@@ -42,7 +42,8 @@ public class NonogramController {
     Pageable nonogramsPageable;
 
     @PostMapping("/save")
-    public ResponseEntity<String> saveNonogramToJsonFile(@RequestParam String fileName, @Valid @RequestBody NonogramFileDetails nfd) {
+    public ResponseEntity<String> saveNonogramToJsonFile(@RequestParam String fileName,
+                                                         @Valid @RequestBody NonogramFileDetails nonogramFileDetails) {
         System.out.println("saving nonogram: " + fileName);
 
         String nonogramsPath = InitializerConstants.PUZZLE_RELATIVE_PATH + InitializerConstants.PuzzleMappings.NONOGRAM_PATH_SUFFIX;
@@ -62,11 +63,11 @@ public class NonogramController {
 
         Gson gson = new Gson();
 
-        FileWriter abc;
+        FileWriter fileWriter;
         try {
-            abc = new FileWriter(nonogramsPath + fileName + ".json");
-            gson.toJson(nfd, abc);
-            abc.close();
+            fileWriter = new FileWriter(nonogramsPath + fileName + ".json");
+            gson.toJson(nonogramFileDetails, fileWriter);
+            fileWriter.close();
             return new ResponseEntity<>("Save success!", HttpStatus.OK);
         } catch (IOException e) {
             e.printStackTrace();

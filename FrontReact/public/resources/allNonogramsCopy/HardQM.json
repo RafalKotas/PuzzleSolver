@@ -1,0 +1,15 @@
+{
+	"rowSequences": [
+		[2, 2], [1, 2, 1], [2, 1, 1], [2], [2], [1, 1, 2], [1, 2, 1], [2, 2]
+	],
+	"columnSequences": [
+		[2, 2], [1, 2, 1], [1, 1, 2], [2], [2], [2, 1, 1], [1, 2, 1], [2, 2]
+	],
+	"filename": "Template_1",
+	"height": 8,
+	"width": 8,
+	"source": "katana",
+	"year": "N/D",
+	"month": "N/D",
+	"difficulty": 5.0
+}

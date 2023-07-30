@@ -59,14 +59,8 @@ public class NonogramsDataInitializer implements CommandLineRunner {
             source = nonogramFileDetails.getSource();
             year = nonogramFileDetails.getYear();
             month = nonogramFileDetails.getMonth();
-            if(source.equals("logiNonograms")) {
-                if(month.length() > 2) {
-                    source = "logiMix";
-                    month = month.substring(0, 2);
-                } else {
-                    source = "logi";
-                }
-            }
+
+            this.correctSource();
 
             difficulty = nonogramFileDetails.getDifficulty();
             height = nonogramFileDetails.getHeight();
@@ -75,16 +69,40 @@ public class NonogramsDataInitializer implements CommandLineRunner {
 
             nonogram = new Nonogram(nonogramFileNameWithoutExtension, source, year, month, difficulty, height, width);
 
-            if(nonogramRepository.existsNonogramByGivenParamsFromFile(nonogramFileNameWithoutExtension, source, year, month, difficulty,
-                    height, width).isPresent()) {
-                nonogramsRepeated++;
-            } else {
-                System.out.println(nonogram);
-                newNonogramsSaved++;
-                nonogramRepository.save(nonogram);
-            }
+            updateOldNewNonogramsStats();
         }
 
+        printStatsIfEnabled();
+    }
+
+    private void correctSource() {
+        if(source.equals("logiNonograms")) {
+            if(month.length() > 2) {
+                if(month.endsWith("supplement")) {
+                    source = "logi";
+                    month = month.substring(0, 2);
+                } else {
+                    source = "logiMix";
+                    month = month.substring(0, 2);
+                }
+            } else {
+                source = "logi";
+            }
+        }
+    }
+
+    private void updateOldNewNonogramsStats() {
+        if(nonogramRepository.existsNonogramByGivenParamsFromFile(nonogramFileNameWithoutExtension, source, year, month, difficulty,
+                height, width).isPresent()) {
+            nonogramsRepeated++;
+        } else {
+            System.out.println(nonogram);
+            newNonogramsSaved++;
+            nonogramRepository.save(nonogram);
+        }
+    }
+
+    private void printStatsIfEnabled() {
         if(InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
             System.out.println("newNonogramsSaved count: " + newNonogramsSaved);
             System.out.println("nonogramsRepeated count: " + nonogramsRepeated);

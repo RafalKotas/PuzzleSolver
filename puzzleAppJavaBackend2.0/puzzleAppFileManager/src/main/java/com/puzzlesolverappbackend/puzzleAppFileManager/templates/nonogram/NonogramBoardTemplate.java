@@ -1,6 +1,8 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.templates.nonogram;
 
 import com.google.gson.Gson;
+import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,26 +15,24 @@ import java.util.List;
 public class NonogramBoardTemplate {
 
     private List<List<String>> board;
-    private String filename = "non-specified";
-
-    private final String nonogramBoardTemplatesPath = "./src/main/resources/templates/nonogramBoards/";
 
     public NonogramBoardTemplate(String filename) {
-
-        this.setFilename(filename);
         Gson gson = new Gson();
 
         try {
             NonogramBoardTemplate nonogramBoardTemplate =
-                    gson.fromJson(new FileReader(nonogramBoardTemplatesPath + filename + ".json"), NonogramBoardTemplate.class);
+                    gson.fromJson(new FileReader(InitializerConstants.NONOGRAM_SOLUTIONS_PATH + filename + ".json"), NonogramBoardTemplate.class);
             this.board = nonogramBoardTemplate.getBoard();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
+    public NonogramBoardTemplate(NonogramLogic solvedNonogramLogic) {
+        this.setBoard(solvedNonogramLogic.getNonogramSolutionBoard());
+    }
+
     public void printBoard () {
-        System.out.println("TEMPLATE BOARD " + this.filename);
         if(this.getBoard().size() > 0) {
             for (List<String> boardRow : this.getBoard()) {
                 System.out.println(boardRow);

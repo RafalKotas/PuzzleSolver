@@ -111,17 +111,19 @@ public class NonogramPrinter extends NonogramLogicParams implements NonogramLogi
      * print solver logs line by line
      */
     public void printLogs() {
+        int logIndex = 0;
         if(this.getLogs().size() > 0) {
             for(String log : this.getLogs()) {
-                System.out.println(log);
+                System.out.println(logIndex + " : "  + log);
+                logIndex++;
             }
         }
     }
 
     /**
-     * function meant to print stats after using only heuristics to solve nonogram
+     * function meant to print stats after using only heuristics + trial and error method to solve nonogram
      */
-    public void printStatsAfterBasicActionsMade() {
+    public void printStats() {
         int fieldsXPlaced = this.fieldsWithXPlaced();
         int fieldsColoured = this.fieldsColoured();
         int fieldsXTotal  = this.fieldsToPlaceXTotal();
@@ -135,6 +137,7 @@ public class NonogramPrinter extends NonogramLogicParams implements NonogramLogi
         System.out.println("Overall completion percentage: " + this.getCompletionPercentage() + "%");
         //System.out.println("newStepsMade: " + this.getNewStepsMade());
         System.out.println("possible fields to make decision: " + this.getAvailableChoices());
+        this.printLogs();
     }
 
     /**

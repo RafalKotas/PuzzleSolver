@@ -60,7 +60,7 @@ const BoardBigRow : React.FC<BoardBigRowProps> = ({rowNo,
                             firstColNoInBigSquare={colNo} 
                             bigSquareHeightInCells={bigRowHeightInCells}
                         />
-                        //bigSquare max 5x5 fields, place rows colum by column (flexDirection: "column")
+                        //bigSquare max 5x5 fields, place rows column by column (flexDirection: "column")
                     } else return <React.Fragment></React.Fragment>
                 })
             }

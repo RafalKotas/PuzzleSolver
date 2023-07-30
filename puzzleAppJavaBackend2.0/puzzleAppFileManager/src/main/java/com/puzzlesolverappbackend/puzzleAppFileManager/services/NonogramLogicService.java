@@ -436,7 +436,7 @@ public class NonogramLogicService {
                                             .addRowFieldToNotToInclude(rowIdx, lastXIndex)
                                             .addColumnFieldToNotToInclude(firstXIndex, rowIdx)
                                             .addColumnFieldToNotToInclude(lastXIndex, rowIdx)
-                                            .changeRowSequenceRange(rowIdx, rowSequencesIndexesIncludingSequenceRange.get(0),
+                                            .updateRowSequenceRange(rowIdx, rowSequencesIndexesIncludingSequenceRange.get(0),
                                                     colouredSequenceRange);
                                     nonogramLogicDataToChange.copyLogicFromNonogramRowLogic();
                                     for(int sequenceColumnIdx = firstXIndex + 1; sequenceColumnIdx < lastXIndex; sequenceColumnIdx++) {
@@ -995,7 +995,7 @@ public class NonogramLogicService {
                 updatedRowRange.add(updatedRowRangeStartIndex);
                 updatedRowRange.add(updatedRowRangeEndIndex);
 
-                nonogramLogicObject.getNonogramRowLogic().changeRowSequenceRange(rowIdx, seqNo, updatedRowRange);
+                nonogramLogicObject.getNonogramRowLogic().updateRowSequenceRange(rowIdx, seqNo, updatedRowRange);
                 nonogramLogicObject.copyLogicFromNonogramRowLogic();
             }
         }
@@ -1241,7 +1241,7 @@ public class NonogramLogicService {
                 updatedColumnSequenceRange.add(updatedColumnSequenceRangeStartIndex);
                 updatedColumnSequenceRange.add(updatedColumnSequenceRangeEndIndex);
 
-                nonogramLogicObject.getNonogramColumnLogic().changeColumnSequenceRange(columnIdx, seqNo,
+                nonogramLogicObject.getNonogramColumnLogic().updateColumnSequenceRange(columnIdx, seqNo,
                         updatedColumnSequenceRange);
                 nonogramLogicObject.copyLogicFromNonogramColumnLogic();
             }
@@ -1264,9 +1264,6 @@ public class NonogramLogicService {
         for(int rowIdx = 0; rowIdx < height; rowIdx++) {
             solutionBoardColumn.add(nonogramSolutionBoard.get(rowIdx).get(columnIdx));
         }
-
-
-
 
         int sequenceId = 0;
         int sequenceLength = columnSequencesLengths.get(0);
@@ -1379,6 +1376,12 @@ public class NonogramLogicService {
         return filteredLengths;
     }
 
+    public static boolean rangesEqual(List<Integer> firstRange, List<Integer> secondRange) {
+        return (firstRange.size() == 2 && secondRange.size() == 2) ?
+                (firstRange.get(0) == secondRange.get(0) && firstRange.get(1) == secondRange.get(1) ? true : false)
+                : false;
+    }
+
     public static int rangeLength(List<Integer> range) {
         int rangeStart = range.get(0);
         int rangeEnd = range.get(range.size() - 1);
@@ -1408,20 +1411,9 @@ public class NonogramLogicService {
     }
 
     public NonogramLogic runCustomSolverOperationWithCorrectnessCheck(NonogramLogic nonogramLogicObject, String solutionFileName) throws CloneNotSupportedException {
-        System.out.println("before creating nonoogramSolver object...");
-        System.out.println(nonogramLogicObject);
-        System.out.println(solutionFileName);
-
         NonogramSolver nonogramSolver = new NonogramSolver(nonogramLogicObject, solutionFileName);
-
-        System.out.println("before creating nonogramSolutionNode object...");
-
         NonogramSolutionNode nonogramSolutionNode = new NonogramSolutionNode(nonogramLogicObject);
-
-        System.out.println("before running solver at node...");
-
         nonogramSolver.runSolutionAtNode(nonogramSolutionNode);
-
         return nonogramSolver.getSolutionLogic();
     }
 
