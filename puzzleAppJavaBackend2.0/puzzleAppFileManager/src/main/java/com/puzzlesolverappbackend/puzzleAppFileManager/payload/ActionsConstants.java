@@ -47,21 +47,23 @@ public class ActionsConstants {
 
     public final static ArrayList<Integer> actionsToDoAfterCorrectingRowsSequencesWhenMetColouredField = new ArrayList<>(
             Arrays. asList(
+                    CORRECT_ROWS_SEQUENCES_RANGES,
                     COLOUR_OVERLAPPING_FIELDS_IN_ROWS,
                     EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROWS,
                     PLACE_XS_ROWS_AT_UNREACHABLE_FIELDS,
                     PLACE_XS_ROWS_AROUND_LONGEST_SEQUENCES,
-                    //PLACE_XS_ROWS_AT_TOO_SHORT_EMPTY_SEQUENCES,
+                    PLACE_XS_ROWS_AT_TOO_SHORT_EMPTY_SEQUENCES,
 
                     MARK_AVAILABLE_FIELDS_IN_ROWS));
 
     public final static ArrayList<Integer> actionsToDoAfterCorrectingColumnsSequencesWhenMetColouredField = new ArrayList<>(
             Arrays. asList(
+                    CORRECT_COLUMNS_SEQUENCES_RANGES,
                     COLOUR_OVERLAPPING_FIELDS_IN_COLUMNS,
                     EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMNS,
                     PLACE_XS_COLUMNS_AT_UNREACHABLE_FIELDS,
                     PLACE_XS_COLUMNS_AROUND_LONGEST_SEQUENCES,
-                    //PLACE_XS_COLUMNS_AT_TOO_SHORT_EMPTY_SEQUENCES,
+                    PLACE_XS_COLUMNS_AT_TOO_SHORT_EMPTY_SEQUENCES,
 
                     MARK_AVAILABLE_FIELDS_IN_COLUMNS));
 
@@ -125,15 +127,15 @@ public class ActionsConstants {
 
     public final static ArrayList<Integer> actionsToDoAfterPlacingXsAtRowsUnreachableFields = new ArrayList<>(
             Arrays. asList(
-                    CORRECT_ROWS_SEQUENCES_RANGES_IF_X_ON_WAY,
-                    EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROWS,
-                    PLACE_XS_ROWS_AT_TOO_SHORT_EMPTY_SEQUENCES));
+                    CORRECT_COLUMNS_SEQUENCES_RANGES_IF_X_ON_WAY,
+                    EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMNS,
+                    PLACE_XS_COLUMNS_AT_TOO_SHORT_EMPTY_SEQUENCES));
 
     public final static ArrayList<Integer> actionsToDoAfterPlacingXsAtColumnsUnreachableFields = new ArrayList<>(
             Arrays. asList(
-                            CORRECT_COLUMNS_SEQUENCES_RANGES_IF_X_ON_WAY,
-                            EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMNS,
-                            PLACE_XS_COLUMNS_AT_TOO_SHORT_EMPTY_SEQUENCES));
+                            CORRECT_ROWS_SEQUENCES_RANGES_IF_X_ON_WAY,
+                            EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROWS,
+                            PLACE_XS_ROWS_AT_TOO_SHORT_EMPTY_SEQUENCES));
 
     public final static ArrayList<Integer> actionsToDoAfterPlacingXsAroundLongestSequencesInRows = new ArrayList<>(
             Arrays. asList(

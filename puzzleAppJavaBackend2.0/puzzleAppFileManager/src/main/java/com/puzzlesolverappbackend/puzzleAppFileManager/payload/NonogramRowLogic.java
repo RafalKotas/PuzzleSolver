@@ -365,6 +365,8 @@ public class NonogramRowLogic {
                                                 .addRowFieldToNotToInclude(rowIdx, firstXIndex)
                                                 .addColumnFieldToNotToInclude(firstXIndex, rowIdx);
 
+                                        addColumnToAffectedActionsByIdentifiers(firstXIndex, ActionsConstants.actionsToDoAfterPlacingXsAroundLongestSequencesInRows);
+
                                     } else if (showRepetitions) {
                                         System.out.println("Placed Xs before longest sequence in row earlier!");
                                     }
@@ -378,6 +380,8 @@ public class NonogramRowLogic {
                                         this.increaseStepsMade().placeXAtGivenPosition(rowIdx, lastXIndex)
                                                 .addRowFieldToNotToInclude(rowIdx, lastXIndex)
                                                 .addColumnFieldToNotToInclude(lastXIndex, rowIdx);
+
+                                        addColumnToAffectedActionsByIdentifiers(lastXIndex, ActionsConstants.actionsToDoAfterPlacingXsAroundLongestSequencesInRows);
                                     }
 
                                 } else if(showRepetitions) {
@@ -389,8 +393,12 @@ public class NonogramRowLogic {
                                 this.addRowFieldToNotToInclude(rowIdx, sequenceColumnIdx);
                             }
 
+
                             this.updateRowSequenceRange(rowIdx, rowSequencesIndexesIncludingSequenceRange.get(0),
                                     colouredSequenceRange);
+
+                            this.addRowToAffectedActionsByIdentifiers(rowIdx, Arrays. asList(
+                                    ActionsConstants.PLACE_XS_ROWS_AT_UNREACHABLE_FIELDS));
                         }
 
                     } else if(rowSequencesLengthsIncludingSequenceRange.size() > 1) {
@@ -420,7 +428,7 @@ public class NonogramRowLogic {
                                 tmpLog = generatePlacingXStepDescription(rowIdx, lastXIndex, "placing \"X\" after longest sequence (index not known)");
                                 addLog(tmpLog);
 
-                                addColumnToAffectedActionsByIdentifiers(firstXIndex, ActionsConstants.actionsToDoAfterPlacingXsAroundLongestSequencesInRows);
+                                addColumnToAffectedActionsByIdentifiers(lastXIndex, ActionsConstants.actionsToDoAfterPlacingXsAroundLongestSequencesInRows);
                             } else if(showRepetitions) {
                                 System.out.println("Longest sequence in row lastXIndex added earlier!");
                             }
@@ -549,6 +557,9 @@ public class NonogramRowLogic {
             if(!emptyRow(rowIndex)) {
                 for(int seqNo = 0; seqNo < this.getRowsSequencesRanges().get(rowIndex).size(); seqNo++) {
                     if(rangeLength(sequencesRanges.get(seqNo)) < sequencesLengths.get(seqNo)) {
+                        if(rowIndex == 27) {
+                            System.out.println("HERE setting solution invalid!!! ranges: " + sequencesRanges);
+                        }
                         this.setSolutionInvalid(true);
                         break;
                     }
@@ -1466,6 +1477,9 @@ public class NonogramRowLogic {
                     break;
                 case ActionsConstants.PLACE_XS_COLUMNS_AROUND_LONGEST_SEQUENCES:
                     this.getAffectedColumnsToPlaceXsAroundLongestSequences().add(columnIdx);
+                    break;
+                case ActionsConstants.PLACE_XS_COLUMNS_AT_TOO_SHORT_EMPTY_SEQUENCES:
+                    this.getAffectedColumnsToPlaceXsAtTooShortEmptySequences().add(columnIdx);
                     break;
                 case ActionsConstants.MARK_AVAILABLE_FIELDS_IN_COLUMNS:
                     this.getAffectedColumnsToMarkAvailableSequences().add(columnIdx);

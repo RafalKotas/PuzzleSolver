@@ -49,7 +49,7 @@ public class NonogramController {
         String nonogramsPath = InitializerConstants.PUZZLE_RELATIVE_PATH + InitializerConstants.PuzzleMappings.NONOGRAM_PATH_SUFFIX;
 
         Set<String> existingFilesNames = commonService
-                .listFilesUsingJavaIO(nonogramsPath);
+                .listJsonFilesUsingJavaIO(nonogramsPath);
 
         String[] fileNamesWithoutExtension = existingFilesNames.toArray(String[]::new);
         List<String> fileNamesWithoutExtensionArray = Arrays.stream(fileNamesWithoutExtension

@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.util.Set;
 
-@Component
-@Order(2)
+//@Component
+//@Order(2)
 public class ArchitectPuzzlesInitializer implements CommandLineRunner {
 
     @Autowired
@@ -51,7 +51,7 @@ public class ArchitectPuzzlesInitializer implements CommandLineRunner {
         architectsRepeated = 0;
 
         Set<String> existingArchitectFilesNames = commonService
-                .listFilesUsingJavaIO(puzzlePath);
+                .listJsonFilesUsingJavaIO(puzzlePath);
 
         for (String architectFileName : existingArchitectFilesNames) {
             ObjectMapper objectMapper = new ObjectMapper();

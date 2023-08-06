@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.util.Set;
 
-@Component
-@Order(5)
+//@Component
+//@Order(5)
 public class SlitherlinkDataInitializer implements CommandLineRunner {
 
     @Autowired
@@ -49,7 +49,7 @@ public class SlitherlinkDataInitializer implements CommandLineRunner {
         SlitherlinksRepeated = 0;
 
         Set<String> existingSlitherlinkFilesNames = commonService
-                .listFilesUsingJavaIO(puzzlePath);
+                .listJsonFilesUsingJavaIO(puzzlePath);
 
         for (String SlitherlinkFileName : existingSlitherlinkFilesNames) {
             ObjectMapper objectMapper = new ObjectMapper();

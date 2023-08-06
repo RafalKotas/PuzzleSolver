@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Component
-@Order(9)
+//@Component
+//@Order(9)
 public class SymmetricNonogramLoggerInitializer implements CommandLineRunner {
     public final static String puzzlePath = InitializerConstants.PUZZLE_RELATIVE_PATH +
             InitializerConstants.PuzzleMappings.NONOGRAM_PATH_SUFFIX;
@@ -37,7 +37,7 @@ public class SymmetricNonogramLoggerInitializer implements CommandLineRunner {
         System.out.println("Symmetrical nonograms logger(9)");
 
         Set<String> existingFilesNames = commonService
-                .listFilesUsingJavaIO(puzzlePath);
+                .listJsonFilesUsingJavaIO(puzzlePath);
 
         String filename;
 

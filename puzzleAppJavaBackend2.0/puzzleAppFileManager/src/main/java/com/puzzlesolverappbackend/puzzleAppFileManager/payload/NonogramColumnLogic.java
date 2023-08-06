@@ -289,8 +289,6 @@ public class NonogramColumnLogic {
                         if(rowToChangeColumnBoardWithMarks.get(columnIdx).substring(2).equals("--")) {
                             this.increaseStepsMade();
 
-                            this.addRowToAffectedActionsByIdentifiers(rowIdx, ActionsConstants.actionsToDoAfterColouringOverlappingSequencesInColumns);
-
                             rowToChangeColumnBoardWithMarks.set(columnIdx, elementToChangeInsideRowBoardWithMarks.substring(0, 2) + "C" + sequenceCharMark);
                             this.getNonogramSolutionBoardWithMarks().set(rowIdx, rowToChangeColumnBoardWithMarks);
                             this.increaseStepsMade();
@@ -303,6 +301,7 @@ public class NonogramColumnLogic {
                                 this.logs.add(tmpLog);
 
                                 this.getNonogramSolutionBoard().set(rowIdx, rowToChangeColumnBoard);
+                                this.addRowToAffectedActionsByIdentifiers(rowIdx, ActionsConstants.actionsToDoAfterColouringOverlappingSequencesInColumns);
                             }
                         } else if (showRepetitions) {
                             System.out.println("Column field was coloured earlier!");
@@ -786,11 +785,13 @@ public class NonogramColumnLogic {
      * place an "X" at too short empty fields sequences in columns, when none of row sequences can fit in hole
      */
     public void placeXsColumnsAtTooShortEmptySequences() {
-
+        this.logs.add("columns affected to place x at too short empty sequences: " +
+                this.getAffectedColumnsToPlaceXsAtTooShortEmptySequences().toString() + " column 1: " +
+                this.getNonogramBoardColumn(1) + " ranges: " +
+                this.getColumnsSequencesRanges().get(1));
         for (Integer columnIndex : this.getAffectedColumnsToPlaceXsAtTooShortEmptySequences()) {
             placeXsColumnAtTooShortEmptySequences(columnIndex);
         }
-
     }
 
     /**
@@ -878,7 +879,9 @@ public class NonogramColumnLogic {
                     if(sequencesWhichNotFit.size() == sequencesWithinRange.size() && emptyFieldsSequenceLength > 0) {
                         for(int emptyFieldRowIdx = emptyFieldsRange.get(0); emptyFieldRowIdx <= emptyFieldsRange.get(1); emptyFieldRowIdx++) {
                             // always true? (empty fields sequence)
+
                             if(this.getNonogramSolutionBoard().get(emptyFieldRowIdx).get(columnIdx).equals("-")) {
+
                                 this.placeXAtGivenPosition(emptyFieldRowIdx, columnIdx);
 
                                 tmpLog = "X placed, column: " + columnIdx + " , row: " + emptyFieldRowIdx + " (too short empty fields in column for sequence). rowSequencesIdsNotToInclude: " + this.getRowsSequencesIdsNotToInclude().get(emptyFieldRowIdx);
@@ -1477,6 +1480,9 @@ public class NonogramColumnLogic {
                     break;
                 case ActionsConstants.PLACE_XS_COLUMNS_AROUND_LONGEST_SEQUENCES:
                     this.getAffectedColumnsToPlaceXsAroundLongestSequences().add(columnIdx);
+                    break;
+                case ActionsConstants.PLACE_XS_COLUMNS_AT_TOO_SHORT_EMPTY_SEQUENCES:
+                    this.getAffectedColumnsToPlaceXsAtTooShortEmptySequences().add(columnIdx);
                     break;
                 case ActionsConstants.MARK_AVAILABLE_FIELDS_IN_COLUMNS:
                     this.getAffectedColumnsToMarkAvailableSequences().add(columnIdx);

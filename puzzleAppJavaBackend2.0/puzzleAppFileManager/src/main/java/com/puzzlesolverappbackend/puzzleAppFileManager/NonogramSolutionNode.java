@@ -4,6 +4,7 @@ package com.puzzlesolverappbackend.puzzleAppFileManager;
 import com.puzzlesolverappbackend.puzzleAppFileManager.logs.nonogram.NonogramNodeLog;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +23,8 @@ public class NonogramSolutionNode {
     private NonogramSolutionNode leftNode;
     private NonogramSolutionNode rightNode;
 
+    private double initTime;
+
     // log of taken actions (heuristics, guesses decisions, and in nodeHeight > 0 also recursion decisions)
     private List<NonogramNodeLog> nodeLogs;
 
@@ -32,6 +35,7 @@ public class NonogramSolutionNode {
         this.parentNode = null;
         this.leftNode = null;
         this.rightNode = null;
+        this.initTime = System.currentTimeMillis();
     }
 
     public NonogramSolutionNode(NonogramLogic nonogramLogic, NonogramSolutionNode parentNode,
@@ -149,18 +153,25 @@ public class NonogramSolutionNode {
         }
     }
 
+    public void changeLastDecisionCompletionPercentage(double updatedCompletionPercentage) {
+        int guessDecisionsSize = this.getNonogramGuessDecisions().size();
+        if(guessDecisionsSize > 1) {
+            this.getNonogramGuessDecisions().get(guessDecisionsSize - 1).setPercentageSolved(updatedCompletionPercentage);
+        }
+    }
+
     public void printNodeFinalResult() {
         System.out.println("-".repeat(30));
         System.out.println("Total decisions made: " + this.getNonogramGuessDecisions().size());
-        printNodeDecisions();
+        printNodeGuessDecisions();
         System.out.println("Stats: ");
         //this.getNonogramLogic().getNonogramPrinter().printStatsAfterBasicActionsMade(this.getNonogramLogic());
         System.out.println("Subsolution invalid? : " + this.getNonogramLogic().isSolutionInvalid());
         System.out.println("-".repeat(30));
     }
 
-    public void printNodeDecisions() {
-        int decisionNo = 1;
+    public void printNodeGuessDecisions() {
+        int decisionNo = 0;
         for(NonogramSolutionDecision decision : this.getNonogramGuessDecisions()) {
             System.out.println(decisionNo + " : " + decision);
             decisionNo++;

@@ -403,7 +403,7 @@
 "o11023"	                                                                                             698.540s 100.0%
 "o11007"	                                                                                            4583.240s 100.0%
 
-//Difficulty 4 logi: (solved count = 552, percent = 98.92) (maxDepth == 5)
+//Difficulty==4 logi: (solved count = 552, percent = 98.92) (maxDepth == 5)
 "o09386" 2.000s 100.00%
 "o11160" 2.011s 100.00%
 "o10006" 2.023s 100.00%
@@ -1520,7 +1520,7 @@ katana DONE: 15x15, 20x20, 30x30 TODO 25x25
 "Symetry(Simetria)(auth_rockejr)"                                                                       125.720s 100.00%
 "Screw(auth_Feiry)"                                                                                     125.888s 100.00% /recDepth=3
 "Chain_Link(auth_BlueRolex)"                                                                            128.712s 100.00%
-"Sword(auth_TAGVoar)"                                                                                   131.329s 100.00%
+"Sword(auth_TAGVoar)"                                                                                   133.921s 100.00%
 "Star(auth_Ulti)"                                                                                       133.921s 100.00% /recDepth=2
 "Cat(auth_Nec)"                                                                                         134.165s 100.00%
 "KEngine_piston(Pistone,_fascia_e_perno)(auth_Sigmundd)"                                                134.346s 100.00%
@@ -1571,6 +1571,7 @@ katana DONE: 15x15, 20x20, 30x30 TODO 25x25
 "Little_star(auth_Force_of_Nature)"                                                                     467.579s   8.75%
 "Square(hard_for_computer_easy_for_human)(auth_Gcpsu)"                                                  479.165s  11.75%
 "floral_tile(auth_bizibody)"                                                                            481.528s 100.00% /recDepth=2
+------------------------------------------------------------------------------------------------------------------------
 "Flower_on_a_vase(Flor_no_vaso)(auth_Marilha)"                                                          577.847s  31.50%
 "Foot(Planta_del_pie)(auth_Ladyweed)"                                                                   635.799s  27.25%
 "Cubes(auth_NDee)"                                                                                     1074.434s 100.00% /recDepth=5
@@ -1689,6 +1690,7 @@ katana DONE: 15x15, 20x20, 30x30 TODO 25x25
 "Design_02(auth_Nancy_McCrary)"                                                                         462.900s 100.00% /recDepth=4
 "Leveling_device(auth_Alfus)"                                                                           489.467s 100.00%
 "Flying_Squirrel(auth_Macy)"                                                                            563.123s 100.00%
+------------------------------------------------------------------------------------------------------------------------
 "Pattern_A(auth_mrs.zenzy)"                                                                             612.795s  37.28%
 "Diagonal_Symmetry(auth_boffe)"                                                                         704.341s 100.00%
 "Duck(auth_martasuldivano)"                                                                             766.829s 100.00% /recDepth=1
@@ -1804,6 +1806,7 @@ katana DONE: 15x15, 20x20, 30x30 TODO 25x25
 "Pattern(auth_wiki)30x30"                                                                               546.898s  54.00%
 "Optical_Illusion_Diagonals_Parallel(auth_ErinAero1)"                                                   550.785s 100.00%
 "Rooster(Kohout)(auth_FinalArgument)"                                                                   607.844s 100.00%
+------------------------------------------------------------------------------------------------------------------------
 "Dog(auth_MyDogsBF)"                                                                                    610.823s 100.00%
 "eye_shadow(auth_ygm)"                                                                                  656.447s 100.00%
 "Clock(Uhr)(auth_Stitch2.0)"                                                                            727.817s  37.00%

@@ -32,7 +32,7 @@ public class SudokuController {
         System.out.println(nfd.toString());
 
         Set<String> existingFilesNames = commonService
-                .listFilesUsingJavaIO("../../puzzle-solver-app/public/resources/Sudoku/");
+                .listJsonFilesUsingJavaIO("../../puzzle-solver-app/public/resources/Sudoku/");
 
         //int fileNamesSize = existingFilesNames.size();
         String[] fileNamesWithoutExtension = existingFilesNames.toArray(String[]::new);

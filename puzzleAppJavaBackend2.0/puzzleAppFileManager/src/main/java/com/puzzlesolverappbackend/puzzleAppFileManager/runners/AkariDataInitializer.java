@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.util.Set;
 
-@Component
-@Order(1)
+//@Component
+//@Order(1)
 public class AkariDataInitializer implements CommandLineRunner {
 
     @Autowired
@@ -47,7 +47,7 @@ public class AkariDataInitializer implements CommandLineRunner {
         akarisRepeated = 0;
 
         Set<String> existingAkariFilesNames = commonService
-                .listFilesUsingJavaIO(puzzlePath);
+                .listJsonFilesUsingJavaIO(puzzlePath);
 
         for (String akariFileName : existingAkariFilesNames) {
             ObjectMapper objectMapper = new ObjectMapper();

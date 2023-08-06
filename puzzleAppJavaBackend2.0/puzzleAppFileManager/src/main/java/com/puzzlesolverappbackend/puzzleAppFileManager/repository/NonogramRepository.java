@@ -21,6 +21,14 @@ public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, Jp
 
     Optional<Nonogram> findById(Integer Id);
 
+    @Query(value = "SELECT npd.source FROM nonogram_puzzles_data npd WHERE filename LIKE %:filename%",
+        nativeQuery = true)
+    String selectFileSource(@Param("filename") String filename);
+
+    @Query(value = "SELECT npd.difficulty FROM nonogram_puzzles_data npd WHERE filename LIKE %:filename%",
+            nativeQuery = true)
+    double selectFileDifficulty(@Param("filename") String filename);
+
     @Query(value = "SELECT distinct(npd.source)" +
             " FROM nonogram_puzzles_data npd",
             nativeQuery = true)
@@ -59,6 +67,15 @@ public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, Jp
     List<Nonogram> selectNonogramBySourceAndDifficulty(@Param("sources") Collection<String> sources,
                                                       @Param("minDifficulty") Double minDifficulty,
                                                       @Param("maxDifficulty") Double maxDifficulty);
+
+    @Query(value = "SELECT *" +
+            " FROM nonogram_puzzles_data npd" +
+            " WHERE source IN :sources" +
+            " AND npd.height = :size" +
+            " AND npd.width = :size",
+            nativeQuery = true)
+    List<Nonogram> selectNonogramsBySourceAndSize(@Param("sources") Collection<String> sources,
+                                                 @Param("size") Integer size);
 
     @Query(value = "SELECT *" +
             " FROM nonogram_puzzles_data npd" +

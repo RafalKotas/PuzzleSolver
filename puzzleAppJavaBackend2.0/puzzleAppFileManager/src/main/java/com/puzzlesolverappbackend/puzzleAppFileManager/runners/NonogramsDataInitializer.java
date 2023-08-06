@@ -13,9 +13,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-@Component
-@Order(4)
+//@Component
+//@Order(4)
 public class NonogramsDataInitializer implements CommandLineRunner {
 
     @Autowired
@@ -49,7 +50,7 @@ public class NonogramsDataInitializer implements CommandLineRunner {
         System.out.println("Nonograms init(4)");
 
         Set<String> existingFilesNames = commonService
-                .listFilesUsingJavaIO(puzzlePath);
+                .listJsonFilesUsingJavaIO(puzzlePath);
 
         for (String nonogramFileName : existingFilesNames) {
             ObjectMapper objectMapper = new ObjectMapper();

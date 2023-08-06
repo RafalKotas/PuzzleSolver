@@ -1,24 +1,70 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.puzzlesolverappbackend.puzzleAppFileManager.NonogramSolutionDecision;
 import com.puzzlesolverappbackend.puzzleAppFileManager.NonogramSolutionNode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.NonogramSolver;
+import com.puzzlesolverappbackend.puzzleAppFileManager.config.NonogramConfig;
+import com.puzzlesolverappbackend.puzzleAppFileManager.model.NonogramResult;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.repository.NonogramRepository;
+import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
+import java.util.Optional;
+
+import static com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService.justifiedString;
 
 @Service
 public class NonogramLogicService {
 
+    FileWriter fileWriter;
+    Gson gson;
+
     boolean showRepetitions = false;
 
+    double completionAfterHeuristics;
+    double timeAfterHeuristics;
+    double completionAfterTrialAndError;
+    double timeAfterTrialAndError;
+    double completionAfterRecursion;
+    double timeAfterRecursion;
+    int nonogramGuessDecisionsSize;
+
+    String source;
+    double difficulty;
+    int height;
+    int width;
+    int area;
+
+    int recursionDepth;
+
     public static String resourcesPath = "../../PuzzleSolver/FrontReact/public/resources/allNonogramsJSON";
+
+    @Autowired
+    NonogramRepository nonogramRepository;
+
+    public void initGson(boolean pretty) {
+        if(pretty) {
+            gson = new GsonBuilder().setPrettyPrinting().create();
+        } else {
+            gson = new Gson();
+        }
+    }
 
     // iterations through all columns
     public NonogramLogic fillOverLappingFieldsInColumnsRange (NonogramLogic nonogramLogicObject, int columnBegin, int columnEnd) {
@@ -1397,7 +1443,7 @@ public class NonogramLogicService {
     }
 
     public NonogramLogic loadSolutionFromFile(String solutionFileName, NonogramLogic placeholder) {
-        Gson gson = new Gson();
+        initGson(false);
 
         try (Reader reader = new FileReader(resourcesPath + "nonogramsSolutions/r" + solutionFileName + ".json")) {
 
@@ -1410,43 +1456,98 @@ public class NonogramLogicService {
         }
     }
 
-    public NonogramLogic runCustomSolverOperationWithCorrectnessCheck(NonogramLogic nonogramLogicObject, String solutionFileName) throws CloneNotSupportedException {
-        NonogramSolver nonogramSolver = new NonogramSolver(nonogramLogicObject, solutionFileName);
+    public NonogramLogic runCustomSolverOperationWithCorrectnessCheck(NonogramLogic nonogramLogicObject, String fileName) throws CloneNotSupportedException {
+        NonogramSolver nonogramSolver = new NonogramSolver(nonogramLogicObject, fileName);
         NonogramSolutionNode nonogramSolutionNode = new NonogramSolutionNode(nonogramLogicObject);
+
         nonogramSolver.runSolutionAtNode(nonogramSolutionNode);
+
+        completionAfterHeuristics = nonogramSolver.getCompletionAfterHeuristics();
+        timeAfterHeuristics = nonogramSolver.getTimeAfterHeuristics();
+        completionAfterTrialAndError = nonogramSolver.getCompletionAfterTrialAndError();
+        timeAfterTrialAndError = nonogramSolver.getTimeAfterTrialAndError();
+        completionAfterRecursion = nonogramSolver.getCompletionAfterRecursion();
+        timeAfterRecursion = nonogramSolver.getTimeAfterRecursion();
+        nonogramGuessDecisionsSize = nonogramSolver.getSolutionNode().getNonogramGuessDecisions().size();
+
+
+        height = nonogramLogicObject.getHeight();
+        width = nonogramLogicObject.getWidth();
+        area = nonogramLogicObject.getHeight() * nonogramLogicObject.getWidth();
+        source = nonogramRepository.selectFileSource(fileName);
+        difficulty = nonogramRepository.selectFileDifficulty(fileName);
+        recursionDepth = nonogramSolver.getRecursionDepth();
+
+        NonogramResult nonogramResult = new NonogramResult(
+                source,
+                fileName,
+                height,
+                width,
+                difficulty,
+                timeAfterHeuristics,
+                completionAfterHeuristics,
+                timeAfterTrialAndError,
+                completionAfterTrialAndError,
+                timeAfterRecursion,
+                completionAfterRecursion,
+                nonogramSolver.getSolutionNode().getNonogramGuessDecisions(),
+                recursionDepth
+        );
+
+        try {;
+            fileWriter = new FileWriter(getResultsPath()  + fileName + "-result.json");
+            fileWriter.write(nonogramResult.toString());
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println( new StringBuilder()
+                .append(String.format("%-" + 30 + "s", fileName))
+                .append(String.format("%-" + 7 + "s", source))
+                .append(String.format("%-" + ("difficulty".length() + 1) + "s", difficulty))
+                .append(String.format("%-" + ("height".length() + 1) + "s", height))
+                .append(String.format("%-" + ("width".length() + 1) + "s", width))
+                .append(String.format("%-" + ("area".length() + 1) + "s", area))
+                .append(String.format("%-" + ("TaH(s)".length() + 3) + "s", timeAfterHeuristics))
+                .append(String.format("%-" + ("CaH(%)".length() + 1) + "s", completionAfterHeuristics))
+                .append(String.format("%-" + ("heuristics_only".length() + 1) + "s", nonogramSolver.getCompletionAfterHeuristics() == 100.0 ? 1 : 0))
+                .append(String.format("%-" + ("TaTAR(s)".length() + 3) + "s", timeAfterTrialAndError))
+                .append(String.format("%-" + ("CaTAR(%)".length() + 1) + "s", completionAfterTrialAndError))
+                .append(String.format("%-" + ("dec".length() + 1) + "s", nonogramGuessDecisionsSize))
+                .append(String.format("%-" + ("heuristics_with_trial_and_error".length() + 1) + "s", nonogramSolver.getCompletionAfterTrialAndError() == 100.0 ? 1 : 0))
+                .append(String.format("%-" + ("TaR(s)".length() + 3) + "s", timeAfterRecursion))
+                .append(String.format("%-" + ("CaR(%)".length() + 1) + "s", completionAfterRecursion))
+        );
+
+        if(nonogramSolver.getSolutionNode().getNonogramGuessDecisions().size() > 0) {
+            nonogramSolver.getSolutionNode().printNodeGuessDecisions();
+        }
+
         return nonogramSolver.getSolutionLogic();
     }
 
-    public void heuristicSolveNonograms(int nonogramsNo) {
-
+    public static String getResultsPath() {
+        String nonogramsPath = InitializerConstants.NONOGRAM_RESULTS_PATH;
+        return nonogramsPath + NonogramConfig.getNonogramResultsOutputPath();
     }
 
-    // TODO class with both classes (nonogramLogic and fileDetails to collect statistical data further)
-    /*public void listAllNonograms() {
-        List<String> allNonogramFiles = Stream.of(new File(InitializerConstants.PUZZLE_RELATIVE_PATH + InitializerConstants.PuzzleMappings.NONOGRAM_PATH_SUFFIX).listFiles())
-                .filter(file -> !file.isDirectory())
-                .map(File::getName)
-                .collect(Collectors.toList());
-
-
-        NonogramLogic currentFileNonogramLogic;
-
-        for(String nonogramFileName : allNonogramFiles) {
-            try {
-                System.out.println("file: " + nonogramFileName);
-                currentFileNonogramLogic = new NonogramLogic(nonogramFileName);
-                NonogramSolver nonogramSolver = new NonogramSolver(currentFileNonogramLogic, "r" + nonogramFileName);
-
-                NonogramSolutionNode nonogramSolutionNode = new NonogramSolutionNode(currentFileNonogramLogic);
-
-                nonogramSolver.runSolutionAtNode(nonogramSolutionNode);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        System.out.println(allNonogramFiles);
-    }*/
+    public static void printHeaders() {
+        System.out.print(justifiedString(20,"filename"));
+        System.out.print(justifiedString(7,"source"));
+        System.out.print(justifiedString("difficulty".length() + 1,"difficulty"));
+        System.out.print(justifiedString("height".length() + 1,"height"));
+        System.out.print(justifiedString("width".length() + 1,"width"));
+        System.out.print(justifiedString("area".length() + 1,"area"));
+        System.out.print(justifiedString("TaH(s)".length() + 3,"TaH(s)"));
+        System.out.print(justifiedString("CaH(%)".length() + 1,"CaH(%)"));
+        System.out.print(justifiedString("heuristics_only".length() + 1, "heuristics_only"));
+        System.out.print(justifiedString("TaTAR(s)".length() + 3,"TaTAR(s)"));
+        System.out.print(justifiedString("CaTAR(%)".length() + 1,"CaTAR(%)"));
+        System.out.print(justifiedString("dec".length() + 1,"dec"));
+        System.out.print(justifiedString("heuristics_with_trial_and_error".length() + 1,
+                "heuristics_with_trial_and_error"));
+        System.out.print(justifiedString("TaR(s)".length() + 3,"TaR(s)"));
+        System.out.println(justifiedString("CaR(%)".length() + 1,"CaR(%)"));
+    }
 }
