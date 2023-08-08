@@ -13,6 +13,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.services.NonogramLogicService.rangeLength;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -1324,5 +1326,78 @@ public class NonogramLogic extends NonogramLogicParams {
 
     public boolean isSolved() {
         return this.fieldsColoured() + this.fieldsWithXPlaced() == this.area();
+    }
+
+    public void shuffleChoices() {
+        this.setAvailableChoices(shuffleNonogramResultsArray(this.getAvailableChoices()));
+    }
+
+    public void orderDecisionsBySumOfRangesLengthsToWhichPixelBelong(String order) {
+        int sumOfRowAndColumnsRangesLengthsToWhichFirstPixelBelong;
+
+        int sumOfRowAndColumnsRangesLengthsToWhichSecondPixelBelong;
+
+        NonogramSolutionDecision firstDecision;
+        NonogramSolutionDecision secondDecision;
+
+        int i, j;
+        for (i = 0; i < this.getAvailableChoices().size(); i++) {
+
+            for (j = 0; j < this.getAvailableChoices().size() - 1; j++) {
+                firstDecision = this.availableChoices.get(i);
+                sumOfRowAndColumnsRangesLengthsToWhichFirstPixelBelong = getRowAndColumnsRangesLengthsSumToWhichPixelBelong(firstDecision);
+                secondDecision = this.availableChoices.get(j);
+                sumOfRowAndColumnsRangesLengthsToWhichSecondPixelBelong = getRowAndColumnsRangesLengthsSumToWhichPixelBelong(secondDecision);
+
+                //DESC
+                if (order.equals("asc") && sumOfRowAndColumnsRangesLengthsToWhichFirstPixelBelong <= sumOfRowAndColumnsRangesLengthsToWhichSecondPixelBelong) {
+                    this.getAvailableChoices().set(i, secondDecision);
+                    this.getAvailableChoices().set(j, firstDecision);
+                }
+                //ASC
+                if (order.equals("desc") && sumOfRowAndColumnsRangesLengthsToWhichFirstPixelBelong >= sumOfRowAndColumnsRangesLengthsToWhichSecondPixelBelong) {
+                    this.getAvailableChoices().set(i, secondDecision);
+                    this.getAvailableChoices().set(j, firstDecision);
+                }
+
+            }
+        }
+    }
+
+    private int getRowAndColumnsRangesLengthsSumToWhichPixelBelong(NonogramSolutionDecision nonogramSolutionDecision) {
+        int rowIdx = nonogramSolutionDecision.getRowIdx();
+        int columnIdx = nonogramSolutionDecision.getColumnIdx();
+
+        int rangesInRowCountToWhichPixelBelong = getRangesLengthsInRowSumToWhichPixelBelong(columnIdx, rowIdx);
+        int rangesInColumnCountToWhichPixelBelong = getRangesLengthsInColumnSumToWhichPixelBelong(rowIdx, columnIdx);
+
+        return rangesInRowCountToWhichPixelBelong + rangesInColumnCountToWhichPixelBelong;
+    }
+
+    private int getRangesLengthsInRowSumToWhichPixelBelong(int columnIdx, int rowIdx) {
+        List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
+        int sum = 0;
+        for(List<Integer> rowSequenceRange : rowSequencesRanges) {
+            if(columnIdx >= rowSequenceRange.get(0) && columnIdx <= rowSequenceRange.get(1)) {
+                sum = sum + rangeLength(rowSequenceRange);
+            }
+        }
+        return sum;
+    }
+
+    private int getRangesLengthsInColumnSumToWhichPixelBelong(int rowIdx, int columnIdx) {
+        List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
+        int sum = 0;
+        for(List<Integer> columnSequenceRange :columnSequencesRanges) {
+            if(rowIdx >= columnSequenceRange.get(0) && rowIdx <= columnSequenceRange.get(1)) {
+                sum = sum + rangeLength(columnSequenceRange);
+            }
+        }
+        return sum;
+    }
+
+    public static List<NonogramSolutionDecision> shuffleNonogramResultsArray(List<NonogramSolutionDecision> decisions) {
+        Collections.shuffle(decisions);
+        return decisions;
     }
 }

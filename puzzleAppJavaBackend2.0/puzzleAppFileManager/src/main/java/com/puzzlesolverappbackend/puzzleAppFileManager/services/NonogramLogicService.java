@@ -8,7 +8,9 @@ import com.google.gson.GsonBuilder;
 import com.puzzlesolverappbackend.puzzleAppFileManager.NonogramSolutionDecision;
 import com.puzzlesolverappbackend.puzzleAppFileManager.NonogramSolutionNode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.NonogramSolver;
+import com.puzzlesolverappbackend.puzzleAppFileManager.config.DecisionMode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.config.NonogramConfig;
+import com.puzzlesolverappbackend.puzzleAppFileManager.config.RecursiveMode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.model.NonogramResult;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.repository.NonogramRepository;
@@ -31,6 +33,8 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonSer
 
 @Service
 public class NonogramLogicService {
+
+    NonogramConfig nonogramConfig = new NonogramConfig();
 
     FileWriter fileWriter;
     Gson gson;
@@ -74,6 +78,11 @@ public class NonogramLogicService {
             nonogramLogicObjectToChange = fillOverlappingFieldsInColumn(nonogramLogicObjectToChange, columnIdx);
         }
         return nonogramLogicObjectToChange;
+    }
+
+    public void changeConfig(DecisionMode decisionMode, RecursiveMode recursiveMode) {
+        nonogramConfig.setDecisionMode(decisionMode);
+        nonogramConfig.setRecursiveMode(recursiveMode);
     }
 
 
@@ -1495,7 +1504,7 @@ public class NonogramLogicService {
         );
 
         try {;
-            fileWriter = new FileWriter(getResultsPath()  + fileName + "-result.json");
+            fileWriter = new FileWriter(nonogramConfig.getResultsPath()  + fileName + "-result.json");
             fileWriter.write(nonogramResult.toString());
             fileWriter.close();
         } catch (IOException e) {
@@ -1520,16 +1529,11 @@ public class NonogramLogicService {
                 .append(String.format("%-" + ("CaR(%)".length() + 1) + "s", completionAfterRecursion))
         );
 
-        if(nonogramSolver.getSolutionNode().getNonogramGuessDecisions().size() > 0) {
-            nonogramSolver.getSolutionNode().printNodeGuessDecisions();
-        }
+//        if(nonogramSolver.getSolutionNode().getNonogramGuessDecisions().size() > 0) {
+//            nonogramSolver.getSolutionNode().printNodeGuessDecisions();
+//        }
 
         return nonogramSolver.getSolutionLogic();
-    }
-
-    public static String getResultsPath() {
-        String nonogramsPath = InitializerConstants.NONOGRAM_RESULTS_PATH;
-        return nonogramsPath + NonogramConfig.getNonogramResultsOutputPath();
     }
 
     public static void printHeaders() {

@@ -1288,7 +1288,7 @@ katana DONE: 15x15, 20x20, 30x30 TODO 25x25
 "Aim(auth_roNNin)"                                                                                       18.005s 100.00%
 "Cross(auth_Thanatroll)"                                                                                 18.015s 100.00%
 "Curly(Encaracolado)(auth_Futterwaker)"                                                                  18.029s 100.00%
-"Symmetry3(auth_wiki)"                                                                                   18.577s 100.00%
+"Symmetry3(auth_wiki)"                                                                                    18.577s 100.00%
 "Face(auth_Red_Rogue_)"                                                                                  18.639s 100.00%
 "Usb_c_loader_plug(Usb_c)(auth_Puzzlesolver)"                                                            18.701s 100.00%
 "(Face)(Me._._.)(auth_XXIxDUDxIXX)"                                                                      18.714s 100.00%
@@ -1732,7 +1732,7 @@ katana DONE: 15x15, 20x20, 30x30 TODO 25x25
 "Bottom(auth_don_Pecco)"                                                                                 15.457s 100.00%
 "Pattern_84(Irene_009)"                                                                                  18.338s 100.00%
 "Sunchild(auth_iltarusko)"                                                                               18.383s 100.00%
-"Positive_&_Negative(Mini_Relaxation_-_BW_15)"                                                           19.484s 100.00% /recDepth=2
+?"Positive_&_Negative(Mini_Relaxation_-_BW_15)"                                                           19.484s 100.00% /recDepth=2
 "Pattern_73(auth_Irene_009)"                                                                             19.932s 100.00%
 "Invisible(auth_mily75)"                                                                                 29.141s 100.00%
 "królik(rabbit)(auth_cyanida)"                                                                           30.236s 100.00%

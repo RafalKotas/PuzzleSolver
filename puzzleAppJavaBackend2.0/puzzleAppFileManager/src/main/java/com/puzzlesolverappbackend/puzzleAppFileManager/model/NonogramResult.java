@@ -123,6 +123,7 @@ public class NonogramResult {
             } else {
                 decisionListToPrint = decisionListToPrint + "\t\t" + nonogramSolutionDecision  + "\n";
             }
+            decisionNo++;
         }
         decisionListToPrint = decisionListToPrint + "\t]";
         return decisionListToPrint;

@@ -1,7 +1,10 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.runners;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.NonogramSolutionDecision;
+import com.puzzlesolverappbackend.puzzleAppFileManager.config.NonogramConfig;
 import com.puzzlesolverappbackend.puzzleAppFileManager.model.NonogramResult;
+import com.puzzlesolverappbackend.puzzleAppFileManager.repository.NonogramRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.annotation.Order;
@@ -10,48 +13,81 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService.justifiedString;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.services.NonogramLogicService.getResultsPath;
 
-@Component
-@Order(8)
+//@Component
+//@Order(8)
 public class NonogramResultsFormatter implements CommandLineRunner {
 
+    String source = "katana";
+    @Autowired
+    NonogramRepository nonogramRepository;
+    NonogramConfig nonogramConfig = new NonogramConfig();
     ObjectMapper objectMapper;
     List<NonogramResult> nonogramResults;
 
-    File resultsFolder = new File(getResultsPath());
+    File resultsFolder = new File(nonogramConfig.getResultsPath());
     File[] listOfFiles = resultsFolder.listFiles();
 
-    Double[] logiDifficulties = {1.0, 2.0, 3.0, 4.0, 5.0};
+    List<Double> difficulties;
+    List<String> dimensions;
+
+    boolean squaredimensions = true;
+
+    List<String> sources = new ArrayList<>(List.of("katana"));
 
     List<NonogramResult> allInGroup;
     List<NonogramResult> solvedLogic;
     List<NonogramResult> solvedTrialAndError;
     List<NonogramResult> solvedRecurison;
 
+    int DECISION_SIZE_LOWER_LIMIT = 10;
+    int DECISION_SIZE_UPPER_LIMIT = 50;
+
+    double TIME_LOWER_LIMIT = 60.0;
+    double TIME_UPPER_LIMIT = 180.0;
+
     @Override
     public void run(String... args) throws Exception {
         init();
         collectFilesFromResultsPath();
-
         initGroups();
 
-        collectAndPrintPercentageSolved();
-        collectAndPrintMeanSolveTime();
-        collectAndPrintMinAndMaxSolveTime();
-        collectAndPrintMeanDecisionsLength();
-        collectAndPrintMinAndMaxDecisionsLength();
-        collectAndPrintMinAndMaxProgressAfterDecision();
-        collectAndPrintMinPercentageSolvedAfterLogicOnly();
-        collectAndPrintPercentAfterLogicAndDecisionSizeCorrelation();
+        if(source.equals("logi")) {
+            collectAndPrintPercentageSolvedDifficulties();
+            collectAndPrintMeanSolveTimeDifficulties();
+            collectAndPrintMinAndMaxSolveTimeDifficulties();
+            collectAndPrintMeanDecisionsLengthDifficulties();
+            collectAndPrintMinAndMaxDecisionsLengthDifficulties();
+            collectAndPrintMinAndMaxProgressAfterDecisionDifficulties();
+            collectAndPrintMinPercentageSolvedAfterLogicOnlyDifficulties();
+            collectAndPrintPercentAfterLogicAndDecisionSizeCorrelationDifficulties();
+
+            printSelectedNonogramsToFurtherAnalysisDifficulties();
+        } else {
+            collectAndPrintPercentageSolvedDimensions();
+            collectAndPrintMeanSolveTimeDimensions();
+            collectAndPrintMinAndMaxSolveTimeDimensions();
+            collectAndPrintMeanDecisionsLengthDimensions();
+            collectAndPrintMinAndMaxDecisionsLengthDimensions();
+            collectAndPrintMinAndMaxProgressAfterDecisionDimensions();
+            collectAndPrintMinPercentageSolvedAfterLogicOnlyDimensions();
+            collectAndPrintPercentAfterLogicAndDecisionSizeCorrelationDimension();
+        }
     }
 
     public void init() {
         objectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
+        difficulties = nonogramRepository.selectNonogramDifficultiesBySource(source);
+        if(squaredimensions) {
+            dimensions = nonogramRepository.selectSquareNonogramDimensions(sources, 15);
+        } else {
+            dimensions = nonogramRepository.selectNonogramDimensions(sources);
+        }
     }
 
     public void collectFilesFromResultsPath() {
@@ -64,16 +100,20 @@ public class NonogramResultsFormatter implements CommandLineRunner {
                     nonogramResult = objectMapper.readValue(
                             file, NonogramResult.class
                     );
-                    nonogramResults.add(nonogramResult);
+
+                    if(nonogramResult.getSource().equals(source)) {
+                        nonogramResults.add(nonogramResult);
+                    }
+
                 } catch (IOException e) {
-                    System.out.println("Wrong format filename: " + file.getPath().substring(file.getPath().length() - 18));
+                    System.out.println("Wrong format filename: " + file.getPath());
                     //throw new RuntimeException(e);
                 }
             }
         }
     }
 
-    public void collectAndPrintPercentageSolved() {
+    public void collectAndPrintPercentageSolvedDifficulties() {
         System.out.println("-".repeat(100));
         System.out.println("Percentage solved in all groups, all steps: ");
 
@@ -81,20 +121,41 @@ public class NonogramResultsFormatter implements CommandLineRunner {
         double percentageTrialAndError;
         double percentageRecursion;
 
-        for(double logiDifficulty : logiDifficulties) {
-            initGroupsForDifficulty(logiDifficulty);
+        for(double difficulty : difficulties) {
+            initGroupsForDifficulty(difficulty);
 
             percentageLogic = (solvedLogic.size() * 100.0) / allInGroup.size();
             percentageTrialAndError = (solvedTrialAndError.size() * 100.0) / allInGroup.size();
             percentageRecursion = (solvedRecurison.size() * 100.0) / allInGroup.size();
 
-            System.out.printf("allInGroup(" + logiDifficulty + "): " + solvedLogic.size() + " , percentage: %.2f\n", percentageLogic);
-            System.out.printf("allInGroup(" + logiDifficulty + "): " + solvedTrialAndError.size() + " , percentage: %.2f\n", percentageTrialAndError);
-            System.out.printf("allInGroup(" + logiDifficulty + "): " + solvedRecurison.size() + " , percentage: %.2f\n\n", percentageRecursion);
+            System.out.printf("allInGroup(" + difficulty + "): " + solvedLogic.size() + " , percentage: %.2f\n", percentageLogic);
+            System.out.printf("allInGroup(" + difficulty + "): " + solvedTrialAndError.size() + " , percentage: %.2f\n", percentageTrialAndError);
+            System.out.printf("allInGroup(" + difficulty + "): " + solvedRecurison.size() + " , percentage: %.2f\n\n", percentageRecursion);
         }
     }
 
-    public void collectAndPrintMeanSolveTime() {
+    public void collectAndPrintPercentageSolvedDimensions() {
+        System.out.println("-".repeat(100));
+        System.out.println("Percentage solved in all groups, all steps: ");
+
+        double percentageLogic;
+        double percentageTrialAndError;
+        double percentageRecursion;
+
+        for(String dimension : dimensions) {
+            initGroupsForDimension(dimension);
+
+            percentageLogic = (solvedLogic.size() * 100.0) / allInGroup.size();
+            percentageTrialAndError = (solvedTrialAndError.size() * 100.0) / allInGroup.size();
+            percentageRecursion = (solvedRecurison.size() * 100.0) / allInGroup.size();
+
+            System.out.printf("allInGroup(" + dimension + "): " + solvedLogic.size() + " , percentage: %.2f\n", percentageLogic);
+            System.out.printf("allInGroup(" + dimension + "): " + solvedTrialAndError.size() + " , percentage: %.2f\n", percentageTrialAndError);
+            System.out.printf("allInGroup(" + dimension + "): " + solvedRecurison.size() + " , percentage: %.2f\n\n", percentageRecursion);
+        }
+    }
+
+    public void collectAndPrintMeanSolveTimeDifficulties() {
         System.out.println("-".repeat(100));
         System.out.println("Mean solve times in all groups, all steps: ");
 
@@ -102,8 +163,8 @@ public class NonogramResultsFormatter implements CommandLineRunner {
         double meanTimeTrialAndError;
         double meanTimeRecursion;
 
-        for(double logiDifficulty : logiDifficulties) {
-            initGroupsForDifficulty(logiDifficulty);
+        for(double difficulty : difficulties) {
+            initGroupsForDifficulty(difficulty);
 
             if(solvedLogic.size() == 0 ) {
                 meanTimeLogic = 0;
@@ -114,13 +175,38 @@ public class NonogramResultsFormatter implements CommandLineRunner {
             meanTimeTrialAndError = solvedTrialAndError.stream().mapToDouble(NonogramResult::getTimeAfterTrialAndError).sum() / solvedTrialAndError.size();
             meanTimeRecursion = solvedRecurison.stream().mapToDouble(NonogramResult::getTimeAfterRecursion).sum() / solvedRecurison.size();
 
-            System.out.printf("Nonograms solved by logic(" + logiDifficulty + "): " + solvedLogic.size() + " , meanTime: %.2f\n", meanTimeLogic);
-            System.out.printf("Nongorams solved by trial and error(" + logiDifficulty + "): " + solvedTrialAndError.size() + " , meanTime: %.2f\n", meanTimeTrialAndError);
-            System.out.printf("Nonogram solved by recursion(" + logiDifficulty + "): " + solvedRecurison.size() + " , meanTime: %.2f\n\n", meanTimeRecursion);
+            System.out.printf("Nonograms solved by logic(" + difficulty + "): " + solvedLogic.size() + " , meanTime: %.2f\n", meanTimeLogic);
+            System.out.printf("Nongorams solved by trial and error(" + difficulty + "): " + solvedTrialAndError.size() + " , meanTime: %.2f\n", meanTimeTrialAndError);
+            System.out.printf("Nonogram solved by recursion(" + difficulty + "): " + solvedRecurison.size() + " , meanTime: %.2f\n\n", meanTimeRecursion);
         }
     }
 
-    public void collectAndPrintMinAndMaxSolveTime() {
+    public void collectAndPrintMeanSolveTimeDimensions() {
+        System.out.println("-".repeat(100));
+        System.out.println("Mean solve times in all groups, all steps: ");
+
+        double meanTimeLogic;
+        double meanTimeTrialAndError;
+        double meanTimeRecursion;
+
+        for(String dimension : dimensions) {
+            initGroupsForDimension(dimension);
+
+            meanTimeLogic = solvedLogic.size() > 0 ? solvedLogic.stream().mapToDouble(NonogramResult::getTimeAfterHeuristics).sum() / solvedLogic.size() : 0;
+
+            meanTimeTrialAndError = solvedTrialAndError.size() > 0 ? solvedTrialAndError.stream().mapToDouble(NonogramResult::getTimeAfterTrialAndError).sum() / solvedTrialAndError.size() : 0;
+
+            meanTimeRecursion = solvedRecurison.size() > 0 ? solvedRecurison.stream().mapToDouble(NonogramResult::getTimeAfterRecursion).sum() / solvedRecurison.size() : 0;
+
+            System.out.printf("Nonograms solved by logic(" + dimension + "): " + solvedLogic.size() + " , meanTime: %.2f\n", meanTimeLogic);
+            System.out.printf("Nongorams solved by trial and error(" + dimension + "): " + solvedTrialAndError.size() + " , meanTime: %.2f\n", meanTimeTrialAndError);
+            System.out.printf("Nonogram solved by recursion(" + dimension + "): " + solvedRecurison.size() + " , meanTime: %.2f\n\n", meanTimeRecursion);
+        }
+    }
+
+
+
+    public void collectAndPrintMinAndMaxSolveTimeDifficulties() {
         System.out.println("-".repeat(100));
         System.out.println("Minimum and maximum solve times in all groups, all steps: ");
 
@@ -131,8 +217,8 @@ public class NonogramResultsFormatter implements CommandLineRunner {
         double minTimeRecursion;
         double maxTimeRecursion;
 
-        for(double logiDifficulty : logiDifficulties) {
-            initGroupsForDifficulty(logiDifficulty);
+        for(double difficulty : difficulties) {
+            initGroupsForDifficulty(difficulty);
 
             minTimeLogic = getMinimumTimeAfterHeuristics();
             maxTimeLogic = getMaximumTimeAfterHeuristics();
@@ -141,46 +227,113 @@ public class NonogramResultsFormatter implements CommandLineRunner {
             minTimeRecursion = getMinimumTimeAfterRecursion();
             maxTimeRecursion = getMaximumTimeAfterRecursion();
 
-            System.out.println("Minimum time to solve using only logic(" + logiDifficulty + "): " + minTimeLogic);
-            System.out.println("Maximum time to solve using only logic(" + logiDifficulty + "): " + maxTimeLogic);
-            System.out.println("Minimum time to solve using trial and error(" + logiDifficulty + "): " + minTimeTrialAndError);
-            System.out.println("Maximum time to solve using trial and error(" + logiDifficulty + "): " + maxTimeTrialAndError);
-            System.out.println("Minimum time to solve using recursive max depth 5(" + logiDifficulty + "): " + minTimeRecursion);
-            System.out.println("Minimum time to solve using recursive max depth 5(" + logiDifficulty + "): " + maxTimeRecursion + "\n");
+            System.out.println("Minimum time to solve using only logic(" + difficulty + "): " + minTimeLogic);
+            System.out.println("Maximum time to solve using only logic(" + difficulty + "): " + maxTimeLogic);
+            System.out.println("Minimum time to solve using trial and error(" + difficulty + "): " + minTimeTrialAndError);
+            System.out.println("Maximum time to solve using trial and error(" + difficulty + "): " + maxTimeTrialAndError);
+            System.out.println("Minimum time to solve using recursive max depth 5(" + difficulty + "): " + minTimeRecursion);
+            System.out.println("Minimum time to solve using recursive max depth 5(" + difficulty + "): " + maxTimeRecursion + "\n");
         }
     }
 
-    public void collectAndPrintMeanDecisionsLength() {
+    public void collectAndPrintMinAndMaxSolveTimeDimensions() {
+        System.out.println("-".repeat(100));
+        System.out.println("Minimum and maximum solve times in all groups, all steps: ");
+
+        double minTimeLogic;
+        double maxTimeLogic;
+        double minTimeTrialAndError;
+        double maxTimeTrialAndError;
+        double minTimeRecursion;
+        double maxTimeRecursion;
+
+        for(String dimension : dimensions) {
+            initGroupsForDimension(dimension);
+
+            minTimeLogic = getMinimumTimeAfterHeuristics();
+            maxTimeLogic = getMaximumTimeAfterHeuristics();
+            minTimeTrialAndError = getMinimumTimeAfterTrialAndError();
+            maxTimeTrialAndError = getMaximumTimeAfterTrialAndError();
+            minTimeRecursion = getMinimumTimeAfterRecursion();
+            maxTimeRecursion = getMaximumTimeAfterRecursion();
+
+            System.out.println("Minimum time to solve using only logic(" + dimension + "): " + minTimeLogic);
+            System.out.println("Maximum time to solve using only logic(" + dimension + "): " + maxTimeLogic);
+            System.out.println("Minimum time to solve using trial and error(" + dimension + "): " + minTimeTrialAndError);
+            System.out.println("Maximum time to solve using trial and error(" + dimension + "): " + maxTimeTrialAndError);
+            System.out.println("Minimum time to solve using recursive max depth 5(" + dimension + "): " + minTimeRecursion);
+            System.out.println("Minimum time to solve using recursive max depth 5(" + dimension + "): " + maxTimeRecursion + "\n");
+        }
+    }
+
+    public void collectAndPrintMeanDecisionsLengthDifficulties() {
         System.out.println("-".repeat(100));
         System.out.println("Mean decisions lengths in all groups, all steps: ");
 
         double meanDecisionsTrialAndError;
 
-        for(double logiDifficulty : logiDifficulties) {
-            initGroupsForDifficulty(logiDifficulty);
+        for(double difficulty : difficulties) {
+            initGroupsForDifficulty(difficulty);
 
             meanDecisionsTrialAndError = solvedTrialAndError.stream().mapToInt(NonogramResult::getDecisionsListSize).sum() / solvedTrialAndError.size();
 
-            System.out.println("Mean decisions trial and error(" + logiDifficulty + "): " + meanDecisionsTrialAndError);
+            System.out.println("Mean decisions trial and error(" + difficulty + "): " + meanDecisionsTrialAndError);
         }
         System.out.println();
     }
 
-    public void collectAndPrintMinAndMaxDecisionsLength() {
+    public void collectAndPrintMeanDecisionsLengthDimensions() {
+        System.out.println("-".repeat(100));
+        System.out.println("Mean decisions lengths in all groups, all steps: ");
+
+        double meanDecisionsTrialAndError;
+
+        for(String dimension : dimensions) {
+            initGroupsForDimension(dimension);
+
+            meanDecisionsTrialAndError = solvedTrialAndError.size() > 0 ? (solvedTrialAndError.stream().mapToInt(NonogramResult::getDecisionsListSize).sum() / solvedTrialAndError.size()) : 0.0;
+
+            System.out.println("Mean decisions trial and error(" + dimension + "): " + meanDecisionsTrialAndError);
+        }
+        System.out.println();
+    }
+
+    public void collectAndPrintMinAndMaxDecisionsLengthDifficulties() {
         System.out.println("-".repeat(100));
         System.out.println("Mean decisions lengths in all groups, all steps: ");
 
         int minDecisionsTrialAndError;
         int maxDecisionsTrialAndError;
 
-        for(double logiDifficulty : logiDifficulties) {
-            initGroupsForDifficulty(logiDifficulty);
+        for(double difficulty : difficulties) {
+            initGroupsForDifficulty(difficulty);
 
             minDecisionsTrialAndError = solvedTrialAndError.stream().mapToInt(NonogramResult::getDecisionsListSize).min().getAsInt();
             maxDecisionsTrialAndError = solvedTrialAndError.stream().mapToInt(NonogramResult::getDecisionsListSize).max().getAsInt();
 
-            System.out.println("Min decisions trial and error(" + logiDifficulty + "): " + minDecisionsTrialAndError + "\n");
-            System.out.println("Max decisions trial and error(" + logiDifficulty + "): " + maxDecisionsTrialAndError + "\n");
+            System.out.println("Min decisions trial and error(" + difficulty + "): " + minDecisionsTrialAndError + "\n");
+            System.out.println("Max decisions trial and error(" + difficulty + "): " + maxDecisionsTrialAndError + "\n");
+        }
+        System.out.println();
+    }
+
+    public void collectAndPrintMinAndMaxDecisionsLengthDimensions() {
+        System.out.println("-".repeat(100));
+        System.out.println("Mean decisions lengths in all groups, all steps: ");
+
+        int minDecisionsTrialAndError;
+        int maxDecisionsTrialAndError;
+
+        for(String dimension : dimensions) {
+            initGroupsForDimension(dimension);
+
+            minDecisionsTrialAndError = solvedTrialAndError.size() > 0 ?
+                    solvedTrialAndError.stream().mapToInt(NonogramResult::getDecisionsListSize).min().getAsInt() : 0;
+            maxDecisionsTrialAndError = solvedTrialAndError.size() > 0 ?
+                    solvedTrialAndError.stream().mapToInt(NonogramResult::getDecisionsListSize).max().getAsInt() : 0;
+
+            System.out.println("Min decisions trial and error(" + dimension + "): " + minDecisionsTrialAndError + "\n");
+            System.out.println("Max decisions trial and error(" + dimension + "): " + maxDecisionsTrialAndError + "\n");
         }
         System.out.println();
     }
@@ -263,12 +416,15 @@ public class NonogramResultsFormatter implements CommandLineRunner {
         return maximumTime;
     }
 
-    public void collectAndPrintMinAndMaxProgressAfterDecision() {
-        double minStep = 100.00;
-        double maxStep =   0.00;
+    public void collectAndPrintMinAndMaxProgressAfterDecisionDifficulties() {
+        double minStep;
+        double maxStep;
 
-        for(double logiDifficulty : logiDifficulties) {
-            initGroupsForDifficulty(logiDifficulty);
+        for(double difficulty : difficulties) {
+            initGroupsForDifficulty(difficulty);
+
+            minStep = 100.00;
+            maxStep =   0.00;
 
             for(NonogramResult nonogramResult : solvedTrialAndError) {
                 if (calculateMaxProgressAfterDecision(nonogramResult) > maxStep) {
@@ -278,8 +434,34 @@ public class NonogramResultsFormatter implements CommandLineRunner {
                     minStep = calculateMinProgressAfterDecision(nonogramResult);
                 }
             }
-            System.out.println("Min step trial and error(" + logiDifficulty + "): " + minStep + "\n");
-            System.out.println("Max step trial and error(" + logiDifficulty + "): " + maxStep + "\n");
+
+            System.out.println("Min step trial and error(" + difficulty + "): " + minStep + "\n");
+            System.out.println("Max step trial and error(" + difficulty + "): " + maxStep + "\n");
+        }
+        System.out.println();
+    }
+
+    public void collectAndPrintMinAndMaxProgressAfterDecisionDimensions() {
+        double minStep;
+        double maxStep;
+
+        for(String dimension : dimensions) {
+            initGroupsForDimension(dimension);
+
+            minStep = 100.00;
+            maxStep =   0.00;
+
+            for(NonogramResult nonogramResult : solvedTrialAndError) {
+                if (calculateMaxProgressAfterDecision(nonogramResult) > maxStep) {
+                    maxStep = calculateMaxProgressAfterDecision(nonogramResult);
+                }
+                if (calculateMinProgressAfterDecision(nonogramResult) < minStep) {
+                    minStep = calculateMinProgressAfterDecision(nonogramResult);
+                }
+            }
+
+            System.out.println("Min step trial and error(" + dimension + "): " + minStep + "\n");
+            System.out.println("Max step trial and error(" + dimension + "): " + maxStep + "\n");
         }
         System.out.println();
     }
@@ -342,12 +524,12 @@ public class NonogramResultsFormatter implements CommandLineRunner {
         return maxDecisionProgress;
     }
 
-    public void collectAndPrintMinPercentageSolvedAfterLogicOnly() {
+    public void collectAndPrintMinPercentageSolvedAfterLogicOnlyDifficulties() {
         double minSolutionPercentage;
         double maxSolutionPercentage;
 
-        for(double logiDifficulty : logiDifficulties) {
-            initGroupsForDifficulty(logiDifficulty);
+        for(double difficulty : difficulties) {
+            initGroupsForDifficulty(difficulty);
 
             minSolutionPercentage = 100.0;
             maxSolutionPercentage =   0.0;
@@ -360,32 +542,130 @@ public class NonogramResultsFormatter implements CommandLineRunner {
                     maxSolutionPercentage = nonogramResult.getPercentageCompletionAfterHeuristics();
                 }
             }
-            System.out.println("Min solution percentage after logic(" + logiDifficulty + "): " + minSolutionPercentage + "\n");
-            System.out.println("Max solution percentage after logic(" + logiDifficulty + "): " + maxSolutionPercentage + "\n");
+            System.out.println("Min solution percentage after logic(" + difficulty + "): " + minSolutionPercentage + "\n");
+            System.out.println("Max solution percentage after logic(" + difficulty + "): " + maxSolutionPercentage + "\n");
         }
         System.out.println();
     }
 
-    public void collectAndPrintPercentAfterLogicAndDecisionSizeCorrelation() {
+    public void collectAndPrintMinPercentageSolvedAfterLogicOnlyDimensions() {
+        double minSolutionPercentage;
+        double maxSolutionPercentage;
+
+        for(String dimension : dimensions) {
+            initGroupsForDimension(dimension);
+
+            minSolutionPercentage = 100.0;
+            maxSolutionPercentage =   0.0;
+
+            for(NonogramResult nonogramResult : solvedTrialAndError) {
+                if(nonogramResult.getPercentageCompletionAfterHeuristics() < minSolutionPercentage) {
+                    minSolutionPercentage = nonogramResult.getPercentageCompletionAfterHeuristics();
+                }
+                if(nonogramResult.getPercentageCompletionAfterHeuristics() > maxSolutionPercentage) {
+                    maxSolutionPercentage = nonogramResult.getPercentageCompletionAfterHeuristics();
+                }
+            }
+            System.out.println("Min solution percentage after logic(" + dimension + "): " + minSolutionPercentage + "\n");
+            System.out.println("Max solution percentage after logic(" + dimension + "): " + maxSolutionPercentage + "\n");
+        }
+        System.out.println();
+    }
+
+    public void collectAndPrintPercentAfterLogicAndDecisionSizeCorrelationDifficulties() {
         System.out.println("-".repeat(100));
 
-        for(double logiDifficulty : logiDifficulties) {
-            initGroupsForDifficulty(logiDifficulty);
-            printPercentAfterLogicAndDecisionSizeCorrelationInDifficultyGroup();
+        for(double difficulty : difficulties) {
+            initGroupsForDifficulty(difficulty);
+            printPercentAfterLogicAndDecisionSizeCorrelationForDifficultyGroup(difficulty);
         }
     }
 
-    public void printPercentAfterLogicAndDecisionSizeCorrelationInDifficultyGroup() {
+    public void collectAndPrintPercentAfterLogicAndDecisionSizeCorrelationDimension() {
+        System.out.println("-".repeat(100));
+
+        for(String dimension : dimensions) {
+            initGroupsForDimension(dimension);
+            if(solvedTrialAndError.size() > 0) {
+                printPercentAfterLogicAndDecisionSizeCorrelationForDimensionGroup(dimension);
+            }
+        }
+    }
+
+    public void printPercentAfterLogicAndDecisionSizeCorrelationForDifficultyGroup(double difficulty) {
         System.out.println("Percent after logic - decisions size: ");
 
         for(NonogramResult nonogramResult : solvedTrialAndError) {
             System.out.println(
-                    justifiedString(7, String.valueOf(nonogramResult.getDifficulty()))
+                    justifiedString(7, String.valueOf(difficulty))
                             + ", percentage after logic: " +
                     justifiedString(7, String.valueOf(nonogramResult.getPercentageCompletionAfterHeuristics()))
                             + ", dec size:" +
                     justifiedString(7, String.valueOf(nonogramResult.getDecisionsListSize()))
             );
+        }
+    }
+
+    public void printPercentAfterLogicAndDecisionSizeCorrelationForDimensionGroup(String dimension) {
+        System.out.println("Percent after logic - decisions size: ");
+
+        for(NonogramResult nonogramResult : solvedTrialAndError) {
+            System.out.println(
+                    justifiedString(7, dimension)
+                            + ", percentage after logic: " +
+                            justifiedString(7, String.valueOf(nonogramResult.getPercentageCompletionAfterHeuristics()))
+                            + ", dec size:" +
+                            justifiedString(7, String.valueOf(nonogramResult.getDecisionsListSize()))
+            );
+        }
+    }
+
+    public void printSelectedNonogramsToFurtherAnalysisDifficulties() {
+        List<NonogramResult> filteredResults = nonogramResults
+                .stream()
+                .filter(nonogramResult -> nonogramResult.getDifficulty() >= 3.0
+                    && nonogramResult.getDecisionsListSize() >= DECISION_SIZE_LOWER_LIMIT
+                    && nonogramResult.getDecisionsListSize() <= DECISION_SIZE_UPPER_LIMIT
+                    && nonogramResult.getTimeAfterTrialAndError() >= TIME_LOWER_LIMIT
+                    && nonogramResult.getTimeAfterTrialAndError() <= TIME_UPPER_LIMIT)
+                .collect(Collectors.toList());
+
+        List<NonogramResult> nonogramResultsDifficulty3 = filteredResults
+                .stream()
+                .filter(nonogramResult -> nonogramResult.getDifficulty() == 3.0)
+                .collect(Collectors.toList());
+
+        List<NonogramResult> nonogramResultsDifficulty4 = filteredResults
+                .stream()
+                .filter(nonogramResult -> nonogramResult.getDifficulty() == 4.0)
+                .collect(Collectors.toList());
+
+        List<NonogramResult> nonogramResultsDifficulty5 = filteredResults
+                .stream()
+                .filter(nonogramResult -> nonogramResult.getDifficulty() == 5.0)
+                .collect(Collectors.toList());
+
+        for(int loopsNo = 0; loopsNo < 100; loopsNo++) {
+
+            for(int size3index = 0; size3index < 5; size3index++) {
+                System.out.printf("%s ", nonogramResultsDifficulty3.get(size3index).getFilename());
+            }
+            System.out.println();
+            for(int size4index = 0; size4index < 5; size4index++) {
+                System.out.printf("%s ", nonogramResultsDifficulty4.get(size4index).getFilename());
+            }
+            System.out.println();
+            for(int size5index = 0; size5index < 5; size5index++) {
+                System.out.printf("%s ", nonogramResultsDifficulty3.get(size5index).getFilename());
+            }
+
+            nonogramResultsDifficulty3 = shuffleNonogramResultsArray(nonogramResultsDifficulty3);
+            nonogramResultsDifficulty4 = shuffleNonogramResultsArray(nonogramResultsDifficulty4);
+            nonogramResultsDifficulty5 = shuffleNonogramResultsArray(nonogramResultsDifficulty5);
+
+            System.out.println();
+            System.out.println("-".repeat(100));
+
         }
     }
 
@@ -398,7 +678,8 @@ public class NonogramResultsFormatter implements CommandLineRunner {
     public void initGroupsForDifficulty(double difficulty) {
         allInGroup = nonogramResults
                 .stream()
-                .filter(nonogramResult -> nonogramResult.getDifficulty() == difficulty)
+                .filter(nonogramResult -> nonogramResult.getDifficulty() == difficulty
+                    && nonogramResult.getSource().equals(source))
                 .collect(Collectors.toList());
         solvedLogic = allInGroup
                 .stream()
@@ -413,5 +694,31 @@ public class NonogramResultsFormatter implements CommandLineRunner {
                 .filter(nonogramResult -> nonogramResult.getPercentageCompletionAfterRecursion() == 100.0 ||
                         nonogramResult.getPercentageCompletionAfterTrialAndError() == 100.0)
                 .collect(Collectors.toList());
+    }
+
+    public void initGroupsForDimension(String dimension) {
+        allInGroup = nonogramResults
+                .stream()
+                .filter(nonogramResult -> (nonogramResult.getWidth() + "x" + nonogramResult.getHeight()).equals(dimension)
+                        && nonogramResult.getSource().equals(source))
+                .collect(Collectors.toList());
+        solvedLogic = allInGroup
+                .stream()
+                .filter(nonogramResult -> nonogramResult.getPercentageCompletionAfterHeuristics() == 100.0)
+                .collect(Collectors.toList());
+        solvedTrialAndError = allInGroup
+                .stream()
+                .filter(nonogramResult -> nonogramResult.getPercentageCompletionAfterTrialAndError() == 100.0)
+                .collect(Collectors.toList());
+        solvedRecurison = allInGroup
+                .stream()
+                .filter(nonogramResult -> nonogramResult.getPercentageCompletionAfterRecursion() == 100.0 ||
+                        nonogramResult.getPercentageCompletionAfterTrialAndError() == 100.0)
+                .collect(Collectors.toList());
+    }
+
+    public static List<NonogramResult> shuffleNonogramResultsArray(List<NonogramResult> inputList) {
+        Collections.shuffle(inputList);
+        return inputList;
     }
 }

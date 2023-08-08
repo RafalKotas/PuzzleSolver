@@ -29,6 +29,18 @@ public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, Jp
             nativeQuery = true)
     double selectFileDifficulty(@Param("filename") String filename);
 
+    @Query(value = "SELECT DISTINCT CONCAT(npd.width, 'x', npd.height) AS size" +
+            " FROM nonogram_puzzles_data npd WHERE source IN :sources AND height % 5 = 0 AND width % 5 = 0" +
+            " ORDER BY length(size), size",
+            nativeQuery = true)
+    List<String> selectNonogramDimensions(@Param("sources") Collection<String> sources);
+
+    @Query(value = "SELECT DISTINCT CONCAT(npd.width, 'x', npd.height) AS size" +
+            " FROM nonogram_puzzles_data npd WHERE source IN :sources AND height % 5 = 0 AND width % 5 = 0 AND height = width AND height >= :minSize" +
+            " ORDER BY length(size), size",
+            nativeQuery = true)
+    List<String> selectSquareNonogramDimensions(@Param("sources") Collection<String> sources, @Param("minSize") Integer minSize);
+
     @Query(value = "SELECT distinct(npd.source)" +
             " FROM nonogram_puzzles_data npd",
             nativeQuery = true)
@@ -48,6 +60,11 @@ public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, Jp
             " FROM nonogram_puzzles_data npd",
             nativeQuery = true)
     List<Double> selectNonogramDifficulties();
+
+    @Query(value = "SELECT distinct(npd.difficulty)" +
+            " FROM nonogram_puzzles_data npd WHERE npd.source LIKE %:source%",
+            nativeQuery = true)
+    List<Double> selectNonogramDifficultiesBySource(@Param("source") String source);
 
     @Query(value = "SELECT distinct(npd.width)" +
             " FROM nonogram_puzzles_data npd",
