@@ -1,6 +1,7 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager;
 
 
+import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzleAppFileManager.logs.nonogram.NonogramNodeLog;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
 import lombok.AllArgsConstructor;
@@ -18,63 +19,44 @@ public class NonogramSolutionNode {
     private NonogramLogic nonogramSolution;
     private List<NonogramSolutionDecision> nonogramGuessDecisions;
     private List<NonogramSolutionDecision> nonogramRecursionDecisions;
-    private NonogramSolutionNode parentNode;
-    private NonogramSolutionNode leftNode;
-    private NonogramSolutionNode rightNode;
 
     // log of taken actions (heuristics, guesses decisions, and in nodeHeight > 0 also recursion decisions)
     private List<NonogramNodeLog> nodeLogs;
 
     public NonogramSolutionNode(NonogramLogic nonogramLogic) {
-        this.nonogramLogic = nonogramLogic;
+        Gson gson = new Gson();
+        this.nonogramLogic = gson.fromJson(gson.toJson(nonogramLogic), NonogramLogic.class);
+        this.nonogramSolution = gson.fromJson(gson.toJson(nonogramLogic), NonogramLogic.class);
         this.nonogramGuessDecisions = new ArrayList<>();
+        this.nonogramRecursionDecisions = new ArrayList<>();
         this.nodeLogs = new ArrayList<>();
-        this.parentNode = null;
-        this.leftNode = null;
-        this.rightNode = null;
     }
 
     public NonogramSolutionNode(NonogramLogic nonogramLogic, NonogramSolutionNode parentNode,
                                 NonogramSolutionDecision nonogramSolutionDecision) {
         this.nonogramLogic = nonogramLogic;
-        this.parentNode = parentNode;
 
         List<NonogramSolutionDecision> childDecisions = new ArrayList<>(parentNode.getNonogramGuessDecisions());
         childDecisions.add(nonogramSolutionDecision);
         this.nonogramGuessDecisions = childDecisions;
-
-        this.leftNode = null;
-        this.rightNode = null;
     }
 
     public NonogramSolutionNode(NonogramSolutionNode nodeToCopy, NonogramSolutionDecision decision) throws CloneNotSupportedException {
         NonogramSolutionNode tmpNode = (NonogramSolutionNode) nodeToCopy.clone();
         this.nonogramLogic = tmpNode.getNonogramLogic();
-        this.parentNode = tmpNode;
         List<NonogramSolutionDecision> decisionList = new ArrayList<>(tmpNode.getNonogramGuessDecisions());
         decisionList.add(decision);
         this.nonogramGuessDecisions = decisionList;
-        this.leftNode = null;
-        this.rightNode = null;
-    }
-
-    public NonogramSolutionNode() {
-        this.leftNode = null;
-        this.rightNode = null;
     }
 
     public void setLeftNode(NonogramSolutionNode node, NonogramSolutionDecision decision) {
-        this.leftNode = node;
         List<NonogramSolutionDecision> leftNodeSolutionDecisions = this.nonogramGuessDecisions;
         leftNodeSolutionDecisions.add(decision);
-        this.leftNode.nonogramGuessDecisions = leftNodeSolutionDecisions;
     }
 
     public void setRightNode(NonogramSolutionNode node, NonogramSolutionDecision decision) {
-        this.rightNode = node;
         List<NonogramSolutionDecision> rightNodeSolutionDecisions = this.nonogramGuessDecisions;
         rightNodeSolutionDecisions.add(decision);
-        this.leftNode.nonogramGuessDecisions = rightNodeSolutionDecisions;
     }
 
     public void addDecision(NonogramSolutionDecision decision) {
@@ -91,13 +73,12 @@ public class NonogramSolutionNode {
 
     @Override
     public String toString() {
-        NonogramSolutionDecision lastDecision = null;
-        if(nonogramGuessDecisions.size() > 0) {
-            lastDecision = nonogramGuessDecisions.get(nonogramGuessDecisions.size() - 1);
-        }
         return "NonogramSolutionNode{" +
-                ", lastDecision=" + lastDecision +
-                ", invalidSolution=" + nonogramLogic.isSolutionInvalid() +
+                "nonogramLogic=" + nonogramLogic +
+                ", nonogramSolution=" + nonogramSolution +
+                ", nonogramGuessDecisions=" + nonogramGuessDecisions +
+                ", nonogramRecursionDecisions=" + nonogramRecursionDecisions +
+                ", nodeLogs=" + nodeLogs +
                 '}';
     }
 
@@ -107,33 +88,6 @@ public class NonogramSolutionNode {
             lastDecision = Optional.ofNullable(this.nonogramGuessDecisions.get(this.nonogramGuessDecisions.size() - 1));
         }
         return lastDecision;
-    }
-
-    public void makeBasicSolverActions() {
-
-        int stepsMadeAtStart;
-        int stepsMadeAtEnd;
-
-        //conditions
-        boolean stepsCountDiffered;
-        boolean solutionInvalid;
-
-        //System.out.println("Nonogram filename: " + this);
-
-        do {
-            stepsMadeAtStart = this.getNonogramLogic().getNewStepsMade();
-
-            for(int actionNo = 1; actionNo < 19; actionNo++) {
-                this.getNonogramLogic().basicSolve(actionNo);
-            }
-
-            stepsMadeAtEnd = this.getNonogramLogic().getNewStepsMade();
-
-            stepsCountDiffered = stepsMadeAtStart != stepsMadeAtEnd;
-            solutionInvalid = this.getNonogramLogic().isSolutionInvalid();
-        } while (
-                stepsCountDiffered && !solutionInvalid
-        );
     }
 
     public void colourOrPlaceX() {
@@ -165,5 +119,173 @@ public class NonogramSolutionNode {
             System.out.println(decisionNo + " : " + decision);
             decisionNo++;
         }
+    }
+
+    public void makeBasicSolverActions() {
+
+        boolean solutionInvalid;
+
+        boolean sequencesRangesDiffered;
+        boolean solutionBoardsDiffered;
+        boolean sequenceIndexesNotToIncludeAddedCondition;
+
+        do {
+            NonogramLogic logicBeforeActionsMade = copyNonogramLogic();
+
+            for(int actionNo = 1; actionNo <= 18; actionNo++) {
+                this.getNonogramLogic().basicSolve(actionNo);
+            }
+
+            solutionInvalid = this.getNonogramLogic().isSolutionInvalid();
+
+            NonogramLogic logicAfterActionsMade = copyNonogramLogic();
+
+            System.out.println(logicBeforeActionsMade.getRowsSequencesRanges());
+            System.out.println(logicAfterActionsMade.getRowsSequencesRanges());
+            System.out.println(logicBeforeActionsMade.getColumnsSequencesRanges());
+            System.out.println(logicAfterActionsMade.getColumnsSequencesRanges());
+            sequencesRangesDiffered = sequencesRangesAfterActionsMadeDiffers(logicBeforeActionsMade, logicAfterActionsMade);
+
+            solutionBoardsDiffered = solutionBoardsDiffers(logicBeforeActionsMade.getNonogramSolutionBoard(),
+                    logicAfterActionsMade.getNonogramSolutionBoard());
+
+            sequenceIndexesNotToIncludeAddedCondition = sequenceIndexesNotToIncludeAdded(logicBeforeActionsMade, logicAfterActionsMade);
+            System.out.println("sequencesRangesDiffered: " + sequencesRangesDiffered + " \n solutionBoardDiffered: " + solutionBoardsDiffered +
+                    " \n sequenceIndexesNotToIncludeAddedCondition: " + sequenceIndexesNotToIncludeAddedCondition + " \n solutionInvalid: " + solutionInvalid
+                    + " \n completionPercentage: " + this.getNonogramLogic().getCompletionPercentage());
+        } while (
+                (sequencesRangesDiffered || solutionBoardsDiffered || sequenceIndexesNotToIncludeAddedCondition)
+                        && !solutionInvalid && this.getNonogramLogic().getCompletionPercentage()!=100
+        );
+    }
+
+    private boolean sequencesRangesAfterActionsMadeDiffers(NonogramLogic logicBeforeActionsMade, NonogramLogic logicAfterActionsMade) {
+        boolean sequencesRangesAfterActionsMadeDiffersInRows = sequencesRangesAfterActionsMadeDiffersInSection(
+                logicBeforeActionsMade.getRowsSequencesRanges(),
+                logicAfterActionsMade.getRowsSequencesRanges()
+        );
+        System.out.println("differs in rows: " + sequencesRangesAfterActionsMadeDiffersInRows);
+        boolean sequencesRangesAfterActionsMadeDiffersInColumns = sequencesRangesAfterActionsMadeDiffersInSection(
+                logicBeforeActionsMade.getColumnsSequencesRanges(),
+                logicAfterActionsMade.getColumnsSequencesRanges()
+        );
+        System.out.println("differs in columns: " + sequencesRangesAfterActionsMadeDiffersInColumns);
+        return sequencesRangesAfterActionsMadeDiffersInRows || sequencesRangesAfterActionsMadeDiffersInColumns;
+    }
+
+    private boolean sequencesRangesAfterActionsMadeDiffersInSection(List<List<List<Integer>>> sequencesRangesBefore, List<List<List<Integer>>> sequencesRangesAfter) {
+
+        Iterator<List<List<Integer>>> logicBeforeActionsMadeRowsSequencesRangesIterator = sequencesRangesBefore.iterator();
+        Iterator<List<List<Integer>>> logicAfterActionsMadeRowsSequencesRangesIterator = sequencesRangesAfter.iterator();
+
+        while(logicBeforeActionsMadeRowsSequencesRangesIterator.hasNext() && logicAfterActionsMadeRowsSequencesRangesIterator.hasNext()) {
+
+            List<List<Integer>> logicBeforeActionsMadeRowSequencesRanges = logicBeforeActionsMadeRowsSequencesRangesIterator.next();
+            List<List<Integer>> logicAfterActionsMadeRowSequencesRanges = logicAfterActionsMadeRowsSequencesRangesIterator.next();
+
+            if(!NonogramSolutionNode.sequencesRangesEqual(logicBeforeActionsMadeRowSequencesRanges, logicAfterActionsMadeRowSequencesRanges)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean sequencesRangesEqual(List<List<Integer>> sequencesRanges_A, List<List<Integer>> sequenceRanges_B) {
+        Iterator<List<Integer>> sequencesRanges_AIterator = sequencesRanges_A.iterator();
+        Iterator<List<Integer>> sequenceRanges_BIterator = sequenceRanges_B.iterator();
+
+        List<Integer> sequenceRange_A;
+        List<Integer> sequenceRange_B;
+
+        while(sequencesRanges_AIterator.hasNext() && sequenceRanges_BIterator.hasNext()) {
+            sequenceRange_A = sequencesRanges_AIterator.next();
+            sequenceRange_B = sequenceRanges_BIterator.next();
+            if(!rangesEqual(sequenceRange_A, sequenceRange_B)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean solutionBoardsDiffers(List<List<String>> solutionBoard_A, List<List<String>> solutionBoard_B) {
+        Iterator<List<String>> solutionBoard_ARowsIterator = solutionBoard_A.iterator();
+        Iterator<List<String>> solutionBoard_BRowsIterator = solutionBoard_B.iterator();
+
+        List<String> solutionBoard_ARow;
+        List<String> solutionBoard_BRow;
+
+        while(solutionBoard_ARowsIterator.hasNext() && solutionBoard_BRowsIterator.hasNext()) {
+            solutionBoard_ARow = solutionBoard_ARowsIterator.next();
+            solutionBoard_BRow = solutionBoard_BRowsIterator.next();
+
+            if(solutionBoardRowsDiffers(solutionBoard_ARow, solutionBoard_BRow)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean solutionBoardRowsDiffers(List<String> solutionBoard_ARow, List<String> solutionBoard_BRow) {
+        Iterator<String> solutionBoard_ARowIterator = solutionBoard_ARow.iterator();
+        Iterator<String> solutionBoard_BRowIterator = solutionBoard_BRow.iterator();
+
+        String rowField_A;
+        String rowField_B;
+
+        while(solutionBoard_ARowIterator.hasNext() && solutionBoard_BRowIterator.hasNext()) {
+            rowField_A = solutionBoard_ARowIterator.next();
+            rowField_B = solutionBoard_BRowIterator.next();
+            if(!rowField_A.equals(rowField_B)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean sequenceIndexesNotToIncludeAdded(NonogramLogic logicBeforeActionsMade, NonogramLogic logicAfterActionsMade) {
+        boolean sequencesIndexesSizeNotToIncludeAddedInRowsChanged = sequenceIndexesNotToIncludeAddedOneDimension(
+                logicBeforeActionsMade.getRowsSequencesIdsNotToInclude(), logicAfterActionsMade.getRowsSequencesIdsNotToInclude());
+        boolean sequencesIndexesSizeNotToIncludeAddedInColumnsChanged = sequenceIndexesNotToIncludeAddedOneDimension(
+                logicBeforeActionsMade.getColumnsSequencesIdsNotToInclude(), logicAfterActionsMade.getColumnsSequencesIdsNotToInclude());
+
+        return sequencesIndexesSizeNotToIncludeAddedInRowsChanged || sequencesIndexesSizeNotToIncludeAddedInColumnsChanged;
+    }
+
+    public boolean sequenceIndexesNotToIncludeAddedOneDimension(List<List<Integer>> sequencesIdsNotToIncludeBefore, List<List<Integer>> sequencesIdsNotToIncludeAfter) {
+
+        Iterator<List<Integer>> sequencesIdsNotToIncludeBeforeActionsMadeIterator = sequencesIdsNotToIncludeBefore.iterator();
+        Iterator<List<Integer>> sequencesIdsNotToIncludeAfterActionsMadeIterator = sequencesIdsNotToIncludeAfter.iterator();
+
+        List<Integer> sequencesIdsNotToIncludeBeforeActionsMade;
+        List<Integer> sequencesIdsNotToIncludeAfterActionsMade;
+
+        while(sequencesIdsNotToIncludeBeforeActionsMadeIterator.hasNext() && sequencesIdsNotToIncludeAfterActionsMadeIterator.hasNext()) {
+            sequencesIdsNotToIncludeBeforeActionsMade = sequencesIdsNotToIncludeBeforeActionsMadeIterator.next();
+            sequencesIdsNotToIncludeAfterActionsMade = sequencesIdsNotToIncludeAfterActionsMadeIterator.next();
+
+            // ids not to include differs only if size of Lists differs (ids are sorted ascending)
+            if(!(sequencesIdsNotToIncludeBeforeActionsMade.size() == sequencesIdsNotToIncludeAfterActionsMade.size()) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /***
+     * range_A in format [A_1, A_2]
+     * range_B in format [B_1, B_2]
+     ***/
+    public static boolean rangesEqual(List<Integer> range_A, List<Integer> range_B) {
+        return Objects.equals(range_A.get(0), range_B.get(0)) && Objects.equals(range_A.get(1), range_B.get(1));
+    }
+
+    private NonogramLogic copyNonogramLogic() {
+        Gson gson = new Gson();
+        return gson.fromJson(gson.toJson(this.getNonogramLogic()), NonogramLogic.class);
     }
 }

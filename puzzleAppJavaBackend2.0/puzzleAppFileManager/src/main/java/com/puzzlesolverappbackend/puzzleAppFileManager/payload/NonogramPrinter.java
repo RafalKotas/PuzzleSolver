@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Getter
 @Setter
@@ -14,7 +15,10 @@ public class NonogramPrinter extends NonogramLogicParams implements NonogramLogi
      * prints nonogramSolutionBoard(only "X"/"O"/"-") in readable format
      */
     public void printNonogramBoard() {
-        for(List<String> boardRow : this.getNonogramSolutionBoard()) {
+        List<String> rowsWithIndexes = IntStream.range(0, this.getNonogramSolutionBoard().size())
+                .mapToObj(rowIndex -> this.getNonogramSolutionBoard().get(rowIndex) + " " + rowIndex)
+                .toList();
+        for(String boardRow : rowsWithIndexes) {
             System.out.println(boardRow);
         }
     }

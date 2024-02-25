@@ -1,0 +1,15 @@
+{
+	"filename" : "more_than_one_solutions.json",
+	"source" : "src",
+	"year" : "2023",
+	"month" : "07",
+	"difficulty" : 3.0,
+	"height" : 5,
+	"width" : 5,
+	"rowSequences" : [
+		[1], [1], [1], [1], [1]
+	],
+	"columnSequences" : [
+		[1], [1], [1], [1], [1]
+	]
+}

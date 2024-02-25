@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -86,7 +85,6 @@ public class NonogramGenetic {
                 nonogramBoardRow =  generateRandomRowArray(populationMember, rowIdx);
 
                 populationMember = populationMember.setNonogramBoardRow(rowIdx, nonogramBoardRow);
-                populationMember.setNonogramPrinter(new NonogramPrinter(populationMember));
             }
 
             if(boardInPopulationUnique(populationMember.getNonogramSolutionBoard(), currentPopulation)) {
@@ -243,7 +241,6 @@ public class NonogramGenetic {
                         if(firstLessOrEqualElementIndex != populationCount) {
                             nextPopulation.add(firstLessOrEqualElementIndex, firstChild);
                             if(firstChild.subsolutionBoardCorrectComparisonWithSolutionBoard("r" + InitializerConstants.PUZZLE_NAME)) {
-                                firstChild.setNonogramPrinter(new NonogramPrinter(firstChild));
                                 setSolutionFound(true);
                             }
                             maxCorrectFieldsInColumnsSums.add(firstLessOrEqualElementIndex, firstChildMaxPossibleCorrectFieldsSum);
@@ -285,8 +282,6 @@ public class NonogramGenetic {
             System.out.println("iterationNo: " + iterationNo + " solution not found...");
         } else {
             System.out.println("Solution found: ");
-            nextPopulation.get(0).setNonogramPrinter(new NonogramPrinter(nextPopulation.get(0)));
-            nextPopulation.get(0).getNonogramPrinter().printNonogramBoard();
         }
     }
 

@@ -1,12 +1,11 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.runners;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.model.Slitherlink;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.SlitherlinkFileDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.repository.SlitherlinkRepository;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -18,10 +17,9 @@ import java.util.Set;
 @Order(5)
 public class SlitherlinkDataInitializer implements CommandLineRunner {
 
-    @Autowired
-    private SlitherlinkRepository SlitherlinkRepository;
+    private final SlitherlinkRepository SlitherlinkRepository;
 
-    @Autowired
+    final
     CommonService commonService;
 
     Slitherlink Slitherlink;
@@ -39,6 +37,11 @@ public class SlitherlinkDataInitializer implements CommandLineRunner {
 
     public final static String puzzlePath = InitializerConstants.PUZZLE_RELATIVE_PATH +
             InitializerConstants.PuzzleMappings.SLITHERLINK_PATH_SUFFIX;
+
+    public SlitherlinkDataInitializer(SlitherlinkRepository SlitherlinkRepository, CommonService commonService) {
+        this.SlitherlinkRepository = SlitherlinkRepository;
+        this.commonService = commonService;
+    }
 
     @Override
     public void run(String... args) throws Exception {

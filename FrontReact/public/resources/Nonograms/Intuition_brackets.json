@@ -1,0 +1,17 @@
+{
+	"filename" : "Intuition_brackets.json",
+	"source" : "katana",
+	"year" : "N/D",
+	"month" : "N/D",
+	"difficulty" : 2.8,
+	"height" : 7,
+	"width" : 7,
+	"rowSequences" : [
+		[2, 1], [1, 1, 1], [1], [1, 1], [1], 
+		[1, 1, 1], [1, 2]
+	],
+	"columnSequences" : [
+		[1, 2], [1, 1, 1], [1], [1, 1], [1], 
+		[2, 1], [1, 1, 1]
+	]
+}

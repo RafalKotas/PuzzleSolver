@@ -1,24 +1,23 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.model;
 
+import jakarta.persistence.*;
+import jakarta.persistence.metamodel.StaticMetamodel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.awt.print.Book;
-
-import javax.persistence.*;
-import javax.persistence.metamodel.StaticMetamodel;
-
 @Entity
-@Table(name = "nonogramPuzzlesData")
+@Table(name = "nonogram_puzzles_data")
 @StaticMetamodel(Nonogram.class)
 @ToString
 @NoArgsConstructor
 @Setter
+@Getter
 public class Nonogram {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "filename")

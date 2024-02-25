@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.NonogramLogicService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +20,12 @@ import java.util.List;
 @RequestMapping("/api/nonogram/logic")
 public class NonogramLogicController {
 
-    @Autowired
+    final
     NonogramLogicService nonogramLogicService;
+
+    public NonogramLogicController(NonogramLogicService nonogramLogicService) {
+        this.nonogramLogicService = nonogramLogicService;
+    }
 
     @PostMapping("/init")
     public ResponseEntity<NonogramLogic> initNonogramLogicObject(@Valid @RequestBody NonogramLogic nonogramLogic) {
@@ -93,14 +96,14 @@ public class NonogramLogicController {
     }
 
     @PostMapping("/customSolutionPart")
-    public ResponseEntity<NonogramLogic> customSolutionPart(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String solutionFileName) throws CloneNotSupportedException {
+    public ResponseEntity<NonogramLogic> customSolutionPart(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String solutionFileName) {
         System.out.println("Custom solver endpoint");
 
         NonogramLogic logicWithAffectedRowsAndColumns = new NonogramLogic(
                 nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences());
 
         return new ResponseEntity<>(
-                nonogramLogicService.runCustomSolverOperationWithCorrectnessCheck(logicWithAffectedRowsAndColumns, solutionFileName),
+                nonogramLogicService.runSolverWithCorrectnessCheck(logicWithAffectedRowsAndColumns, solutionFileName),
                 HttpStatus.OK);
     }
 

@@ -1,0 +1,15 @@
+{
+	"filename" : "example-square.json",
+	"source" : "example",
+	"year" : "N/D",
+	"month" : "N/D",
+	"difficulty" : 1.0,
+	"height" : 5,
+	"width" : 5,
+	"rowSequences" : [
+		[5], [1, 1], [1, 1], [1, 1], [5]
+	],
+	"columnSequences" : [
+		[5], [1, 1], [1, 1], [1, 1], [5]
+	]
+}

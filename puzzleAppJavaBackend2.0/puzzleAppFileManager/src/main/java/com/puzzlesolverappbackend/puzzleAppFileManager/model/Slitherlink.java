@@ -1,14 +1,15 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.model;
 
+import jakarta.persistence.*;
+import jakarta.persistence.metamodel.StaticMetamodel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
-import javax.persistence.metamodel.StaticMetamodel;
+
 
 @Entity
-@Table(name = "slitherlinkPuzzlesData")
+@Table(name = "slitherlink_puzzles_data")
 @StaticMetamodel(Slitherlink.class)
 @ToString
 @NoArgsConstructor

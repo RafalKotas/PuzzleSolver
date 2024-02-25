@@ -1,5 +1,5 @@
 //react
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 
 // redux
 import { connect, ConnectedProps } from "react-redux"
@@ -14,7 +14,7 @@ import { SetCorrectness } from "../../../../../../../store/data/nonogram"
 import ActionVariants from "./ActionVariants/ActionVariants"
 
 // material-ui
-import { Button, Tab, Tabs, Tooltip } from "@mui/material"
+import { Tab, Tabs, Tooltip } from "@mui/material"
 import { makeStyles } from "@material-ui/core"
 
 // others
@@ -25,7 +25,7 @@ import "./ActionsSelect.css"
 
 // fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { InitializeSolverData, nonogramBoardMarks, ResetLogicDataInitialized, SetCurrentNonogramMark } from "../../../../../../../store/puzzleLogic/nonogram"
+import { InitializeSolverData, nonogramBoardMarks, SetCurrentNonogramMark } from "../../../../../../../store/puzzleLogic/nonogram"
 
 const useStyles = makeStyles((theme) => ({
     listItemRoot: {
@@ -48,8 +48,7 @@ interface OwnSolverActionsPanelProps {
 
 const mapStateToProps = (state: AppState) => ({
     selectedNonogram: state.nonogramDataReducer.selectedNonogram,
-    correctIndicator: state.nonogramDataReducer.nonogramCorrect,
-    logicDataInitialized: state.nonogramLogicReducer.logicDataInitialized
+    correctIndicator: state.nonogramDataReducer.nonogramCorrect
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -57,8 +56,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
         dispatch(SetCorrectness(correct)),
     setCurrentNonogramMark: (mark : nonogramBoardMarks) =>
         dispatch(SetCurrentNonogramMark(mark)),
-    initializeSolverData: (rowsSequences: number[][], columnsSequences: number[][]) => dispatch(InitializeSolverData(rowsSequences, columnsSequences)),
-    resetLogicDataInitializationMark: () => dispatch(ResetLogicDataInitialized())
+    initializeSolverData: (rowsSequences: number[][], columnsSequences: number[][]) => dispatch(InitializeSolverData(rowsSequences, columnsSequences))
 })
 
 const connector = connect(mapStateToProps, mapDispatchToProps)
@@ -67,8 +65,8 @@ type SolverActionsPanelPropsFromRedux = ConnectedProps<typeof connector>
 
 type SolverActionsPanelProps = SolverActionsPanelPropsFromRedux & OwnSolverActionsPanelProps
 
-const SolverActionsPanel: React.FC<SolverActionsPanelProps> = ({selectedNonogram, correctIndicator, logicDataInitialized, 
-    setCurrentNonogramMark, initializeSolverData, resetLogicDataInitializationMark }) => {
+const SolverActionsPanel: React.FC<SolverActionsPanelProps> = ({selectedNonogram, correctIndicator, 
+    setCurrentNonogramMark }) => {
 
     const classes = useStyles()
 
@@ -77,22 +75,9 @@ const SolverActionsPanel: React.FC<SolverActionsPanelProps> = ({selectedNonogram
     const onActionTabChange = (event: React.SyntheticEvent<Element, Event>, value: number) => {
         setSelectedActionTypeIdx(value)
     }
-
-    const initializeNonogramLogicData = () => {
-        if(selectedNonogram) {
-            let { rowSequences, columnSequences } = selectedNonogram
-            initializeSolverData(rowSequences, columnSequences)
-        }
-    }
-
-    useEffect(() => {
-        resetLogicDataInitializationMark()
-        //eslint-disable-next-line
-    }, [])
     
     return (
         <div id="nonogram-actions-select">
-            {!logicDataInitialized && <Button variant="contained" onClick={() => initializeNonogramLogicData()}>INITIALIZE DATA</Button>}
             <Tabs value={selectedActionTypeIdx}
                 classes={{flexContainer: classes.tabsContainer}}
                 onChange={(event: React.SyntheticEvent<Element, Event>, value: number) => onActionTabChange(event, value)}

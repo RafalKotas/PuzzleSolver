@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### resources outputs ###
+**/src/main/resources/to_store/
+/results/

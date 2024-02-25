@@ -1,14 +1,15 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.repository;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.model.Akari;
 import com.puzzlesolverappbackend.puzzleAppFileManager.model.Hitori;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface HitoriRepository extends JpaRepository<Hitori, Integer> {
 
     List<Hitori> findAll();

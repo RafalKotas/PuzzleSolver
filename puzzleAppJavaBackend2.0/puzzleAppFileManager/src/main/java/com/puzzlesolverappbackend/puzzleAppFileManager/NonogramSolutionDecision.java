@@ -2,13 +2,15 @@ package com.puzzlesolverappbackend.puzzleAppFileManager;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class NonogramSolutionDecision {
-    String decisionMarker; // "XXXX" or "OOOO"
+    String decisionMarker; // "X" or "O"
     int rowIdx;
     int columnIdx;
 

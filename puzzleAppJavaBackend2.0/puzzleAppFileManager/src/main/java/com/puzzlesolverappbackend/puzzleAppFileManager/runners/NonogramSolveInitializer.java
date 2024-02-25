@@ -10,8 +10,6 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.services.NonogramLogicSer
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.NonogramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -650,7 +648,7 @@ public class NonogramSolveInitializer implements CommandLineRunner {
 
             if(!filesTooLongSolving.contains(filename)) {
                 long start = System.currentTimeMillis();
-                nonogramLogicSolved = nonogramLogicService.runCustomSolverOperationWithCorrectnessCheck(nonogramLogicToSolve,
+                nonogramLogicSolved = nonogramLogicService.runSolverWithCorrectnessCheck(nonogramLogicToSolve,
                         filename + ".json");
                 long finish = System.currentTimeMillis();
                 long timeElapsed = finish - start;

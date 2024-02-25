@@ -1,0 +1,19 @@
+{
+	"filename" : "Polar_bear_in_a_snow_storm(auth_Magic1900).json",
+	"source" : "katana",
+	"year" : "N/D",
+	"month" : "N/D",
+	"difficulty" : 2.0,
+	"height" : 13,
+	"width" : 13,
+	"rowSequences" : [
+		[0], [2, 2], [1, 1], [0], [1, 1], 
+		[0], [3], [3], [1], [0], 
+		[1], [1, 1], [0]
+	],
+	"columnSequences" : [
+		[0], [2], [1], [0], [1], 
+		[2, 1], [3, 1], [2, 1], [1], [0], 
+		[1], [2], [0]
+	]
+}

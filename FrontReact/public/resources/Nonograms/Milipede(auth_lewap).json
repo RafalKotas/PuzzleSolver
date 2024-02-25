@@ -1,0 +1,17 @@
+{
+	"filename" : "Milipede(auth_lewap).json",
+	"source" : "katana",
+	"year" : "N/D",
+	"month" : "N/D",
+	"difficulty" : 2.0,
+	"height" : 10,
+	"width" : 10,
+	"rowSequences" : [
+		[0], [2, 1], [3, 1], [3, 1], [1, 3, 1], 
+		[1, 3, 1], [1, 3], [1, 3], [1, 2], [0]
+	],
+	"columnSequences" : [
+		[0], [2, 1], [3, 1], [3, 1], [1, 3, 1], 
+		[1, 3, 1], [1, 3], [1, 3], [1, 2], [0]
+	]
+}

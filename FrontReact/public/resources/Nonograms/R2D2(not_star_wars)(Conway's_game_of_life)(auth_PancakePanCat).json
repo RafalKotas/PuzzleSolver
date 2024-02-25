@@ -1,0 +1,19 @@
+{
+	"filename" : "R2D2(not_star_wars)(Conway's_game_of_life)(auth_PancakePanCat).json",
+	"source" : "katana",
+	"year" : "N/D",
+	"month" : "N/D",
+	"difficulty" : 2.6,
+	"height" : 12,
+	"width" : 13,
+	"rowSequences" : [
+		[2, 2], [2, 1, 2], [1, 1, 1, 1], [1, 1, 1], [1, 1, 1], 
+		[2, 1, 1, 2], [2, 1, 1, 2], [1, 1], [1, 1, 1], [1, 1, 1, 1], 
+		[2, 1, 2], [2, 2]
+	],
+	"columnSequences" : [
+		[3, 3], [2, 2, 2], [2], [0], [6], 
+		[1, 1], [1, 2, 1, 1], [1, 1], [6], [0], 
+		[2], [2, 2, 2], [3, 3]
+	]
+}

@@ -123,7 +123,7 @@ const SequencesModifier: React.FC<SequencesModifierProps> = ({ maxRowModifyIndex
   }
 
   const sequencesInDesiredFormat = (sequences: string) => {
-    return sequences.split(" ").map((sequence) => parseInt(sequence))
+    return sequences.trim().split(" ").map((sequence) => parseInt(sequence))
   }
 
   return (

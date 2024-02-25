@@ -1,0 +1,17 @@
+{
+	"filename" : "Superman(auth_Matan_Yamin).json",
+	"source" : "katana",
+	"year" : "N/D",
+	"month" : "N/D",
+	"difficulty" : 2.3,
+	"height" : 10,
+	"width" : 10,
+	"rowSequences" : [
+		[0], [6], [1, 2, 1], [1, 1, 1, 1], [1, 2, 1], 
+		[1, 1, 1, 1], [1, 2, 1], [1, 1], [2], [0]
+	],
+	"columnSequences" : [
+		[2], [1, 1], [1, 1], [1, 1, 1, 1], [2, 1, 1, 1], 
+		[2, 1, 1, 1], [1, 1, 1, 1], [1, 1], [1, 1], [2]
+	]
+}

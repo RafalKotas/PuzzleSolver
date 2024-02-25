@@ -7,16 +7,14 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Component
-@Order(9)
+//@Component
+//@Order(9)
 public class SymmetricNonogramLoggerInitializer implements CommandLineRunner {
     public final static String puzzlePath = InitializerConstants.PUZZLE_RELATIVE_PATH +
             InitializerConstants.PuzzleMappings.NONOGRAM_PATH_SUFFIX;
@@ -39,26 +37,31 @@ public class SymmetricNonogramLoggerInitializer implements CommandLineRunner {
         Set<String> existingFilesNames = commonService
                 .listFilesUsingJavaIO(puzzlePath);
 
-        String filename;
+        ObjectMapper objectMapper = new ObjectMapper();
 
         for (String nonogramFileName : existingFilesNames) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            NonogramFileDetails nonogramFileDetails = objectMapper.readValue(new File(puzzlePath + nonogramFileName), NonogramFileDetails.class);
-            NonogramLogic nonogramLogic = new NonogramLogic(nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences());
 
-            switch(nonogramLogic.nonogramSymmetricalGrade()) {
-                case "4 axis":
-                    nonograms3Dsymmetrical.add(nonogramFileName);
-                    break;
-                case "2 axis":
-                    nonograms2Dsymmetrical.add(nonogramFileName);
-                    break;
-                case "1 axis":
-                    nonograms1Dsymmetrical.add(nonogramFileName);
-                    break;
-                default:
-                    break;
+            try {
+                NonogramFileDetails nonogramFileDetails = objectMapper.readValue(new File(puzzlePath + nonogramFileName), NonogramFileDetails.class);
+                NonogramLogic nonogramLogic = new NonogramLogic(nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences());
+
+                switch(nonogramLogic.nonogramSymmetricalGrade()) {
+                    case "4 axis":
+                        nonograms3Dsymmetrical.add(nonogramFileName);
+                        break;
+                    case "2 axis":
+                        nonograms2Dsymmetrical.add(nonogramFileName);
+                        break;
+                    case "1 axis":
+                        nonograms1Dsymmetrical.add(nonogramFileName);
+                        break;
+                    default:
+                        break;
+                }
+            } catch (Exception e) {
+                System.out.printf("Can't parse file with name %s\n", nonogramFileName);
             }
+
         }
 
         System.out.println("Nonograms 4 axis symmetrical filenames: ");

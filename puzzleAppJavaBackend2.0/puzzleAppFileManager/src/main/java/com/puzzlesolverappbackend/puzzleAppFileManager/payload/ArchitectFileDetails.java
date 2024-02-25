@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -20,9 +21,9 @@ public class ArchitectFileDetails {
 
     private List<List<String>> board;
 
-    //@Min(1)
+    @Min(1)
     private int height;
-    //@Min(1)
+    @Min(1)
     private int width;
 
     private String source;

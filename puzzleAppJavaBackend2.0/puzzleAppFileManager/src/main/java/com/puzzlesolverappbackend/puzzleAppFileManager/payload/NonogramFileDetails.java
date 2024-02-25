@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -20,9 +21,9 @@ public class NonogramFileDetails {
 
     private String filename;
 
-    //@Min(1)
+    @Min(1)
     private int height;
-    //@Min(1)
+    @Min(1)
     private int width;
 
     @Override
@@ -43,6 +44,6 @@ public class NonogramFileDetails {
     private String source;
     private String year;
     private String month;
-
     private double difficulty;
+    private String additionalContent;
 }

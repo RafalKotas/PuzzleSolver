@@ -45,7 +45,7 @@ const NonogramEditView : React.FC<NonogramEditViewProps> = ({selectedNonogram, c
 
     const params = useParams()
 
-    const nonogramPath = "../../resources/allNonogramsJSON/" + params.filename + ".json"
+    const nonogramPath = "../../resources/Nonograms/" + params.filename + ".json"
 
     useEffect(() => {
         createdNonogramsList.forEach((nonogram) => {
