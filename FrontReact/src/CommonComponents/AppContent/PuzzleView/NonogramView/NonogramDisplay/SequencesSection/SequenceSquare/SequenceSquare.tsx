@@ -8,7 +8,7 @@ import { Dispatch } from "redux"
 import { AppState } from "../../../../../../../store"
 import { ModifySequence, nonogramSquareEdit, SetEditedSquare } from "../../../../../../../store/data/nonogram"
 import EditableSquare from "./EditableSquare/EditableSquare"
-import NotEditableSquare from "./NotEditableSquare.tsx/NotEditableSquare"
+import NotEditableSquare from "./NotEditableSquare/NotEditableSquare"
 
 interface OwnSequenceSquareProps {
     section: "rowSequences" | "columnSequences",
