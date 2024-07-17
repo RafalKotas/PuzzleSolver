@@ -21,8 +21,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@Component
-@Order(4)
+//@Component
+//@Order(4)
 public class NonogramsDataInitializer implements CommandLineRunner {
 
     private final NonogramRepository nonogramRepository;

@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.util.Set;
 
-@Component
-@Order(6)
+//@Component
+//@Order(6)
 public class SudokuDataInitializer implements CommandLineRunner {
 
     private final SudokuRepository sudokuRepository;

@@ -1,14 +1,18 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.payload;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.NonogramSolutionDecision;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Slf4j
 public abstract class NonogramLogicParams {
 
     protected boolean showRepetitions = false;
@@ -22,6 +26,7 @@ public abstract class NonogramLogicParams {
     protected List<List<Integer>> rowsSequences;
     protected List<List<Integer>> columnsSequences;
     protected List<List<String>> nonogramSolutionBoardWithMarks;
+
     protected List<List<String>> nonogramSolutionBoard;
     protected List<List<List<Integer>>> rowsSequencesRanges;
     protected List<List<List<Integer>>> columnsSequencesRanges;
@@ -46,7 +51,7 @@ public abstract class NonogramLogicParams {
     //6
     protected Set<Integer> affectedRowsToCorrectSequencesRangesWhenMetColouredField;
     //7
-    protected Set<Integer> affectedRowsToChangeSequencesRangeIfXOnWay;
+    protected Set<Integer> affectedRowsToCorrectSequencesRangesIfXOnWay;
     //8
     protected Set<Integer> affectedColumnsToCorrectSequencesRanges;
     //9

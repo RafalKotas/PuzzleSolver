@@ -97,7 +97,6 @@ public class NonogramLogicController {
 
     @PostMapping("/customSolutionPart")
     public ResponseEntity<NonogramLogic> customSolutionPart(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String solutionFileName) {
-        System.out.println("Custom solver endpoint");
 
         NonogramLogic logicWithAffectedRowsAndColumns = new NonogramLogic(
                 nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences());
@@ -124,7 +123,6 @@ public class NonogramLogicController {
             nonogramSolutionWriter.close();
             return new ResponseEntity<>("Save success!", HttpStatus.OK);
         } catch (IOException e) {
-            e.printStackTrace();
             return new ResponseEntity<>("Exception external problem.", HttpStatus.OK);
         }
     }
@@ -142,7 +140,6 @@ public class NonogramLogicController {
 
         } catch (IOException e) {
             System.out.println("Exception...");
-            e.printStackTrace();
             return new ResponseEntity<>(nonogramLogic, HttpStatus.OK);
         }
     }

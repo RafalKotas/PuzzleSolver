@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.util.Set;
 
-@Component
-@Order(5)
+//@Component
+//@Order(5)
 public class SlitherlinkDataInitializer implements CommandLineRunner {
 
     private final SlitherlinkRepository SlitherlinkRepository;

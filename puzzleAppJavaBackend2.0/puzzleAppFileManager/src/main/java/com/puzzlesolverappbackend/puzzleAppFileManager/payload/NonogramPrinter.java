@@ -55,7 +55,7 @@ public class NonogramPrinter extends NonogramLogicParams implements NonogramLogi
         //6
         this.affectedRowsToCorrectSequencesRangesWhenMetColouredField = nonogramLogic.getAffectedRowsToCorrectSequencesRangesWhenMetColouredField();
         //7
-        this.affectedRowsToChangeSequencesRangeIfXOnWay = nonogramLogic.getAffectedRowsToChangeSequencesRangeIfXOnWay();
+        this.affectedRowsToCorrectSequencesRangesIfXOnWay = nonogramLogic.getAffectedRowsToCorrectSequencesRangesIfXOnWay();
         //8
         this.affectedColumnsToCorrectSequencesRanges = nonogramLogic.getAffectedColumnsToCorrectSequencesRanges();
         //9
@@ -161,7 +161,7 @@ public class NonogramPrinter extends NonogramLogicParams implements NonogramLogi
         //6
         int affectedRowsToCorrectSequencesWhenMetColouredFieldCount = this.getAffectedRowsToCorrectSequencesRangesWhenMetColouredField().size();
         //7
-        int affectedRowsToCorrectSequencesIfXOnWayCount = this.getAffectedRowsToChangeSequencesRangeIfXOnWay().size();
+        int affectedRowsToCorrectSequencesIfXOnWayCount = this.getAffectedRowsToCorrectSequencesRangesIfXOnWay().size();
         //8
         int affectedColumnsToCorrectSequencesRangesCount = this.getAffectedColumnsToCorrectSequencesRanges().size();
         //9
@@ -204,7 +204,7 @@ public class NonogramPrinter extends NonogramLogicParams implements NonogramLogi
             System.out.println("affectedRowsToMarkAvailableSequences=" + getAffectedRowsToMarkAvailableSequences());
             System.out.println("affectedRowsToCorrectSequencesRanges=" + getAffectedRowsToCorrectSequencesRanges());
             System.out.println("affectedRowsToCorrectSequencesRangesWhenMetColouredField=" + getAffectedRowsToCorrectSequencesRangesWhenMetColouredField());
-            System.out.println("affectedRowsToChangeSequencesRangeIfXOnWay=" + getAffectedRowsToChangeSequencesRangeIfXOnWay());
+            System.out.println("affectedRowsToChangeSequencesRangeIfXOnWay=" + getAffectedRowsToCorrectSequencesRangesIfXOnWay());
             System.out.println("affectedRowsToPlaceXsAtUnreachableFields=" + getAffectedRowsToPlaceXsAtUnreachableFields());
             System.out.println("affectedRowsToPlaceXsAroundLongestSequences=" + getAffectedRowsToPlaceXsAroundLongestSequences());
             System.out.println("affectedRowsToPlaceXsAtTooShortEmptySequences=" + getAffectedRowsToPlaceXsAtTooShortEmptySequences());

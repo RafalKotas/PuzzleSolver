@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.List;
-import java.util.stream.Collectors;
 
+// nonogram controller comment
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/nonogram")
@@ -55,7 +55,7 @@ public class NonogramController {
         List<String> fileNamesWithoutExtensionArray = Arrays.stream(fileNamesWithoutExtension
                 .clone())
                 .map(fN -> fN.substring(0, fN.length() - 5)) // ".json"
-                .collect(Collectors.toList());
+                .toList();
 
         if(fileNamesWithoutExtensionArray.contains(fileName)) {
             return new ResponseEntity<>("Save failed. File with same name already exists.", HttpStatus.OK);
@@ -70,7 +70,6 @@ public class NonogramController {
             fileWriter.close();
             return new ResponseEntity<>("Save success!", HttpStatus.OK);
         } catch (IOException e) {
-            e.printStackTrace();
             return new ResponseEntity<>("Exception external problem.", HttpStatus.OK);
         }
     }

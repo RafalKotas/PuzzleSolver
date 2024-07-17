@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 //@Component
 //@Order(7)
@@ -68,7 +67,7 @@ public class NonogramSolveInitializer implements CommandLineRunner {
         selectedNonogramsList = selectedNonogramsList
                 .stream()
                 .filter(nonogram1 -> nonogram1.getHeight().equals(30) && nonogram1.getWidth().equals(30))
-                .collect(Collectors.toList());
+                .toList();
 
         int selectedCount = 0;
         int solvedCount = 0;

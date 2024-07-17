@@ -2,7 +2,6 @@ package com.puzzlesolverappbackend.puzzleAppFileManager;
 
 
 import com.google.gson.Gson;
-import com.puzzlesolverappbackend.puzzleAppFileManager.logs.nonogram.NonogramNodeLog;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +20,7 @@ public class NonogramSolutionNode {
     private List<NonogramSolutionDecision> nonogramRecursionDecisions;
 
     // log of taken actions (heuristics, guesses decisions, and in nodeHeight > 0 also recursion decisions)
-    private List<NonogramNodeLog> nodeLogs;
+    private List<String> nodeLogs;
 
     public NonogramSolutionNode(NonogramLogic nonogramLogic) {
         Gson gson = new Gson();
@@ -32,43 +31,8 @@ public class NonogramSolutionNode {
         this.nodeLogs = new ArrayList<>();
     }
 
-    public NonogramSolutionNode(NonogramLogic nonogramLogic, NonogramSolutionNode parentNode,
-                                NonogramSolutionDecision nonogramSolutionDecision) {
-        this.nonogramLogic = nonogramLogic;
-
-        List<NonogramSolutionDecision> childDecisions = new ArrayList<>(parentNode.getNonogramGuessDecisions());
-        childDecisions.add(nonogramSolutionDecision);
-        this.nonogramGuessDecisions = childDecisions;
-    }
-
-    public NonogramSolutionNode(NonogramSolutionNode nodeToCopy, NonogramSolutionDecision decision) throws CloneNotSupportedException {
-        NonogramSolutionNode tmpNode = (NonogramSolutionNode) nodeToCopy.clone();
-        this.nonogramLogic = tmpNode.getNonogramLogic();
-        List<NonogramSolutionDecision> decisionList = new ArrayList<>(tmpNode.getNonogramGuessDecisions());
-        decisionList.add(decision);
-        this.nonogramGuessDecisions = decisionList;
-    }
-
-    public void setLeftNode(NonogramSolutionNode node, NonogramSolutionDecision decision) {
-        List<NonogramSolutionDecision> leftNodeSolutionDecisions = this.nonogramGuessDecisions;
-        leftNodeSolutionDecisions.add(decision);
-    }
-
-    public void setRightNode(NonogramSolutionNode node, NonogramSolutionDecision decision) {
-        List<NonogramSolutionDecision> rightNodeSolutionDecisions = this.nonogramGuessDecisions;
-        rightNodeSolutionDecisions.add(decision);
-    }
-
     public void addDecision(NonogramSolutionDecision decision) {
         this.nonogramGuessDecisions.add(decision);
-    }
-
-    public void removeLastDecision() {
-        this.nonogramGuessDecisions.remove(this.nonogramGuessDecisions.size() - 1);
-    }
-
-    public void addNodeLog(NonogramNodeLog nonogramNodeLog) {
-        this.nodeLogs.add(nonogramNodeLog);
     }
 
     @Override
@@ -129,33 +93,42 @@ public class NonogramSolutionNode {
         boolean solutionBoardsDiffered;
         boolean sequenceIndexesNotToIncludeAddedCondition;
 
+        boolean changesOccured;
+
+        boolean influentActionPrinted = false;
+
         do {
             NonogramLogic logicBeforeActionsMade = copyNonogramLogic();
 
             for(int actionNo = 1; actionNo <= 18; actionNo++) {
                 this.getNonogramLogic().basicSolve(actionNo);
+                //o06005
+                if(!influentActionPrinted && this.getNonogramLogic().getNonogramSolutionBoard().get(4).get(5).equals("O")
+                        && this.getNonogramLogic().getNonogramSolutionBoard().get(4).get(6).equals("O")
+                        /*&& rangesEqual(this.getNonogramLogic().getRowsSequencesRanges().get(5).get(0), List.of(3, 9))
+                        && rangesEqual(this.getNonogramLogic().getRowsSequencesRanges().get(5).get(1), List.of(14, 14))*/) {
+                    System.out.println("After actionNo: " + actionNo);
+                    //System.out.println(this.getNonogramLogic().getAffectedRowsToPlaceXsAroundLongestSequences());
+                    influentActionPrinted = true;
+                }
             }
 
             solutionInvalid = this.getNonogramLogic().isSolutionInvalid();
 
             NonogramLogic logicAfterActionsMade = copyNonogramLogic();
 
-            System.out.println(logicBeforeActionsMade.getRowsSequencesRanges());
-            System.out.println(logicAfterActionsMade.getRowsSequencesRanges());
-            System.out.println(logicBeforeActionsMade.getColumnsSequencesRanges());
-            System.out.println(logicAfterActionsMade.getColumnsSequencesRanges());
+            this.nodeLogs = logicAfterActionsMade.getLogs();
+
             sequencesRangesDiffered = sequencesRangesAfterActionsMadeDiffers(logicBeforeActionsMade, logicAfterActionsMade);
 
             solutionBoardsDiffered = solutionBoardsDiffers(logicBeforeActionsMade.getNonogramSolutionBoard(),
                     logicAfterActionsMade.getNonogramSolutionBoard());
 
             sequenceIndexesNotToIncludeAddedCondition = sequenceIndexesNotToIncludeAdded(logicBeforeActionsMade, logicAfterActionsMade);
-            System.out.println("sequencesRangesDiffered: " + sequencesRangesDiffered + " \n solutionBoardDiffered: " + solutionBoardsDiffered +
-                    " \n sequenceIndexesNotToIncludeAddedCondition: " + sequenceIndexesNotToIncludeAddedCondition + " \n solutionInvalid: " + solutionInvalid
-                    + " \n completionPercentage: " + this.getNonogramLogic().getCompletionPercentage());
+
+            changesOccured = sequencesRangesDiffered || solutionBoardsDiffered || sequenceIndexesNotToIncludeAddedCondition;
         } while (
-                (sequencesRangesDiffered || solutionBoardsDiffered || sequenceIndexesNotToIncludeAddedCondition)
-                        && !solutionInvalid && this.getNonogramLogic().getCompletionPercentage()!=100
+                (changesOccured && !solutionInvalid && this.getNonogramLogic().getCompletionPercentage() != 100) || affectedRowsOrColumnsLeft()
         );
     }
 
@@ -164,12 +137,10 @@ public class NonogramSolutionNode {
                 logicBeforeActionsMade.getRowsSequencesRanges(),
                 logicAfterActionsMade.getRowsSequencesRanges()
         );
-        System.out.println("differs in rows: " + sequencesRangesAfterActionsMadeDiffersInRows);
         boolean sequencesRangesAfterActionsMadeDiffersInColumns = sequencesRangesAfterActionsMadeDiffersInSection(
                 logicBeforeActionsMade.getColumnsSequencesRanges(),
                 logicAfterActionsMade.getColumnsSequencesRanges()
         );
-        System.out.println("differs in columns: " + sequencesRangesAfterActionsMadeDiffersInColumns);
         return sequencesRangesAfterActionsMadeDiffersInRows || sequencesRangesAfterActionsMadeDiffersInColumns;
     }
 
@@ -287,5 +258,33 @@ public class NonogramSolutionNode {
     private NonogramLogic copyNonogramLogic() {
         Gson gson = new Gson();
         return gson.fromJson(gson.toJson(this.getNonogramLogic()), NonogramLogic.class);
+    }
+
+    private String getNonogramBoardField(int rowIdx, int columnIdx) {
+        return this.getNonogramLogic().getNonogramSolutionBoard().get(rowIdx).get(columnIdx);
+    }
+
+    private boolean affectedRowsOrColumnsLeft() {
+        boolean areAffectedRows = !this.getNonogramLogic().getAffectedRowsToCorrectSequencesRanges().isEmpty()
+                || !this.getNonogramLogic().getAffectedRowsToCorrectSequencesRangesWhenMetColouredField().isEmpty()
+                || !this.getNonogramLogic().getAffectedRowsToCorrectSequencesRangesIfXOnWay().isEmpty()
+                || !this.getNonogramLogic().getAffectedRowsToFillOverlappingFields().isEmpty()
+                || !this.getNonogramLogic().getAffectedRowsToExtendColouredFieldsNearX().isEmpty()
+                || !this.getNonogramLogic().getAffectedRowsToPlaceXsAtUnreachableFields().isEmpty()
+                || !this.getNonogramLogic().getAffectedRowsToPlaceXsAroundLongestSequences().isEmpty()
+                || !this.getNonogramLogic().getAffectedRowsToPlaceXsAtTooShortEmptySequences().isEmpty()
+                || !this.getNonogramLogic().getAffectedRowsToMarkAvailableSequences().isEmpty();
+
+        boolean areAffectedColumns = !this.getNonogramLogic().getAffectedColumnsToCorrectSequencesRanges().isEmpty()
+                || !this.getNonogramLogic().getAffectedColumnsToCorrectSequencesRangesWhenMetColouredField().isEmpty()
+                || !this.getNonogramLogic().getAffectedColumnsToCorrectSequencesRangesIfXOnWay().isEmpty()
+                || !this.getNonogramLogic().getAffectedColumnsToFillOverlappingFields().isEmpty()
+                || !this.getNonogramLogic().getAffectedColumnsToExtendColouredFieldsNearX().isEmpty()
+                || !this.getNonogramLogic().getAffectedColumnsToPlaceXsAtUnreachableFields().isEmpty()
+                || !this.getNonogramLogic().getAffectedColumnsToPlaceXsAroundLongestSequences().isEmpty()
+                || !this.getNonogramLogic().getAffectedColumnsToPlaceXsAtTooShortEmptySequences().isEmpty()
+                || !this.getNonogramLogic().getAffectedColumnsToMarkAvailableSequences().isEmpty();
+
+        return areAffectedRows || areAffectedColumns;
     }
 }

@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.util.Set;
 
-@Component
-@Order(3)
+//@Component
+//@Order(3)
 public class HitoriDataInitializer implements CommandLineRunner {
 
     @Autowired

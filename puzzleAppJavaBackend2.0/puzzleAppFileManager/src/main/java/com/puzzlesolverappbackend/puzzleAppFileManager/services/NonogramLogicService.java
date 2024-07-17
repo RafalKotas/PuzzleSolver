@@ -445,7 +445,7 @@ public class NonogramLogicService {
                         }
 
                     }
-                } else if(rowSequencesLengthsIncludingSequenceRange.size() > 0) {
+                } else if(!rowSequencesLengthsIncludingSequenceRange.isEmpty()) {
 
                     //check if length of sequence == Max(foundSequences_lengths)
                     if(sequenceOnBoardLength == Collections.max(rowSequencesLengthsIncludingSequenceRange)) {
@@ -583,7 +583,7 @@ public class NonogramLogicService {
                         }
 
                     }
-                } else if(columnSequencesIndexesIncludingSequenceRange.size() > 0) {
+                } else if(!columnSequencesIndexesIncludingSequenceRange.isEmpty()) {
                     //check if length of sequence == Max(foundSequences_lengths)
                     if(sequenceLength == Collections.max(columnSequencesLengthsIncludingSequenceRange)) {
                         if(nonogramLogicDataToChange.getNonogramSolutionBoard().get(firstXIndex).get(columnIdx).equals("-")) {
@@ -1328,7 +1328,7 @@ public class NonogramLogicService {
     }
 
     public static boolean rangeInsideAnotherRange(List<Integer> internalRange, List<Integer> externalRange) {
-        if(internalRange.size() >= 1 && externalRange.size() == 2) {
+        if(!internalRange.isEmpty() && externalRange.size() == 2) {
             return (internalRange.get(0) >= externalRange.get(0)) && (internalRange.get(internalRange.size() - 1) <= externalRange.get(1));
         } else {
             return false;
@@ -1341,103 +1341,6 @@ public class NonogramLogicService {
         log.info("INITIALIZED nonogramSolver {}!", nonogramSolver);
         NonogramSolutionNode nonogramSolutionNode = new NonogramSolutionNode(nonogramLogicObject);
         log.info("INITIALIZED nonogramSolutionNode (DEC SIZE : {})! GO TO nonogramSolver.runSolutionAtNode()", nonogramSolutionNode.getNonogramGuessDecisions().size());
-        nonogramSolver.runSolutionAtNode(nonogramSolutionNode);
-        return nonogramSolver.getSolutionLogic();
+        return nonogramSolver.runSolutionAtNode(nonogramSolutionNode);
     }
-
-    //public static String resourcesPath = "../../PuzzleSolver/FrontReact/public/resources/Nonograms";
-
-    // TODO class with both classes (nonogramLogic and fileDetails to collect statistical data further)
-    /*public void listAllNonograms() {
-        List<String> allNonogramFiles = Stream.of(new File(InitializerConstants.PUZZLE_RELATIVE_PATH + InitializerConstants.PuzzleMappings.NONOGRAM_PATH_SUFFIX).listFiles())
-                .filter(file -> !file.isDirectory())
-                .map(File::getName)
-                .collect(Collectors.toList());
-
-
-        NonogramLogic currentFileNonogramLogic;
-
-        for(String nonogramFileName : allNonogramFiles) {
-            try {
-                System.out.println("file: " + nonogramFileName);
-                currentFileNonogramLogic = new NonogramLogic(nonogramFileName);
-                NonogramSolver nonogramSolver = new NonogramSolver(currentFileNonogramLogic, "r" + nonogramFileName);
-
-                NonogramSolutionNode nonogramSolutionNode = new NonogramSolutionNode(currentFileNonogramLogic);
-
-                nonogramSolver.runSolutionAtNode(nonogramSolutionNode);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        System.out.println(allNonogramFiles);
-    }*/
-
-    //    public NonogramLogic loadSolutionFromFile(String solutionFileName, NonogramLogic placeholder) {
-//        Gson gson = new Gson();
-//
-//        try (Reader reader = new FileReader(resourcesPath + "nonogramsSolutions/r" + solutionFileName + ".json")) {
-//
-//            // Convert JSON File to Java Object
-//
-//            return gson.fromJson(reader, NonogramLogic.class);
-//
-//        } catch (IOException e) {
-//            return placeholder;
-//        }
-//    }
-
-    //    public boolean compareSubSolutionWithSolution(List<List<List<Integer>>> subSolutionRowsSequencesRanges, List<List<List<Integer>>> solutionRowsSequencesRanges,
-//                                                  List<List<List<Integer>>> subSolutionColumnsSequencesRanges, List<List<List<Integer>>> solutionColumnsSequencesRanges,
-//                                                  List<List<String>> subSolutionBoard, List<List<String>> solutionBoard) {
-//        List<List<Integer>> subSolutionRowRanges;
-//        List<List<Integer>> solutionRowRanges;
-//
-//        for(int rowIdx = 0; rowIdx < subSolutionRowsSequencesRanges.size(); rowIdx++) {
-//            subSolutionRowRanges = subSolutionRowsSequencesRanges.get(rowIdx);
-//            solutionRowRanges = solutionRowsSequencesRanges.get(rowIdx);
-//            for(int sequenceNo = 0; sequenceNo < solutionRowRanges.size(); sequenceNo++) {
-//                if(!rangeInsideAnotherRange(solutionRowRanges.get(sequenceNo), subSolutionRowRanges.get(sequenceNo))) {
-//                    return false;
-//                }
-//            }
-//        }
-//
-//        List<List<Integer>> subSolutionColumnRanges;
-//        List<List<Integer>> solutionColumnRanges;
-//
-//        for(int columnIdx = 0; columnIdx < subSolutionColumnsSequencesRanges.size(); columnIdx++) {
-//            subSolutionColumnRanges = subSolutionColumnsSequencesRanges.get(columnIdx);
-//            solutionColumnRanges = solutionColumnsSequencesRanges.get(columnIdx);
-//            for(int sequenceNo = 0; sequenceNo < solutionColumnRanges.size(); sequenceNo++) {
-//                if(!rangeInsideAnotherRange(solutionColumnRanges.get(sequenceNo), subSolutionColumnRanges.get(sequenceNo))) {
-//                    System.out.println("columnIdx: " + columnIdx);
-//                    System.out.println("subSolutionColumnRanges: " + subSolutionColumnRanges);
-//                    System.out.println("solutionColumnRanges: " + solutionColumnRanges);
-//                    return false;
-//                }
-//            }
-//
-//        }
-//
-//        for (int rowIdx = 0; rowIdx < solutionRowsSequencesRanges.size(); rowIdx++) {
-//            for (int columnIdx = 0; columnIdx < solutionColumnsSequencesRanges.size(); columnIdx++) {
-//
-//                if(subSolutionBoard.get(rowIdx).get(columnIdx).equals("XXXX") && !solutionBoard.get(rowIdx).get(columnIdx).equals("XXXX")) {
-//                    System.out.println("rowIdx: " + rowIdx + ", columnIdx: " + columnIdx + " inconsistency");
-//                    return false;
-//                }
-//
-//                if(subSolutionBoard.get(rowIdx).get(columnIdx).equals("O".repeat(4)) && !solutionBoard.get(rowIdx).get(columnIdx).equals("O".repeat(4))) {
-//                    System.out.println("rowIdx: " + rowIdx + ", columnIdx: " + columnIdx + " inconsistency");
-//                    return false;
-//                }
-//            }
-//        }
-//
-//        return true;
-//    }
 }
