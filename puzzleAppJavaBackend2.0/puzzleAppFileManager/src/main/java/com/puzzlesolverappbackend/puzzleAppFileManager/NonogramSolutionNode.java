@@ -19,6 +19,8 @@ public class NonogramSolutionNode {
     private List<NonogramSolutionDecision> nonogramGuessDecisions;
     private List<NonogramSolutionDecision> nonogramRecursionDecisions;
 
+    private boolean influentActionPrinted = false;
+
     // log of taken actions (heuristics, guesses decisions, and in nodeHeight > 0 also recursion decisions)
     private List<String> nodeLogs;
 
@@ -95,22 +97,12 @@ public class NonogramSolutionNode {
 
         boolean changesOccured;
 
-        boolean influentActionPrinted = false;
-
         do {
             NonogramLogic logicBeforeActionsMade = copyNonogramLogic();
 
             for(int actionNo = 1; actionNo <= 18; actionNo++) {
                 this.getNonogramLogic().basicSolve(actionNo);
-                //o06005
-                if(!influentActionPrinted && this.getNonogramLogic().getNonogramSolutionBoard().get(4).get(5).equals("O")
-                        && this.getNonogramLogic().getNonogramSolutionBoard().get(4).get(6).equals("O")
-                        /*&& rangesEqual(this.getNonogramLogic().getRowsSequencesRanges().get(5).get(0), List.of(3, 9))
-                        && rangesEqual(this.getNonogramLogic().getRowsSequencesRanges().get(5).get(1), List.of(14, 14))*/) {
-                    System.out.println("After actionNo: " + actionNo);
-                    //System.out.println(this.getNonogramLogic().getAffectedRowsToPlaceXsAroundLongestSequences());
-                    influentActionPrinted = true;
-                }
+                logActionWhichLeadToCheckedStage(actionNo);
             }
 
             solutionInvalid = this.getNonogramLogic().isSolutionInvalid();
@@ -128,8 +120,16 @@ public class NonogramSolutionNode {
 
             changesOccured = sequencesRangesDiffered || solutionBoardsDiffered || sequenceIndexesNotToIncludeAddedCondition;
         } while (
-                (changesOccured && !solutionInvalid && this.getNonogramLogic().getCompletionPercentage() != 100) || affectedRowsOrColumnsLeft()
+                (changesOccured && !solutionInvalid && !this.getNonogramLogic().isSolved()) || affectedRowsOrColumnsLeft()
         );
+    }
+
+    private void logActionWhichLeadToCheckedStage(int actionNo) {
+        if(!influentActionPrinted && this.getNonogramLogic().getNonogramSolutionBoard().get(4).get(5).equals("O")
+                && this.getNonogramLogic().getNonogramSolutionBoard().get(4).get(6).equals("O")) {
+            System.out.println("Checked stage after actionNo: " + actionNo);
+            influentActionPrinted = true;
+        }
     }
 
     private boolean sequencesRangesAfterActionsMadeDiffers(NonogramLogic logicBeforeActionsMade, NonogramLogic logicAfterActionsMade) {
