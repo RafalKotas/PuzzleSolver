@@ -2,7 +2,6 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.controllers;
 
 import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.NonogramLogicService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +13,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
+
+import static com.puzzlesolverappbackend.puzzleAppFileManager.helpers.FileHelper.generateSavePathForFilename;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -118,7 +119,7 @@ public class NonogramLogicController {
 
         FileWriter nonogramSolutionWriter;
         try {
-            nonogramSolutionWriter = new FileWriter(InitializerConstants.PUZZLE_RELATIVE_PATH + "nonogramsSolutions/r" + fileName + ".json");
+            nonogramSolutionWriter = new FileWriter(generateSavePathForFilename(fileName));
             gson.toJson(solution, nonogramSolutionWriter);
             nonogramSolutionWriter.close();
             return new ResponseEntity<>("Save success!", HttpStatus.OK);
@@ -131,7 +132,7 @@ public class NonogramLogicController {
     public ResponseEntity<NonogramLogic> compareWithSolution(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String fileName) {
         Gson gson = new Gson();
 
-        try (Reader reader = new FileReader(InitializerConstants.PUZZLE_RELATIVE_PATH + "nonogramsSolutions/r" + fileName + ".json")) {
+        try (Reader reader = new FileReader(generateSavePathForFilename(fileName))) {
 
             // Convert JSON File to Java Object
             NonogramLogic solution = gson.fromJson(reader, NonogramLogic.class);

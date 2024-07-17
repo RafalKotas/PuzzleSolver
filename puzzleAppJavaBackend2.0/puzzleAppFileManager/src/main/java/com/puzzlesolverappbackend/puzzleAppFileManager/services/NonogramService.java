@@ -1,10 +1,10 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.services;
 
 import com.google.gson.Gson;
+import com.puzzlesolverappbackend.puzzleAppFileManager.helpers.FileHelper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramFiltersResponse;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.repository.NonogramRepository;
-import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
 import com.puzzlesolverappbackend.puzzleAppFileManager.templates.nonogram.NonogramBoardTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -89,13 +89,13 @@ public class NonogramService {
         return new NonogramFiltersResponse(sources, years, months, difficulties, heights, widths);
     }
 
-    public void saveSolutionToFile(String filename, NonogramLogic nonogramLogic) {
+    public void saveSolutionToFile(String filename, NonogramLogic nonogramSolutionLogic) {
         FileWriter fileWriter;
         try {
-            fileWriter = new FileWriter(InitializerConstants.NONOGRAM_SOLUTIONS_PATH + "r" + filename + ".json");
+            fileWriter = new FileWriter(FileHelper.generateSavePathForFilename(filename));
             Gson gson = new Gson();
-            NonogramBoardTemplate nonogramBoardTemplate = new NonogramBoardTemplate(nonogramLogic);
-            nonogramBoardTemplate.setBoard(nonogramLogic.getNonogramSolutionBoard());
+            NonogramBoardTemplate nonogramBoardTemplate = new NonogramBoardTemplate(nonogramSolutionLogic);
+            nonogramBoardTemplate.setBoard(nonogramSolutionLogic.getNonogramSolutionBoard());
             gson.toJson(nonogramBoardTemplate, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
