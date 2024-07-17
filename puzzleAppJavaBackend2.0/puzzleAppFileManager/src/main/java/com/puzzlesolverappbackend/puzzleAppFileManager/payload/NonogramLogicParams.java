@@ -190,4 +190,8 @@ public abstract class NonogramLogicParams {
     public double fieldsWithXPlacedPercent() {
         return getPercent(this.fieldsWithXPlaced(), this.fieldsToPlaceXTotal());
     }
+
+    public boolean isSolved() {
+        return this.fieldsColoured() + this.fieldsWithXPlaced() == this.area();
+    }
 }

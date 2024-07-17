@@ -1409,10 +1409,6 @@ public class NonogramLogic extends NonogramLogicParams {
         return true;
     }
 
-    public boolean isSolved() {
-        return this.fieldsColoured() + this.fieldsWithXPlaced() == this.area();
-    }
-
     public void printSolutionBoard() {
         for (List<String> solutionBoardRow : this.getNonogramSolutionBoard()) {
             System.out.println(solutionBoardRow);
