@@ -7,15 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface SlitherlinkRepository extends JpaRepository<Slitherlink, Integer>, JpaSpecificationExecutor {
-
-    List<Slitherlink> findAll();
-
-    Optional<Slitherlink> findById(Integer Id);
 
     @Query(value = "SELECT *" +
             " FROM slitherlink_puzzles_data spd" +

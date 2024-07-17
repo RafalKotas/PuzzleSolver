@@ -1,25 +1,20 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.repository;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.model.Nonogram;
-import org.springframework.stereotype.Repository;
-
-import java.util.Collection;
-import java.util.Optional;
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, JpaSpecificationExecutor {
-
-    List<Nonogram> findAll();
-
-    Optional<Nonogram> findById(Integer Id);
 
     @Query(value = "SELECT distinct(npd.source)" +
             " FROM nonogram_puzzles_data npd",

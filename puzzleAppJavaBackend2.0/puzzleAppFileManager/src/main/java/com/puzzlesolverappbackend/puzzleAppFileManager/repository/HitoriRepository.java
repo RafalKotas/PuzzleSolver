@@ -6,15 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface HitoriRepository extends JpaRepository<Hitori, Integer> {
-
-    List<Hitori> findAll();
-
-    Optional<Hitori> findById(Integer Id);
 
     @Query(value = "SELECT *" +
             " FROM hitori_puzzles_data hpd" +

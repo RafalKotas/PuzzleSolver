@@ -6,15 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface SudokuRepository extends JpaRepository<Sudoku, Integer> {
-
-    List<Sudoku> findAll();
-
-    Optional<Sudoku> findById(Integer Id);
 
     @Query(value = "SELECT *" +
             " FROM sudoku_puzzles_data spd" +
