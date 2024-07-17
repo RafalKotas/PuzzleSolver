@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.List;
 
-// nonogram controller comment
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/nonogram")
