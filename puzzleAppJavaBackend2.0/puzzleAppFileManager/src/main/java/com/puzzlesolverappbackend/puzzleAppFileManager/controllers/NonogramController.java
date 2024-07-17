@@ -19,10 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import java.util.Arrays;
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -40,6 +39,8 @@ public class NonogramController {
 
     Pageable nonogramsPageable;
 
+    private final static int JSON_EXTENSION_LENGTH = ".json".length();
+
     @PostMapping("/save")
     public ResponseEntity<String> saveNonogramToJsonFile(@RequestParam String fileName,
                                                          @Valid @RequestBody NonogramFileDetails nonogramFileDetails) {
@@ -53,7 +54,7 @@ public class NonogramController {
         String[] fileNamesWithoutExtension = existingFilesNames.toArray(String[]::new);
         List<String> fileNamesWithoutExtensionArray = Arrays.stream(fileNamesWithoutExtension
                 .clone())
-                .map(fN -> fN.substring(0, fN.length() - 5)) // ".json"
+                .map(fN -> fN.substring(0, fN.length() - JSON_EXTENSION_LENGTH))
                 .toList();
 
         if(fileNamesWithoutExtensionArray.contains(fileName)) {
