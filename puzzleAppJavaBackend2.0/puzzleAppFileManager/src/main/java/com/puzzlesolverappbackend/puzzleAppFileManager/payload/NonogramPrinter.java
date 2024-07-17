@@ -116,7 +116,7 @@ public class NonogramPrinter extends NonogramLogicParams implements NonogramLogi
      */
     public void printLogs() {
         int logIndex = 0;
-        if(this.getLogs().size() > 0) {
+        if(!this.getLogs().isEmpty()) {
             for(String log : this.getLogs()) {
                 System.out.println(logIndex + " : "  + log);
                 logIndex++;

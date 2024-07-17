@@ -316,7 +316,7 @@ public class NonogramSolver {
 
     private boolean guessModeContinueDecision (String wordExpression) {
         return switch (wordExpression) {
-            case "toFirstDecision" -> this.solutionNode.getNonogramGuessDecisions().size() < 1;
+            case "toFirstDecision" -> this.solutionNode.getNonogramGuessDecisions().isEmpty();
             case "toInvalidSolution" -> !this.solutionNode.getNonogramLogic().isSolutionInvalid();
             default -> this.oneOfTwoWrong;
         };
