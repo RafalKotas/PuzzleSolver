@@ -100,9 +100,9 @@ public class NonogramSolutionNode {
         do {
             NonogramLogic logicBeforeActionsMade = copyNonogramLogic();
 
-            for(int actionNo = 1; actionNo <= 18; actionNo++) {
-                this.getNonogramLogic().basicSolve(actionNo);
-                logActionWhichLeadToCheckedStage(actionNo);
+            for(ActionEnum action : EnumSet.allOf(ActionEnum.class)) {
+                this.getNonogramLogic().basicSolve(action);
+                logActionWhichLeadToCheckedStage(action);
             }
 
             solutionInvalid = this.getNonogramLogic().getNonogramState().isInvalidSolution();
@@ -120,14 +120,14 @@ public class NonogramSolutionNode {
 
             changesOccured = sequencesRangesDiffered || solutionBoardsDiffered || sequenceIndexesNotToIncludeAddedCondition;
         } while (
-                (changesOccured && !solutionInvalid && !this.getNonogramLogic().isSolved()) || affectedRowsOrColumnsLeft()
+                (changesOccured && !this.getNonogramLogic().getNonogramState().isInvalidSolution() && !this.getNonogramLogic().isSolved()) || affectedRowsOrColumnsLeft()
         );
     }
 
-    private void logActionWhichLeadToCheckedStage(int actionNo) {
+    private void logActionWhichLeadToCheckedStage(ActionEnum action) {
         if(!influentActionPrinted && this.getNonogramLogic().getNonogramSolutionBoard().get(4).get(5).equals("O")
                 && this.getNonogramLogic().getNonogramSolutionBoard().get(4).get(6).equals("O")) {
-            System.out.println("Checked stage after actionNo: " + actionNo);
+            System.out.println("Checked stage after actionNo: " + action);
             influentActionPrinted = true;
         }
     }
