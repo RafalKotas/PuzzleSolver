@@ -48,26 +48,4 @@ public class Sudoku {
         this.difficulty = difficulty;
         this.filled = filled;
     }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public String getMonth() {
-        return month;
-    }
-
-    public Double getDifficulty() {
-        return difficulty;
-    }
-
-    public Integer getFilled() { return filled; }
 }

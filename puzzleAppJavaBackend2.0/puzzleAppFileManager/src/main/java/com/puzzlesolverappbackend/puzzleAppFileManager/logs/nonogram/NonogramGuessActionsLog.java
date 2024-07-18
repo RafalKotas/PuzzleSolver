@@ -6,9 +6,9 @@ import java.util.List;
 
 public class NonogramGuessActionsLog {
 
-    NonogramSolutionDecision guessDecision;
+    private final NonogramSolutionDecision guessDecision;
 
-    List<String> actions;
+    private final List<String> actions;
 
     public NonogramGuessActionsLog(NonogramSolutionDecision nonogramSolutionDecision, List<String> actions) {
         this.guessDecision = nonogramSolutionDecision;

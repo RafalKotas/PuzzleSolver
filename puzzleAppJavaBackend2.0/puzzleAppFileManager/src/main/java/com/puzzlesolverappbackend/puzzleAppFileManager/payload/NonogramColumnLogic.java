@@ -1416,17 +1416,11 @@ public class NonogramColumnLogic {
     }
 
     public void addLog(String log) {
-
-        //String situationOccuredMarker = situationDetectionCondition()  ? "+" : "-";
         if (log.isEmpty()) {
             System.out.println("Trying to add empty log!!!");
         } else {
-            this.logs.add(log/* + situationOccuredMarker*/);
+            this.logs.add(log);
         }
-    }
-
-    public boolean situationDetectionCondition() {
-        return true;
     }
 
     private String generateColourStepDescription(int columnIndex, int rowIndex, String actionType) {

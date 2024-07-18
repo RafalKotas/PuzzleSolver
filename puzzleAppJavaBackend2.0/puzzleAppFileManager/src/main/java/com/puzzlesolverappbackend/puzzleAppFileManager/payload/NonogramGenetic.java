@@ -143,8 +143,7 @@ public class NonogramGenetic {
                 //System.out.println("Population indexes: " + firstPopulationMemberIndex + " and " + secondPopulationMemberIndex);
 
                 //do crossing - fit function parameters (not same members && cross two members only once)
-                if(firstPopulationMemberIndex != secondPopulationMemberIndex &&
-                        firstPopulationMemberIndex < secondPopulationMemberIndex) {
+                if(firstPopulationMemberIndex < secondPopulationMemberIndex) {
                     crossingCount++;
 
                     int firstMemberTopMinimum;
@@ -235,7 +234,7 @@ public class NonogramGenetic {
                     secondChildMaxPossibleCorrectFieldsSum = secondChildColumnsMaximumCorrectIndexFromBottom.stream().reduce(secondChildMaxPossibleCorrectFieldsSum, Integer::sum);
 
                     //first child
-                    if(nextPopulation.size() >= 1) {
+                    if(!nextPopulation.isEmpty()) {
                         int firstLessOrEqualElementIndex = findFirstLessOrEqualElementIndex(firstChildMaxPossibleCorrectFieldsSum);
 
                         if(firstLessOrEqualElementIndex != populationCount) {
@@ -429,7 +428,7 @@ public class NonogramGenetic {
     public int calculateFieldsNeeded(int currentSeqNo, List<Integer> sequencesLengths, String direction) {
         int sequencesLengthsSum = 0;
         int sequencesCount = 0;
-        if(direction == "fromTop") {
+        if(direction.equals("fromTop")) {
             for(int seqNo = 0; seqNo < sequencesLengths.size(); seqNo++) {
                 if(seqNo >= currentSeqNo) {
                     sequencesCount++;
@@ -492,8 +491,8 @@ public class NonogramGenetic {
 
         List<List<Integer>> indexesToFillRanges = new ArrayList<>();
 
-        for(int rowSequence = 0; rowSequence < rowSequencesRanges.size(); rowSequence++) {
-            indexesToFillRanges.add(findAllIntegersInRange(rowSequencesRanges.get(rowSequence)));
+        for (List<Integer> rowSequencesRange : rowSequencesRanges) {
+            indexesToFillRanges.add(findAllIntegersInRange(rowSequencesRange));
         }
 
         List<Integer> indexesToColour = flattenArray(indexesToFillRanges);
@@ -512,22 +511,19 @@ public class NonogramGenetic {
     public List<Integer> flattenArray(List<List<Integer>> rangesIndexes) {
         List<Integer> flattenedArray = new ArrayList<>();
         List<Integer> rangeIndexes;
-        for(int rangeIdx = 0; rangeIdx < rangesIndexes.size(); rangeIdx++) {
-            rangeIndexes = rangesIndexes.get(rangeIdx);
+        for (List<Integer> rangesIndex : rangesIndexes) {
+            rangeIndexes = rangesIndex;
 
-            for (int rangeIndex : rangeIndexes) {
-                flattenedArray.add(rangeIndex);
-            }
+            flattenedArray.addAll(rangeIndexes);
         }
 
         return flattenedArray;
     } 
 
     public List<List<Integer>> setRowSequenceRange(List<List<Integer>> sequencesRanges, int sequenceIdx, List<Integer> updatedRange) {
-        List<List<Integer>> sequencesRangesUpdated = sequencesRanges;
-        sequencesRangesUpdated.set(sequenceIdx, updatedRange);
+        sequencesRanges.set(sequenceIdx, updatedRange);
 
-        return sequencesRangesUpdated;
+        return sequencesRanges;
     }
 
     public List<Integer> generateStartIndexesForSequence(List<Integer> sequenceRange, Integer sequenceLength) {
@@ -556,7 +552,7 @@ public class NonogramGenetic {
     public boolean boardInPopulationUnique(List<List<String>> boardToCheck, List<NonogramLogic> population) {
         List<List<String>> populationBoard;
 
-        if(population.size() == 0) {
+        if(population.isEmpty()) {
             return true;
         } else {
             for (NonogramLogic populationMember : population) {
@@ -579,7 +575,7 @@ public class NonogramGenetic {
             populationBoardRow = populationBoard.get(rowIdx);
 
             for(int colIdx = 0; colIdx < boardToCheckRow.size(); colIdx++) {
-                if(boardToCheckRow.get(colIdx) != populationBoardRow.get(colIdx)) {
+                if(!boardToCheckRow.get(colIdx).equals(populationBoardRow.get(colIdx))) {
                     return false;
                 }
             }

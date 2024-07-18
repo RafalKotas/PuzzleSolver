@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 public class NonogramLogicService {
 
-    boolean showRepetitions = false;
+    private final boolean showRepetitions = false;
 
     // iterations through all columns
     public NonogramLogic fillOverLappingFieldsInColumnsRange (NonogramLogic nonogramLogicObject, int columnBegin, int columnEnd) {

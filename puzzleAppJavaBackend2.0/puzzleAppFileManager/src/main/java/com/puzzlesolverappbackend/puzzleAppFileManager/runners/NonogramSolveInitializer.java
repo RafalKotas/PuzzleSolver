@@ -21,7 +21,8 @@ import java.util.Set;
 //@Order(7)
 public class NonogramSolveInitializer implements CommandLineRunner {
 
-    boolean saveSolutions = true;
+    private final boolean saveSolutions = true;
+
     @Autowired
     private NonogramRepository nonogramRepository;
 

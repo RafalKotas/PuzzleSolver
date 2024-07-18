@@ -50,32 +50,4 @@ public class Architect {
         this.height = height;
         this.width = width;
     }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public String getMonth() {
-        return month;
-    }
-
-    public Double getDifficulty() {
-        return difficulty;
-    }
-
-    public Integer getHeight() {
-        return height;
-    }
-
-    public Integer getWidth() {
-        return width;
-    }
 }
