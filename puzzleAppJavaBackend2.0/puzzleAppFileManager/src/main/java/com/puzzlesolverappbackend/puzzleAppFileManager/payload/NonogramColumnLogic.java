@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.payload;
 
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.ActionEnum;
 import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.payload.ActionsConstants.actionsToDoAfterColouringOverlappingSequencesInColumns;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.payload.ActionsConstants.actionsToDoAfterCorrectingRangesWhenMarkingSequencesInColumns;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.services.NonogramLogicService.*;
 
@@ -252,7 +254,7 @@ public class NonogramColumnLogic {
                         this.nonogramState.increaseMadeSteps();
                         rowToChangeColumnBoardWithMarks.set(columnIdx, elementToChangeInsideRowBoardWithMarks.substring(0, 2) + "C" + sequenceCharMark);
 
-                        this.addRowToAffectedActionsByIdentifiers(rowIdx, ActionsConstants.actionsToDoAfterColouringOverlappingSequencesInColumns); // TODO - move to if below ?
+                        this.addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoAfterColouringOverlappingSequencesInColumns); // TODO - move to if below ?
 
                         this.getNonogramSolutionBoardWithMarks().set(rowIdx, rowToChangeColumnBoardWithMarks);
 
@@ -1451,52 +1453,34 @@ public class NonogramColumnLogic {
         return String.format("COLUMN %d - SeqNo = %d added to not to include", columnIdx, seqNo);
     }
 
-    private void addRowToAffectedActionsByIdentifiers(int rowIdx, List<Integer> affectedActionIds) {
-        for(int affectedActionId : affectedActionIds) {
-            switch (affectedActionId) {
-                case ActionsConstants.CORRECT_ROWS_SEQUENCES_RANGES ->
-                        this.getAffectedRowsToCorrectSequencesRanges().add(rowIdx);
-                case ActionsConstants.CORRECT_ROWS_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS ->
-                        this.getAffectedRowsToCorrectSequencesRangesWhenMetColouredField().add(rowIdx);
-                case ActionsConstants.CORRECT_ROWS_SEQUENCES_RANGES_IF_X_ON_WAY ->
-                        this.getAffectedRowsToChangeSequencesRangeIfXOnWay().add(rowIdx);
-                case ActionsConstants.COLOUR_OVERLAPPING_FIELDS_IN_ROWS ->
-                        this.getAffectedRowsToFillOverlappingFields().add(rowIdx);
-                case ActionsConstants.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROWS ->
-                        this.getAffectedRowsToExtendColouredFieldsNearX().add(rowIdx);
-                case ActionsConstants.PLACE_XS_ROWS_AT_UNREACHABLE_FIELDS ->
-                        this.getAffectedRowsToPlaceXsAtUnreachableFields().add(rowIdx);
-                case ActionsConstants.PLACE_XS_ROWS_AROUND_LONGEST_SEQUENCES ->
-                        this.getAffectedRowsToPlaceXsAroundLongestSequences().add(rowIdx);
-                case ActionsConstants.PLACE_XS_ROWS_AT_TOO_SHORT_EMPTY_SEQUENCES ->
-                        this.getAffectedRowsToPlaceXsAtTooShortEmptySequences().add(rowIdx);
-                case ActionsConstants.MARK_AVAILABLE_FIELDS_IN_ROWS ->
-                        this.getAffectedRowsToMarkAvailableSequences().add(rowIdx);
-                default -> {
-                }
+    private void addRowToAffectedActionsByIdentifiers(int rowIdx, List<ActionEnum> affectedActions) {
+        for(ActionEnum affectedAction : affectedActions) {
+            switch (affectedAction) {
+                case CORRECT_ROWS_SEQUENCES_RANGES -> this.getAffectedRowsToCorrectSequencesRanges().add(rowIdx);
+                case CORRECT_ROWS_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS -> this.getAffectedRowsToCorrectSequencesRangesWhenMetColouredField().add(rowIdx);
+                case CORRECT_ROWS_SEQUENCES_RANGES_IF_X_ON_WAY -> this.getAffectedRowsToChangeSequencesRangeIfXOnWay().add(rowIdx);
+                case COLOUR_OVERLAPPING_FIELDS_IN_ROWS -> this.getAffectedRowsToFillOverlappingFields().add(rowIdx);
+                case EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROWS -> this.getAffectedRowsToExtendColouredFieldsNearX().add(rowIdx);
+                case PLACE_XS_ROWS_AT_UNREACHABLE_FIELDS -> this.getAffectedRowsToPlaceXsAtUnreachableFields().add(rowIdx);
+                case PLACE_XS_ROWS_AROUND_LONGEST_SEQUENCES -> this.getAffectedRowsToPlaceXsAroundLongestSequences().add(rowIdx);
+                case PLACE_XS_ROWS_AT_TOO_SHORT_EMPTY_SEQUENCES -> this.getAffectedRowsToPlaceXsAtTooShortEmptySequences().add(rowIdx);
+                case MARK_AVAILABLE_FIELDS_IN_ROWS -> this.getAffectedRowsToMarkAvailableSequences().add(rowIdx);
+                default -> {}
             }
         }
     }
 
-    private void addColumnToAffectedActionsByIdentifiers(int columnIdx, List<Integer> affectedActionIds) {
-        for(int affectedActionId : affectedActionIds) {
-            switch (affectedActionId) {
-                case ActionsConstants.CORRECT_COLUMNS_SEQUENCES_RANGES ->
-                        this.getAffectedColumnsToCorrectSequencesRanges().add(columnIdx);
-                case ActionsConstants.CORRECT_COLUMNS_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS ->
-                        this.getAffectedColumnsToCorrectSequencesRangesWhenMetColouredField().add(columnIdx);
-                case ActionsConstants.CORRECT_COLUMNS_SEQUENCES_RANGES_IF_X_ON_WAY ->
-                        this.getAffectedColumnsToCorrectSequencesRangesIfXOnWay().add(columnIdx);
-                case ActionsConstants.COLOUR_OVERLAPPING_FIELDS_IN_COLUMNS ->
-                        this.getAffectedColumnsToFillOverlappingFields().add(columnIdx);
-                case ActionsConstants.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMNS ->
-                        this.getAffectedColumnsToExtendColouredFieldsNearX().add(columnIdx);
-                case ActionsConstants.PLACE_XS_COLUMNS_AT_UNREACHABLE_FIELDS ->
-                        this.getAffectedColumnsToPlaceXsAtUnreachableFields().add(columnIdx);
-                case ActionsConstants.PLACE_XS_COLUMNS_AROUND_LONGEST_SEQUENCES ->
-                        this.getAffectedColumnsToPlaceXsAroundLongestSequences().add(columnIdx);
-                case ActionsConstants.MARK_AVAILABLE_FIELDS_IN_COLUMNS ->
-                        this.getAffectedColumnsToMarkAvailableSequences().add(columnIdx);
+    private void addColumnToAffectedActionsByIdentifiers(int columnIdx, List<ActionEnum> affectedActions) {
+        for(ActionEnum affectedAction : affectedActions) {
+            switch (affectedAction) {
+                case CORRECT_COLUMNS_SEQUENCES_RANGES -> this.getAffectedColumnsToCorrectSequencesRanges().add(columnIdx);
+                case CORRECT_COLUMNS_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS -> this.getAffectedColumnsToCorrectSequencesRangesWhenMetColouredField().add(columnIdx);
+                case CORRECT_COLUMNS_SEQUENCES_RANGES_IF_X_ON_WAY -> this.getAffectedColumnsToCorrectSequencesRangesIfXOnWay().add(columnIdx);
+                case COLOUR_OVERLAPPING_FIELDS_IN_COLUMNS -> this.getAffectedColumnsToFillOverlappingFields().add(columnIdx);
+                case EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMNS -> this.getAffectedColumnsToExtendColouredFieldsNearX().add(columnIdx);
+                case PLACE_XS_COLUMNS_AT_UNREACHABLE_FIELDS -> this.getAffectedColumnsToPlaceXsAtUnreachableFields().add(columnIdx);
+                case PLACE_XS_COLUMNS_AROUND_LONGEST_SEQUENCES -> this.getAffectedColumnsToPlaceXsAroundLongestSequences().add(columnIdx);
+                case MARK_AVAILABLE_FIELDS_IN_COLUMNS -> this.getAffectedColumnsToMarkAvailableSequences().add(columnIdx);
                 default -> {}
             }
         }

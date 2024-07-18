@@ -1,58 +1,42 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.payload;
 
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.ActionEnum;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ActionsConstants {
-    public final static int CORRECT_ROWS_SEQUENCES_RANGES = 1;
-    public final static int CORRECT_COLUMNS_SEQUENCES_RANGES = 2;
-    public final static int CORRECT_ROWS_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS = 3;
-    public final static int CORRECT_COLUMNS_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS = 4;
-    public final static int CORRECT_ROWS_SEQUENCES_RANGES_IF_X_ON_WAY = 5;
-    public final static int CORRECT_COLUMNS_SEQUENCES_RANGES_IF_X_ON_WAY = 6;
-    public final static int COLOUR_OVERLAPPING_FIELDS_IN_ROWS = 7;
-    public final static int COLOUR_OVERLAPPING_FIELDS_IN_COLUMNS = 8;
-    public final static int EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROWS = 9;
-    public final static int EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMNS = 10;
-    public final static int PLACE_XS_ROWS_AT_UNREACHABLE_FIELDS = 11;
-    public final static int PLACE_XS_COLUMNS_AT_UNREACHABLE_FIELDS = 12;
-    public final static int PLACE_XS_ROWS_AROUND_LONGEST_SEQUENCES = 13;
-    public final static int PLACE_XS_COLUMNS_AROUND_LONGEST_SEQUENCES = 14;
-    public final static int PLACE_XS_ROWS_AT_TOO_SHORT_EMPTY_SEQUENCES = 15;
-    public final static int PLACE_XS_COLUMNS_AT_TOO_SHORT_EMPTY_SEQUENCES = 16;
-    public final static int MARK_AVAILABLE_FIELDS_IN_ROWS = 17;
-    public final static int MARK_AVAILABLE_FIELDS_IN_COLUMNS = 18;
-    public final static int CORRECT_ROWS_SEQUENCES_RANGES_WHEN_MARKING_FIELDS = 19;
-    public final static int CORRECT_COLUMNS_SEQUENCES_RANGES_WHEN_MARKING_FIELDS = 20;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.ActionEnum.*;
 
-    public final static ArrayList<Integer> actionsToDoAfterCorrectingRowsSequences = new ArrayList<>(
+public class ActionsConstants {
+
+    public final static ArrayList<ActionEnum> actionsToDoAfterCorrectingRowsSequences = new ArrayList<>(
             List.of(
                     CORRECT_ROWS_SEQUENCES_RANGES_IF_X_ON_WAY,
                     COLOUR_OVERLAPPING_FIELDS_IN_ROWS,
                     PLACE_XS_ROWS_AT_UNREACHABLE_FIELDS
             ));
 
-    public final static ArrayList<Integer> actionsToDoAfterCorrectingColumnsSequences = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterCorrectingColumnsSequences = new ArrayList<>(
             List.of(
                     CORRECT_COLUMNS_SEQUENCES_RANGES_IF_X_ON_WAY,
                     COLOUR_OVERLAPPING_FIELDS_IN_COLUMNS,
                     PLACE_XS_COLUMNS_AT_UNREACHABLE_FIELDS
             ));
 
-    public final static ArrayList<Integer> actionsToDoAfterCorrectingRowsSequencesWhenMetColouredField = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterCorrectingRowsSequencesWhenMetColouredField = new ArrayList<>(
             Arrays.asList(
                     COLOUR_OVERLAPPING_FIELDS_IN_ROWS,
                     PLACE_XS_ROWS_AT_UNREACHABLE_FIELDS
             ));
 
-    public final static ArrayList<Integer> actionsToDoAfterCorrectingColumnsSequencesWhenMetColouredField = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterCorrectingColumnsSequencesWhenMetColouredField = new ArrayList<>(
             Arrays.asList(
                     COLOUR_OVERLAPPING_FIELDS_IN_COLUMNS,
                     PLACE_XS_COLUMNS_AT_UNREACHABLE_FIELDS
             ));
 
-    public final static ArrayList<Integer> actionsToDoAfterCorrectingRowsSequencesIfXOnWay = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterCorrectingRowsSequencesIfXOnWay = new ArrayList<>(
             List.of(
                     CORRECT_ROWS_SEQUENCES_RANGES,
                     COLOUR_OVERLAPPING_FIELDS_IN_ROWS,
@@ -60,7 +44,7 @@ public class ActionsConstants {
                     MARK_AVAILABLE_FIELDS_IN_ROWS
             ));
 
-    public final static ArrayList<Integer> actionsToDoAfterCorrectingColumnsSequencesIfXOnWay = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterCorrectingColumnsSequencesIfXOnWay = new ArrayList<>(
             List.of(
                     CORRECT_COLUMNS_SEQUENCES_RANGES,
                     COLOUR_OVERLAPPING_FIELDS_IN_COLUMNS,
@@ -68,33 +52,33 @@ public class ActionsConstants {
                     MARK_AVAILABLE_FIELDS_IN_COLUMNS
             ));
 
-    public final static ArrayList<Integer> actionsToDoAfterColouringOverlappingSequencesInRows = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterColouringOverlappingSequencesInRows = new ArrayList<>(
             Arrays.asList(
                     CORRECT_COLUMNS_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
                     PLACE_XS_COLUMNS_AROUND_LONGEST_SEQUENCES,
                     MARK_AVAILABLE_FIELDS_IN_COLUMNS
             ));
 
-    public final static ArrayList<Integer> actionsToDoAfterColouringOverlappingSequencesInColumns = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterColouringOverlappingSequencesInColumns = new ArrayList<>(
             Arrays.asList(
                     CORRECT_ROWS_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
                     PLACE_XS_ROWS_AROUND_LONGEST_SEQUENCES,
                     MARK_AVAILABLE_FIELDS_IN_ROWS
             ));
 
-    public final static ArrayList<Integer> actionsToDoAfterExtendingColouredFieldsNearXInRows = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterExtendingColouredFieldsNearXInRows = new ArrayList<>(
             List.of());
 
-    public final static ArrayList<Integer> actionsToDoAfterExtendingColouredFieldsNearXInColumns = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterExtendingColouredFieldsNearXInColumns = new ArrayList<>(
             List.of());
 
-    public final static ArrayList<Integer> actionsToDoAfterPlacingXsAtRowsUnreachableFields = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterPlacingXsAtRowsUnreachableFields = new ArrayList<>(
             List.of(
                     CORRECT_COLUMNS_SEQUENCES_RANGES_IF_X_ON_WAY,
                     PLACE_XS_COLUMNS_AT_UNREACHABLE_FIELDS //+
             ));
 
-    public final static ArrayList<Integer> actionsToDoAfterPlacingXsAtColumnsUnreachableFields = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterPlacingXsAtColumnsUnreachableFields = new ArrayList<>(
             List.of(
                     CORRECT_COLUMNS_SEQUENCES_RANGES,
                     CORRECT_ROWS_SEQUENCES_RANGES_IF_X_ON_WAY,
@@ -102,7 +86,7 @@ public class ActionsConstants {
                     PLACE_XS_ROWS_AT_TOO_SHORT_EMPTY_SEQUENCES //+
             ));
 
-    public final static ArrayList<Integer> actionsToDoAfterPlacingXsAroundLongestSequencesInRows = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterPlacingXsAroundLongestSequencesInRows = new ArrayList<>(
             List.of(
                     CORRECT_ROWS_SEQUENCES_RANGES, // TODO - check if can extract correcting range to another place (while only one possible coloured sequence matches)
                     CORRECT_COLUMNS_SEQUENCES_RANGES_IF_X_ON_WAY,
@@ -110,7 +94,7 @@ public class ActionsConstants {
                     PLACE_XS_COLUMNS_AT_TOO_SHORT_EMPTY_SEQUENCES
             ));
 
-    public final static ArrayList<Integer> actionsToDoAfterPlacingXsAroundLongestSequencesInColumns = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterPlacingXsAroundLongestSequencesInColumns = new ArrayList<>(
             List.of(
                     CORRECT_COLUMNS_SEQUENCES_RANGES, // TODO - check if can extract correcting range to another place (while only one possible coloured sequence matches)
                     CORRECT_ROWS_SEQUENCES_RANGES_IF_X_ON_WAY,
@@ -118,47 +102,47 @@ public class ActionsConstants {
                     PLACE_XS_ROWS_AT_TOO_SHORT_EMPTY_SEQUENCES
             ));
 
-    public final static ArrayList<Integer> actionsToDoAfterPlacingXsAtTooShortEmptySequencesInRows = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterPlacingXsAtTooShortEmptySequencesInRows = new ArrayList<>(
             List.of(
                     CORRECT_COLUMNS_SEQUENCES_RANGES_IF_X_ON_WAY
             ));
 
-    public final static ArrayList<Integer> actionsToDoAfterPlacingXsAtTooShortSequencesInColumns = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterPlacingXsAtTooShortSequencesInColumns = new ArrayList<>(
             List.of(
                     CORRECT_ROWS_SEQUENCES_RANGES_IF_X_ON_WAY
             ));
 
-    public final static ArrayList<Integer> actionsToDoAfterColouringFieldInTrivialRow = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterColouringFieldInTrivialRow = new ArrayList<>(
             List.of(
                     CORRECT_COLUMNS_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
                     EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMNS
             ));
 
-    public final static ArrayList<Integer> actionsToDoAfterColouringFieldInTrivialColumn = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterColouringFieldInTrivialColumn = new ArrayList<>(
             List.of(
                     CORRECT_ROWS_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
                     EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROWS
             ));
-
-    public final static ArrayList<Integer> actionsToDoAfterPlacingXInTrivialRow = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterPlacingXInTrivialRow = new ArrayList<>(
             List.of(
+
                     CORRECT_COLUMNS_SEQUENCES_RANGES_IF_X_ON_WAY,
                     PLACE_XS_COLUMNS_AT_TOO_SHORT_EMPTY_SEQUENCES
             ));
 
-    public final static ArrayList<Integer> actionsToDoAfterPlacingXInTrivialColumn = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterPlacingXInTrivialColumn = new ArrayList<>(
             List.of(
                     CORRECT_ROWS_SEQUENCES_RANGES_IF_X_ON_WAY,
                     PLACE_XS_ROWS_AT_TOO_SHORT_EMPTY_SEQUENCES
             ));
 
-    public final static ArrayList<Integer> actionsToDoAfterCorrectingRangesWhenMarkingSequencesInRows = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterCorrectingRangesWhenMarkingSequencesInRows = new ArrayList<>(
             List.of(
                     COLOUR_OVERLAPPING_FIELDS_IN_ROWS,
                     PLACE_XS_ROWS_AT_UNREACHABLE_FIELDS
             ));
 
-    public final static ArrayList<Integer> actionsToDoAfterCorrectingRangesWhenMarkingSequencesInColumns = new ArrayList<>(
+    public final static ArrayList<ActionEnum> actionsToDoAfterCorrectingRangesWhenMarkingSequencesInColumns = new ArrayList<>(
             List.of(
                     COLOUR_OVERLAPPING_FIELDS_IN_COLUMNS,
                     PLACE_XS_COLUMNS_AT_UNREACHABLE_FIELDS
