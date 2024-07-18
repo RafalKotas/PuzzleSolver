@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager;
+package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

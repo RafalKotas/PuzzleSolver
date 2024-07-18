@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager;
+package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram;
 
 
 import com.google.gson.Gson;
@@ -50,7 +50,7 @@ public class NonogramSolutionNode {
 
     public Optional<NonogramSolutionDecision> getLastDecision() {
         Optional<NonogramSolutionDecision> lastDecision = Optional.empty();
-        if(this.nonogramGuessDecisions.size() > 0) {
+        if(!this.nonogramGuessDecisions.isEmpty()) {
             lastDecision = Optional.ofNullable(this.nonogramGuessDecisions.get(this.nonogramGuessDecisions.size() - 1));
         }
         return lastDecision;
@@ -75,7 +75,7 @@ public class NonogramSolutionNode {
         printNodeDecisions();
         System.out.println("Stats: ");
         //this.getNonogramLogic().getNonogramPrinter().printStatsAfterBasicActionsMade(this.getNonogramLogic());
-        System.out.println("Subsolution invalid? : " + this.getNonogramLogic().isSolutionInvalid());
+        System.out.println("Subsolution invalid? : " + this.getNonogramLogic().getNonogramState().isInvalidSolution());
         System.out.println("-".repeat(30));
     }
 
@@ -105,7 +105,7 @@ public class NonogramSolutionNode {
                 logActionWhichLeadToCheckedStage(actionNo);
             }
 
-            solutionInvalid = this.getNonogramLogic().isSolutionInvalid();
+            solutionInvalid = this.getNonogramLogic().getNonogramState().isInvalidSolution();
 
             NonogramLogic logicAfterActionsMade = copyNonogramLogic();
 

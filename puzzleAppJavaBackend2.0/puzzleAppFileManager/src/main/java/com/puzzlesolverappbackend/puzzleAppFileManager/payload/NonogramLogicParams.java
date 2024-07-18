@@ -1,6 +1,6 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.payload;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.NonogramSolutionDecision;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramSolutionDecision;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

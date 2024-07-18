@@ -1,8 +1,8 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.services;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.NonogramSolutionNode;
-import com.puzzlesolverappbackend.puzzleAppFileManager.NonogramSolver;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramSolutionNode;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramSolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -60,11 +60,11 @@ public class NonogramLogicService {
 
 
                     if(rowToChangeColumnBoardWithMarks.get(columnIdx).substring(2).equals("--")) {
-                        nonogramLogicObject.increaseStepsMade();
+                        nonogramLogicObject.getNonogramState().increaseMadeSteps();
 
                         rowToChangeColumnBoardWithMarks.set(columnIdx, elementToChangeInsideRowBoardWithMarks.substring(0, 2) + "C" + sequenceCharMark);
                         nonogramLogicObject.getNonogramSolutionBoardWithMarks().set(rowIdx, rowToChangeColumnBoardWithMarks);
-                        nonogramLogicObject.setNewStepsMade(nonogramLogicObject.getNewStepsMade() + 1);
+                        nonogramLogicObject.getNonogramState().increaseMadeSteps();
 
                         rowToChangeColumnBoard = nonogramLogicObject.getNonogramSolutionBoard().get(rowIdx);
                         if(rowToChangeColumnBoard.get(columnIdx).equals("-".repeat(4))) {
@@ -125,7 +125,7 @@ public class NonogramLogicService {
                     elementToChangeInsideRowBoardWithMarks = rowToChangeSolutionBoardWithMarks.get(columnIdx);
 
                     if(rowToChangeSolutionBoardWithMarks.get(columnIdx).startsWith("--")) {
-                        nonogramLogicObject.increaseStepsMade();
+                        nonogramLogicObject.getNonogramState().increaseMadeSteps();
                         rowToChangeSolutionBoardWithMarks.set(columnIdx, "R" + sequenceCharMark + elementToChangeInsideRowBoardWithMarks.substring(2, 4));
 
                         rowToChangeSolutionBoard = nonogramLogicObject.getNonogramSolutionBoard().get(rowIdx);
@@ -235,7 +235,7 @@ public class NonogramLogicService {
                     for(int sequenceColumnIdx = firstSequenceIndex; sequenceColumnIdx <= lastSequenceIndex; sequenceColumnIdx++) {
                         if(nonogramLogicObject.getNonogramSolutionBoardWithMarks().get(rowIdx).get(sequenceColumnIdx).startsWith("--")) {
                             nonogramLogicObject.getNonogramRowLogic().markRowBoardField(rowIdx, sequenceColumnIdx, sequenceMarker);
-                            nonogramLogicObject.increaseStepsMade();
+                            nonogramLogicObject.getNonogramState().increaseMadeSteps();
                         } else if(showRepetitions) {
                             System.out.println("Row field was marked before.");
                         }
@@ -341,7 +341,7 @@ public class NonogramLogicService {
                         if(nonogramLogicObject.getNonogramSolutionBoardWithMarks().get(sequenceRowIdx).get(columnIdx).substring(2).equals("--")) {
                             nonogramLogicObject.getNonogramColumnLogic().markColumnBoardField(sequenceRowIdx, columnIdx, sequenceMarker);
                             nonogramLogicObject.copyLogicFromNonogramColumnLogic();
-                            nonogramLogicObject.increaseStepsMade();
+                            nonogramLogicObject.getNonogramState().increaseMadeSteps();
                         } else if (showRepetitions) {
                             System.out.println("Column field was marked before.");
                         }
@@ -423,7 +423,7 @@ public class NonogramLogicService {
                         if(sequenceOnBoardLength == rowSequencesLengthsIncludingSequenceRange.get(0)) {
                             if((firstXIndex > -1 && nonogramLogicDataToChange.getNonogramSolutionBoard().get(rowIdx).get(firstXIndex).equals("-"))
                              || (lastXIndex < width && nonogramLogicDataToChange.getNonogramSolutionBoard().get(rowIdx).get(lastXIndex).equals("-")) ) {
-                                nonogramLogicObject.increaseStepsMade();
+                                nonogramLogicObject.getNonogramState().increaseMadeSteps();
                                     nonogramLogicDataToChange.getNonogramRowLogic()
                                             .placeXAtGivenPosition(rowIdx, firstXIndex)
                                             .placeXAtGivenPosition(rowIdx, lastXIndex)
@@ -451,7 +451,7 @@ public class NonogramLogicService {
                     if(sequenceOnBoardLength == Collections.max(rowSequencesLengthsIncludingSequenceRange)) {
 
                         if(nonogramLogicDataToChange.getNonogramSolutionBoard().get(rowIdx).get(firstXIndex).equals("-")) {
-                            nonogramLogicObject.increaseStepsMade();
+                            nonogramLogicObject.getNonogramState().increaseMadeSteps();
                             nonogramLogicDataToChange = nonogramLogicDataToChange
                                     .placeXAtGivenPosittion(rowIdx, firstXIndex)
                                     .addRowFieldToNotToInclude(rowIdx, firstXIndex)
@@ -461,7 +461,7 @@ public class NonogramLogicService {
                         }
 
                         if(nonogramLogicDataToChange.getNonogramSolutionBoard().get(rowIdx).get(lastXIndex).equals("-")) {
-                            nonogramLogicObject.increaseStepsMade();
+                            nonogramLogicObject.getNonogramState().increaseMadeSteps();
                             nonogramLogicDataToChange = nonogramLogicDataToChange
                                     .placeXAtGivenPosittion(rowIdx, lastXIndex)
                                     .addRowFieldToNotToInclude(rowIdx, lastXIndex)
@@ -550,7 +550,7 @@ public class NonogramLogicService {
 
                             if(firstXIndex > -1) {
                                 if (nonogramLogicDataToChange.getNonogramSolutionBoard().get(firstXIndex).get(columnIdx).equals("-")) {
-                                    nonogramLogicObject.increaseStepsMade();
+                                    nonogramLogicObject.getNonogramState().increaseMadeSteps();
                                     nonogramLogicDataToChange = nonogramLogicDataToChange
                                             .placeXAtGivenPosittion(firstXIndex, columnIdx)
                                             .addRowFieldToNotToInclude(firstXIndex, columnIdx)
@@ -562,7 +562,7 @@ public class NonogramLogicService {
 
                             if (lastXIndex < height) {
                                 if( nonogramLogicDataToChange.getNonogramSolutionBoard().get(lastXIndex).get(columnIdx).equals("-")) {
-                                    nonogramLogicObject.increaseStepsMade();
+                                    nonogramLogicObject.getNonogramState().increaseMadeSteps();
                                     nonogramLogicDataToChange = nonogramLogicDataToChange
                                             .placeXAtGivenPosittion(lastXIndex, columnIdx)
                                             .addRowFieldToNotToInclude(lastXIndex, columnIdx)
@@ -574,7 +574,7 @@ public class NonogramLogicService {
 
                             for(int sequenceRowIdx = firstXIndex + 1; sequenceRowIdx < lastXIndex; sequenceRowIdx++) {
                                 if (!nonogramLogicDataToChange.getColumnsFieldsNotToInclude().get(columnIdx).contains(sequenceRowIdx)) {
-                                    nonogramLogicObject.increaseStepsMade();
+                                    nonogramLogicObject.getNonogramState().increaseMadeSteps();
                                     nonogramLogicDataToChange = nonogramLogicDataToChange.addColumnFieldToNotToInclude(columnIdx, sequenceRowIdx);
                                 } else if(showRepetitions) {
                                     System.out.println("Field not to include in column has been inserted before");
@@ -591,7 +591,7 @@ public class NonogramLogicService {
                                     .placeXAtGivenPosittion(firstXIndex, columnIdx)
                                     .addColumnFieldToNotToInclude(columnIdx, firstXIndex)
                                     .addRowFieldToNotToInclude(firstXIndex, columnIdx);
-                            nonogramLogicObject.increaseStepsMade();
+                            nonogramLogicObject.getNonogramState().increaseMadeSteps();
                         } else if (showRepetitions) {
                             System.out.println("Sequence with maximum length in area firstXIndex placed before!");
                         }
@@ -600,7 +600,7 @@ public class NonogramLogicService {
                                     .placeXAtGivenPosittion(lastXIndex, columnIdx)
                                     .addColumnFieldToNotToInclude(columnIdx, lastXIndex)
                                     .addRowFieldToNotToInclude(lastXIndex, columnIdx);
-                            nonogramLogicObject.increaseStepsMade();
+                            nonogramLogicObject.getNonogramState().increaseMadeSteps();
                         } else if(showRepetitions) {
                             System.out.println("Sequence with maximum length in area lastXIndex placed before!");
                         }
@@ -643,7 +643,7 @@ public class NonogramLogicService {
                             .placeXAtGivenPosittion(rowIdx, columnIdx)
                             .addRowFieldToNotToInclude(rowIdx, columnIdx)
                             .addColumnFieldToNotToInclude(columnIdx, rowIdx);
-                    nonogramLogicObject.increaseStepsMade();
+                    nonogramLogicObject.getNonogramState().increaseMadeSteps();
                 } else if(showRepetitions) {
                     System.out.println("X at unreachable field in row placed before!");
                 }
@@ -685,7 +685,7 @@ public class NonogramLogicService {
                             .placeXAtGivenPosittion(rowIdx, columnIdx)
                             .addRowFieldToNotToInclude(rowIdx, columnIdx)
                             .addColumnFieldToNotToInclude(columnIdx, rowIdx);
-                    nonogramLogicObject.increaseStepsMade();
+                    nonogramLogicObject.getNonogramState().increaseMadeSteps();
                 } else if(showRepetitions) {
                     System.out.println("X at unreachable field in column placed before!");
                 }

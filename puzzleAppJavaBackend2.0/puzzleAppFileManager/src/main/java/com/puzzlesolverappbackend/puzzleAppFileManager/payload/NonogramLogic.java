@@ -1,7 +1,8 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.payload;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.NonogramSolutionDecision;
 import com.puzzlesolverappbackend.puzzleAppFileManager.logicOperators.LogicFunctions;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramSolutionDecision;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramState;
 import com.puzzlesolverappbackend.puzzleAppFileManager.templates.nonogram.NonogramBoardTemplate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.payload.ActionsConstants.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramState.buildInitialEmptyNonogramState;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.services.NonogramLogicService.rangeInsideAnotherRange;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.services.NonogramLogicService.rangeLength;
 
@@ -23,9 +25,8 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.services.NonogramL
 @AllArgsConstructor
 public class NonogramLogic extends NonogramLogicParams {
     private static final Logger log = LoggerFactory.getLogger(NonogramLogic.class);
-    private int newStepsMade;
 
-    private boolean solutionInvalid;
+    private NonogramState nonogramState;
 
     @Override
     public String toString() {
@@ -54,7 +55,6 @@ public class NonogramLogic extends NonogramLogicParams {
                 ", affectedColumnsToPlaceXsAtTooShortEmptySequences=" + affectedColumnsToPlaceXsAtTooShortEmptySequences + "\n" +
                 ", affectedRowsToExtendColouredFieldsNearX=" + affectedRowsToExtendColouredFieldsNearX + "\n" +
                 ", affectedColumnsToExtendColouredFieldsNearX=" + affectedColumnsToExtendColouredFieldsNearX + "\n" +
-                ", newStepsMade=" + newStepsMade + "\n" +
                 '}';
     }
 
@@ -102,7 +102,7 @@ public class NonogramLogic extends NonogramLogicParams {
         this.rowsSequencesIdsNotToInclude = generateEmptyRowsNotToInclude();
         this.columnsSequencesIdsNotToInclude = generateEmptyColumnsNotToInclude();
 
-        this.newStepsMade = 0;
+        this.nonogramState = buildInitialEmptyNonogramState();
 
         this.nonogramColumnLogic = new NonogramColumnLogic(this);
         this.nonogramRowLogic = new NonogramRowLogic(this);
@@ -142,12 +142,17 @@ public class NonogramLogic extends NonogramLogicParams {
     }
 
     public NonogramLogic(NonogramLogic that) {
-        this(that.getRowsSequences(), that.getColumnsSequences(),
-                that.getRowsSequencesRanges(), that.getColumnsSequencesRanges(),
-                that.getRowsFieldsNotToInclude(), that.getColumnsFieldsNotToInclude(),
-                that.getRowsSequencesIdsNotToInclude(), that.getColumnsFieldsNotToInclude(),
-                that.getNonogramSolutionBoard(), that.getNonogramSolutionBoardWithMarks(),
-                that.isSolutionInvalid());
+        this(that.getRowsSequences(),
+                that.getColumnsSequences(),
+                that.getRowsSequencesRanges(),
+                that.getColumnsSequencesRanges(),
+                that.getRowsFieldsNotToInclude(),
+                that.getColumnsFieldsNotToInclude(),
+                that.getRowsSequencesIdsNotToInclude(),
+                that.getColumnsFieldsNotToInclude(),
+                that.getNonogramSolutionBoard(),
+                that.getNonogramSolutionBoardWithMarks(),
+                that.getNonogramState().isInvalidSolution());
     }
 
     public NonogramLogic(List<List<Integer>> rowsSequences,
@@ -196,9 +201,7 @@ public class NonogramLogic extends NonogramLogicParams {
         this.affectedRowsToExtendColouredFieldsNearX = new HashSet<>();
         this.affectedColumnsToExtendColouredFieldsNearX = new HashSet<>();
 
-        this.setSolutionInvalid(isSolutionInvalid);
-
-        this.newStepsMade = 0;
+        this.nonogramState = new NonogramState(0, isSolutionInvalid);
     }
 
     public void clearLogs() {
@@ -921,13 +924,6 @@ public class NonogramLogic extends NonogramLogicParams {
     }
 
     /**
-     * increases steps (actions like change column/sequence ranges, marking sequence, place "X" or "O"
-     */
-    public void increaseStepsMade() {
-        this.newStepsMade = this.newStepsMade + 1;
-    }
-
-    /**
      * function updates available choices to solve nonogram using method "trial and error"(?)
      */
     public void updateCurrentAvailableChoices() {
@@ -1161,8 +1157,7 @@ public class NonogramLogic extends NonogramLogicParams {
         this.affectedRowsToExtendColouredFieldsNearX = this.nonogramColumnLogic.getAffectedRowsToExtendColouredFieldsNearX();
         this.affectedColumnsToExtendColouredFieldsNearX = this.nonogramColumnLogic.getAffectedColumnsToExtendColouredFieldsNearX();
 
-        this.newStepsMade = this.nonogramColumnLogic.getNewStepsMade();
-        this.solutionInvalid = this.nonogramColumnLogic.isSolutionInvalid();
+        this.setNonogramState(this.nonogramColumnLogic.getNonogramState());
     }
 
     public void copyLogicToNonogramColumnLogic() {
@@ -1197,8 +1192,7 @@ public class NonogramLogic extends NonogramLogicParams {
         this.nonogramColumnLogic.setAffectedRowsToExtendColouredFieldsNearX(this.affectedRowsToExtendColouredFieldsNearX);
         this.nonogramColumnLogic.setAffectedColumnsToExtendColouredFieldsNearX(this.affectedColumnsToExtendColouredFieldsNearX);
 
-        this.nonogramColumnLogic.setNewStepsMade(this.newStepsMade);
-        this.nonogramColumnLogic.setSolutionInvalid(this.solutionInvalid);
+        this.nonogramColumnLogic.setNonogramState(this.getNonogramState());
     }
 
     public void copyLogicFromNonogramRowLogic() {
@@ -1234,8 +1228,7 @@ public class NonogramLogic extends NonogramLogicParams {
         this.affectedRowsToMarkAvailableSequences = this.nonogramRowLogic.getAffectedRowsToMarkAvailableSequences();
         this.affectedColumnsToMarkAvailableSequences = this.nonogramRowLogic.getAffectedColumnsToMarkAvailableSequences();
 
-        this.newStepsMade = this.nonogramRowLogic.getNewStepsMade();
-        this.solutionInvalid = this.nonogramRowLogic.isSolutionInvalid();
+        this.nonogramState = this.nonogramRowLogic.getNonogramState();
     }
 
     public void copyLogicToNonogramRowLogic() {
@@ -1271,8 +1264,7 @@ public class NonogramLogic extends NonogramLogicParams {
         this.nonogramRowLogic.setAffectedRowsToExtendColouredFieldsNearX(this.affectedRowsToExtendColouredFieldsNearX);
         this.nonogramRowLogic.setAffectedColumnsToExtendColouredFieldsNearX(this.affectedColumnsToExtendColouredFieldsNearX);
 
-        this.nonogramRowLogic.setNewStepsMade(this.newStepsMade);
-        this.nonogramRowLogic.setSolutionInvalid(this.solutionInvalid);
+        this.nonogramRowLogic.setNonogramState(this.nonogramState);
     }
 
 

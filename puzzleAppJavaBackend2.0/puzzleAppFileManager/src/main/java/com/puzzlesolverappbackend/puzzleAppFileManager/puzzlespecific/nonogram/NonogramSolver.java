@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager;
+package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram;
 
 import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzleAppFileManager.logs.nonogram.NonogramGuessActionsLog;
@@ -134,8 +134,8 @@ public class NonogramSolver {
                     rightNodeX.colourOrPlaceX();
                     rightNodeX.makeBasicSolverActions();
 
-                    if(!leftNodeO.getNonogramLogic().isSolutionInvalid()) {
-                        if(rightNodeX.getNonogramLogic().isSolutionInvalid()) {
+                    if(!leftNodeO.getNonogramLogic().getNonogramState().isInvalidSolution()) {
+                        if(rightNodeX.getNonogramLogic().getNonogramState().isInvalidSolution()) {
                             decision.setDecisionMarker("O");
                             correctDecision = Optional.of(decision);
                             nonogramSubsolutionNode = gson.fromJson(gson.toJson(leftNodeO), NonogramSolutionNode.class);
@@ -149,7 +149,7 @@ public class NonogramSolver {
                             wrongCount = 0;
                         }
                     } else { //leftNode0 solution invalid
-                        if(rightNodeX.getNonogramLogic().isSolutionInvalid()) {
+                        if(rightNodeX.getNonogramLogic().getNonogramState().isInvalidSolution()) {
                             wrongCount = 2;
                         } else {
                             decision.setDecisionMarker("X");
@@ -317,7 +317,7 @@ public class NonogramSolver {
     private boolean guessModeContinueDecision (String wordExpression) {
         return switch (wordExpression) {
             case "toFirstDecision" -> this.solutionNode.getNonogramGuessDecisions().isEmpty();
-            case "toInvalidSolution" -> !this.solutionNode.getNonogramLogic().isSolutionInvalid();
+            case "toInvalidSolution" -> !this.solutionNode.getNonogramLogic().getNonogramState().isInvalidSolution();
             default -> this.oneOfTwoWrong;
         };
     }
