@@ -94,9 +94,6 @@ public class NonogramGenetic {
                 index--;
             }
         }
-
-        //System.out.println("Same boards generated " + repetitionCount + " times.");
-        //System.out.println("Initial population size: " + currentPopulation.size());
     }
 
     public void generateNextPopulation(int iterationNo) {

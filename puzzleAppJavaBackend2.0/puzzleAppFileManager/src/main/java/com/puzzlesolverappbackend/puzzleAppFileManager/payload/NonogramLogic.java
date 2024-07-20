@@ -145,7 +145,8 @@ public class NonogramLogic extends NonogramLogicParams {
                 that.getColumnsFieldsNotToInclude(),
                 that.getNonogramSolutionBoard(),
                 that.getNonogramSolutionBoardWithMarks(),
-                that.getNonogramState().isInvalidSolution());
+                that.getNonogramState().isInvalidSolution(),
+                that.isGuessMode());
     }
 
     public NonogramLogic(List<List<Integer>> rowsSequences,
@@ -158,7 +159,8 @@ public class NonogramLogic extends NonogramLogicParams {
                          List<List<Integer>> columnsSequencesIdsNotToInclude,
                          List<List<String>> nonogramSolutionBoard,
                          List<List<String>> nonogramSolutionBoardWithMarks,
-                         boolean isSolutionInvalid) {
+                         boolean isSolutionInvalid,
+                         boolean guessMode) {
         this.logs = new ArrayList<>();
 
         this.rowsSequences = new ArrayList<>(rowsSequences);
@@ -176,6 +178,8 @@ public class NonogramLogic extends NonogramLogicParams {
         this.availableChoices = new ArrayList<>();
 
         this.nonogramState = new NonogramState(0, isSolutionInvalid);
+
+        this.guessMode = guessMode;
     }
 
     public void clearLogs() {

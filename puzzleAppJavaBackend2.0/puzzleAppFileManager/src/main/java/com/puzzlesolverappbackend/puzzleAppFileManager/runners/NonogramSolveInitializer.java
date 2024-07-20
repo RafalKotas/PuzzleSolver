@@ -644,7 +644,7 @@ public class NonogramSolveInitializer implements CommandLineRunner {
             );
 
             nonogramLogicToSolve = new NonogramLogic(
-                    nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences());
+                    nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences(), false);
 
             if(!filesTooLongSolving.contains(filename)) {
                 long start = System.currentTimeMillis();

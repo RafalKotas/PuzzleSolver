@@ -1,7 +1,6 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.runners;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramFileDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
@@ -26,8 +25,6 @@ public class SymmetricNonogramLoggerInitializer implements CommandLineRunner {
     private List<String> nonograms2Dsymmetrical = new ArrayList<>();
     private List<String> nonograms3Dsymmetrical = new ArrayList<>();
 
-    private Gson gsonMapper = new Gson();
-
 
     @Override
     public void run(String... args) throws Exception {
@@ -43,7 +40,7 @@ public class SymmetricNonogramLoggerInitializer implements CommandLineRunner {
 
             try {
                 NonogramFileDetails nonogramFileDetails = objectMapper.readValue(new File(puzzlePath + nonogramFileName), NonogramFileDetails.class);
-                NonogramLogic nonogramLogic = new NonogramLogic(nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences());
+                NonogramLogic nonogramLogic = new NonogramLogic(nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences(), false);
 
                 switch(nonogramLogic.nonogramSymmetricalGrade()) {
                     case "4 axis":

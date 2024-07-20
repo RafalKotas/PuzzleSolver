@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import java.util.Arrays;
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -25,7 +24,7 @@ public class SudokuController {
     CommonService commonService;
 
     @PostMapping("/save")
-    public ResponseEntity<String> saveSudokuToJsonFile(@RequestParam String fileName, @Valid @RequestBody SudokuFileDetails nfd) {
+    public ResponseEntity<String> saveSudokuToJsonFile(@RequestParam String fileName, @Valid @RequestBody SudokuFileDetails nfd) throws IOException {
 
         System.out.println("SAVE SUDOKU START, FILENAME: " + fileName);
         System.out.println(nfd.toString());
@@ -53,10 +52,8 @@ public class SudokuController {
             abc.close();
             return new ResponseEntity<>("Save success!", HttpStatus.OK);
         } catch (IOException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>("Exception external problem.", HttpStatus.OK);
+            throw new IOException("Can't save sudoku to file");
         }
-
     }
 }
 

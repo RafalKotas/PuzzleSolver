@@ -6,8 +6,6 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramFileDetai
 import com.puzzlesolverappbackend.puzzleAppFileManager.repository.NonogramRepository;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,7 +81,7 @@ public class NonogramsDataInitializer implements CommandLineRunner {
                 collectFilesToCorrect(filePath);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException("Can't read file/s from directory " + puzzlePath);
         }
 
         System.out.println("Files OK: " + filesOK + " filesCount: " + filesCount + " to Correct: " + (filesCount - filesOK));
