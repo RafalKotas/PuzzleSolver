@@ -976,9 +976,24 @@ public class NonogramLogic extends NonogramLogicParams {
 
     public void makeProperActionInRow(int rowIdx, ActionEnum actionToDoInRow) {
         switch (actionToDoInRow) {
-            case CORRECT_ROW_SEQUENCES_RANGES -> nonogramRowLogic.correctRowSequencesRanges(rowIdx);
-            case CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS -> nonogramRowLogic.correctRowSequencesRangesWhenMetColouredField(rowIdx);
-            case CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY -> nonogramRowLogic.correctRowRangeIndexesIfXOnWay(rowIdx);
+            case CORRECT_ROW_SEQUENCES_RANGES -> {
+                nonogramRowLogic.correctRowSequencesRanges(rowIdx);
+                if(guessMode) {
+                    invalidateSolutionIfRowSequencesWrong(rowIdx);
+                }
+            }
+            case CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS -> {
+                nonogramRowLogic.correctRowSequencesRangesWhenMetColouredField(rowIdx);
+                if(guessMode) {
+                    invalidateSolutionIfRowSequencesWrong(rowIdx);
+                }
+            }
+            case CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY -> {
+                nonogramRowLogic.correctRowRangeIndexesIfXOnWay(rowIdx);
+                if(guessMode) {
+                    invalidateSolutionIfRowSequencesWrong(rowIdx);
+                }
+            }
             case COLOUR_OVERLAPPING_FIELDS_IN_ROW -> nonogramRowLogic.fillOverlappingFieldsInRow(rowIdx);
             case EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW -> {
                 nonogramRowLogic.extendColouredFieldsToLeftNearXToMaximumPossibleLengthInRow(rowIdx);
@@ -1002,8 +1017,18 @@ public class NonogramLogic extends NonogramLogicParams {
                     invalidateSolutionIfColumnSequencesWrong(columnIdx);
                 }
             }
-            case CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS -> nonogramColumnLogic.correctColumnSequencesWhenMetColouredField(columnIdx);
-            case CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY -> nonogramColumnLogic.correctColumnRangeIndexesIfXOnWay(columnIdx);
+            case CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS -> {
+                nonogramColumnLogic.correctColumnSequencesWhenMetColouredField(columnIdx);
+                if(guessMode) {
+                    invalidateSolutionIfColumnSequencesWrong(columnIdx);
+                }
+            }
+            case CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY -> {
+                nonogramColumnLogic.correctColumnRangeIndexesIfXOnWay(columnIdx);
+                if(guessMode) {
+                    invalidateSolutionIfColumnSequencesWrong(columnIdx);
+                }
+            }
             case COLOUR_OVERLAPPING_FIELDS_IN_COLUMN -> nonogramColumnLogic.fillOverlappingFieldsInColumn(columnIdx);
             case EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN -> {
                 nonogramColumnLogic.extendColouredFieldsToTopNearXToMaximumPossibleLengthInColumn(columnIdx);
@@ -1022,12 +1047,22 @@ public class NonogramLogic extends NonogramLogicParams {
         List<Integer> sequencesLengths = this.nonogramColumnLogic.getColumnsSequences().get(columnIndex);
         List<List<Integer>> columnSequencesRanges = this.nonogramColumnLogic.getColumnsSequencesRanges().get(columnIndex);
 
-        if(!nonogramColumnLogic.emptyColumn(columnIndex)) {
-            for(int seqNo = 0; seqNo < columnSequencesRanges.size(); seqNo++) {
-                if(rangeLength(columnSequencesRanges.get(seqNo)) < sequencesLengths.get(seqNo)) {
-                    this.nonogramColumnLogic.getNonogramState().setInvalidSolution(true);
-                    break;
-                }
+        for(int seqNo = 0; seqNo < columnSequencesRanges.size(); seqNo++) {
+            if(rangeLength(columnSequencesRanges.get(seqNo)) < sequencesLengths.get(seqNo)) {
+                this.nonogramColumnLogic.getNonogramState().invalidateSolution();
+                break;
+            }
+        }
+    }
+
+    private void invalidateSolutionIfRowSequencesWrong(int rowIndex) {
+        List<Integer> sequencesLengths = this.getRowsSequences().get(rowIndex);
+        List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIndex);
+
+        for(int seqNo = 0; seqNo < rowSequencesRanges.size(); seqNo++) {
+            if(rangeLength(rowSequencesRanges.get(seqNo)) < sequencesLengths.get(seqNo)) {
+                this.nonogramRowLogic.getNonogramState().invalidateSolution();
+                break;
             }
         }
     }
@@ -1277,12 +1312,10 @@ public class NonogramLogic extends NonogramLogicParams {
     }
 
     public void addLog(String log) {
-
-        //String situationOccuredMarker = situationDetectionCondition()  ? "+" : "-";
         if (log.isEmpty()) {
             System.out.println("Trying to add empty log!!!");
         } else {
-            this.logs.add(log/* + situationOccuredMarker*/);
+            this.logs.add(log);
         }
     }
 }

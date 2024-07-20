@@ -1203,22 +1203,6 @@ public class NonogramColumnLogic {
     }
 
     /**
-     * @param columnIdx - column to check if is empty
-     * @return true if column is empty ([0]), false if not
-     */
-    public boolean emptyColumn(int columnIdx) {
-        if(columnIdx < this.getWidth()) {
-            if(this.getColumnsSequences().get(columnIdx).size() == 1) {
-                return this.getColumnsSequences().get(columnIdx).get(0) == 0;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * @param rowIdx - row index to validate if is in range <0, height)
      * @return true if row index is valid(in range) or false if not
      */
@@ -1251,9 +1235,6 @@ public class NonogramColumnLogic {
     }
 
     private String generateColourStepDescription(int columnIndex, int rowIndex, String actionType) {
-        if(columnIndex == 3 && rowIndex == 0) {
-            this.addLog(this.getColumnsSequencesRanges().get(columnIndex).toString());
-        }
         return String.format("COLUMN %d, ROW %d - field colouring - %s.", columnIndex, rowIndex, actionType);
     }
 
