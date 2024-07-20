@@ -1,6 +1,7 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.payload;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.ActionEnum;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramActionDefinition;
 import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.payload.ActionsConstants.actionsToDoAfterColouringOverlappingSequencesInColumns;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.payload.ActionsConstants.actionsToDoAfterCorrectingRangesWhenMarkingSequencesInColumns;
@@ -33,42 +33,8 @@ public class NonogramColumnLogic {
     private List<List<List<Integer>>> rowsSequencesRanges;
     private List<List<String>> nonogramSolutionBoardWithMarks;
     private List<List<String>> nonogramSolutionBoard;
-    //1
-    private Set<Integer> affectedRowsToFillOverlappingFields;
-    //2
-    private Set<Integer> affectedColumnsToMarkAvailableSequences;
-    //3
-    private Set<Integer> affectedColumnsToFillOverlappingFields;
-    //4
-    private Set<Integer> affectedRowsToMarkAvailableSequences;
-    //5
-    private Set<Integer> affectedRowsToCorrectSequencesRanges;
-    //6
-    private Set<Integer> affectedRowsToCorrectSequencesRangesWhenMetColouredField;
-    //7
-    private Set<Integer> affectedRowsToChangeSequencesRangeIfXOnWay;
-    //8
-    private Set<Integer> affectedColumnsToCorrectSequencesRanges;
-    //9
-    private Set<Integer> affectedColumnsToCorrectSequencesRangesWhenMetColouredField;
-    //10
-    private Set<Integer> affectedColumnsToCorrectSequencesRangesIfXOnWay;
-    //11
-    private Set<Integer> affectedRowsToPlaceXsAtUnreachableFields;
-    //12
-    private Set<Integer> affectedColumnsToPlaceXsAtUnreachableFields;
-    //13
-    private Set<Integer> affectedRowsToPlaceXsAroundLongestSequences;
-    //14
-    private Set<Integer> affectedColumnsToPlaceXsAroundLongestSequences;
-    //15
-    private Set<Integer> affectedRowsToPlaceXsAtTooShortEmptySequences;
-    //16
-    private Set<Integer> affectedColumnsToPlaceXsAtTooShortEmptySequences;
-    //17
-    private Set<Integer> affectedRowsToExtendColouredFieldsNearX;
-    //18
-    private Set<Integer> affectedColumnsToExtendColouredFieldsNearX;
+
+    private List<NonogramActionDefinition> actionsToDoList;
 
     private List<List<Integer>> rowsFieldsNotToInclude;
     private List<List<Integer>> columnsFieldsNotToInclude;
@@ -76,8 +42,6 @@ public class NonogramColumnLogic {
     private List<List<Integer>> columnsSequencesIdsNotToInclude;
 
     String tmpLog;
-
-    private boolean solutionInvalid = false;
 
     public NonogramColumnLogic(NonogramLogic nonogramLogic) {
         this.nonogramState = nonogramLogic.getNonogramState();
@@ -87,35 +51,7 @@ public class NonogramColumnLogic {
         this.columnsSequencesRanges = nonogramLogic.getColumnsSequencesRanges();
         this.nonogramSolutionBoardWithMarks = nonogramLogic.getNonogramSolutionBoardWithMarks();
         this.nonogramSolutionBoard = nonogramLogic.getNonogramSolutionBoard();
-        this.affectedRowsToFillOverlappingFields = nonogramLogic.getAffectedRowsToFillOverlappingFields();
-        this.affectedColumnsToMarkAvailableSequences = nonogramLogic.getAffectedColumnsToMarkAvailableSequences();
-        this.affectedColumnsToFillOverlappingFields = nonogramLogic.getAffectedColumnsToFillOverlappingFields();
-        this.affectedRowsToMarkAvailableSequences = nonogramLogic.getAffectedRowsToMarkAvailableSequences();
-        this.affectedRowsToCorrectSequencesRanges = nonogramLogic.getAffectedRowsToCorrectSequencesRanges();
-        this.affectedRowsToCorrectSequencesRangesWhenMetColouredField = nonogramLogic.getAffectedRowsToCorrectSequencesRangesWhenMetColouredField();
-        this.affectedRowsToChangeSequencesRangeIfXOnWay = nonogramLogic.getAffectedRowsToCorrectSequencesRangesIfXOnWay();
-        this.affectedColumnsToCorrectSequencesRanges = nonogramLogic.getAffectedColumnsToCorrectSequencesRanges();
-        this.affectedColumnsToCorrectSequencesRangesWhenMetColouredField = nonogramLogic.getAffectedColumnsToCorrectSequencesRangesWhenMetColouredField();
-        this.affectedColumnsToCorrectSequencesRangesIfXOnWay = nonogramLogic.getAffectedColumnsToCorrectSequencesRangesIfXOnWay();
-        this.affectedRowsToPlaceXsAtUnreachableFields = nonogramLogic.getAffectedRowsToPlaceXsAtUnreachableFields();
-        this.affectedColumnsToPlaceXsAtUnreachableFields = nonogramLogic.getAffectedColumnsToPlaceXsAtUnreachableFields();
-        this.affectedRowsToPlaceXsAroundLongestSequences = nonogramLogic.getAffectedRowsToPlaceXsAroundLongestSequences();
-        this.affectedColumnsToPlaceXsAroundLongestSequences = nonogramLogic.getAffectedColumnsToPlaceXsAroundLongestSequences();
-        this.affectedRowsToPlaceXsAtTooShortEmptySequences = nonogramLogic.getAffectedRowsToPlaceXsAtTooShortEmptySequences();
-        this.affectedColumnsToPlaceXsAtTooShortEmptySequences = nonogramLogic.getAffectedColumnsToPlaceXsAtTooShortEmptySequences();
-        this.affectedRowsToExtendColouredFieldsNearX = nonogramLogic.getAffectedRowsToExtendColouredFieldsNearX();
-        this.affectedColumnsToExtendColouredFieldsNearX = nonogramLogic.getAffectedColumnsToExtendColouredFieldsNearX();
-    }
-
-    /**
-     * mark columns sequences with char identifiers
-     */
-    public NonogramColumnLogic markAvailableSequencesInColumns() {
-        for (Integer columnIndex : this.getAffectedColumnsToMarkAvailableSequences()) {
-            markAvailableSequencesInColumn(columnIndex);
-        }
-
-        return this;
+        this.actionsToDoList = nonogramLogic.getActionsToDoList();
     }
 
 
@@ -204,15 +140,6 @@ public class NonogramColumnLogic {
     }
 
     /**
-     * fill fields in columns where ranges met specific condition
-     */
-    public void fillOverlappingFieldsInColumns () {
-        for (Integer columnIndex : this.getAffectedColumnsToFillOverlappingFields()) {
-            fillOverlappingFieldsInColumn(columnIndex);
-        }
-    }
-
-    /**
      * fill fields in column where ranges met specific condition (range_length < sequence_length * 2)
      */
     public void fillOverlappingFieldsInColumn (int columnIdx) {
@@ -277,18 +204,6 @@ public class NonogramColumnLogic {
             }
         }
 
-    }
-
-    // iterations through all columns
-    /**
-     * place "X" around coloured fields in columns where sequence of these coloured fields have length of longest
-     * possible sequence length in specific row, that can be located in coloured field sequence range
-     */
-    public void placeXsColumnsAroundLongestSequences() {
-
-        for (Integer columnIndex : this.getAffectedColumnsToPlaceXsAroundLongestSequences()) {
-            placeXsColumnAroundLongestSequences(columnIndex);
-        }
     }
 
     /**
@@ -440,32 +355,6 @@ public class NonogramColumnLogic {
                         }
                     }
                 }
-            }
-        }
-    }
-
-    /**
-     * correct the potential ranges of occurrence of sequences in the columns due to the ranges of previous and next sequences
-     */
-    public void correctColumnsSequencesRanges () {
-
-        for (Integer columnIndex : this.getAffectedColumnsToCorrectSequencesRanges()) {
-            correctColumnSequencesRanges(columnIndex);
-
-            List<Integer> sequencesLengths = this.getColumnsSequences().get(columnIndex);
-            List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIndex);
-
-            if(!emptyColumn(columnIndex)) {
-                for(int seqNo = 0; seqNo < columnSequencesRanges.size(); seqNo++) {
-                    if(rangeLength(columnSequencesRanges.get(seqNo)) < sequencesLengths.get(seqNo)) {
-                        this.setSolutionInvalid(true);
-                        break;
-                    }
-                }
-            }
-
-            if(solutionInvalid) {
-                break;
             }
         }
     }
@@ -642,18 +531,6 @@ public class NonogramColumnLogic {
     }
 
     /**
-     * corrects columns sequences when met coloured field in columns
-     * (f.e. first sequence FS can't start later than first met coloured field FMCF,
-     * second - not later than first coloured field on index FMCF + FS.length, etc.)
-     */
-    public void correctColumnsSequencesWhenMetColouredField () {
-        for (Integer columnIndex : this.getAffectedColumnsToCorrectSequencesRangesWhenMetColouredField()) {
-            correctColumnSequencesWhenMetColouredField(columnIndex);
-        }
-    }
-
-
-    /**
      * @param columnIdx - column to correct range when met coloured field
      */
     public void correctColumnSequencesWhenMetColouredField (int columnIdx) {
@@ -768,17 +645,6 @@ public class NonogramColumnLogic {
     }
 
     /**
-     * place an "X" at too short empty fields sequences in columns, when none of row sequences can fit in hole
-     */
-    public void placeXsColumnsAtTooShortEmptySequences() {
-
-        for (Integer columnIndex : this.getAffectedColumnsToPlaceXsAtTooShortEmptySequences()) {
-            placeXsColumnAtTooShortEmptySequences(columnIndex);
-        }
-
-    }
-
-    /**
      * place an "X" at too short empty fields sequences in column, when none of row sequences can fit in hole
      */
     public void placeXsColumnAtTooShortEmptySequences(int columnIdx) {
@@ -833,7 +699,7 @@ public class NonogramColumnLogic {
                     rowIdx++;
                 }
 
-                // condition - only empty fields, coloured fields in at least one of consectuive fields not allowed
+                // condition - only empty fields, coloured fields in at least one of consecutive fields not allowed
                 if(!colouredFieldInFieldsSequence) {
                     lastXIndex = rowIdx; // index of "X" after empty fields sequence
                     rowIdx--;
@@ -859,7 +725,7 @@ public class NonogramColumnLogic {
                         }
                     }
 
-                    // if there not any sequence with length equal or less than emptyFieldSequenceLength
+                    // if there is not any sequence with length equal or less than emptyFieldSequenceLength
                     if(sequencesWhichNotFit.size() == sequencesWithinRange.size() && emptyFieldsSequenceLength > 0) {
                         for(int emptyFieldRowIdx = emptyFieldsRange.get(0); emptyFieldRowIdx <= emptyFieldsRange.get(1); emptyFieldRowIdx++) {
                             // always true? (empty fields sequence)
@@ -881,16 +747,6 @@ public class NonogramColumnLogic {
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * Corrects column sequence(s) range(s) "if X on way" -> if "X" is located too close to the potential starting
-     * point counting from the beginning or end of the potential range, then correct the potential range
-     */
-    public void correctColumnsSequencesIfXOnWay () {
-        for (Integer columnIndex : this.getAffectedColumnsToCorrectSequencesRangesIfXOnWay()) {
-            correctColumnRangeIndexesIfXOnWay(columnIndex);
         }
     }
 
@@ -977,16 +833,6 @@ public class NonogramColumnLogic {
         }
     }
 
-    /**
-     * place an "X" on fields outside the columns sequence ranges
-     */
-    public void placeXsColumnsAtUnreachableFields() {
-
-        for (Integer columnIndex : this.getAffectedColumnsToPlaceXsAtUnreachableFields()) {
-            placeXsColumnAtUnreachableFields(columnIndex);
-        }
-    }
-
     public void placeXsColumnAtUnreachableFields(int columnIdx) {
 
         List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
@@ -1021,18 +867,7 @@ public class NonogramColumnLogic {
     }
 
     /**
-     * extends coloured subsequences in column to maximum possible length, looking for minimum possible length sequence
-     * that can be placed in filled fields range
-     */
-    public void extendColouredFieldsNearXToMaximumPossibleLengthInColumns() {
-        for (Integer columnIndex : this.getAffectedColumnsToExtendColouredFieldsNearX()) {
-            extendColouredFieldsToTopNearXToMaximumPossibleLengthInColumn(columnIndex);
-            extendColouredFieldsToBottomNearXToMaximumPossibleLengthInColumn(columnIndex);
-        }
-    }
-
-    /**
-     * @param columnIdx - column index on which try to extend subsequence to minimum possible matching (to topo)
+     * @param columnIdx - column index on which try to extend subsequence to minimum possible matching
      */
     public void extendColouredFieldsToTopNearXToMaximumPossibleLengthInColumn(int columnIdx) {
 
@@ -1075,7 +910,7 @@ public class NonogramColumnLogic {
                         columnSequencesRanges, firstColouredSubsequence, columnSequencesLengths);
 
                 if((possibleSequenceLengths.isEmpty())) {
-                    this.setSolutionInvalid(true);
+                    this.nonogramState.invalidateSolution();
                     break;
                 }
 
@@ -1097,7 +932,7 @@ public class NonogramColumnLogic {
                     for(int colourRowIdx = sequenceStartIndex; colourRowIdx >= sequenceEndIndex; colourRowIdx--) {
                         try {
                             if(this.getNonogramSolutionBoard().get(colourRowIdx).get(columnIdx).equals("-")) {
-                                this.colourFieldAtGivenPosittion(colourRowIdx, columnIdx);
+                                this.colourFieldAtGivenPosition(colourRowIdx, columnIdx);
                                 this.addRowToAffectedActionsByIdentifiers(colourRowIdx, ActionsConstants.actionsToDoAfterExtendingColouredFieldsNearXInColumns);
                                 this.nonogramState.increaseMadeSteps();
 
@@ -1108,7 +943,7 @@ public class NonogramColumnLogic {
                                 System.out.println("Column field was coloured earlier (extending to minimum required - to top).");
                             }
                         } catch (IndexOutOfBoundsException e) {
-                            this.setSolutionInvalid(true);
+                            this.nonogramState.invalidateSolution();
                         }
                     }
                 }
@@ -1162,7 +997,7 @@ public class NonogramColumnLogic {
                         columnSequencesRanges, firstColouredSubsequence, columnSequencesLengths);
 
                 if(possibleSequenceLengths.isEmpty()) {
-                    this.setSolutionInvalid(true);
+                    this.nonogramState.invalidateSolution();
                     break;
                 }
 
@@ -1185,7 +1020,7 @@ public class NonogramColumnLogic {
 
                         try {
                             if(this.getNonogramSolutionBoard().get(colourRowIdx).get(columnIdx).equals("-")) {
-                                this.colourFieldAtGivenPosittion(colourRowIdx, columnIdx);
+                                this.colourFieldAtGivenPosition(colourRowIdx, columnIdx);
                                 this.addRowToAffectedActionsByIdentifiers(colourRowIdx, ActionsConstants.actionsToDoAfterExtendingColouredFieldsNearXInColumns);
                                 this.nonogramState.increaseMadeSteps();
 
@@ -1196,7 +1031,7 @@ public class NonogramColumnLogic {
                                 System.out.println("Column field was coloured earlier (extending to minimum required - to bottom).");
                             }
                         } catch (IndexOutOfBoundsException e) {
-                            this.setSolutionInvalid(true);
+                            this.nonogramState.invalidateSolution();
                         }
 
                     }
@@ -1291,7 +1126,7 @@ public class NonogramColumnLogic {
         boolean columnValid = isColumnIndexValid(columnIdx);
         if(rowValid && columnValid) {
             this.nonogramSolutionBoard.get(rowIdx).set(columnIdx, "X");
-            this.nonogramSolutionBoardWithMarks.get(rowIdx).set(columnIdx, "XXXX");
+            this.nonogramSolutionBoardWithMarks.get(rowIdx).set(columnIdx, "X".repeat(4));
         }
 
         return this;
@@ -1301,7 +1136,7 @@ public class NonogramColumnLogic {
      * @param rowIdx - field row index
      * @param columnIdx - field column index
      */
-    public void colourFieldAtGivenPosittion(int rowIdx, int columnIdx) {
+    public void colourFieldAtGivenPosition(int rowIdx, int columnIdx) {
         boolean rowValid = isRowIndexValid(rowIdx);
         boolean columnValid = isColumnIndexValid(columnIdx);
         if(rowValid && columnValid) {
@@ -1335,14 +1170,6 @@ public class NonogramColumnLogic {
      */
     public void changeColumnSequenceRange(int columnIndex, int sequenceIndex, List<Integer> updatedRange) {
         this.columnsSequencesRanges.get(columnIndex).set(sequenceIndex, updatedRange);
-    }
-
-    public void colourFieldAtGivenPosition(int rowIdx, int columnIdx) {
-        boolean rowValid = isRowIndexValid(rowIdx);
-        boolean columnValid = isColumnIndexValid(columnIdx);
-        if(rowValid && columnValid) {
-            this.nonogramSolutionBoard.get(rowIdx).set(columnIdx, "O");
-        }
     }
 
     /**
@@ -1379,7 +1206,7 @@ public class NonogramColumnLogic {
      * @param columnIdx - column to check if is empty
      * @return true if column is empty ([0]), false if not
      */
-    private boolean emptyColumn(int columnIdx) {
+    public boolean emptyColumn(int columnIdx) {
         if(columnIdx < this.getWidth()) {
             if(this.getColumnsSequences().get(columnIdx).size() == 1) {
                 return this.getColumnsSequences().get(columnIdx).get(0) == 0;
@@ -1400,7 +1227,7 @@ public class NonogramColumnLogic {
     }
 
     /**
-     * @param columnIdx - column index to validate if is in range <0, width)
+     * @param columnIdx - column index to validate if is in range <0, width - 1>
      * @return true if column index is valid(in range) or false if not
      */
     private boolean isColumnIndexValid (int columnIdx) {
@@ -1439,51 +1266,19 @@ public class NonogramColumnLogic {
                 oldRange.get(0), oldRange.get(1), correctedRange.get(0), correctedRange.get(1), actionType);
     }
 
-    public String generateMarkingSequenceStepDescription(int columnIdx, int rowIdx, String actionType) {
-        return String.format("COLUMN %d, ROW %d - %s", columnIdx, rowIdx, actionType);
-    }
-
     public String generateAddingSequenceToNotToIncludeDescription(int columnIdx, int seqNo) {
         return String.format("COLUMN %d - SeqNo = %d added to not to include", columnIdx, seqNo);
     }
 
-    private void addRowToAffectedActionsByIdentifiers(int rowIdx, List<ActionEnum> affectedActions) {
-        for(ActionEnum affectedAction : affectedActions) {
-            switch (affectedAction) {
-                case CORRECT_ROWS_SEQUENCES_RANGES -> this.getAffectedRowsToCorrectSequencesRanges().add(rowIdx);
-                case CORRECT_ROWS_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS -> this.getAffectedRowsToCorrectSequencesRangesWhenMetColouredField().add(rowIdx);
-                case CORRECT_ROWS_SEQUENCES_RANGES_IF_X_ON_WAY -> this.getAffectedRowsToChangeSequencesRangeIfXOnWay().add(rowIdx);
-                case COLOUR_OVERLAPPING_FIELDS_IN_ROWS -> this.getAffectedRowsToFillOverlappingFields().add(rowIdx);
-                case EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROWS -> this.getAffectedRowsToExtendColouredFieldsNearX().add(rowIdx);
-                case PLACE_XS_ROWS_AT_UNREACHABLE_FIELDS -> this.getAffectedRowsToPlaceXsAtUnreachableFields().add(rowIdx);
-                case PLACE_XS_ROWS_AROUND_LONGEST_SEQUENCES -> this.getAffectedRowsToPlaceXsAroundLongestSequences().add(rowIdx);
-                case PLACE_XS_ROWS_AT_TOO_SHORT_EMPTY_SEQUENCES -> this.getAffectedRowsToPlaceXsAtTooShortEmptySequences().add(rowIdx);
-                case MARK_AVAILABLE_FIELDS_IN_ROWS -> this.getAffectedRowsToMarkAvailableSequences().add(rowIdx);
-                default -> {}
-            }
+    private void addRowToAffectedActionsByIdentifiers(int rowIdx, List<ActionEnum> actions) {
+        for(ActionEnum action : actions) {
+            this.actionsToDoList.add(new NonogramActionDefinition(rowIdx, action));
         }
     }
 
-    private void addColumnToAffectedActionsByIdentifiers(int columnIdx, List<ActionEnum> affectedActions) {
-        for(ActionEnum affectedAction : affectedActions) {
-            switch (affectedAction) {
-                case CORRECT_COLUMNS_SEQUENCES_RANGES -> this.getAffectedColumnsToCorrectSequencesRanges().add(columnIdx);
-                case CORRECT_COLUMNS_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS -> this.getAffectedColumnsToCorrectSequencesRangesWhenMetColouredField().add(columnIdx);
-                case CORRECT_COLUMNS_SEQUENCES_RANGES_IF_X_ON_WAY -> this.getAffectedColumnsToCorrectSequencesRangesIfXOnWay().add(columnIdx);
-                case COLOUR_OVERLAPPING_FIELDS_IN_COLUMNS -> this.getAffectedColumnsToFillOverlappingFields().add(columnIdx);
-                case EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMNS -> this.getAffectedColumnsToExtendColouredFieldsNearX().add(columnIdx);
-                case PLACE_XS_COLUMNS_AT_UNREACHABLE_FIELDS -> this.getAffectedColumnsToPlaceXsAtUnreachableFields().add(columnIdx);
-                case PLACE_XS_COLUMNS_AROUND_LONGEST_SEQUENCES -> this.getAffectedColumnsToPlaceXsAroundLongestSequences().add(columnIdx);
-                case MARK_AVAILABLE_FIELDS_IN_COLUMNS -> this.getAffectedColumnsToMarkAvailableSequences().add(columnIdx);
-                default -> {}
-            }
-        }
-    }
-
-    private void printSolutionBoard() {
-        log.info("Solution board: ");
-        for(List<String> boardRow : this.getNonogramSolutionBoard()) {
-            System.out.println(boardRow);
+    private void addColumnToAffectedActionsByIdentifiers(int columnIdx, List<ActionEnum> actions) {
+        for(ActionEnum action : actions) {
+            this.actionsToDoList.add(new NonogramActionDefinition(columnIdx, action));
         }
     }
 }

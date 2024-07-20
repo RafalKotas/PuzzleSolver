@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -37,43 +36,6 @@ public abstract class NonogramLogicParams {
     protected List<List<Integer>> columnsSequencesIdsNotToInclude;
 
     protected List<NonogramSolutionDecision> availableChoices;
-
-    //1
-    protected Set<Integer> affectedRowsToFillOverlappingFields;
-    //2
-    protected Set<Integer> affectedColumnsToMarkAvailableSequences;
-    //3
-    protected Set<Integer> affectedColumnsToFillOverlappingFields;
-    //4
-    protected Set<Integer> affectedRowsToMarkAvailableSequences;
-    //5
-    protected Set<Integer> affectedRowsToCorrectSequencesRanges;
-    //6
-    protected Set<Integer> affectedRowsToCorrectSequencesRangesWhenMetColouredField;
-    //7
-    protected Set<Integer> affectedRowsToCorrectSequencesRangesIfXOnWay;
-    //8
-    protected Set<Integer> affectedColumnsToCorrectSequencesRanges;
-    //9
-    protected Set<Integer> affectedColumnsToCorrectSequencesRangesWhenMetColouredField;
-    //10
-    protected Set<Integer> affectedColumnsToCorrectSequencesRangesIfXOnWay;
-    //11
-    protected Set<Integer> affectedRowsToPlaceXsAtUnreachableFields;
-    //12
-    protected Set<Integer> affectedColumnsToPlaceXsAtUnreachableFields;
-    //13
-    protected Set<Integer> affectedRowsToPlaceXsAroundLongestSequences;
-    //14
-    protected Set<Integer> affectedColumnsToPlaceXsAroundLongestSequences;
-    //15
-    protected Set<Integer> affectedRowsToPlaceXsAtTooShortEmptySequences;
-    //16
-    protected Set<Integer> affectedColumnsToPlaceXsAtTooShortEmptySequences;
-    //17
-    protected Set<Integer> affectedRowsToExtendColouredFieldsNearX;
-    //18
-    protected Set<Integer> affectedColumnsToExtendColouredFieldsNearX;
 
     /**
      * @return "X" count on nonogram solution board

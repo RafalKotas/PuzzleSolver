@@ -51,9 +51,9 @@ public class NonogramSolver {
         this.gson = new Gson();
         this.solutionNode = new NonogramSolutionNode(nonogramLogic);
         this.rootNode = this.solutionNode;
-        this.solutionLogic = new NonogramLogic(nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences());
+        this.solutionLogic = new NonogramLogic(nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences(), false);
         this.finalSolutionLogic = new NonogramLogic(nonogramLogic.getRowsSequences(),
-                nonogramLogic.getColumnsSequences());
+                nonogramLogic.getColumnsSequences(), false);
         this.solutionFileName = "r" + fileName;
     }
 

@@ -31,7 +31,7 @@ public class NonogramLogicController {
     @PostMapping("/init")
     public ResponseEntity<NonogramLogic> initNonogramLogicObject(@Valid @RequestBody NonogramLogic nonogramLogic) {
         NonogramLogic initialNonogramLogicObject = new NonogramLogic(
-                nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences());
+                nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences(), false);
 
         return new ResponseEntity<>(initialNonogramLogicObject, HttpStatus.OK);
     }
@@ -100,7 +100,7 @@ public class NonogramLogicController {
     public ResponseEntity<NonogramLogic> customSolutionPart(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String solutionFileName) {
 
         NonogramLogic logicWithAffectedRowsAndColumns = new NonogramLogic(
-                nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences());
+                nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences(), false);
 
         return new ResponseEntity<>(
                 nonogramLogicService.runSolverWithCorrectnessCheck(logicWithAffectedRowsAndColumns, solutionFileName),

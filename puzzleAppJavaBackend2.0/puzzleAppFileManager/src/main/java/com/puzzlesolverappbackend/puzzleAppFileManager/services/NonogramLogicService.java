@@ -453,7 +453,7 @@ public class NonogramLogicService {
                         if(nonogramLogicDataToChange.getNonogramSolutionBoard().get(rowIdx).get(firstXIndex).equals("-")) {
                             nonogramLogicObject.getNonogramState().increaseMadeSteps();
                             nonogramLogicDataToChange = nonogramLogicDataToChange
-                                    .placeXAtGivenPosittion(rowIdx, firstXIndex)
+                                    .placeXAtGivenPosition(rowIdx, firstXIndex)
                                     .addRowFieldToNotToInclude(rowIdx, firstXIndex)
                                     .addColumnFieldToNotToInclude(firstXIndex, rowIdx);
                         } else if(showRepetitions) {
@@ -463,7 +463,7 @@ public class NonogramLogicService {
                         if(nonogramLogicDataToChange.getNonogramSolutionBoard().get(rowIdx).get(lastXIndex).equals("-")) {
                             nonogramLogicObject.getNonogramState().increaseMadeSteps();
                             nonogramLogicDataToChange = nonogramLogicDataToChange
-                                    .placeXAtGivenPosittion(rowIdx, lastXIndex)
+                                    .placeXAtGivenPosition(rowIdx, lastXIndex)
                                     .addRowFieldToNotToInclude(rowIdx, lastXIndex)
                                     .addColumnFieldToNotToInclude(lastXIndex, rowIdx);
                         } else if(showRepetitions) {
@@ -552,7 +552,7 @@ public class NonogramLogicService {
                                 if (nonogramLogicDataToChange.getNonogramSolutionBoard().get(firstXIndex).get(columnIdx).equals("-")) {
                                     nonogramLogicObject.getNonogramState().increaseMadeSteps();
                                     nonogramLogicDataToChange = nonogramLogicDataToChange
-                                            .placeXAtGivenPosittion(firstXIndex, columnIdx)
+                                            .placeXAtGivenPosition(firstXIndex, columnIdx)
                                             .addRowFieldToNotToInclude(firstXIndex, columnIdx)
                                             .addColumnFieldToNotToInclude(columnIdx, firstXIndex);
                                 } else if(showRepetitions) {
@@ -564,7 +564,7 @@ public class NonogramLogicService {
                                 if( nonogramLogicDataToChange.getNonogramSolutionBoard().get(lastXIndex).get(columnIdx).equals("-")) {
                                     nonogramLogicObject.getNonogramState().increaseMadeSteps();
                                     nonogramLogicDataToChange = nonogramLogicDataToChange
-                                            .placeXAtGivenPosittion(lastXIndex, columnIdx)
+                                            .placeXAtGivenPosition(lastXIndex, columnIdx)
                                             .addRowFieldToNotToInclude(lastXIndex, columnIdx)
                                             .addColumnFieldToNotToInclude(columnIdx, lastXIndex);
                                 } else if(showRepetitions) {
@@ -588,7 +588,7 @@ public class NonogramLogicService {
                     if(sequenceLength == Collections.max(columnSequencesLengthsIncludingSequenceRange)) {
                         if(nonogramLogicDataToChange.getNonogramSolutionBoard().get(firstXIndex).get(columnIdx).equals("-")) {
                             nonogramLogicDataToChange = nonogramLogicDataToChange
-                                    .placeXAtGivenPosittion(firstXIndex, columnIdx)
+                                    .placeXAtGivenPosition(firstXIndex, columnIdx)
                                     .addColumnFieldToNotToInclude(columnIdx, firstXIndex)
                                     .addRowFieldToNotToInclude(firstXIndex, columnIdx);
                             nonogramLogicObject.getNonogramState().increaseMadeSteps();
@@ -597,7 +597,7 @@ public class NonogramLogicService {
                         }
                         if(nonogramLogicDataToChange.getNonogramSolutionBoard().get(lastXIndex).get(columnIdx).equals("-")) {
                             nonogramLogicDataToChange = nonogramLogicDataToChange
-                                    .placeXAtGivenPosittion(lastXIndex, columnIdx)
+                                    .placeXAtGivenPosition(lastXIndex, columnIdx)
                                     .addColumnFieldToNotToInclude(columnIdx, lastXIndex)
                                     .addRowFieldToNotToInclude(lastXIndex, columnIdx);
                             nonogramLogicObject.getNonogramState().increaseMadeSteps();
@@ -640,7 +640,7 @@ public class NonogramLogicService {
             if(!existRangeIncludingColumn) {
                 if(nonogramLogicDataToChange.getNonogramSolutionBoard().get(rowIdx).get(columnIdx).equals("-")) {
                     nonogramLogicDataToChange = nonogramLogicDataToChange
-                            .placeXAtGivenPosittion(rowIdx, columnIdx)
+                            .placeXAtGivenPosition(rowIdx, columnIdx)
                             .addRowFieldToNotToInclude(rowIdx, columnIdx)
                             .addColumnFieldToNotToInclude(columnIdx, rowIdx);
                     nonogramLogicObject.getNonogramState().increaseMadeSteps();
@@ -682,7 +682,7 @@ public class NonogramLogicService {
             if(!existRangeIncludingRow) {
                 if(nonogramLogicDataToChange.getNonogramSolutionBoard().get(rowIdx).get(columnIdx).equals("-")) {
                     nonogramLogicDataToChange = nonogramLogicDataToChange
-                            .placeXAtGivenPosittion(rowIdx, columnIdx)
+                            .placeXAtGivenPosition(rowIdx, columnIdx)
                             .addRowFieldToNotToInclude(rowIdx, columnIdx)
                             .addColumnFieldToNotToInclude(columnIdx, rowIdx);
                     nonogramLogicObject.getNonogramState().increaseMadeSteps();
@@ -959,7 +959,7 @@ public class NonogramLogicService {
                 for(int columnStartIndex = rowSequenceRangeStartIndex; columnStartIndex < (rowSequenceRangeEndIndex - rowSequenceLength + 1); columnStartIndex++) {
                     indexOk = true;
                     for(int columnIdx = columnStartIndex; columnIdx < columnStartIndex + rowSequenceLength; columnIdx++) {
-                        if(nonogramBoard.get(rowIdx).get(columnIdx).equals("XXXX")) {
+                        if(nonogramBoard.get(rowIdx).get(columnIdx).equals("X".repeat(4))) {
                             indexOk = false;
                             break;
                         }
@@ -976,7 +976,7 @@ public class NonogramLogicService {
                 for(int columnEndIndex = rowSequenceRangeEndIndex; columnEndIndex > (rowSequenceRangeStartIndex + rowSequenceLength - 1); columnEndIndex--) {
                     indexOk = true;
                     for(int columnIdx = columnEndIndex; columnIdx > columnEndIndex - rowSequenceLength; columnIdx--) {
-                        if(nonogramBoard.get(rowIdx).get(columnIdx).equals("XXXX")) {
+                        if(nonogramBoard.get(rowIdx).get(columnIdx).equals("X".repeat(4))) {
                             indexOk = false;
                             break;
                         }
@@ -1205,7 +1205,7 @@ public class NonogramLogicService {
                 for(int rowStartIndex = columnSequenceRangeStartIndex; rowStartIndex < columnSequenceRangeEndIndex - columnSequenceLength + 1; rowStartIndex++) {
                     indexOk = true;
                     for(int rowIdx = rowStartIndex; rowIdx < rowStartIndex + columnSequenceLength; rowIdx++) {
-                        if(nonogramBoard.get(rowIdx).get(columnIdx).equals("XXXX")) {
+                        if(nonogramBoard.get(rowIdx).get(columnIdx).equals("X".repeat(4))) {
                             indexOk = false;
                             break;
                         }
@@ -1222,7 +1222,7 @@ public class NonogramLogicService {
                 for(int rowEndIndex = columnSequenceRangeEndIndex; rowEndIndex > columnSequenceRangeStartIndex + columnSequenceLength - 1; rowEndIndex--) {
                     indexOk = true;
                     for(int rowIdx = rowEndIndex; rowIdx > rowEndIndex - columnSequenceLength; rowIdx--) {
-                        if(nonogramBoard.get(rowIdx).get(columnIdx).equals("XXXX")) {
+                        if(nonogramBoard.get(rowIdx).get(columnIdx).equals("X".repeat(4))) {
                             indexOk = false;
                             break;
                         }
