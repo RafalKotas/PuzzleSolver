@@ -5,8 +5,6 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramFileDetai
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramGenetic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 
@@ -32,7 +30,7 @@ public class NonogramGeneticInitializer implements CommandLineRunner {
         nonogramFileDetails = objectMapper.readValue(
                 new File(puzzlePath + InitializerConstants.PUZZLE_NAME + ".json"), NonogramFileDetails.class
         );
-        nonogramLogicToSolve = new NonogramLogic(nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences());
+        nonogramLogicToSolve = new NonogramLogic(nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences(), false);
         nonogramGenetic = new NonogramGenetic(nonogramLogicToSolve);
         nonogramGenetic.solve();
     }

@@ -13,6 +13,4 @@ public interface NonogramLogicPrinter {
     void printLogs();
 
     void printStats();
-
-    void printAffectedRowsAndColumns(boolean printAffectedArrays, boolean printAffectedSum);
 }

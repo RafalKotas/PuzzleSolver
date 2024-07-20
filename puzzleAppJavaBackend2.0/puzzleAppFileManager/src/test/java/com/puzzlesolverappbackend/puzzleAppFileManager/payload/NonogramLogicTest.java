@@ -26,7 +26,7 @@ class NonogramLogicTest {
                 List.of(1, 8), List.of(1, 2, 3), List.of(1, 5), List.of(2, 1, 1), List.of(6)
         );
 
-        nonogramLogic_o10355 = new NonogramLogic(rowsSequences, columnsSequences);
+        nonogramLogic_o10355 = new NonogramLogic(rowsSequences, columnsSequences, false);
     }
 
     @Test
