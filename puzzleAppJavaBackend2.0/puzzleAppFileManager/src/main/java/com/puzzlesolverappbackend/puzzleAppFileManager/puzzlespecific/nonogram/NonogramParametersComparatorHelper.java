@@ -1,6 +1,6 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogic;
 
 import java.util.Iterator;
 import java.util.List;

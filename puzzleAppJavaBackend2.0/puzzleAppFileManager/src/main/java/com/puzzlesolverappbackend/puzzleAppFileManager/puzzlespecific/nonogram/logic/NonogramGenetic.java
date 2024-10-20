@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.payload;
+package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic;
 
 import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;

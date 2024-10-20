@@ -1,8 +1,7 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram;
+package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic;
 
 
 import com.google.gson.Gson;
-import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +9,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.X_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramParametersComparatorHelper.*;
 
 @Getter
@@ -53,11 +53,11 @@ public class NonogramSolutionNode {
         //add chosen decision - colour field(O) or place (X)
         NonogramSolutionDecision lastDecision = this.nonogramGuessDecisions.get(this.nonogramGuessDecisions.size() - 1);
 
-        if (lastDecision.getDecisionMarker().equals("X")) {
-            this.getNonogramLogic().placeXAtGivenPosition(lastDecision.getRowIdx(), lastDecision.getColumnIdx());
+        if (lastDecision.getDecisionMarker().equals(X_FIELD)) {
+            this.getNonogramLogic().placeXAtGivenPosition(lastDecision.getDecisionField());
             this.getNonogramLogic().addAffectedRowAndColumnAfterPlacingXAtField(lastDecision);
         } else {
-            this.getNonogramLogic().colourFieldAtGivenPosition(lastDecision.getRowIdx(), lastDecision.getColumnIdx());
+            this.getNonogramLogic().colourFieldAtGivenPosition(lastDecision.getDecisionField());
             this.getNonogramLogic().addAffectedRowAndColumnAfterColouringField(lastDecision);
         }
     }

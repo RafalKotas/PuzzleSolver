@@ -2,7 +2,7 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.runners;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.model.Nonogram;
-import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramFileDetails;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramFileDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.repository.NonogramRepository;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
 import org.springframework.boot.CommandLineRunner;
@@ -73,10 +73,10 @@ public class NonogramsDataInitializer implements CommandLineRunner {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
-            // Uzyskaj listę plików w danym folderze
+            // Get files paths from given folder
             List<Path> files = Files.list(Paths.get(puzzlePath)).toList();
 
-            // Iteruj przez listę plików i wypisz ich zawartość linia po linii
+            // Iterate through files list and print its contents line after line
             for (Path filePath : files) {
                 collectFilesToCorrect(filePath);
             }
@@ -152,7 +152,7 @@ public class NonogramsDataInitializer implements CommandLineRunner {
     private void collectFilesToCorrect(java.nio.file.Path filePath) {
         ObjectMapper objectMapper = new ObjectMapper();
 
-        // Odczytaj linie z pliku
+        // Read lines from file
         List<String> fileLines;
         try {
             fileLines = Files.lines(filePath).collect(Collectors.toList());

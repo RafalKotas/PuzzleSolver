@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.payload;
+package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

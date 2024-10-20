@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram;
+package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic;
 
 import lombok.*;
 

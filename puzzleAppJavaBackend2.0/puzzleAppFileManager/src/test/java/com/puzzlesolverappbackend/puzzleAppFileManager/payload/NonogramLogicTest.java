@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.payload;
 
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

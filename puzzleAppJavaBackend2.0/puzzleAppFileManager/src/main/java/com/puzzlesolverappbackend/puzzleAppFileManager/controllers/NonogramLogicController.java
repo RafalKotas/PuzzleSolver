@@ -1,8 +1,8 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.controllers;
 
 import com.google.gson.Gson;
-import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.services.NonogramLogicService;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

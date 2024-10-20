@@ -1,9 +1,9 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.runners;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramFileDetails;
-import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramGenetic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramFileDetails;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramGenetic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogic;
 import org.springframework.boot.CommandLineRunner;
 
 import java.io.File;

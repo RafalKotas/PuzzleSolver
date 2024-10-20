@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram;
+package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,15 +11,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class NonogramSolutionDecision {
     String decisionMarker; // "X" or "O"
-    int rowIdx;
-    int columnIdx;
+    Field decisionField;
 
     @Override
     public String toString() {
         return "dec.{" +
                 "'" + decisionMarker + '\'' +
-                ", r" + rowIdx +
-                ", c" + columnIdx +
+                ", r" + decisionField.getRowIdx() +
+                ", c" + decisionField.getColumnIdx() +
                 '}';
     }
 }

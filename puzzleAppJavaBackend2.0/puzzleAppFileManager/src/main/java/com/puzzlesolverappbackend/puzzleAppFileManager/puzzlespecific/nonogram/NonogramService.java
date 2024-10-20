@@ -1,9 +1,8 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.services;
+package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram;
 
 import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzleAppFileManager.helpers.FileHelper;
-import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramFiltersResponse;
-import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.repository.NonogramRepository;
 import com.puzzlesolverappbackend.puzzleAppFileManager.templates.nonogram.NonogramBoardTemplate;
 import org.springframework.beans.factory.annotation.Autowired;

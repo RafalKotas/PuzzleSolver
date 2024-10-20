@@ -1,6 +1,6 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.logs.nonogram;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramSolutionDecision;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramSolutionDecision;
 
 import java.util.List;
 
