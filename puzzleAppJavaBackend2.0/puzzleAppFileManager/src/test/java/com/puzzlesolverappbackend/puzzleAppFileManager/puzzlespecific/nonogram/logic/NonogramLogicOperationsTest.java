@@ -264,11 +264,11 @@ class NonogramLogicOperationsTest {
                 Arrays.asList(Arrays.asList(0, 5), Arrays.asList(2, 7), Arrays.asList(4, 9)),
                 Arrays.asList(Arrays.asList(0, 1), Arrays.asList(2, 3), Arrays.asList(4, 5), Arrays.asList(6, 7), Arrays.asList(8, 9)),
                 Arrays.asList(Arrays.asList(0, 1), Arrays.asList(2, 7), Arrays.asList(8, 9)),
-                Arrays.asList(Arrays.asList(0, 9)),
-                Arrays.asList(Arrays.asList(0, 9)),
+                List.of(Arrays.asList(0, 9)),
+                List.of(Arrays.asList(0, 9)),
                 Arrays.asList(Arrays.asList(0, 7), Arrays.asList(8, 9)),
-                Arrays.asList(Arrays.asList(0, 9)),
-                Arrays.asList(Arrays.asList(0, 9)),
+                List.of(Arrays.asList(0, 9)),
+                List.of(Arrays.asList(0, 9)),
                 Arrays.asList(Arrays.asList(0, 7), Arrays.asList(2, 9)),
                 Arrays.asList(Arrays.asList(0, 6), Arrays.asList(3, 9))
         ));
@@ -295,11 +295,11 @@ class NonogramLogicOperationsTest {
                 Arrays.asList(Arrays.asList(0, 2), Arrays.asList(2, 6), Arrays.asList(6, 9)),
                 Arrays.asList(Arrays.asList(0, 1), Arrays.asList(2, 3), Arrays.asList(4, 5), Arrays.asList(6, 7), Arrays.asList(8, 9)),
                 Arrays.asList(Arrays.asList(0, 1), Arrays.asList(2, 7), Arrays.asList(8, 9)),
-                Arrays.asList(Arrays.asList(0, 8)),
-                Arrays.asList(Arrays.asList(0, 8)),
+                List.of(Arrays.asList(0, 8)),
+                List.of(Arrays.asList(0, 8)),
                 Arrays.asList(Arrays.asList(0, 6), Arrays.asList(8, 8)),
-                Arrays.asList(Arrays.asList(0, 8)),
-                Arrays.asList(Arrays.asList(0, 9)),
+                List.of(Arrays.asList(0, 8)),
+                List.of(Arrays.asList(0, 9)),
                 Arrays.asList(Arrays.asList(0, 6), Arrays.asList(6, 9)),
                 Arrays.asList(Arrays.asList(1, 3), Arrays.asList(5, 7))
         ));
@@ -311,16 +311,16 @@ class NonogramLogicOperationsTest {
         // given
         List<List<List<Integer>>> columnsSequencesRangesBeforeCorrectingWhenMetColouredFields = o06005_difficulty_1.getColumnsSequencesRanges();
         assertThat(columnsSequencesRangesBeforeCorrectingWhenMetColouredFields).isEqualTo(Arrays.asList(
-                Arrays.asList(Arrays.asList(0, 9)),
-                Arrays.asList(Arrays.asList(0, 9)),
+                List.of(Arrays.asList(0, 9)),
+                List.of(Arrays.asList(0, 9)),
                 Arrays.asList(Arrays.asList(0, 7), Arrays.asList(9, 9)),
-                Arrays.asList(Arrays.asList(0, 9)),
-                Arrays.asList(Arrays.asList(0, 9)),
-                Arrays.asList(Arrays.asList(0, 9)),
-                Arrays.asList(Arrays.asList(0, 9)),
+                List.of(Arrays.asList(0, 9)),
+                List.of(Arrays.asList(0, 9)),
+                List.of(Arrays.asList(0, 9)),
+                List.of(Arrays.asList(0, 9)),
                 Arrays.asList(Arrays.asList(0, 4), Arrays.asList(3, 7), Arrays.asList(6, 9)),
-                Arrays.asList(Arrays.asList(0, 9)),
-                Arrays.asList(Arrays.asList(0, 9))
+                List.of(Arrays.asList(0, 9)),
+                List.of(Arrays.asList(0, 9))
         ));
 
         // when
@@ -341,16 +341,16 @@ class NonogramLogicOperationsTest {
 
         List<List<List<Integer>>> columnsSequencesRangesAfterCorrectingWhenMetColouredFields = o06005_difficulty_1.getColumnsSequencesRanges();
         assertThat(columnsSequencesRangesAfterCorrectingWhenMetColouredFields).isEqualTo(Arrays.asList(
-                Arrays.asList(Arrays.asList(1, 9)),
-                Arrays.asList(Arrays.asList(1, 9)),
+                List.of(Arrays.asList(1, 9)),
+                List.of(Arrays.asList(1, 9)),
                 Arrays.asList(Arrays.asList(0, 7), Arrays.asList(9, 9)),
-                Arrays.asList(Arrays.asList(2, 7)),
-                Arrays.asList(Arrays.asList(0, 9)),
-                Arrays.asList(Arrays.asList(2, 7)),
-                Arrays.asList(Arrays.asList(0, 9)),
+                List.of(Arrays.asList(2, 7)),
+                List.of(Arrays.asList(0, 9)),
+                List.of(Arrays.asList(2, 7)),
+                List.of(Arrays.asList(0, 9)),
                 Arrays.asList(Arrays.asList(0, 4), Arrays.asList(3, 7), Arrays.asList(7, 9)),
-                Arrays.asList(Arrays.asList(1, 9)),
-                Arrays.asList(Arrays.asList(7, 7))
+                List.of(Arrays.asList(1, 9)),
+                List.of(Arrays.asList(7, 7))
         ));
     }
 
@@ -641,11 +641,11 @@ class NonogramLogicOperationsTest {
                 Arrays.asList(Arrays.asList(2, 2), Arrays.asList(2, 6), Arrays.asList(6, 6)),
                 Arrays.asList(Arrays.asList(0, 0), Arrays.asList(2, 2), Arrays.asList(4, 4),  Arrays.asList(6, 6), Arrays.asList(8, 8)),
                 Arrays.asList(Arrays.asList(0, 0), Arrays.asList(2, 6), Arrays.asList(8, 8)),
-                Arrays.asList(Arrays.asList(0, 8)),
-                Arrays.asList(Arrays.asList(0, 8)),
+                List.of(Arrays.asList(0, 8)),
+                List.of(Arrays.asList(0, 8)),
                 Arrays.asList(Arrays.asList(0, 6), Arrays.asList(8, 8)),
-                Arrays.asList(Arrays.asList(0, 8)),
-                Arrays.asList(Arrays.asList(0, 9)),
+                List.of(Arrays.asList(0, 8)),
+                List.of(Arrays.asList(0, 9)),
                 Arrays.asList(Arrays.asList(0, 6), Arrays.asList(6, 8)),
                 Arrays.asList(Arrays.asList(1, 2), Arrays.asList(6, 7))
         ));
@@ -808,16 +808,16 @@ class NonogramLogicOperationsTest {
         // then
         List<List<List<Integer>>> columnSequencesRangesAfterCorrectingWhenMetColouredFields = o06005_difficulty_1.getColumnsSequencesRanges();
         assertThat(columnSequencesRangesAfterCorrectingWhenMetColouredFields).isEqualTo(Arrays.asList(
-                Arrays.asList(Arrays.asList(1, 7)),
-                Arrays.asList(Arrays.asList(3, 9)),
+                List.of(Arrays.asList(1, 7)),
+                List.of(Arrays.asList(3, 9)),
                 Arrays.asList(Arrays.asList(0, 7), Arrays.asList(9, 9)),
-                Arrays.asList(Arrays.asList(2, 7)),
-                Arrays.asList(Arrays.asList(0, 8)),
-                Arrays.asList(Arrays.asList(2, 7)),
-                Arrays.asList(Arrays.asList(0, 9)),
+                List.of(Arrays.asList(2, 7)),
+                List.of(Arrays.asList(0, 8)),
+                List.of(Arrays.asList(2, 7)),
+                List.of(Arrays.asList(0, 9)),
                 Arrays.asList(Arrays.asList(3, 4), Arrays.asList(6, 7), Arrays.asList(9, 9)),
-                Arrays.asList(Arrays.asList(1, 7)),
-                Arrays.asList(Arrays.asList(7, 7))
+                List.of(Arrays.asList(1, 7)),
+                List.of(Arrays.asList(7, 7))
         ));
     }
 
@@ -1009,11 +1009,11 @@ class NonogramLogicOperationsTest {
                 Arrays.asList(Arrays.asList(2, 2), Arrays.asList(4, 4), Arrays.asList(6, 6)),
                 Arrays.asList(Arrays.asList(0, 0), Arrays.asList(2, 2), Arrays.asList(4, 4), Arrays.asList(6, 6), Arrays.asList(8, 8)),
                 Arrays.asList(Arrays.asList(0, 0), Arrays.asList(2, 6), Arrays.asList(8, 8)),
-                Arrays.asList(Arrays.asList(0, 8)),
-                Arrays.asList(Arrays.asList(0, 8)),
+                List.of(Arrays.asList(0, 8)),
+                List.of(Arrays.asList(0, 8)),
                 Arrays.asList(Arrays.asList(0, 6), Arrays.asList(8, 8)),
-                Arrays.asList(Arrays.asList(0, 8)),
-                Arrays.asList(Arrays.asList(0, 9)),
+                List.of(Arrays.asList(0, 8)),
+                List.of(Arrays.asList(0, 9)),
                 Arrays.asList(Arrays.asList(0, 6), Arrays.asList(6, 8)),
                 Arrays.asList(Arrays.asList(1, 2), Arrays.asList(6, 7))
         ));
@@ -1123,11 +1123,11 @@ class NonogramLogicOperationsTest {
                 Arrays.asList(Arrays.asList(2, 2), Arrays.asList(4, 4), Arrays.asList(6, 6)),
                 Arrays.asList(Arrays.asList(0, 0), Arrays.asList(2, 2), Arrays.asList(4, 4), Arrays.asList(6, 6), Arrays.asList(8, 8)),
                 Arrays.asList(Arrays.asList(0, 0), Arrays.asList(2, 6), Arrays.asList(8, 8)),
-                Arrays.asList(Arrays.asList(0, 8)),
-                Arrays.asList(Arrays.asList(0, 8)),
+                List.of(Arrays.asList(0, 8)),
+                List.of(Arrays.asList(0, 8)),
                 Arrays.asList(Arrays.asList(0, 6), Arrays.asList(8, 8)),
-                Arrays.asList(Arrays.asList(0, 8)),
-                Arrays.asList(Arrays.asList(0, 9)),
+                List.of(Arrays.asList(0, 8)),
+                List.of(Arrays.asList(0, 9)),
                 Arrays.asList(Arrays.asList(1, 1), Arrays.asList(6, 6)),
                 Arrays.asList(Arrays.asList(1, 2), Arrays.asList(6, 7))
         ));
