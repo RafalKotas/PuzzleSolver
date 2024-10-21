@@ -31,6 +31,9 @@ public class NonogramLogic extends NonogramLogicParams {
 
     protected boolean guessMode;
 
+    protected NonogramColumnLogic nonogramColumnLogic;
+    protected NonogramRowLogic nonogramRowLogic;
+
     @Override
     public String toString() {
         return "NonogramLogic{" +
@@ -84,12 +87,12 @@ public class NonogramLogic extends NonogramLogicParams {
 
         List<NonogramActionDefinition> overlappingActionsAllRows = IntStream.range(0, height)
                 .mapToObj(rowIdx -> new NonogramActionDefinition(rowIdx, COLOUR_OVERLAPPING_FIELDS_IN_ROW))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
         List<NonogramActionDefinition> overlappingActionsAllColumns = IntStream.range(0, width)
                 .mapToObj(columnIdx -> new NonogramActionDefinition(columnIdx, COLOUR_OVERLAPPING_FIELDS_IN_COLUMN))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
 
-        return Stream.concat(overlappingActionsAllRows.stream(), overlappingActionsAllColumns.stream()).toList();
+        return Stream.concat(overlappingActionsAllRows.stream(), overlappingActionsAllColumns.stream()).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public NonogramLogic(List<List<Integer>> rowsSequences, List<List<Integer>> columnsSequences, List<List<String>> nonogramSolutionBoard) {
@@ -153,13 +156,14 @@ public class NonogramLogic extends NonogramLogicParams {
         this.logs = new ArrayList<>();
 
         this.rowsSequences = new ArrayList<>(rowsSequences);
-        this.columnsSequences = new ArrayList<>(columnsSequences);
         this.rowsSequencesRanges = new ArrayList<>(rowsSequencesRanges);
-        this.columnsSequencesRanges = new ArrayList<>(columnsSequencesRanges);
-        this.rowsFieldsNotToInclude = new ArrayList<>(rowsFieldsNotToInclude);
-        this.columnsFieldsNotToInclude = new ArrayList<>(columnsFieldsNotToInclude);
         this.rowsSequencesIdsNotToInclude = new ArrayList<>(rowsSequencesIdsNotToInclude);
+        this.rowsFieldsNotToInclude = new ArrayList<>(rowsFieldsNotToInclude);
+
+        this.columnsSequences = new ArrayList<>(columnsSequences);
+        this.columnsSequencesRanges = new ArrayList<>(columnsSequencesRanges);
         this.columnsSequencesIdsNotToInclude = new ArrayList<>(columnsSequencesIdsNotToInclude);
+        this.columnsFieldsNotToInclude = new ArrayList<>(columnsFieldsNotToInclude);
 
         this.nonogramSolutionBoard = new ArrayList<>(nonogramSolutionBoard);
         this.nonogramSolutionBoardWithMarks = new ArrayList<>(nonogramSolutionBoardWithMarks);
@@ -217,7 +221,6 @@ public class NonogramLogic extends NonogramLogicParams {
         Field rowField;
         for(int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
             if(isRowTrivial(rowIdx)) {
-                addAllRowSequencesIdxToNotToInclude(rowIdx);
                 addFillTrivialRowLog(rowIdx);
                 int seqNo = 0;
                 int subsequentXs = 0;
@@ -225,7 +228,7 @@ public class NonogramLogic extends NonogramLogicParams {
                 List<Integer> rowSequenceRange = rowSequencesRanges.get(seqNo);
                 for(int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
                     rowField = new Field(rowIdx, columnIdx);
-                    if(rangeInsideAnotherRange(List.of(columnIdx), rowSequenceRange)) {
+                    if(rangeInsideAnotherRange(List.of(columnIdx, columnIdx), rowSequenceRange)) {
                         subsequentXs = 0;
                         fillTrivialRowField(rowField, seqNo);
                         addRowFieldToExcluded(rowField);
@@ -243,20 +246,9 @@ public class NonogramLogic extends NonogramLogicParams {
                         }
                     }
                 }
+                addAllRowSequencesIdxToNotToInclude(rowIdx);
             }
         }
-    }
-
-    private boolean isRowTrivial(int rowIdx) {
-        List<Integer> rowSequencesLengths = this.getRowsSequences().get(rowIdx);
-        List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
-        for(int seqNo = 0; seqNo < rowSequencesLengths.size(); seqNo++) {
-            if(rowSequencesLengths.get(seqNo) != rangeLength(rowSequencesRanges.get(seqNo))) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     private void addAllRowSequencesIdxToNotToInclude(int rowIdx) {
@@ -270,10 +262,6 @@ public class NonogramLogic extends NonogramLogicParams {
             this.rowsSequencesIdsNotToInclude.get(rowIdx).add(seqIdx);
             Collections.sort(this.rowsSequencesIdsNotToInclude.get(rowIdx));
         }
-    }
-
-    public String generateAddingRowSequenceToNotToIncludeDescription(int rowIdx, int seqNo) {
-        return String.format("ROW %d - SeqNo = %d added to not to include", rowIdx, seqNo);
     }
 
     private void addFillTrivialRowLog(int rowIdx) {
@@ -307,7 +295,6 @@ public class NonogramLogic extends NonogramLogicParams {
         Field columnField;
         for(int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
             if(isColumnTrivial(columnIdx)) {
-                addAllColumnSequencesIdxToNotToInclude(columnIdx);
                 addFillTrivialColumnLog(columnIdx);
                 int seqNo = 0;
                 int subsequentXs = 0;
@@ -333,20 +320,9 @@ public class NonogramLogic extends NonogramLogicParams {
                         }
                     }
                 }
+                addAllColumnSequencesIdxToNotToInclude(columnIdx);
             }
         }
-    }
-
-    private boolean isColumnTrivial(int columnIdx) {
-        List<Integer> columnSequencesLengths = this.getColumnsSequences().get(columnIdx);
-        List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
-        for(int seqNo = 0; seqNo < columnSequencesLengths.size(); seqNo++) {
-            if(columnSequencesLengths.get(seqNo) != rangeLength(columnSequencesRanges.get(seqNo))) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     private void addAllColumnSequencesIdxToNotToInclude(int columnIdx) {
@@ -355,19 +331,19 @@ public class NonogramLogic extends NonogramLogicParams {
 
     public void addColumnSequenceIdxToNotToInclude(int columnIdx, int seqIdx) {
         if(!this.columnsSequencesIdsNotToInclude.get(columnIdx).contains(seqIdx)) {
-            tmpLog = generateAddingColumnSequenceToNotToIncludeDescription(columnIdx, seqIdx);
-            addLog(tmpLog);
+            generateAddingColumnSequenceToNotToIncludeDescription(columnIdx, seqIdx);
             this.columnsSequencesIdsNotToInclude.get(columnIdx).add(seqIdx);
             Collections.sort(this.columnsSequencesIdsNotToInclude.get(columnIdx));
         }
     }
 
-    public String generateAddingColumnSequenceToNotToIncludeDescription(int columnIdx, int seqNo) {
-        return String.format("COLUMN %d - SeqNo = %d added to not to include", columnIdx, seqNo);
-    }
-
     private void addFillTrivialColumnLog(int columnIdx) {
         tmpLog = String.format("COLUMN %d is trivial - filling whole", columnIdx);
+        addLog(tmpLog);
+    }
+
+    private void generateAddingColumnSequenceToNotToIncludeDescription(int columnIdx, int seqNo) {
+        tmpLog = String.format("COLUMN %d - seqNo = %d excluded", columnIdx, seqNo);
         addLog(tmpLog);
     }
 
@@ -435,27 +411,11 @@ public class NonogramLogic extends NonogramLogicParams {
         return this;
     }
 
-    public int maximumColumnIndexWithoutX(int rowIdx, int firstSequenceColumnIdx, int sequenceFullLength) {
-        List<String> boardRow = this.getNonogramSolutionBoard().get(rowIdx);
-        int maximumColumnIndex = firstSequenceColumnIdx;
-        int maximumColumnIndexLimit = Math.min(firstSequenceColumnIdx + sequenceFullLength - 1, this.getWidth() - 1);
-        String fieldMark;
-
-        for(; maximumColumnIndex <= maximumColumnIndexLimit; maximumColumnIndex++) {
-            fieldMark = boardRow.get(maximumColumnIndex);
-            if(fieldMark.equals(X_FIELD)) {
-                break;
-            }
-        }
-
-        return maximumColumnIndex - 1;
-    }
-
     private List<List<List<Integer>>> inferInitialRowsSequencesRanges() {
         List<List<List<Integer>>> initialRowSequencesRanges = new ArrayList<>();
 
         for(int rowIdx = 0; rowIdx < rowsSequences.size(); rowIdx++) {
-            initialRowSequencesRanges.add( inferInitialRowSequencesRanges( rowsSequences.get(rowIdx), rowIdx) );
+            initialRowSequencesRanges.add(inferInitialRowSequencesRanges(rowsSequences.get(rowIdx), rowIdx));
         }
 
         return initialRowSequencesRanges;

@@ -223,7 +223,7 @@ public class NonogramLogicService {
                         updatedRangeBeginIndex = Math.max(0,
                                 nonogramLogicObject.getNonogramRowLogic().minimumColumnIndexWithoutX(rowIdx, lastSequenceIndex, matchingSequenceLength));
                         updatedRangeEndIndex = Math.min(nonogramLogicObject.getWidth() - 1,
-                                nonogramLogicObject.maximumColumnIndexWithoutX(rowIdx, firstSequenceIndex, matchingSequenceLength));
+                                nonogramLogicObject.getNonogramRowLogic().maximumColumnIndexWithoutX(rowIdx, firstSequenceIndex, matchingSequenceLength));
                         rowSequenceRange.add( Math.max(oldRangeBeginIndex ,updatedRangeBeginIndex) );
                         rowSequenceRange.add( Math.min(oldRangeEndIndex, updatedRangeEndIndex) );
 

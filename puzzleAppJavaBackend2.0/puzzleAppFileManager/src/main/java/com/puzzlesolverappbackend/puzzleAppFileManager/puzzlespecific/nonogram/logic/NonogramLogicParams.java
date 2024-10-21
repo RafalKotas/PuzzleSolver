@@ -9,10 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.rangeLength;
 
 @Data
 @NoArgsConstructor
@@ -23,13 +25,11 @@ public abstract class NonogramLogicParams {
     protected final static Logger logger = LoggerFactory.getLogger(NonogramLogic.class);
     protected boolean showRepetitions = false;
     protected NonogramState nonogramState;
-    protected List<NonogramActionDefinition> actionsToDoList;
+    protected List<NonogramActionDefinition> actionsToDoList = new ArrayList<>();
 
     protected List<String> logs;
 
     protected String tmpLog;
-    protected NonogramColumnLogic nonogramColumnLogic;
-    protected NonogramRowLogic nonogramRowLogic;
 
     protected List<List<Integer>> rowsSequences;
     protected List<List<Integer>> columnsSequences;
@@ -253,7 +253,7 @@ public abstract class NonogramLogicParams {
     protected void excludeSequenceInRow(int rowIdx, int seqIdx) {
         boolean rowValid = isRowIndexValid(rowIdx);
         if(rowValid && !this.rowsSequencesIdsNotToInclude.get(rowIdx).contains(seqIdx)) {
-            tmpLog = generateAddingSequenceToNotToIncludeDescription(rowIdx, seqIdx);
+            tmpLog = generateAddingRowSequenceToNotToIncludeDescription(rowIdx, seqIdx);
             addLog(tmpLog);
             this.rowsSequencesIdsNotToInclude.get(rowIdx).add(seqIdx);
             Collections.sort(this.rowsSequencesIdsNotToInclude.get(rowIdx));
@@ -266,23 +266,11 @@ public abstract class NonogramLogicParams {
      */
     protected void excludeSequenceInColumn(int columnIdx, int seqIdx) {
         if(!this.columnsSequencesIdsNotToInclude.get(columnIdx).contains(seqIdx)) {
-            tmpLog = generateAddingSequenceToNotToIncludeDescription(columnIdx, seqIdx);
+            tmpLog = generateAddingRowSequenceToNotToIncludeDescription(columnIdx, seqIdx);
             addLog(tmpLog);
             this.columnsSequencesIdsNotToInclude.get(columnIdx).add(seqIdx);
             Collections.sort(this.columnsSequencesIdsNotToInclude.get(columnIdx));
         }
-    }
-
-    protected void addLog(String log) {
-        if (log.isEmpty()) {
-            System.out.println("Trying to add empty log!!!");
-        } else {
-            this.logs.add(log);
-        }
-    }
-
-    protected String generateAddingSequenceToNotToIncludeDescription(int rowIdx, int seqNo) {
-        return String.format("ROW %d - SeqNo = %d added to not to include", rowIdx, seqNo);
     }
 
     /**
@@ -339,5 +327,41 @@ public abstract class NonogramLogicParams {
      */
     public void updateColumnSequenceRange(int columnIdx, int sequenceIdx, List<Integer> updatedRange) {
         this.columnsSequencesRanges.get(columnIdx).set(sequenceIdx, updatedRange);
+    }
+
+    public boolean isRowTrivial(int rowIdx) {
+        List<Integer> rowSequencesLengths = this.getRowsSequences().get(rowIdx);
+        List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
+        for(int seqNo = 0; seqNo < rowSequencesLengths.size(); seqNo++) {
+            if(rowSequencesLengths.get(seqNo) != rangeLength(rowSequencesRanges.get(seqNo))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean isColumnTrivial(int columnIdx) {
+        List<Integer> columnSequencesLengths = this.getColumnsSequences().get(columnIdx);
+        List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
+        for(int seqNo = 0; seqNo < columnSequencesLengths.size(); seqNo++) {
+            if(columnSequencesLengths.get(seqNo) != rangeLength(columnSequencesRanges.get(seqNo))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected String generateAddingRowSequenceToNotToIncludeDescription(int rowIdx, int seqNo) {
+        return String.format("ROW %d - seqNo = %d excluded", rowIdx, seqNo);
+    }
+
+    protected void addLog(String log) {
+        if (log.isEmpty()) {
+            System.out.println("Trying to add empty log!!!");
+        } else {
+            this.logs.add(log);
+        }
     }
 }

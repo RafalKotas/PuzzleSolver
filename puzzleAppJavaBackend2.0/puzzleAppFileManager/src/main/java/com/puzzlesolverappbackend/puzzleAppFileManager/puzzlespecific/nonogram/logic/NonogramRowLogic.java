@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.payload.ActionsConstants.actionsToDoAfterCorrectingRangesWhenMarkingSequencesInRows;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.MARKED_ROW_INDICATOR;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.X_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.*;
 
 
@@ -34,8 +35,13 @@ public class NonogramRowLogic extends NonogramLogicParams {
         this.nonogramState = nonogramLogic.getNonogramState();
         this.logs = nonogramLogic.getLogs();
         this.rowsSequences = nonogramLogic.getRowsSequences();
+        this.rowsSequencesRanges = nonogramLogic.getRowsSequencesRanges();
+        this.rowsSequencesIdsNotToInclude = nonogramLogic.getRowsSequencesIdsNotToInclude();
+        this.rowsFieldsNotToInclude = nonogramLogic.getRowsFieldsNotToInclude();
         this.columnsSequences = nonogramLogic.getColumnsSequences();
         this.columnsSequencesRanges = nonogramLogic.getColumnsSequencesRanges();
+        this.columnsSequencesIdsNotToInclude = nonogramLogic.getColumnsSequencesIdsNotToInclude();
+        this.columnsFieldsNotToInclude = nonogramLogic.getColumnsFieldsNotToInclude();
         this.nonogramSolutionBoardWithMarks = nonogramLogic.getNonogramSolutionBoardWithMarks();
         this.nonogramSolutionBoard = nonogramLogic.getNonogramSolutionBoard();
         this.actionsToDoList = nonogramLogic.getActionsToDoList();
@@ -198,7 +204,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
         List<Integer> rowSequencesIndexesIncludingSequenceRange;
         List<Integer> rowSequencesLengthsIncludingSequenceRange;
 
-        List<Integer> xAtEdges = new ArrayList<>();
+        List<Integer> xAtEdges;
         Field potentiallyColouredField;
 
         int sequenceIdxToExclude;
@@ -208,22 +214,23 @@ public class NonogramRowLogic extends NonogramLogicParams {
         for(int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
             potentiallyColouredField = new Field(rowIdx, columnIdx);
             if(isFieldColoured(potentiallyColouredField)) {
-
-                colouredSequenceRange = findColouredSequenceRangeInRow(rowIdx, columnIdx);
+                colouredSequenceRange = findColouredSequenceRangeInRow(columnIdx, rowIdx);
                 columnIdx = colouredSequenceRange.get(1); //start from end of current coloured sequence
 
                 sequenceOnBoardLength = rangeLength(colouredSequenceRange);
                 rowSequencesIndexesIncludingSequenceRange = new ArrayList<>();
                 rowSequencesLengthsIncludingSequenceRange = new ArrayList<>();
 
+                List<Integer> rowSequencesIdsNotToInclude = this.getRowsSequencesIdsNotToInclude().get(rowIdx);
                 for(int seqNo = 0; seqNo < rowSequencesRanges.size(); seqNo++) {
                     rowSequenceRange = rowSequencesRanges.get(seqNo);
-                    if(rangeInsideAnotherRange(colouredSequenceRange, rowSequenceRange)) {
+                    if(rangeInsideAnotherRange(colouredSequenceRange, rowSequenceRange) && !rowSequencesIdsNotToInclude.contains(seqNo)) {
                         rowSequencesIndexesIncludingSequenceRange.add(seqNo);
                         rowSequencesLengthsIncludingSequenceRange.add(rowSequencesLengths.get(seqNo));
                     }
                 }
 
+                xAtEdges = new ArrayList<>();
                 xAtEdges.add(colouredSequenceRange.get(0) - 1);
                 xAtEdges.add(colouredSequenceRange.get(1) + 1);
 
@@ -235,7 +242,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
                     updatedSequenceRange = IntStream.rangeClosed(xAtEdges.get(0) + 1, xAtEdges.get(1) - 1).boxed().toList();
                     excludeColouredFieldsBetweenXs(rowIdx, updatedSequenceRange);
                     sequenceIdxToExclude = rowSequencesIndexesIncludingSequenceRange.get(0);
-                    updateLogicAfterPlacingXsAroundOnlyOneMatchingSequenceInRow(columnIdx, sequenceIdxToExclude, updatedSequenceRange);
+                    updateLogicAfterPlacingXsAroundOnlyOneMatchingSequenceInRow(rowIdx, sequenceIdxToExclude, colouredSequenceRange);
                 } else if(rowSequencesLengthsIncludingSequenceRange.size() > 1 && sequenceOnBoardLength == Collections.max(rowSequencesLengthsIncludingSequenceRange)) {
                     /*more than one row sequence fit in coloured range & length of coloured sequence is a max length of possible matching row sequences lengths */
                     doStuffWhenPlacingXsAroundLongestSequence(rowIdx, xAtEdges, false);
@@ -261,10 +268,12 @@ public class NonogramRowLogic extends NonogramLogicParams {
         String logEndPart = onlyMatching ? "[only possible]" : "[sequence index not specified]";
         for(int currentColumnIndex : xAtEdges) {
             Field fieldAtEdge = new Field(rowIdx, currentColumnIndex);
-            if(isFieldEmpty(fieldAtEdge)) {
-                doStuffWhenPlacingXsAfterOrBeforeLongestSequence(rowIdx, currentColumnIndex, xAtEdges, logEndPart);
-            } else if(showRepetitions) {
-                log.warn("X around longest sequence(pos={}) in row added earlier! {}", fieldAtEdge, logEndPart);
+            if(isColumnIndexValid(currentColumnIndex)) {
+                if(isFieldEmpty(fieldAtEdge)) {
+                    doStuffWhenPlacingXsAfterOrBeforeLongestSequence(rowIdx, currentColumnIndex, xAtEdges, logEndPart);
+                } else if(showRepetitions) {
+                    log.warn("X around longest sequence(pos={}) in row added earlier! {}", fieldAtEdge, logEndPart);
+                }
             }
         }
     }
@@ -305,8 +314,8 @@ public class NonogramRowLogic extends NonogramLogicParams {
     }
 
     private void updateLogicAfterPlacingXsAroundOnlyOneMatchingSequenceInRow(int rowIdx, int rowSequenceToExclude, List<Integer> updatedSequenceRange) {
-        List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(rowIdx);
-        List<Integer> oldSequenceRange = columnSequencesRanges.get(rowSequenceToExclude);
+        List<List<Integer>> rowsSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
+        List<Integer> oldSequenceRange = rowsSequencesRanges.get(rowSequenceToExclude);
         this.changeRowSequenceRange(rowIdx, rowSequenceToExclude, updatedSequenceRange);
         tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, rowSequenceToExclude,
                 oldSequenceRange, updatedSequenceRange, "correcting sequence while placing X before only matching coloured sequence");
@@ -990,49 +999,6 @@ public class NonogramRowLogic extends NonogramLogicParams {
         return List.of(firstColouredFieldColumnIndexInSubsequence, lastColouredFieldColumnIndexInSubsequence);
     }
 
-    public void changeRowSequenceRange(int rowIndex, int sequenceIndex, List<Integer> updatedRange) {
-        this.rowsSequencesRanges.get(rowIndex).set(sequenceIndex, updatedRange);
-    }
-
-    /**
-     * @param fieldToColour - field to colour if possible
-     */
-    public void colourFieldAtGivenPosition(Field fieldToColour) {
-        int fieldRowIdx = fieldToColour.getRowIdx();
-        int fieldColIdx = fieldToColour.getColumnIdx();
-        if(areFieldIndexesValid(fieldToColour)) {
-            this.nonogramSolutionBoard.get(fieldRowIdx).set(fieldColIdx, COLOURED_FIELD);
-        }
-    }
-
-    /**
-     * @param fieldToExclude field to place "X"/exclude (considering given row)
-     */
-    protected void excludeFieldInRow(Field fieldToExclude) {
-        int fieldRowIdx = fieldToExclude.getRowIdx();
-        int fieldColIdx = fieldToExclude.getColumnIdx();
-        if(areFieldIndexesValid(fieldToExclude) && !this.rowsFieldsNotToInclude.get(fieldRowIdx).contains(fieldColIdx)) {
-            this.rowsFieldsNotToInclude.get(fieldRowIdx).add(fieldColIdx);
-            Collections.sort(this.rowsFieldsNotToInclude.get(fieldRowIdx));
-        }
-    }
-
-    public int minimumColumnIndexWithoutX(int rowIdx, int lastSequenceColumnIdx, int sequenceFullLength) {
-        List<String> boardRow = this.getNonogramSolutionBoard().get(rowIdx);
-        int minimumColumnIndex = lastSequenceColumnIdx;
-        int minimumColumnIndexLimit = Math.max(lastSequenceColumnIdx - sequenceFullLength + 1, 0);
-        String fieldMark;
-
-        for(; minimumColumnIndex >= minimumColumnIndexLimit; minimumColumnIndex--) {
-            fieldMark = boardRow.get(minimumColumnIndex);
-            if(fieldMark.equals(X_FIELD)) {
-                break;
-            }
-        }
-
-        return minimumColumnIndex + 1;
-    }
-
     private boolean isColumnRangeColoured(int rowIdx, List<Integer> columnRange) {
         for(Integer columnIdx : columnRange) {
             if(!this.getNonogramSolutionBoard().get(rowIdx).get(columnIdx).equals("O")) {
@@ -1043,6 +1009,37 @@ public class NonogramRowLogic extends NonogramLogicParams {
         return true;
     }
 
+    public int minimumColumnIndexWithoutX(int rowIdx, int lastSequenceColumnIdx, int sequenceFullLength) {
+        int minimumColumnIndex = lastSequenceColumnIdx;
+        int minimumColumnIndexLimit = Math.max(lastSequenceColumnIdx - sequenceFullLength + 1, 0);
+        Field fieldToCheck;
+
+        for(; minimumColumnIndex >= minimumColumnIndexLimit; minimumColumnIndex--) {
+            fieldToCheck = new Field(rowIdx, minimumColumnIndex);
+            if(isFieldWithX(fieldToCheck)) {
+                break;
+            }
+        }
+
+        return minimumColumnIndex + 1;
+    }
+
+    public int maximumColumnIndexWithoutX(int rowIdx, int firstSequenceColumnIdx, int sequenceFullLength) {
+        List<String> boardRow = this.getNonogramSolutionBoard().get(rowIdx);
+        int maximumColumnIndex = firstSequenceColumnIdx;
+        int maximumColumnIndexLimit = Math.min(firstSequenceColumnIdx + sequenceFullLength - 1, this.getWidth() - 1);
+        String fieldMark;
+
+        for(; maximumColumnIndex <= maximumColumnIndexLimit; maximumColumnIndex++) {
+            fieldMark = boardRow.get(maximumColumnIndex);
+            if(fieldMark.equals(X_FIELD)) {
+                break;
+            }
+        }
+
+        return maximumColumnIndex - 1;
+    }
+
     /**
      * @param rowIdx row to mark sequence with its identifier (1st sequence -> "b", 2nd sequence -> "c", etc.)
      * @param colIdx column of field to mark with row sequence identifier
@@ -1051,15 +1048,15 @@ public class NonogramRowLogic extends NonogramLogicParams {
     public void markRowBoardField(int rowIdx, int colIdx, String marker) {
         String oldRowField = this.nonogramSolutionBoardWithMarks.get(rowIdx).get(colIdx);
         this.nonogramSolutionBoardWithMarks.get(rowIdx).set(colIdx, "R" + marker + oldRowField.substring(2, 4));
-
     }
 
-    public void addLog(String log) {
-        if (log.isEmpty()) {
-            System.out.println("Trying to add empty log!!!");
-        } else {
-            this.logs.add(log);
-        }
+    /**
+     * @param rowIndex - row index to change one of its sequences range
+     * @param sequenceIndex - sequence index to change range
+     * @param updatedRange - row sequence updatedRange
+     */
+    public void changeRowSequenceRange(int rowIndex, int sequenceIndex, List<Integer> updatedRange) {
+        this.rowsSequencesRanges.get(rowIndex).set(sequenceIndex, updatedRange);
     }
 
     public String generateColourStepDescription(int rowIndex, int columnIndex, String actionType) {

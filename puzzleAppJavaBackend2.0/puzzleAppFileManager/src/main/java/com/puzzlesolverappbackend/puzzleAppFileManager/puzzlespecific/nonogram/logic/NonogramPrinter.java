@@ -11,6 +11,9 @@ import java.util.stream.IntStream;
 @Setter
 public class NonogramPrinter extends NonogramLogicParams implements NonogramLogicPrinter {
 
+    protected NonogramColumnLogic nonogramColumnLogic;
+    protected NonogramRowLogic nonogramRowLogic;
+
     /**
      * prints nonogramSolutionBoard(only "X"/"O"/"-") in readable format
      */
