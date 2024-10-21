@@ -9,6 +9,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.COLOURED_FIELD;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.X_FIELD;
+
 /*TODO 26.05
 For every population member:
 1.(+) Generate arrays (top and bottom) of maximumPossibleCorrect fields
@@ -496,9 +499,9 @@ public class NonogramGenetic {
 
         for(int j = 0; j < this.getNonogramObject().getWidth(); j++) {
             if(indexesToColour.contains(j)) {
-                rowArray.add("O");
+                rowArray.add(COLOURED_FIELD);
             } else {
-                rowArray.add("X");
+                rowArray.add(X_FIELD);
             }
         }
 

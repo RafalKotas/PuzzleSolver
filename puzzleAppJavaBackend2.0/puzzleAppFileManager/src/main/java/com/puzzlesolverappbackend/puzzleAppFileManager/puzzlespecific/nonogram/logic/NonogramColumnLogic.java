@@ -732,6 +732,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
         int updatedColumnSequenceRangeStartIndex;
         int updatedColumnSequenceRangeEndIndex;
         List<Integer> updatedRange;
+        Field potentiallyXOnWayField;
 
         for(int seqNo = 0; seqNo < columnSequencesRanges.size(); seqNo++) {
             if(!excludedColumnSequences.contains(seqNo)) {
@@ -746,7 +747,8 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                 for(int rowStartIndex = columnSequenceRangeStartIndex; rowStartIndex < columnSequenceRangeEndIndex - columnSequenceLength + 1; rowStartIndex++) {
                     indexOk = true;
                     for(int rowIdx = rowStartIndex; rowIdx < rowStartIndex + columnSequenceLength; rowIdx++) {
-                        if(nonogramBoard.get(rowIdx).get(columnIdx).equals("X")) {
+                        potentiallyXOnWayField = new Field(rowIdx, columnIdx);
+                        if(isFieldWithX(potentiallyXOnWayField)) {
                             indexOk = false;
                             break;
                         }
@@ -763,7 +765,8 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                 for(int rowEndIndex = columnSequenceRangeEndIndex; rowEndIndex > columnSequenceRangeStartIndex + columnSequenceLength - 1; rowEndIndex--) {
                     indexOk = true;
                     for(int rowIdx = rowEndIndex; rowIdx > rowEndIndex - columnSequenceLength; rowIdx--) {
-                        if(nonogramBoard.get(rowIdx).get(columnIdx).equals("X")) {
+                        potentiallyXOnWayField = new Field(rowIdx, columnIdx);
+                        if(isFieldWithX(potentiallyXOnWayField)) {
                             indexOk = false;
                             break;
                         }
@@ -1028,11 +1031,11 @@ public class NonogramColumnLogic extends NonogramLogicParams {
 
         int maximumRowIndex = firstSequenceRowIdx;
         int maximumRowIndexLimit = Math.min(firstSequenceRowIdx + sequenceFullLength - 1, this.getHeight() - 1);
-        String fieldMark;
+        Field fieldToCheck;
 
         for(; maximumRowIndex <= maximumRowIndexLimit; maximumRowIndex++) {
-            fieldMark = nonogramSolutionBoard.get(maximumRowIndex).get(columnIdx);
-            if(fieldMark.equals("X")) {
+            fieldToCheck = new Field(maximumRowIndex, columnIdx);
+            if(isFieldWithX(fieldToCheck)) {
                 break;
             }
         }

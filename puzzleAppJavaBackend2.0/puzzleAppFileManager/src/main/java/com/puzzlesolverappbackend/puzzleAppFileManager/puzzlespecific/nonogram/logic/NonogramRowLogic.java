@@ -722,7 +722,6 @@ public class NonogramRowLogic extends NonogramLogicParams {
         List<Integer> rowSequences = this.getRowsSequences().get(rowIdx);
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
         List<Integer> excludedRowSequences = this.getRowsSequencesIdsNotToInclude().get(rowIdx);
-        List<List<String>> nonogramBoard = this.getNonogramSolutionBoard();
         int oldRowSequenceRangeStartIndex;
         int oldRowSequenceRangeEndIndex;
         int rowSequenceLength;
@@ -732,6 +731,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
         int updatedRowRangeStartIndex;
         int updatedRowRangeEndIndex;
         List<Integer> updatedRange;
+        Field potentiallyXOnWayField;
 
         for(int seqNo = 0; seqNo < rowSequencesRanges.size(); seqNo++) {
             if(!excludedRowSequences.contains(seqNo)) {
@@ -746,7 +746,8 @@ public class NonogramRowLogic extends NonogramLogicParams {
                 for(int columnStartIndex = oldRowSequenceRangeStartIndex; columnStartIndex <= (oldRowSequenceRangeEndIndex - rowSequenceLength + 1); columnStartIndex++) {
                     indexOk = true;
                     for(int columnIdx = columnStartIndex; columnIdx < columnStartIndex + rowSequenceLength; columnIdx++) {
-                        if(nonogramBoard.get(rowIdx).get(columnIdx).equals("X")) {
+                        potentiallyXOnWayField = new Field(rowIdx, columnIdx);
+                        if(isFieldWithX(potentiallyXOnWayField)) {
                             indexOk = false;
                             break;
                         }
@@ -763,7 +764,8 @@ public class NonogramRowLogic extends NonogramLogicParams {
                 for(int columnEndIndex = oldRowSequenceRangeEndIndex; columnEndIndex > (oldRowSequenceRangeStartIndex + rowSequenceLength - 1); columnEndIndex--) {
                     indexOk = true;
                     for(int columnIdx = columnEndIndex; columnIdx > columnEndIndex - rowSequenceLength; columnIdx--) {
-                        if(nonogramBoard.get(rowIdx).get(columnIdx).equals("X")) {
+                        potentiallyXOnWayField = new Field(rowIdx, columnIdx);
+                        if(isFieldWithX(potentiallyXOnWayField)) {
                             indexOk = false;
                             break;
                         }
@@ -1000,8 +1002,10 @@ public class NonogramRowLogic extends NonogramLogicParams {
     }
 
     private boolean isColumnRangeColoured(int rowIdx, List<Integer> columnRange) {
+        Field potentiallyColouredField;
         for(Integer columnIdx : columnRange) {
-            if(!this.getNonogramSolutionBoard().get(rowIdx).get(columnIdx).equals("O")) {
+            potentiallyColouredField = new Field(rowIdx, columnIdx);
+            if(!isFieldColoured(potentiallyColouredField)) {
                 return false;
             }
         }

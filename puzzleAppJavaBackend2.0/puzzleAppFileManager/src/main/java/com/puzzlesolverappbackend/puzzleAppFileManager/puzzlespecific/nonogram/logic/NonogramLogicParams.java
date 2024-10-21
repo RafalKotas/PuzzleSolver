@@ -81,9 +81,11 @@ public abstract class NonogramLogicParams {
      */
     public int fieldsColoured() {
         int colouredFieldsOnBoard = 0;
+        Field potentiallyColouredField;
         for(int rowIndex = 0; rowIndex < this.getHeight(); rowIndex++) {
             for(int columnIndex = 0; columnIndex < this.getWidth(); columnIndex++) {
-                if(this.getNonogramSolutionBoard().get(rowIndex).get(columnIndex).equals("O")) {
+                potentiallyColouredField = new Field(rowIndex, columnIndex);
+                if(isFieldColoured(potentiallyColouredField)) {
                     colouredFieldsOnBoard++;
                 }
             }

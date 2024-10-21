@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.COLOURED_FIELD;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.X_FIELD;
+
 @Getter
 @Setter
 @Slf4j
@@ -108,12 +111,12 @@ public class NonogramSolver {
 //                start = System.currentTimeMillis();
                 gson = new Gson();
                 for(NonogramSolutionDecision decision : availableChoices) {
-                    leftNodeO = copyNodeAndAddDecision(decision, "O", nonogramSubsolutionNode);
-                    rightNodeX = copyNodeAndAddDecision(decision, "X", nonogramSubsolutionNode);
+                    leftNodeO = copyNodeAndAddDecision(decision, COLOURED_FIELD, nonogramSubsolutionNode);
+                    rightNodeX = copyNodeAndAddDecision(decision, X_FIELD, nonogramSubsolutionNode);
 
                     if(!leftNodeO.getNonogramLogic().getNonogramState().isInvalidSolution()) {
                         if(rightNodeX.getNonogramLogic().getNonogramState().isInvalidSolution()) {
-                            decision.setDecisionMarker("O");
+                            decision.setDecisionMarker(COLOURED_FIELD);
                             correctDecision = Optional.of(decision);
                             nonogramSubsolutionNode = gson.fromJson(gson.toJson(leftNodeO), NonogramSolutionNode.class);
                             if(currentTreeHeight == 0) {
@@ -129,7 +132,7 @@ public class NonogramSolver {
                         if(rightNodeX.getNonogramLogic().getNonogramState().isInvalidSolution()) {
                             wrongCount = 2;
                         } else {
-                            decision.setDecisionMarker("X");
+                            decision.setDecisionMarker(X_FIELD);
                             correctDecision = Optional.of(decision);
                             nonogramSubsolutionNode = gson.fromJson(gson.toJson(rightNodeX), NonogramSolutionNode.class);
                             if(currentTreeHeight == 0) {
@@ -183,11 +186,11 @@ public class NonogramSolver {
                         int leftNodeFilled;
                         int rightNodeFilled;
                         for(NonogramSolutionDecision decision : nonogramSubsolutionNode.getNonogramLogic().getAvailableChoices()) {
-                            leftNodeO = copyNodeAndAddDecision(decision, "O", nonogramSubsolutionNode);
+                            leftNodeO = copyNodeAndAddDecision(decision, COLOURED_FIELD, nonogramSubsolutionNode);
                             leftNodeO.makeBasicSolverActions();
                             leftNodeFilled = leftNodeO.getNonogramLogic().fieldsFilled();
 
-                            rightNodeX = copyNodeAndAddDecision(decision, "X", nonogramSubsolutionNode);
+                            rightNodeX = copyNodeAndAddDecision(decision, X_FIELD, nonogramSubsolutionNode);
                             rightNodeX.makeBasicSolverActions();
                             rightNodeFilled = rightNodeX.getNonogramLogic().fieldsFilled();
 
@@ -197,13 +200,13 @@ public class NonogramSolver {
                             }
                         }
                         NonogramSolutionNode leftNodeRecursive = gson.fromJson(gson.toJson(nonogramSubsolutionNode), NonogramSolutionNode.class);
-                        decisionCoefficientsMax.setDecisionMarker("O");
+                        decisionCoefficientsMax.setDecisionMarker(COLOURED_FIELD);
                         leftNodeRecursive.addDecision(decisionCoefficientsMax);
                         leftNodeRecursive.colourOrPlaceX();
                         leftNodeRecursive.makeBasicSolverActions();
 
                         NonogramSolutionNode rightNodeRecursive = gson.fromJson(gson.toJson(nonogramSubsolutionNode), NonogramSolutionNode.class);
-                        decisionCoefficientsMax.setDecisionMarker("X");
+                        decisionCoefficientsMax.setDecisionMarker(X_FIELD);
                         rightNodeRecursive.addDecision(decisionCoefficientsMax);
                         rightNodeRecursive.colourOrPlaceX();
                         rightNodeRecursive.makeBasicSolverActions();
@@ -224,11 +227,11 @@ public class NonogramSolver {
                         int rightNodeFilled;
 
                         for(NonogramSolutionDecision decision : nonogramSubsolutionNode.getNonogramLogic().getAvailableChoices()) {
-                            leftNodeO = copyNodeAndAddDecision(decision, "O", nonogramSubsolutionNode);
+                            leftNodeO = copyNodeAndAddDecision(decision, COLOURED_FIELD, nonogramSubsolutionNode);
                             leftNodeO.makeBasicSolverActions();
                             leftNodeFilled = leftNodeO.getNonogramLogic().fieldsFilled();
 
-                            rightNodeX = copyNodeAndAddDecision(decision, "X", nonogramSubsolutionNode);
+                            rightNodeX = copyNodeAndAddDecision(decision, X_FIELD, nonogramSubsolutionNode);
                             rightNodeX.makeBasicSolverActions();
                             rightNodeFilled = rightNodeX.getNonogramLogic().fieldsFilled();
 
@@ -237,8 +240,8 @@ public class NonogramSolver {
                                 maxNextFilled = Math.max(leftNodeFilled, rightNodeFilled);
                             }
                         }
-                        NonogramSolutionNode leftNodeRecursive = copyNodeAndAddDecision(decisionCoefficientsMax, "O", nonogramSubsolutionNode);
-                        NonogramSolutionNode rightNodeRecursive = copyNodeAndAddDecision(decisionCoefficientsMax, "X", nonogramSubsolutionNode);
+                        NonogramSolutionNode leftNodeRecursive = copyNodeAndAddDecision(decisionCoefficientsMax, COLOURED_FIELD, nonogramSubsolutionNode);
+                        NonogramSolutionNode rightNodeRecursive = copyNodeAndAddDecision(decisionCoefficientsMax, X_FIELD, nonogramSubsolutionNode);
 
                         runHeuristicSolver(leftNodeRecursive,currentTreeHeight + 1, maxTreeHeight);
                         runHeuristicSolver(rightNodeRecursive, currentTreeHeight + 1, maxTreeHeight);
