@@ -14,7 +14,6 @@ import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.payload.ActionsConstants.actionsToDoAfterColouringOverlappingSequencesInColumns;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.payload.ActionsConstants.actionsToDoAfterCorrectingRangesWhenMarkingSequencesInColumns;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.COLOURED_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.MARKED_COLUMN_INDICATOR;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.*;
 
@@ -51,7 +50,6 @@ public class NonogramColumnLogic extends NonogramLogicParams {
      * @param columnIdx - column index on which mark sequences with char identifiers
      */
     public void markAvailableSequencesInColumn(int columnIdx) {
-        List<String> nonogramBoardColumn = getNonogramBoardColumn(columnIdx);
         Field potentiallyColouredField;
         List<Integer> colouredSequenceIndexes;
         int firstSequenceIndex;
@@ -67,7 +65,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
         List<Integer> onlyMatchingSequenceOldRange;
         List<Integer> newSequenceRange;
 
-        for(int rowIdx = 0; rowIdx < nonogramBoardColumn.size(); rowIdx++) {
+        for(int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
             potentiallyColouredField = new Field(rowIdx, columnIdx);
             if(isFieldColoured(potentiallyColouredField)) {
 
@@ -75,7 +73,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                 colouredSequenceIndexes.add(rowIdx);
 
                 // TODO - do while(?)
-                while(rowIdx < nonogramBoardColumn.size() && isFieldColoured(potentiallyColouredField)) {
+                while(rowIdx < this.getHeight() && isFieldColoured(potentiallyColouredField)) {
                     rowIdx++;
                     potentiallyColouredField = new Field(rowIdx, columnIdx);
                 }
@@ -722,7 +720,6 @@ public class NonogramColumnLogic extends NonogramLogicParams {
         List<Integer> columnSequences = this.getColumnsSequences().get(columnIdx);
         List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
         List<Integer> excludedColumnSequences = this.getColumnsSequencesIdsNotToInclude().get(columnIdx);
-        List<List<String>> nonogramBoard = this.getNonogramSolutionBoard();
         int columnSequenceRangeStartIndex;
         int columnSequenceRangeEndIndex;
         int columnSequenceLength;
@@ -1003,8 +1000,10 @@ public class NonogramColumnLogic extends NonogramLogicParams {
     }
 
     private boolean isRowRangeColoured(int columnIdx, List<Integer> rowRange) {
+        Field potentiallyColouredField;
         for(Integer rowIdx : rowRange) {
-            if(!this.getNonogramSolutionBoard().get(rowIdx).get(columnIdx).equals(COLOURED_FIELD)) {
+            potentiallyColouredField = new Field(rowIdx, columnIdx);
+            if(!isFieldColoured(potentiallyColouredField)) {
                 return false;
             }
         }
@@ -1028,7 +1027,6 @@ public class NonogramColumnLogic extends NonogramLogicParams {
     }
 
     public int maximumRowIndexWithoutX(int columnIdx, int firstSequenceRowIdx, int sequenceFullLength) {
-
         int maximumRowIndex = firstSequenceRowIdx;
         int maximumRowIndexLimit = Math.min(firstSequenceRowIdx + sequenceFullLength - 1, this.getHeight() - 1);
         Field fieldToCheck;

@@ -14,7 +14,6 @@ import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.payload.ActionsConstants.actionsToDoAfterCorrectingRangesWhenMarkingSequencesInRows;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.MARKED_ROW_INDICATOR;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.X_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.*;
 
 
@@ -51,7 +50,6 @@ public class NonogramRowLogic extends NonogramLogicParams {
      * @param rowIdx - row index on which mark sequences with char identifiers
      */
     public void markAvailableSequencesInRow(int rowIdx) {
-        List<String> boardRow = this.getNonogramSolutionBoard().get(rowIdx);
         Field potentiallyColouredField;
         List<Integer> colouredSequenceIndexes;
         int firstSequenceIndex;
@@ -67,7 +65,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
         List<Integer> oldOnlyMatchingSequenceRange;
         List<Integer> newSequenceRange;
 
-        for(int columnIdx = 0; columnIdx < boardRow.size(); columnIdx++) {
+        for(int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
             potentiallyColouredField = new Field(rowIdx, columnIdx);
             if(isFieldColoured(potentiallyColouredField)) {
 
@@ -75,7 +73,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
                 colouredSequenceIndexes.add(columnIdx);
 
                 // TODO - do while(?)
-                while(columnIdx < boardRow.size() && isFieldColoured(potentiallyColouredField)) {
+                while(columnIdx < this.getWidth() && isFieldColoured(potentiallyColouredField)) {
                     columnIdx++;
                     potentiallyColouredField = new Field(rowIdx, columnIdx);
                 }
@@ -1029,14 +1027,13 @@ public class NonogramRowLogic extends NonogramLogicParams {
     }
 
     public int maximumColumnIndexWithoutX(int rowIdx, int firstSequenceColumnIdx, int sequenceFullLength) {
-        List<String> boardRow = this.getNonogramSolutionBoard().get(rowIdx);
         int maximumColumnIndex = firstSequenceColumnIdx;
         int maximumColumnIndexLimit = Math.min(firstSequenceColumnIdx + sequenceFullLength - 1, this.getWidth() - 1);
-        String fieldMark;
+        Field fieldToCheck;
 
         for(; maximumColumnIndex <= maximumColumnIndexLimit; maximumColumnIndex++) {
-            fieldMark = boardRow.get(maximumColumnIndex);
-            if(fieldMark.equals(X_FIELD)) {
+            fieldToCheck = new Field(rowIdx, maximumColumnIndex);
+            if(isFieldWithX(fieldToCheck)) {
                 break;
             }
         }
