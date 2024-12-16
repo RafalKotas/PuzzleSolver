@@ -8,6 +8,8 @@ import org.springframework.boot.CommandLineRunner;
 
 import java.io.File;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
+
 //@Component
 //@Order(8)
 public class NonogramGeneticInitializer implements CommandLineRunner {
@@ -28,7 +30,7 @@ public class NonogramGeneticInitializer implements CommandLineRunner {
 
         objectMapper = new ObjectMapper();
         nonogramFileDetails = objectMapper.readValue(
-                new File(puzzlePath + InitializerConstants.PUZZLE_NAME + ".json"), NonogramFileDetails.class
+                new File(puzzlePath + InitializerConstants.PUZZLE_NAME + JSON_EXTENSION), NonogramFileDetails.class
         );
         nonogramLogicToSolve = new NonogramLogic(nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences(), false);
         nonogramGenetic = new NonogramGenetic(nonogramLogicToSolve);

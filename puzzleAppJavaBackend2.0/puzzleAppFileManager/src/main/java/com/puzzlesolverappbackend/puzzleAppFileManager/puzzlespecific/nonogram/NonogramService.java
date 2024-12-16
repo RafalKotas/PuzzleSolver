@@ -17,6 +17,14 @@ import java.util.stream.Collectors;
 @Service
 public class NonogramService {
 
+    private final static int DEFAULT_MIN_DIMENSION = 5;
+
+    private final static int DEFAULT_MAX_DIMENSION = 10;
+
+    private final static double DEFAULT_MIN_DIFFICULTY = 1.0;
+
+    private final static double DEFAULT_MAX_DIFFICULTY = 2.0;
+
     @Autowired
     NonogramRepository nonogramRepository;
 
@@ -44,46 +52,43 @@ public class NonogramService {
         return nonogramRepository.selectNonogramWidths().stream().sorted().collect(Collectors.toList());
     }
 
-    public List<Integer> getIntegerBounds(List<Integer> integerList) {
+    public List<Integer> inferDimensionRange(List<Integer> integerList) {
         List<Integer> bounds = new ArrayList<>();
         if(integerList.size() >= 2) {
             bounds.add(integerList.get(0));
             bounds.add(integerList.get(integerList.size() - 1));
         } else {
-            bounds.add(5);
-            bounds.add(10);
+            bounds.add(DEFAULT_MIN_DIMENSION);
+            bounds.add(DEFAULT_MAX_DIMENSION);
         }
 
         return bounds;
     }
 
     /**
-     * Creates 2 num range if list contains one element or makes 2 nums list from specified doubles
-     * @param  doublesList 2 or 1 element list of doubles to create range from
-     * @param  rangeLowerBound specified range lower bound
-     * @param  rangeUpperBound specified range upper bound
-     * @return range created from doublesList or range specified bounds
+     * @param  difficultiesList list of possible difficulties
+     * @return range created from difficultiesList (2 elements)
      * **/
-    public List<Double> getDoubleBounds(List<Double> doublesList, double rangeLowerBound, double rangeUpperBound) {
-        List<Double> bounds = new ArrayList<>();
-        if(doublesList.size() >= 2) {
-            bounds.add(doublesList.get(0));
-            bounds.add(doublesList.get(doublesList.size() - 1));
+    public List<Double> inferDifficulties(List<Double> difficultiesList) {
+        List<Double> difficulties = new ArrayList<>();
+        if(difficultiesList.size() >= 2) {
+            difficulties.add(difficultiesList.get(0));
+            difficulties.add(difficultiesList.get(difficultiesList.size() - 1));
         } else {
-            bounds.add(rangeLowerBound);
-            bounds.add(rangeUpperBound);
+            difficulties.add(DEFAULT_MIN_DIFFICULTY);
+            difficulties.add(DEFAULT_MAX_DIFFICULTY);
         }
 
-        return bounds;
+        return difficulties;
     }
 
     public NonogramFiltersResponse getNonogramFilters() {
         List<String> sources = getNonogramSources();
         List<String> years = getNonogramYears();
         List<String> months = getNonogramMonths();
-        List<Double> difficulties = getDoubleBounds(getNonogramDifficulties(), 1.0, 2.0);
-        List<Integer> heights = getIntegerBounds(getNonogramHeights());
-        List<Integer> widths = getIntegerBounds(getNonogramWidths());
+        List<Double> difficulties = inferDifficulties(getNonogramDifficulties());
+        List<Integer> heights = inferDimensionRange(getNonogramHeights());
+        List<Integer> widths = inferDimensionRange(getNonogramWidths());
 
         return new NonogramFiltersResponse(sources, years, months, difficulties, heights, widths);
     }

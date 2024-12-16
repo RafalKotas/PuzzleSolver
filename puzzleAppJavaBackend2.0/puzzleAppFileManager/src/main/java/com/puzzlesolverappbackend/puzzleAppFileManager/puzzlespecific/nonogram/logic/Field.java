@@ -3,20 +3,14 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@ToString
 public class Field {
 
     private int rowIdx;
     private int columnIdx;
-
-    @Override
-    public String toString() {
-        return "Field{" +
-                "rowIdx=" + rowIdx +
-                ", columnIdx=" + columnIdx +
-                '}';
-    }
 }

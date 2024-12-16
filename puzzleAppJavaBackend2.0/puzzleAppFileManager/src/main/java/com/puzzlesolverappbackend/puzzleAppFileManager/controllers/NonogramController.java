@@ -23,6 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION_LENGTH;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/nonogram")
@@ -38,8 +41,6 @@ public class NonogramController {
     NonogramRepository nonogramRepository;
 
     Pageable nonogramsPageable;
-
-    private final static int JSON_EXTENSION_LENGTH = ".json".length();
 
     @PostMapping("/save")
     public ResponseEntity<String> saveNonogramToJsonFile(@RequestParam String fileName,
@@ -65,7 +66,7 @@ public class NonogramController {
 
         FileWriter fileWriter;
         try {
-            fileWriter = new FileWriter(nonogramsPath + fileName + ".json");
+            fileWriter = new FileWriter(nonogramsPath + fileName + JSON_EXTENSION);
             gson.toJson(nonogramFileDetails, fileWriter);
             fileWriter.close();
             return new ResponseEntity<>("Save success!", HttpStatus.OK);

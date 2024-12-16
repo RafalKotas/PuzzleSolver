@@ -15,6 +15,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION_LENGTH;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/sudoku")
@@ -32,11 +35,10 @@ public class SudokuController {
         Set<String> existingFilesNames = commonService
                 .listFilesUsingJavaIO("../../puzzle-solver-app/public/resources/Sudoku/");
 
-        //int fileNamesSize = existingFilesNames.size();
         String[] fileNamesWithoutExtension = existingFilesNames.toArray(String[]::new);
         List<String> fileNamesWithoutExtensionArray = Arrays.stream(fileNamesWithoutExtension
                 .clone())
-                .map(fN -> fN.substring(0, fN.length() - 5)) // ".json"
+                .map(fN -> fN.substring(0, fN.length() - JSON_EXTENSION_LENGTH))
                 .toList();
 
         if(fileNamesWithoutExtensionArray.contains(fileName)) {
@@ -47,7 +49,7 @@ public class SudokuController {
 
         FileWriter abc;
         try {
-            abc = new FileWriter("../../puzzle-solver-app/public/resources/Sudoku/" + fileName + ".json");
+            abc = new FileWriter("../../puzzle-solver-app/public/resources/Sudoku/" + fileName + JSON_EXTENSION);
             gson.toJson(nfd, abc);
             abc.close();
             return new ResponseEntity<>("Save success!", HttpStatus.OK);

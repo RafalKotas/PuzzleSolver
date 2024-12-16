@@ -17,6 +17,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
+
 //@Component
 //@Order(7)
 public class NonogramSolveInitializer implements CommandLineRunner {
@@ -640,7 +642,7 @@ public class NonogramSolveInitializer implements CommandLineRunner {
 
             ObjectMapper objectMapper = new ObjectMapper();
             nonogramFileDetails = objectMapper.readValue(
-                    new File(puzzlePath + filename + ".json"), NonogramFileDetails.class
+                    new File(puzzlePath + filename + JSON_EXTENSION), NonogramFileDetails.class
             );
 
             nonogramLogicToSolve = new NonogramLogic(
@@ -649,13 +651,12 @@ public class NonogramSolveInitializer implements CommandLineRunner {
             if(!filesTooLongSolving.contains(filename)) {
                 long start = System.currentTimeMillis();
                 nonogramLogicSolved = nonogramLogicService.runSolverWithCorrectnessCheck(nonogramLogicToSolve,
-                        filename + ".json");
+                        filename + JSON_EXTENSION);
                 long finish = System.currentTimeMillis();
                 long timeElapsed = finish - start;
                 double secondsElapsed = (double) timeElapsed / 1000.0;
 
                 System.out.println(secondsElapsed + "s " + nonogramLogicSolved.getCompletionPercentage() + "%");
-                //System.out.println("-".repeat(20));
 
                 if(nonogramLogicSolved.getCompletionPercentage() == 100) {
                     solvedCount = solvedCount + 1;

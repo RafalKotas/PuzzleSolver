@@ -10,6 +10,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
+
 @Getter
 @Setter
 public class NonogramBoardTemplate {
@@ -21,7 +23,7 @@ public class NonogramBoardTemplate {
 
         try {
             NonogramBoardTemplate nonogramBoardTemplate =
-                    gson.fromJson(new FileReader(InitializerConstants.NONOGRAM_SOLUTIONS_PATH + filename + ".json"), NonogramBoardTemplate.class);
+                    gson.fromJson(new FileReader(InitializerConstants.NONOGRAM_SOLUTIONS_PATH + filename + JSON_EXTENSION), NonogramBoardTemplate.class);
             this.board = nonogramBoardTemplate.getBoard();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
