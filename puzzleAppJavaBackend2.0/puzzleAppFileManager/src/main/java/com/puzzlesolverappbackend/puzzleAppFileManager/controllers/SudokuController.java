@@ -41,7 +41,7 @@ public class SudokuController {
                 .map(fN -> fN.substring(0, fN.length() - JSON_EXTENSION_LENGTH))
                 .toList();
 
-        if(fileNamesWithoutExtensionArray.contains(fileName)) {
+        if (fileNamesWithoutExtensionArray.contains(fileName)) {
             return new ResponseEntity<>("Save failed. File with same name already exists.", HttpStatus.OK);
         }
 

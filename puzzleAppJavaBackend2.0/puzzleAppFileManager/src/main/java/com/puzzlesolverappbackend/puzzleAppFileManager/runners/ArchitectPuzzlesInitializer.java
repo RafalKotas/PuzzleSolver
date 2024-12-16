@@ -8,8 +8,6 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.repository.ArchitectRepos
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Set;
@@ -61,8 +59,8 @@ public class ArchitectPuzzlesInitializer implements CommandLineRunner {
                 source = architectFileDetails.getSource();
                 year = architectFileDetails.getYear();
                 month = architectFileDetails.getMonth();
-                if(source.equals("logiNonograms")) {
-                    if(month.length() > 2) {
+                if (source.equals("logiNonograms")) {
+                    if (month.length() > 2) {
                         source = "logiMix";
                     } else {
                         source = "logi";
@@ -75,7 +73,7 @@ public class ArchitectPuzzlesInitializer implements CommandLineRunner {
 
                 architect = new Architect(architectFileNameWithoutExtension, source, year, month, difficulty, height, width);
 
-                if(architectRepository.existsArchitectByGivenParamsFromFile(architectFileNameWithoutExtension, source, year, month, difficulty, height, width).isPresent()) {
+                if (architectRepository.existsArchitectByGivenParamsFromFile(architectFileNameWithoutExtension, source, year, month, difficulty, height, width).isPresent()) {
                     architectsRepeated++;
                 } else {
                     System.out.println(architect);
@@ -88,7 +86,7 @@ public class ArchitectPuzzlesInitializer implements CommandLineRunner {
             }
         }
 
-        if(InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
+        if (InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
             System.out.println("architectsSaved count: " + architectsSaved);
             System.out.println("architectsRepeated count: " + architectsRepeated);
         }

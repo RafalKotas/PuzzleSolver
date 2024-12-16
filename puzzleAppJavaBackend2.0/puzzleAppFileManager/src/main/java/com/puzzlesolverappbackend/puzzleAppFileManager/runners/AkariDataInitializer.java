@@ -8,8 +8,6 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.repository.AkariRepositor
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Set;
@@ -64,7 +62,7 @@ public class AkariDataInitializer implements CommandLineRunner {
 
                 akari = new Akari(akariFileNameWithoutExtension, source, difficulty, height, width);
 
-                if(akariRepository.existsAkariByGivenParamsFromFile(akariFileNameWithoutExtension, source, difficulty, height, width).isPresent()) {
+                if (akariRepository.existsAkariByGivenParamsFromFile(akariFileNameWithoutExtension, source, difficulty, height, width).isPresent()) {
                     akarisRepeated++;
                 } else {
                     System.out.println(akari);
@@ -77,7 +75,7 @@ public class AkariDataInitializer implements CommandLineRunner {
             }
         }
 
-        if(InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
+        if (InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
             System.out.println("akarisSaved count: " + akarisSaved);
             System.out.println("akarisRepeated count: " + akarisRepeated);
         }

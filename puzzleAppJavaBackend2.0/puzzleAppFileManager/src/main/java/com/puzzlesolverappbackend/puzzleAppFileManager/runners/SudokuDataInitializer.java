@@ -7,8 +7,6 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.repository.SudokuReposito
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
 import jdk.security.jarsigner.JarSignerException;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Set;
@@ -90,7 +88,7 @@ public class SudokuDataInitializer implements CommandLineRunner {
             }
         }
 
-        if(InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
+        if (InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
             System.out.println("SudokusSaved count: " + sudokusSaved);
             System.out.println("SudokusRepeated count: " + sudokusRepeated);
         }

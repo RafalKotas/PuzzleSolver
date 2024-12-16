@@ -35,7 +35,7 @@ public class NonogramBoardTemplate {
     }
 
     public void printBoard () {
-        if(!this.getBoard().isEmpty()) {
+        if (!this.getBoard().isEmpty()) {
             for (List<String> boardRow : this.getBoard()) {
                 System.out.println(boardRow);
             }

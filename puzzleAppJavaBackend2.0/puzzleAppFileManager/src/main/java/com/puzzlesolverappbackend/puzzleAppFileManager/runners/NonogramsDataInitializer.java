@@ -121,7 +121,7 @@ public class NonogramsDataInitializer implements CommandLineRunner {
     }
 
     private void updateOldNewNonogramsStats() {
-        if(nonogramRepository.existsNonogramByGivenParamsFromFile(nonogramFileNameWithoutExtension, source, year, month, difficulty,
+        if (nonogramRepository.existsNonogramByGivenParamsFromFile(nonogramFileNameWithoutExtension, source, year, month, difficulty,
                 height, width).isPresent()) {
             nonogramsRepeated++;
         } else {
@@ -131,7 +131,7 @@ public class NonogramsDataInitializer implements CommandLineRunner {
     }
 
     private void printStatsIfEnabled() {
-        if(InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
+        if (InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
             System.out.println("newNonogramsSaved count: " + newNonogramsSaved);
             System.out.println("nonogramsRepeated count: " + nonogramsRepeated);
         }
@@ -144,7 +144,7 @@ public class NonogramsDataInitializer implements CommandLineRunner {
                         combination.get(0).equals(sourceMonthCombination.get(0)) &&
                         combination.get(1).equals(sourceMonthCombination.get(1)));
 
-        if(!sourceMonthCombinationExist) {
+        if (!sourceMonthCombinationExist) {
             this.sourceMonthCombinations.add(sourceMonthCombination);
         }
     }
@@ -173,7 +173,7 @@ public class NonogramsDataInitializer implements CommandLineRunner {
         boolean requiredMinimumLinesCondition = fileLines.size() == calculateMinimumNonogramFileLinesNeeded(nonogramPropsInOrder, nonogramFileDetails);
         boolean arePropsInRequiredOrder = verifyIfPropsInRequiredOrder(nonogramPropsInOrder);
 
-        if(requiredMinimumLinesCondition && arePropsInRequiredOrder) {
+        if (requiredMinimumLinesCondition && arePropsInRequiredOrder) {
             filesOK++;
         } else {
             filesToCorrect.add(fullFilename.substring(0, fullFilename.length() - 5));

@@ -7,8 +7,6 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.payload.SlitherlinkFileDe
 import com.puzzlesolverappbackend.puzzleAppFileManager.repository.SlitherlinkRepository;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Set;
@@ -69,8 +67,8 @@ public class SlitherlinkDataInitializer implements CommandLineRunner {
 
                 year = SlitherlinkFileDetails.getYear();
                 month = SlitherlinkFileDetails.getMonth();
-                if(source.equals("Logi")) {
-                    if(month.length() > 2) {
+                if (source.equals("Logi")) {
+                    if (month.length() > 2) {
                         source = "logiMix";
                         month = month.substring(0, 2);
                     } else {
@@ -80,7 +78,7 @@ public class SlitherlinkDataInitializer implements CommandLineRunner {
 
                 Slitherlink = new Slitherlink(slitherlinkFileNameWithoutExtension, source, year, month, difficulty, height, width);
 
-                if(SlitherlinkRepository.existsSlitherlinkByGivenParamsFromFile(slitherlinkFileNameWithoutExtension, source, year, month, difficulty, height, width).isPresent()) {
+                if (SlitherlinkRepository.existsSlitherlinkByGivenParamsFromFile(slitherlinkFileNameWithoutExtension, source, year, month, difficulty, height, width).isPresent()) {
                     SlitherlinksRepeated++;
                 } else {
                     SlitherlinksSaved++;
@@ -92,7 +90,7 @@ public class SlitherlinkDataInitializer implements CommandLineRunner {
             }
         }
 
-        if(InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
+        if (InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
             System.out.println("SlitherlinksSaved count: " + SlitherlinksSaved);
             System.out.println("SlitherlinksRepeated count: " + SlitherlinksRepeated);
         }

@@ -54,7 +54,7 @@ public abstract class NonogramLogicParams {
         int fieldsWithXOnBoard = 0;
         for(int rowIndex = 0; rowIndex < this.getHeight(); rowIndex++) {
             for(int columnIndex = 0; columnIndex < this.getWidth(); columnIndex++) {
-                if(this.getNonogramSolutionBoard().get(rowIndex).get(columnIndex).equals("X")) {
+                if (this.getNonogramSolutionBoard().get(rowIndex).get(columnIndex).equals("X")) {
                     fieldsWithXOnBoard++;
                 }
             }
@@ -85,7 +85,7 @@ public abstract class NonogramLogicParams {
         for(int rowIndex = 0; rowIndex < this.getHeight(); rowIndex++) {
             for(int columnIndex = 0; columnIndex < this.getWidth(); columnIndex++) {
                 potentiallyColouredField = new Field(rowIndex, columnIndex);
-                if(isFieldColoured(potentiallyColouredField)) {
+                if (isFieldColoured(potentiallyColouredField)) {
                     colouredFieldsOnBoard++;
                 }
             }
@@ -226,7 +226,7 @@ public abstract class NonogramLogicParams {
     public void colourFieldAtGivenPosition(Field fieldToColour) {
         int fieldRowIdx = fieldToColour.getRowIdx();
         int fieldColIdx = fieldToColour.getColumnIdx();
-        if(areFieldIndexesValid(fieldToColour)) {
+        if (areFieldIndexesValid(fieldToColour)) {
             this.nonogramSolutionBoard.get(fieldRowIdx).set(fieldColIdx, COLOURED_FIELD);
         }
     }
@@ -242,7 +242,7 @@ public abstract class NonogramLogicParams {
     public void placeXAtGivenField(Field x_field) {
         int fieldColIdx = x_field.getColumnIdx();
         int fieldRowIdx = x_field.getRowIdx();
-        if(areFieldIndexesValid(x_field)) {
+        if (areFieldIndexesValid(x_field)) {
             this.nonogramSolutionBoard.get(fieldRowIdx).set(fieldColIdx, X_FIELD);
             this.nonogramSolutionBoardWithMarks.get(fieldRowIdx).set(fieldColIdx, X_FIELD.repeat(4));
         }
@@ -254,7 +254,7 @@ public abstract class NonogramLogicParams {
      */
     protected void excludeSequenceInRow(int rowIdx, int seqIdx) {
         boolean rowValid = isRowIndexValid(rowIdx);
-        if(rowValid && !this.rowsSequencesIdsNotToInclude.get(rowIdx).contains(seqIdx)) {
+        if (rowValid && !this.rowsSequencesIdsNotToInclude.get(rowIdx).contains(seqIdx)) {
             tmpLog = generateAddingRowSequenceToNotToIncludeDescription(rowIdx, seqIdx);
             addLog(tmpLog);
             this.rowsSequencesIdsNotToInclude.get(rowIdx).add(seqIdx);
@@ -267,7 +267,7 @@ public abstract class NonogramLogicParams {
      * @param seqIdx - sequence index to exclude in specified column
      */
     protected void excludeSequenceInColumn(int columnIdx, int seqIdx) {
-        if(!this.columnsSequencesIdsNotToInclude.get(columnIdx).contains(seqIdx)) {
+        if (!this.columnsSequencesIdsNotToInclude.get(columnIdx).contains(seqIdx)) {
             tmpLog = generateAddingRowSequenceToNotToIncludeDescription(columnIdx, seqIdx);
             addLog(tmpLog);
             this.columnsSequencesIdsNotToInclude.get(columnIdx).add(seqIdx);
@@ -288,7 +288,7 @@ public abstract class NonogramLogicParams {
     protected void excludeFieldInRow(Field fieldToExclude) {
         int fieldRowIdx = fieldToExclude.getRowIdx();
         int fieldColIdx = fieldToExclude.getColumnIdx();
-        if(areFieldIndexesValid(fieldToExclude) && !this.rowsFieldsNotToInclude.get(fieldRowIdx).contains(fieldColIdx)) {
+        if (areFieldIndexesValid(fieldToExclude) && !this.rowsFieldsNotToInclude.get(fieldRowIdx).contains(fieldColIdx)) {
             this.rowsFieldsNotToInclude.get(fieldRowIdx).add(fieldColIdx);
             Collections.sort(this.rowsFieldsNotToInclude.get(fieldRowIdx));
         }
@@ -307,7 +307,7 @@ public abstract class NonogramLogicParams {
     protected void excludeFieldInColumn(Field fieldToExclude) {
         int fieldColIdx = fieldToExclude.getColumnIdx();
         int fieldRowIdx = fieldToExclude.getRowIdx();
-        if(areFieldIndexesValid(fieldToExclude) && !this.columnsFieldsNotToInclude.get(fieldColIdx).contains(fieldRowIdx)) {
+        if (areFieldIndexesValid(fieldToExclude) && !this.columnsFieldsNotToInclude.get(fieldColIdx).contains(fieldRowIdx)) {
             this.columnsFieldsNotToInclude.get(fieldColIdx).add(fieldRowIdx);
             Collections.sort(this.columnsFieldsNotToInclude.get(fieldColIdx));
         }
@@ -335,7 +335,7 @@ public abstract class NonogramLogicParams {
         List<Integer> rowSequencesLengths = this.getRowsSequences().get(rowIdx);
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
         for(int seqNo = 0; seqNo < rowSequencesLengths.size(); seqNo++) {
-            if(rowSequencesLengths.get(seqNo) != rangeLength(rowSequencesRanges.get(seqNo))) {
+            if (rowSequencesLengths.get(seqNo) != rangeLength(rowSequencesRanges.get(seqNo))) {
                 return false;
             }
         }
@@ -347,7 +347,7 @@ public abstract class NonogramLogicParams {
         List<Integer> columnSequencesLengths = this.getColumnsSequences().get(columnIdx);
         List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
         for(int seqNo = 0; seqNo < columnSequencesLengths.size(); seqNo++) {
-            if(columnSequencesLengths.get(seqNo) != rangeLength(columnSequencesRanges.get(seqNo))) {
+            if (columnSequencesLengths.get(seqNo) != rangeLength(columnSequencesRanges.get(seqNo))) {
                 return false;
             }
         }

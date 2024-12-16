@@ -30,7 +30,7 @@ public class NonogramParametersComparatorHelper {
             List<List<Integer>> logicBeforeActionsMadeRowSequencesRanges = logicBeforeActionsMadeRowsSequencesRangesIterator.next();
             List<List<Integer>> logicAfterActionsMadeRowSequencesRanges = logicAfterActionsMadeRowsSequencesRangesIterator.next();
 
-            if(!sequencesRangesEqual(logicBeforeActionsMadeRowSequencesRanges, logicAfterActionsMadeRowSequencesRanges)) {
+            if (!sequencesRangesEqual(logicBeforeActionsMadeRowSequencesRanges, logicAfterActionsMadeRowSequencesRanges)) {
                 return true;
             }
         }
@@ -48,7 +48,7 @@ public class NonogramParametersComparatorHelper {
         while(sequencesRanges_AIterator.hasNext() && sequenceRanges_BIterator.hasNext()) {
             sequenceRange_A = sequencesRanges_AIterator.next();
             sequenceRange_B = sequenceRanges_BIterator.next();
-            if(!rangesEqual(sequenceRange_A, sequenceRange_B)) {
+            if (!rangesEqual(sequenceRange_A, sequenceRange_B)) {
                 return false;
             }
         }
@@ -67,7 +67,7 @@ public class NonogramParametersComparatorHelper {
             solutionBoard_ARow = solutionBoard_ARowsIterator.next();
             solutionBoard_BRow = solutionBoard_BRowsIterator.next();
 
-            if(solutionBoardRowsDiffers(solutionBoard_ARow, solutionBoard_BRow)) {
+            if (solutionBoardRowsDiffers(solutionBoard_ARow, solutionBoard_BRow)) {
                 return true;
             }
         }
@@ -85,7 +85,7 @@ public class NonogramParametersComparatorHelper {
         while(solutionBoard_ARowIterator.hasNext() && solutionBoard_BRowIterator.hasNext()) {
             rowField_A = solutionBoard_ARowIterator.next();
             rowField_B = solutionBoard_BRowIterator.next();
-            if(!rowField_A.equals(rowField_B)) {
+            if (!rowField_A.equals(rowField_B)) {
                 return true;
             }
         }
@@ -115,7 +115,7 @@ public class NonogramParametersComparatorHelper {
             sequencesIdsNotToIncludeAfterActionsMade = sequencesIdsNotToIncludeAfterActionsMadeIterator.next();
 
             // ids not to include differs only if size of Lists differs (ids are sorted ascending)
-            if(!(sequencesIdsNotToIncludeBeforeActionsMade.size() == sequencesIdsNotToIncludeAfterActionsMade.size()) ) {
+            if (!(sequencesIdsNotToIncludeBeforeActionsMade.size() == sequencesIdsNotToIncludeAfterActionsMade.size()) ) {
                 return true;
             }
         }

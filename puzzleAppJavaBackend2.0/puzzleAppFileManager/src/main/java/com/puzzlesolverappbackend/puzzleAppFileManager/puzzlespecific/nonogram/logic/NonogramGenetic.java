@@ -65,7 +65,7 @@ public class NonogramGenetic {
         generateInitialPopulation();
         for(int iterationNo = 0; iterationNo < 20; iterationNo++) {
             generateNextPopulation(iterationNo);
-            if(solutionFound) {
+            if (solutionFound) {
                 System.out.println("Solution found!!!, iterationNo: " + iterationNo);
                 break;
             }
@@ -90,7 +90,7 @@ public class NonogramGenetic {
                 populationMember = populationMember.setNonogramBoardRow(rowIdx, nonogramBoardRow);
             }
 
-            if(boardInPopulationUnique(populationMember.getNonogramSolutionBoard(), currentPopulation)) {
+            if (boardInPopulationUnique(populationMember.getNonogramSolutionBoard(), currentPopulation)) {
                 currentPopulation.add(populationMember);
             } else {
                 repetitionCount++;
@@ -143,7 +143,7 @@ public class NonogramGenetic {
                 //System.out.println("Population indexes: " + firstPopulationMemberIndex + " and " + secondPopulationMemberIndex);
 
                 //do crossing - fit function parameters (not same members && cross two members only once)
-                if(firstPopulationMemberIndex < secondPopulationMemberIndex) {
+                if (firstPopulationMemberIndex < secondPopulationMemberIndex) {
                     crossingCount++;
 
                     int firstMemberTopMinimum;
@@ -182,7 +182,7 @@ public class NonogramGenetic {
 
                     //choose side top(0) or bottom(1)
                     choosenSide = randomIntGenerator.nextInt(2);
-                    if(choosenSide == 0) {
+                    if (choosenSide == 0) {
                         chosenRowIndex = randomIntGenerator.nextInt(topMinimum + 1);
                     } else {
                         //chosenRowIndex = ThreadLocalRandom.current().nextInt(nonogramObject.getHeight() - 1 - bottomMinimum, nonogramObject.getHeight() - 1);
@@ -205,7 +205,7 @@ public class NonogramGenetic {
 
                     int randNumTo10 = randomIntGenerator.nextInt(100) + 1;
 
-                    if(randNumTo10 > 95) {
+                    if (randNumTo10 > 95) {
                         //mutate
                         firstChild.setNonogramBoardRow(chosenRowIndex, generateRandomRowArray(firstChild, chosenRowIndex));
                     } else {
@@ -213,7 +213,7 @@ public class NonogramGenetic {
                     }
 
                     randNumTo10 = randomIntGenerator.nextInt(100) + 1;
-                    if(randNumTo10 > 95) {
+                    if (randNumTo10 > 95) {
                         //mutate
                         secondChild.setNonogramBoardRow(chosenRowIndex, generateRandomRowArray(secondChild, chosenRowIndex));
                     } else {
@@ -234,16 +234,16 @@ public class NonogramGenetic {
                     secondChildMaxPossibleCorrectFieldsSum = secondChildColumnsMaximumCorrectIndexFromBottom.stream().reduce(secondChildMaxPossibleCorrectFieldsSum, Integer::sum);
 
                     //first child
-                    if(!nextPopulation.isEmpty()) {
+                    if (!nextPopulation.isEmpty()) {
                         int firstLessOrEqualElementIndex = findFirstLessOrEqualElementIndex(firstChildMaxPossibleCorrectFieldsSum);
 
-                        if(firstLessOrEqualElementIndex != populationCount) {
+                        if (firstLessOrEqualElementIndex != populationCount) {
                             nextPopulation.add(firstLessOrEqualElementIndex, firstChild);
-                            if(firstChild.subsolutionBoardCorrectComparisonWithSolutionBoard("r" + InitializerConstants.PUZZLE_NAME)) {
+                            if (firstChild.subsolutionBoardCorrectComparisonWithSolutionBoard("r" + InitializerConstants.PUZZLE_NAME)) {
                                 setSolutionFound(true);
                             }
                             maxCorrectFieldsInColumnsSums.add(firstLessOrEqualElementIndex, firstChildMaxPossibleCorrectFieldsSum);
-                            if(nextPopulation.size() > populationCount) {
+                            if (nextPopulation.size() > populationCount) {
                                 nextPopulation = nextPopulation.stream().limit(populationCount).collect(Collectors.toList());
                                 maxCorrectFieldsInColumnsSums = maxCorrectFieldsInColumnsSums.stream().limit(populationCount).collect(Collectors.toList());
                             }
@@ -257,10 +257,10 @@ public class NonogramGenetic {
 
                     int firstLessOrEqualElementIndex = findFirstLessOrEqualElementIndex(secondChildMaxPossibleCorrectFieldsSum);
 
-                    if(firstLessOrEqualElementIndex != populationCount) {
+                    if (firstLessOrEqualElementIndex != populationCount) {
                         nextPopulation.add(firstLessOrEqualElementIndex, secondChild);
                         maxCorrectFieldsInColumnsSums.add(firstLessOrEqualElementIndex, secondChildMaxPossibleCorrectFieldsSum);
-                        if(nextPopulation.size() > populationCount) {
+                        if (nextPopulation.size() > populationCount) {
                             nextPopulation = nextPopulation.stream().limit(populationCount).collect(Collectors.toList());
                             maxCorrectFieldsInColumnsSums = maxCorrectFieldsInColumnsSums.stream().limit(populationCount).collect(Collectors.toList());
                         }
@@ -276,7 +276,7 @@ public class NonogramGenetic {
         System.out.println("MIN: " + maxCorrectFieldsInColumnsSums.get(maxCorrectFieldsInColumnsSums.size() - 1));
         System.out.println("MAX: " + maxCorrectFieldsInColumnsSums.get(0));
 
-        if(!solutionFound) {
+        if (!solutionFound) {
             selectNewPopulation();
             System.out.println("iterationNo: " + iterationNo + " solution not found...");
         } else {
@@ -294,7 +294,7 @@ public class NonogramGenetic {
                 .filter(i -> maxCorrectFieldsInColumnsSums.get(i) <= elementToFind)
                 .findFirst();
 
-        if(firstIndex.isPresent()) {
+        if (firstIndex.isPresent()) {
             return firstIndex.getAsInt();
         } else {
             return populationCount;
@@ -330,10 +330,10 @@ public class NonogramGenetic {
             maxProbablyCorrect = 0;
 
             for(int rowIdx = 0;  rowIdx < populationMember.getHeight(); rowIdx++) {
-                if(boardColumn.get(rowIdx).equals("X")) {
-                    if(colouredInRow == currentSequenceLength) {
+                if (boardColumn.get(rowIdx).equals("X")) {
+                    if (colouredInRow == currentSequenceLength) {
                         currentSequenceNo++;
-                        if(currentSequenceNo < columnSequencesLengths.size()) {
+                        if (currentSequenceNo < columnSequencesLengths.size()) {
                             currentSequenceLength = columnSequencesLengths.get(currentSequenceNo);
                         }
                     } else if (colouredInRow > 0 && colouredInRow < currentSequenceLength) {
@@ -343,7 +343,7 @@ public class NonogramGenetic {
                     colouredInRow = 0;
                     fieldsLeft = nonogramObject.getHeight() - 1 - rowIdx;
                     fieldsNeeded = calculateFieldsNeeded(currentSequenceNo, columnSequencesLengths, "fromTop");
-                    if(fieldsLeft < fieldsNeeded && rowIdx > 0) {
+                    if (fieldsLeft < fieldsNeeded && rowIdx > 0) {
                         maxProbablyCorrect = rowIdx - 1;
                         break;
                     } else {
@@ -351,10 +351,10 @@ public class NonogramGenetic {
                     }
                 } else {
                     colouredInRow++;
-                    if(colouredInRow > currentSequenceLength || currentSequenceNo >= columnSequencesLengths.size()) {
+                    if (colouredInRow > currentSequenceLength || currentSequenceNo >= columnSequencesLengths.size()) {
                         maxProbablyCorrect = rowIdx - 1;
                         break;
-                    } else if(rowIdx == populationMember.getHeight() - 1) {
+                    } else if (rowIdx == populationMember.getHeight() - 1) {
                         maxProbablyCorrect = rowIdx;
                     }
                 }
@@ -390,10 +390,10 @@ public class NonogramGenetic {
             maxProbablyCorrect = 0;
 
             for(int rowIdx = populationMember.getHeight() - 1;  rowIdx >= 0; rowIdx--) {
-                if(boardColumn.get(rowIdx).equals("X")) {
-                    if(colouredInRow == currentSequenceLength) {
+                if (boardColumn.get(rowIdx).equals("X")) {
+                    if (colouredInRow == currentSequenceLength) {
                         currentSequenceNo--;
-                        if(currentSequenceNo >= 0) {
+                        if (currentSequenceNo >= 0) {
                             currentSequenceLength = columnSequencesLengths.get(currentSequenceNo);
                         }
                     } else if (colouredInRow > 0 && colouredInRow < currentSequenceLength) {
@@ -403,7 +403,7 @@ public class NonogramGenetic {
                     colouredInRow = 0;
                     fieldsLeft = rowIdx;
                     fieldsNeeded = calculateFieldsNeeded(currentSequenceNo, columnSequencesLengths, "fromBottom");
-                    if(fieldsLeft < fieldsNeeded && rowIdx > 0) {
+                    if (fieldsLeft < fieldsNeeded && rowIdx > 0) {
                         maxProbablyCorrect = nonogramObject.getHeight() - (rowIdx + 1);
                         break;
                     } else {
@@ -411,10 +411,10 @@ public class NonogramGenetic {
                     }
                 } else {
                     colouredInRow++;
-                    if(colouredInRow > currentSequenceLength) {
+                    if (colouredInRow > currentSequenceLength) {
                         maxProbablyCorrect = nonogramObject.getHeight() - (rowIdx + 1);
                         break;
-                    }  else if(rowIdx == 0) {
+                    }  else if (rowIdx == 0) {
                         maxProbablyCorrect = nonogramObject.getHeight() - (rowIdx + 1);
                     }
                 }
@@ -428,16 +428,16 @@ public class NonogramGenetic {
     public int calculateFieldsNeeded(int currentSeqNo, List<Integer> sequencesLengths, String direction) {
         int sequencesLengthsSum = 0;
         int sequencesCount = 0;
-        if(direction.equals("fromTop")) {
+        if (direction.equals("fromTop")) {
             for(int seqNo = 0; seqNo < sequencesLengths.size(); seqNo++) {
-                if(seqNo >= currentSeqNo) {
+                if (seqNo >= currentSeqNo) {
                     sequencesCount++;
                     sequencesLengthsSum += sequencesLengths.get(seqNo);
                 }
             }
         } else {
             for(int seqNo = sequencesLengths.size() - 1; seqNo >= 0; seqNo--) {
-                if(seqNo <= currentSeqNo) {
+                if (seqNo <= currentSeqNo) {
                     sequencesCount++;
                     sequencesLengthsSum += sequencesLengths.get(seqNo);
                 }
@@ -467,7 +467,7 @@ public class NonogramGenetic {
 
                 startPointPossibleIndexes = generateStartIndexesForSequence(sequenceRange, sequenceLength);
 
-                if(startPointPossibleIndexes.size() != 1) {
+                if (startPointPossibleIndexes.size() != 1) {
                     //randomStartPointIndex =  randomIntGenerator.nextInt(0, startPointPossibleIndexes.size() - 1);
                     randomStartPointIndex = randomIntGenerator.nextInt(startPointPossibleIndexes.size());
                     choosenStartPointIndex = startPointPossibleIndexes.get(randomStartPointIndex);
@@ -481,7 +481,7 @@ public class NonogramGenetic {
 
                 rowSequencesRanges = setRowSequenceRange(rowSequencesRanges, rowSequence, updatedRange);
 
-                if(rowSequence + 1 < rowSequencesRanges.size()) {
+                if (rowSequence + 1 < rowSequencesRanges.size()) {
                     updatedRange = new ArrayList<>();
                     updatedRange.add(choosenStartPointIndex + sequenceLength + 1);
                     updatedRange.add(rowSequencesRanges.get(rowSequence + 1).get(1));
@@ -498,7 +498,7 @@ public class NonogramGenetic {
         List<Integer> indexesToColour = flattenArray(indexesToFillRanges);
 
         for(int j = 0; j < this.getNonogramObject().getWidth(); j++) {
-            if(indexesToColour.contains(j)) {
+            if (indexesToColour.contains(j)) {
                 rowArray.add(COLOURED_FIELD);
             } else {
                 rowArray.add(X_FIELD);
@@ -552,12 +552,12 @@ public class NonogramGenetic {
     public boolean boardInPopulationUnique(List<List<String>> boardToCheck, List<NonogramLogic> population) {
         List<List<String>> populationBoard;
 
-        if(population.isEmpty()) {
+        if (population.isEmpty()) {
             return true;
         } else {
             for (NonogramLogic populationMember : population) {
                 populationBoard = populationMember.getNonogramSolutionBoard();
-                if(areBoardsIdentical(boardToCheck, populationBoard)) {
+                if (areBoardsIdentical(boardToCheck, populationBoard)) {
                     return false;
                 }
             }
@@ -575,7 +575,7 @@ public class NonogramGenetic {
             populationBoardRow = populationBoard.get(rowIdx);
 
             for(int colIdx = 0; colIdx < boardToCheckRow.size(); colIdx++) {
-                if(!boardToCheckRow.get(colIdx).equals(populationBoardRow.get(colIdx))) {
+                if (!boardToCheckRow.get(colIdx).equals(populationBoardRow.get(colIdx))) {
                     return false;
                 }
             }

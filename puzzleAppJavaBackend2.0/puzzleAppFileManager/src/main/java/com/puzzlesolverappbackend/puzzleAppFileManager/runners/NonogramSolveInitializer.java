@@ -648,7 +648,7 @@ public class NonogramSolveInitializer implements CommandLineRunner {
             nonogramLogicToSolve = new NonogramLogic(
                     nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences(), false);
 
-            if(!filesTooLongSolving.contains(filename)) {
+            if (!filesTooLongSolving.contains(filename)) {
                 long start = System.currentTimeMillis();
                 nonogramLogicSolved = nonogramLogicService.runSolverWithCorrectnessCheck(nonogramLogicToSolve,
                         filename + JSON_EXTENSION);
@@ -658,9 +658,9 @@ public class NonogramSolveInitializer implements CommandLineRunner {
 
                 System.out.println(secondsElapsed + "s " + nonogramLogicSolved.getCompletionPercentage() + "%");
 
-                if(nonogramLogicSolved.getCompletionPercentage() == 100) {
+                if (nonogramLogicSolved.getCompletionPercentage() == 100) {
                     solvedCount = solvedCount + 1;
-                    if(saveSolutions) {
+                    if (saveSolutions) {
                         nonogramService.saveSolutionToFile(filename, nonogramLogicSolved);
                     }
                 }

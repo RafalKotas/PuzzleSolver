@@ -54,7 +54,7 @@ public class NonogramService {
 
     public List<Integer> inferDimensionRange(List<Integer> integerList) {
         List<Integer> bounds = new ArrayList<>();
-        if(integerList.size() >= 2) {
+        if (integerList.size() >= 2) {
             bounds.add(integerList.get(0));
             bounds.add(integerList.get(integerList.size() - 1));
         } else {
@@ -71,7 +71,7 @@ public class NonogramService {
      * **/
     public List<Double> inferDifficulties(List<Double> difficultiesList) {
         List<Double> difficulties = new ArrayList<>();
-        if(difficultiesList.size() >= 2) {
+        if (difficultiesList.size() >= 2) {
             difficulties.add(difficultiesList.get(0));
             difficulties.add(difficultiesList.get(difficultiesList.size() - 1));
         } else {
