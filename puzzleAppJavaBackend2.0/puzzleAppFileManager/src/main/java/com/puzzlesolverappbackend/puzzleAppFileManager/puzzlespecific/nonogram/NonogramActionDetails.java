@@ -1,12 +1,16 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @Getter
-public class NonogramActionDefinition {
+@EqualsAndHashCode
+@ToString
+public class NonogramActionDetails {
     private int index;
 
-    private ActionEnum action;
+    private NonogramSolveAction actionName;
 }
