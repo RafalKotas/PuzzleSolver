@@ -918,7 +918,7 @@ public class NonogramLogic extends NonogramLogicParams {
                     makeProperActionInRow(nextActionRCIndex, currentActionDetails.getActionName());
                     stepsAfter = this.getNonogramState().getNewStepsMade();
 
-                    if(stepsBefore != stepsAfter) {
+                    if (stepsBefore != stepsAfter) {
                         logRowStateBefore(currentActionDetails, nextActionRCIndex);
                         logRowStateAfter(currentActionDetails, nextActionRCIndex);
                     }
@@ -930,7 +930,7 @@ public class NonogramLogic extends NonogramLogicParams {
                     makeProperActionInColumn(nextActionRCIndex, currentActionDetails.getActionName());
                     stepsAfter = this.getNonogramState().getNewStepsMade();
 
-                    if(stepsBefore != stepsAfter) {
+                    if (stepsBefore != stepsAfter) {
                         logColumnStateBefore(currentActionDetails, nextActionRCIndex);
                         logColumnStateAfter(currentActionDetails, nextActionRCIndex);
                     }
@@ -974,7 +974,7 @@ public class NonogramLogic extends NonogramLogicParams {
             elementToLog = this.getNonogramRowLogic().getNonogramSolutionBoard().get(nextActionRowIndex).toString();
         }
 
-        log.info("Row {} after making action {}: {}", nextActionRowIndex, actionDetails.getActionName(), elementToLog);
+        log.info("Row {} after  making action {}: {}", nextActionRowIndex, actionDetails.getActionName(), elementToLog);
     }
 
     private void logColumnStateBefore(NonogramActionDetails actionDetails, int nextActionColumnIndex) {
@@ -1002,7 +1002,7 @@ public class NonogramLogic extends NonogramLogicParams {
             elementToLog = this.getNonogramColumnLogic().getNonogramBoardColumn(nextActionColumnIndex).toString();
         }
 
-        log.info("Column {} after making action {}: {}", nextActionColumnIndex, actionDetails.getActionName(), elementToLog);
+        log.info("Column {} after  making action {}: {}", nextActionColumnIndex, actionDetails.getActionName(), elementToLog);
     }
 
     public void makeProperActionInRow(int rowIdx, NonogramSolveAction actionToDoInRow) {

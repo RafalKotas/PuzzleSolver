@@ -104,12 +104,18 @@ public class ActionsConstants {
                     PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES
             ));
 
-    public final static ArrayList<NonogramSolveAction> actionsToDoAfterPlacingXsAroundLongestSequencesInColumns = new ArrayList<>(
+
+    public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterPlacingXsAroundLongestSequencesInColumns = new ArrayList<>(
+            List.of(
+                    CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY,
+                    PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES
+            ));
+
+
+    public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterPlacingXsAroundLongestSequencesInColumns = new ArrayList<>(
             List.of(
                     CORRECT_COLUMN_SEQUENCES_RANGES, // TODO - check if can extract correcting range to another place (while only one possible coloured sequence matches)
-                    CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY,
-                    PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS,
-                    PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES
+                    PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoAfterPlacingXsAtTooShortEmptySequencesInRows = new ArrayList<>(
@@ -150,12 +156,14 @@ public class ActionsConstants {
 
     public final static ArrayList<NonogramSolveAction> actionsToDoAfterCorrectingRangesWhenMarkingSequencesInRows = new ArrayList<>(
             List.of(
+                    CORRECT_ROW_SEQUENCES_RANGES,
                     COLOUR_OVERLAPPING_FIELDS_IN_ROW,
                     PLACE_XS_ROW_AT_UNREACHABLE_FIELDS
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoAfterCorrectingRangesWhenMarkingSequencesInColumns = new ArrayList<>(
             List.of(
+                    CORRECT_COLUMN_SEQUENCES_RANGES,
                     COLOUR_OVERLAPPING_FIELDS_IN_COLUMN,
                     PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS
             ));

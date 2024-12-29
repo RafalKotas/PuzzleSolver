@@ -1327,14 +1327,6 @@ public class NonogramLogicService {
         return nonogramLogicObject;
     }
 
-    public static List<Integer> createRangeFromTwoIntegers(int rangeBegin, int rangeEnd) {
-        List<Integer> range = new ArrayList<>();
-        range.add(rangeBegin);
-        range.add(rangeEnd);
-
-        return range;
-    }
-
     public static boolean rangesListIncludingAnotherRange (List<List<Integer>> listOfRanges, List<Integer> range) {
         for (List<Integer> listOfRange : listOfRanges) {
             if (rangeInsideAnotherRange(range, listOfRange)) {
