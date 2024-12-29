@@ -70,6 +70,9 @@ public class NonogramSolutionNode {
 
         boolean changesOccurred;
 
+        int iterations = 5;
+        int iteration = 0;
+
         do {
             NonogramLogic logicBeforeActionsMade = copyNonogramLogic();
 
@@ -87,8 +90,10 @@ public class NonogramSolutionNode {
             sequenceIndexesNotToIncludeAddedCondition = sequenceIndexesNotToIncludeAdded(logicBeforeActionsMade, logicAfterActionsMade);
 
             changesOccurred = sequencesRangesDiffered || solutionBoardsDiffered || sequenceIndexesNotToIncludeAddedCondition;
+
+            iteration++;
         } while (
-                (changesOccurred && !this.getNonogramLogic().getNonogramState().isInvalidSolution() && !this.getNonogramLogic().isSolved()) || affectedRowsOrColumnsLeft()
+                (iteration < iterations && changesOccurred && !this.getNonogramLogic().getNonogramState().isInvalidSolution() && !this.getNonogramLogic().isSolved()) || affectedRowsOrColumnsLeft()
         );
     }
 

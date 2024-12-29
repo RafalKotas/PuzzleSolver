@@ -1,12 +1,13 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.logicOperators.LogicFunctions;
-import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.ActionEnum;
-import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramActionDefinition;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramActionDetails;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzleAppFileManager.templates.nonogram.NonogramBoardTemplate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,8 +19,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.payload.ActionsConstants.*;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.ActionEnum.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramSolveAction.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.rangeInsideAnotherRange;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.rangeLength;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramState.buildInitialEmptyNonogramState;
@@ -27,6 +28,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.non
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Slf4j
 public class NonogramLogic extends NonogramLogicParams {
 
     protected boolean guessMode;
@@ -80,16 +82,16 @@ public class NonogramLogic extends NonogramLogicParams {
 
         this.guessMode = guessMode;
 
-        logger.info("CREATED NonogramLogic object from rowSequences and columnSequences");
+        log.info("CREATED NonogramLogic object from rowSequences and columnSequences");
     }
 
-    private List<NonogramActionDefinition> generateInitialActionsToDo(int height, int width) {
+    private List<NonogramActionDetails> generateInitialActionsToDo(int height, int width) {
 
-        List<NonogramActionDefinition> overlappingActionsAllRows = IntStream.range(0, height)
-                .mapToObj(rowIdx -> new NonogramActionDefinition(rowIdx, COLOUR_OVERLAPPING_FIELDS_IN_ROW))
+        List<NonogramActionDetails> overlappingActionsAllRows = IntStream.range(0, height)
+                .mapToObj(rowIdx -> new NonogramActionDetails(rowIdx, COLOUR_OVERLAPPING_FIELDS_IN_ROW))
                 .collect(Collectors.toCollection(ArrayList::new));
-        List<NonogramActionDefinition> overlappingActionsAllColumns = IntStream.range(0, width)
-                .mapToObj(columnIdx -> new NonogramActionDefinition(columnIdx, COLOUR_OVERLAPPING_FIELDS_IN_COLUMN))
+        List<NonogramActionDetails> overlappingActionsAllColumns = IntStream.range(0, width)
+                .mapToObj(columnIdx -> new NonogramActionDetails(columnIdx, COLOUR_OVERLAPPING_FIELDS_IN_COLUMN))
                 .collect(Collectors.toCollection(ArrayList::new));
 
         return Stream.concat(overlappingActionsAllRows.stream(), overlappingActionsAllColumns.stream()).collect(Collectors.toCollection(ArrayList::new));
@@ -871,14 +873,14 @@ public class NonogramLogic extends NonogramLogicParams {
         int rowIdx = decision.getDecisionField().getRowIdx();
         int columnIdx = decision.getDecisionField().getColumnIdx();
 
-        this.actionsToDoList.add(new NonogramActionDefinition(rowIdx, ActionEnum.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS));
-        this.actionsToDoList.add(new NonogramActionDefinition(columnIdx, ActionEnum.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS));
-        this.actionsToDoList.add(new NonogramActionDefinition(rowIdx, ActionEnum.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW));
-        this.actionsToDoList.add(new NonogramActionDefinition(columnIdx, ActionEnum.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN));
-        this.actionsToDoList.add(new NonogramActionDefinition(columnIdx, ActionEnum.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES));
-        this.actionsToDoList.add(new NonogramActionDefinition(columnIdx, ActionEnum.PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES));
-        this.actionsToDoList.add(new NonogramActionDefinition(rowIdx, ActionEnum.MARK_AVAILABLE_FIELDS_IN_ROW));
-        this.actionsToDoList.add(new NonogramActionDefinition(columnIdx, ActionEnum.MARK_AVAILABLE_FIELDS_IN_COLUMN));
+        this.actionsToDoList.add(new NonogramActionDetails(rowIdx, NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS));
+        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS));
+        this.actionsToDoList.add(new NonogramActionDetails(rowIdx, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW));
+        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN));
+        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES));
+        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES));
+        this.actionsToDoList.add(new NonogramActionDetails(rowIdx, NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW));
+        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN));
     }
 
     /**
@@ -888,30 +890,74 @@ public class NonogramLogic extends NonogramLogicParams {
         int rowIdx = decision.getDecisionField().getRowIdx();
         int columnIdx = decision.getDecisionField().getColumnIdx();
 
-        this.actionsToDoList.add(new NonogramActionDefinition(rowIdx, ActionEnum.CORRECT_ROW_SEQUENCES_RANGES));
-        this.actionsToDoList.add(new NonogramActionDefinition(columnIdx, ActionEnum.CORRECT_COLUMN_SEQUENCES_RANGES));
-        this.actionsToDoList.add(new NonogramActionDefinition(rowIdx, CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY));
-        this.actionsToDoList.add(new NonogramActionDefinition(columnIdx, ActionEnum.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY));
-        this.actionsToDoList.add(new NonogramActionDefinition(rowIdx, ActionEnum.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW));
-        this.actionsToDoList.add(new NonogramActionDefinition(columnIdx, ActionEnum.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN));
-        this.actionsToDoList.add(new NonogramActionDefinition(rowIdx, ActionEnum.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES));
-        this.actionsToDoList.add(new NonogramActionDefinition(columnIdx, ActionEnum.PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES));
+        this.actionsToDoList.add(new NonogramActionDetails(rowIdx, NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES));
+        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES));
+        this.actionsToDoList.add(new NonogramActionDetails(rowIdx, CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY));
+        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY));
+        this.actionsToDoList.add(new NonogramActionDetails(rowIdx, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW));
+        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN));
+        this.actionsToDoList.add(new NonogramActionDetails(rowIdx, NonogramSolveAction.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES));
+        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES));
     }
 
     public void basicSolve() {
         int actionListIndex = 0;
+        int nextActionRCIndex; // row or column index
+        int logChunkStart;
+        int logChunkEnd = 0;
+        int stepsBefore;
+        int stepsAfter;
+        int steps = 0;
+        NonogramActionDetails currentActionDetails;
 
-        while(actionListIndex <= actionsToDoList.size()) {
-            NonogramActionDefinition nextNonogramActionDefinition = actionsToDoList.get(actionListIndex);
-            if (nextNonogramActionDefinition.getAction().ordinal() <= LAST_ROW_ACTION_ENUM_VALUE) {
-                this.copyLogicToNonogramRowLogic();
-                makeProperActionInRow(nextNonogramActionDefinition.getIndex(), nextNonogramActionDefinition.getAction());
-                this.copyLogicFromNonogramRowLogic();
-            } else {
-                this.copyLogicToNonogramColumnLogic();
-                makeProperActionInColumn(nextNonogramActionDefinition.getIndex(), nextNonogramActionDefinition.getAction());
-                this.copyLogicFromNonogramColumnLogic();
+        while(actionListIndex < actionsToDoList.size() && steps < 550) {
+            logChunkStart = this.logs.size();
+            currentActionDetails = actionsToDoList.get(actionListIndex);
+            nextActionRCIndex = currentActionDetails.getIndex();
+            try {
+                if (getRowSolveActions().contains(currentActionDetails.getActionName())) {
+                    this.copyLogicToNonogramRowLogic();
+                    stepsBefore = this.getNonogramState().getNewStepsMade();
+
+                    makeProperActionInRow(nextActionRCIndex, currentActionDetails.getActionName());
+                    stepsAfter = this.getNonogramState().getNewStepsMade();
+
+                    if(stepsBefore != stepsAfter) {
+                        logRowStateBefore(currentActionDetails, nextActionRCIndex);
+                        logRowStateAfter(currentActionDetails, nextActionRCIndex);
+                    }
+                    this.copyLogicFromNonogramRowLogic();
+                } else {
+                    this.copyLogicToNonogramColumnLogic();
+                    stepsBefore = this.getNonogramState().getNewStepsMade();
+
+                    makeProperActionInColumn(nextActionRCIndex, currentActionDetails.getActionName());
+                    stepsAfter = this.getNonogramState().getNewStepsMade();
+
+                    if(stepsBefore != stepsAfter) {
+                        logColumnStateBefore(currentActionDetails, nextActionRCIndex);
+                        logColumnStateAfter(currentActionDetails, nextActionRCIndex);
+                    }
+                    this.copyLogicFromNonogramColumnLogic();
+                }
+
+//                if(currentActionDetails.getActionName().equals(MARK_AVAILABLE_FIELDS_IN_ROW) && nextActionRCIndex == 2) {
+//                    log.info("Last action before desired state: {}", currentActionDetails);
+//                    printSolutionBoard();
+//                    printSolutionBoardWithMarks();
+//                    while (true) {
+//
+//                    }
+//                }
+
+                logChunkEnd = this.logs.size();
+            } catch (Exception e) {
+                // empty
             }
+
+            //printLogChunk(logChunkStart, logChunkEnd);
+
+            steps++;
             actionListIndex++;
 
             if (this.guessMode && this.nonogramState.isInvalidSolution()) {
@@ -920,7 +966,70 @@ public class NonogramLogic extends NonogramLogicParams {
         }
     }
 
-    public void makeProperActionInRow(int rowIdx, ActionEnum actionToDoInRow) {
+    private void logRowStateBefore(NonogramActionDetails actionDetails, int nextActionRowIndex) {
+        String elementToLog;
+
+        if (NonogramSolveAction.getCorrectRowRangesSolveActions().contains(actionDetails.getActionName())) {
+            elementToLog = this.getRowsSequencesRanges().get(nextActionRowIndex).toString();
+        } else if (NonogramSolveAction.isMarkRowAction(actionDetails.getActionName())) {
+            elementToLog = this.getNonogramSolutionBoardWithMarks().get(nextActionRowIndex).toString();
+        } else {
+            elementToLog = this.getNonogramSolutionBoard().get(nextActionRowIndex).toString();
+        }
+
+        log.info("Row {} before making action {}: {}", nextActionRowIndex, actionDetails.getActionName(), elementToLog);
+    }
+
+    private void logRowStateAfter(NonogramActionDetails actionDetails, int nextActionRowIndex) {
+        String elementToLog;
+
+        if (NonogramSolveAction.getCorrectRowRangesSolveActions().contains(actionDetails.getActionName())) {
+            elementToLog = this.getNonogramRowLogic().getRowsSequencesRanges().get(nextActionRowIndex).toString();
+        } else if (NonogramSolveAction.isMarkRowAction(actionDetails.getActionName())) {
+            elementToLog = this.getNonogramRowLogic().getNonogramSolutionBoardWithMarks().get(nextActionRowIndex).toString();
+        } else {
+            elementToLog = this.getNonogramRowLogic().getNonogramSolutionBoard().get(nextActionRowIndex).toString();
+        }
+
+        log.info("Row {} after making action {}: {}", nextActionRowIndex, actionDetails.getActionName(), elementToLog);
+    }
+
+    private void logColumnStateBefore(NonogramActionDetails actionDetails, int nextActionColumnIndex) {
+        String elementToLog;
+
+        if (NonogramSolveAction.getCorrectColumnRangesSolveActions().contains(actionDetails.getActionName())) {
+            elementToLog = this.getColumnsSequencesRanges().get(nextActionColumnIndex).toString();
+        } else if (NonogramSolveAction.isMarkColumnAction(actionDetails.getActionName())) {
+            elementToLog = this.getNonogramBoardColumnWithMarks(nextActionColumnIndex).toString();
+        } else {
+            elementToLog = this.getNonogramBoardColumn(nextActionColumnIndex).toString();
+        }
+
+        log.info("Column {} before making action {}: {}", nextActionColumnIndex, actionDetails.getActionName(), elementToLog);
+    }
+
+    private void logColumnStateAfter(NonogramActionDetails actionDetails, int nextActionColumnIndex) {
+        String elementToLog;
+
+        if (NonogramSolveAction.getCorrectColumnRangesSolveActions().contains(actionDetails.getActionName())) {
+            elementToLog = this.getNonogramColumnLogic().getColumnsSequencesRanges().get(nextActionColumnIndex).toString();
+        } else if (NonogramSolveAction.isMarkColumnAction(actionDetails.getActionName())) {
+            elementToLog = this.getNonogramColumnLogic().getNonogramBoardColumnWithMarks(nextActionColumnIndex).toString();
+        } else {
+            elementToLog = this.getNonogramColumnLogic().getNonogramBoardColumn(nextActionColumnIndex).toString();
+        }
+
+        log.info("Column {} after making action {}: {}", nextActionColumnIndex, actionDetails.getActionName(), elementToLog);
+    }
+
+    private void printLogChunk(int logChunkStartIdx, int logChunkEndIdx) {
+        for(int idx = logChunkStartIdx; idx < logChunkEndIdx; idx++) {
+            System.out.println(this.getLogs().get(idx));
+        }
+        System.out.println("-".repeat(50));
+    }
+
+    public void makeProperActionInRow(int rowIdx, NonogramSolveAction actionToDoInRow) {
         switch (actionToDoInRow) {
             case CORRECT_ROW_SEQUENCES_RANGES -> {
                 nonogramRowLogic.correctRowSequencesRanges(rowIdx);
@@ -949,13 +1058,14 @@ public class NonogramLogic extends NonogramLogicParams {
             case PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES -> nonogramRowLogic.placeXsAroundLongestSequencesInRow(rowIdx);
             case PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES ->
                     nonogramRowLogic.placeXsRowAtTooShortEmptySequences(rowIdx);
-            case MARK_AVAILABLE_FIELDS_IN_ROW -> nonogramRowLogic.markAvailableSequencesInRow(rowIdx);
+            case MARK_AVAILABLE_FIELDS_IN_ROW -> nonogramRowLogic.markAvailableFieldsInRow(rowIdx);
             default -> {
+                // empty
             }
         }
     }
 
-    public void makeProperActionInColumn(int columnIdx, ActionEnum actionToDoInColumn) {
+    public void makeProperActionInColumn(int columnIdx, NonogramSolveAction actionToDoInColumn) {
         switch (actionToDoInColumn) {
             case CORRECT_COLUMN_SEQUENCES_RANGES -> {
                 nonogramColumnLogic.correctColumnSequencesRanges(columnIdx);
@@ -983,8 +1093,9 @@ public class NonogramLogic extends NonogramLogicParams {
             case PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS -> nonogramColumnLogic.placeXsColumnAtUnreachableFields(columnIdx);
             case PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES -> nonogramColumnLogic.placeXsAroundLongestSequencesInColumn(columnIdx);
             case PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES -> nonogramColumnLogic.placeXsColumnAtTooShortEmptySequences(columnIdx);
-            case MARK_AVAILABLE_FIELDS_IN_COLUMN -> nonogramColumnLogic.markAvailableSequencesInColumn(columnIdx);
+            case MARK_AVAILABLE_FIELDS_IN_COLUMN -> nonogramColumnLogic.markAvailableFieldsInColumn(columnIdx);
             default -> {
+                // empty
             }
         }
     }
@@ -1015,53 +1126,53 @@ public class NonogramLogic extends NonogramLogicParams {
 
     public void copyLogicFromNonogramColumnLogic() {
         this.logs = this.nonogramColumnLogic.getLogs();
-        this.nonogramSolutionBoardWithMarks = this.nonogramColumnLogic.getNonogramSolutionBoardWithMarks();
-        this.nonogramSolutionBoard = this.nonogramColumnLogic.getNonogramSolutionBoard();
 
-        this.rowsSequencesRanges = this.nonogramColumnLogic.getRowsSequencesRanges();
-        this.columnsSequencesRanges = this.nonogramColumnLogic.getColumnsSequencesRanges();
+        this.nonogramSolutionBoardWithMarks = copyTwoDeepList(this.nonogramColumnLogic.getNonogramSolutionBoardWithMarks());
+        this.nonogramSolutionBoard = copyTwoDeepList(this.nonogramColumnLogic.getNonogramSolutionBoard());
 
-        this.rowsFieldsNotToInclude = this.nonogramColumnLogic.getRowsFieldsNotToInclude();
-        this.columnsFieldsNotToInclude = this.nonogramColumnLogic.getColumnsFieldsNotToInclude();
-        this.rowsSequencesIdsNotToInclude = this.nonogramColumnLogic.getRowsSequencesIdsNotToInclude();
-        this.columnsSequencesIdsNotToInclude = this.nonogramColumnLogic.getColumnsSequencesIdsNotToInclude();
+        this.rowsSequencesRanges = copySequencesRanges(this.nonogramColumnLogic.getRowsSequencesRanges());
+        this.columnsSequencesRanges = copySequencesRanges(this.nonogramColumnLogic.getColumnsSequencesRanges());
+
+        this.rowsFieldsNotToInclude = copyTwoDeepList(this.nonogramColumnLogic.getRowsFieldsNotToInclude());
+        this.columnsFieldsNotToInclude = copyTwoDeepList(this.nonogramColumnLogic.getColumnsFieldsNotToInclude());
+        this.rowsSequencesIdsNotToInclude = copyTwoDeepList(this.nonogramColumnLogic.getRowsSequencesIdsNotToInclude());
+        this.columnsSequencesIdsNotToInclude = copyTwoDeepList(this.nonogramColumnLogic.getColumnsSequencesIdsNotToInclude());
 
         this.actionsToDoList = this.nonogramColumnLogic.getActionsToDoList();
 
-        this.setNonogramState(this.nonogramColumnLogic.getNonogramState());
+        this.nonogramState = this.nonogramColumnLogic.getNonogramState();
     }
 
     public void copyLogicToNonogramColumnLogic() {
-        this.nonogramColumnLogic.setLogs(this.getLogs());
-        this.nonogramColumnLogic.setNonogramSolutionBoardWithMarks(this.getNonogramSolutionBoardWithMarks());
-        this.nonogramColumnLogic.setNonogramSolutionBoard(this.getNonogramSolutionBoard());
-
-        this.nonogramColumnLogic.setRowsSequencesRanges(this.getRowsSequencesRanges());
-        this.nonogramColumnLogic.setColumnsSequencesRanges(this.getColumnsSequencesRanges());
-
-        this.nonogramColumnLogic.setRowsFieldsNotToInclude(this.getRowsFieldsNotToInclude());
-        this.nonogramColumnLogic.setColumnsFieldsNotToInclude(this.getColumnsFieldsNotToInclude());
-        this.nonogramColumnLogic.setRowsSequencesIdsNotToInclude(this.getRowsSequencesIdsNotToInclude());
-        this.nonogramColumnLogic.setColumnsSequencesIdsNotToInclude(this.getColumnsSequencesIdsNotToInclude());
-
-        this.nonogramColumnLogic.setActionsToDoList(this.getActionsToDoList());
-
         this.nonogramColumnLogic.setNonogramState(this.getNonogramState());
+        this.nonogramColumnLogic.setLogs(this.getLogs());
+
+        this.nonogramColumnLogic.setRowsSequencesRanges(copySequencesRanges(this.getRowsSequencesRanges()));
+        this.nonogramColumnLogic.setRowsSequencesIdsNotToInclude(copyTwoDeepList(this.getRowsSequencesIdsNotToInclude()));
+        this.nonogramColumnLogic.setRowsFieldsNotToInclude(copyTwoDeepList(this.getRowsFieldsNotToInclude()));
+
+        this.nonogramColumnLogic.setColumnsSequencesRanges(copySequencesRanges(this.getColumnsSequencesRanges()));
+        this.nonogramColumnLogic.setColumnsSequencesIdsNotToInclude(copyTwoDeepList(this.getColumnsSequencesIdsNotToInclude()));
+        this.nonogramColumnLogic.setColumnsFieldsNotToInclude(copyTwoDeepList(this.getColumnsFieldsNotToInclude()));
+
+        this.nonogramColumnLogic.setNonogramSolutionBoardWithMarks(copyTwoDeepList(this.getNonogramSolutionBoardWithMarks()));
+        this.nonogramColumnLogic.setNonogramSolutionBoard(copyTwoDeepList(this.getNonogramSolutionBoard()));
+        this.nonogramColumnLogic.setActionsToDoList(this.getActionsToDoList());
     }
 
     public void copyLogicFromNonogramRowLogic() {
         this.logs = this.nonogramRowLogic.getLogs();
 
-        this.nonogramSolutionBoardWithMarks = this.nonogramRowLogic.getNonogramSolutionBoardWithMarks();
-        this.nonogramSolutionBoard = this.nonogramRowLogic.getNonogramSolutionBoard();
+        this.nonogramSolutionBoardWithMarks = copyTwoDeepList(this.nonogramRowLogic.getNonogramSolutionBoardWithMarks());
+        this.nonogramSolutionBoard = copyTwoDeepList(this.nonogramRowLogic.getNonogramSolutionBoard());
 
-        this.rowsSequencesRanges = this.nonogramRowLogic.getRowsSequencesRanges();
-        this.columnsSequencesRanges = this.nonogramRowLogic.getColumnsSequencesRanges();
+        this.rowsSequencesRanges = copySequencesRanges(this.nonogramRowLogic.getRowsSequencesRanges());
+        this.columnsSequencesRanges = copySequencesRanges(this.nonogramRowLogic.getColumnsSequencesRanges());
 
-        this.rowsFieldsNotToInclude = this.nonogramRowLogic.getRowsFieldsNotToInclude();
-        this.columnsFieldsNotToInclude = this.nonogramRowLogic.getColumnsFieldsNotToInclude();
-        this.rowsSequencesIdsNotToInclude = this.nonogramRowLogic.getRowsSequencesIdsNotToInclude();
-        this.columnsSequencesIdsNotToInclude = this.nonogramRowLogic.getColumnsSequencesIdsNotToInclude();
+        this.rowsFieldsNotToInclude = copyTwoDeepList(this.nonogramRowLogic.getRowsFieldsNotToInclude());
+        this.columnsFieldsNotToInclude = copyTwoDeepList(this.nonogramRowLogic.getColumnsFieldsNotToInclude());
+        this.rowsSequencesIdsNotToInclude = copyTwoDeepList(this.nonogramRowLogic.getRowsSequencesIdsNotToInclude());
+        this.columnsSequencesIdsNotToInclude = copyTwoDeepList(this.nonogramRowLogic.getColumnsSequencesIdsNotToInclude());
 
         this.actionsToDoList = this.nonogramRowLogic.getActionsToDoList();
 
@@ -1069,22 +1180,51 @@ public class NonogramLogic extends NonogramLogicParams {
     }
 
     public void copyLogicToNonogramRowLogic() {
-        this.nonogramRowLogic.setLogs(this.logs);
+        this.nonogramRowLogic.setNonogramState(this.getNonogramState());
+        this.nonogramRowLogic.setLogs(this.getLogs());
 
-        this.nonogramRowLogic.setNonogramSolutionBoardWithMarks(this.nonogramSolutionBoardWithMarks);
-        this.nonogramRowLogic.setNonogramSolutionBoard(this.nonogramSolutionBoard);
+        this.nonogramRowLogic.setRowsSequencesRanges(copySequencesRanges(this.getRowsSequencesRanges()));
+        this.nonogramRowLogic.setRowsSequencesIdsNotToInclude(copyTwoDeepList(this.getRowsSequencesIdsNotToInclude()));
+        this.nonogramRowLogic.setRowsFieldsNotToInclude(copyTwoDeepList(this.getRowsFieldsNotToInclude()));
 
-        this.nonogramRowLogic.setRowsSequencesRanges(this.rowsSequencesRanges);
-        this.nonogramRowLogic.setColumnsSequencesRanges(this.columnsSequencesRanges);
+        this.nonogramRowLogic.setColumnsSequencesRanges(copySequencesRanges(this.getColumnsSequencesRanges()));
+        this.nonogramRowLogic.setColumnsSequencesIdsNotToInclude(copyTwoDeepList(this.getColumnsSequencesIdsNotToInclude()));
+        this.nonogramRowLogic.setColumnsFieldsNotToInclude(copyTwoDeepList(this.getColumnsFieldsNotToInclude()));
 
-        this.nonogramRowLogic.setRowsFieldsNotToInclude(this.rowsFieldsNotToInclude);
-        this.nonogramRowLogic.setColumnsFieldsNotToInclude(this.columnsFieldsNotToInclude);
-        this.nonogramRowLogic.setRowsSequencesIdsNotToInclude(this.rowsSequencesIdsNotToInclude);
-        this.nonogramRowLogic.setColumnsSequencesIdsNotToInclude(this.columnsSequencesIdsNotToInclude);
-
+        this.nonogramRowLogic.setNonogramSolutionBoardWithMarks(copyTwoDeepList(this.getNonogramSolutionBoardWithMarks()));
+        this.nonogramRowLogic.setNonogramSolutionBoard(copyTwoDeepList(this.getNonogramSolutionBoard()));
         this.nonogramRowLogic.setActionsToDoList(this.getActionsToDoList());
+    }
 
-        this.nonogramRowLogic.setNonogramState(this.nonogramState);
+    private <T> List<List<T>> copyTwoDeepList(List<List<T>> nonogramBoard) {
+        if (nonogramBoard == null) {
+            return null;
+        }
+
+        List<List<T>> copiedBoard = new ArrayList<>();
+        for (List<T> boardRow : nonogramBoard) {
+            if (boardRow != null) {
+                copiedBoard.add(new ArrayList<>(boardRow));
+            } else {
+                copiedBoard.add(null);
+            }
+        }
+        return copiedBoard;
+    }
+
+    private List<List<List<Integer>>> copySequencesRanges(List<List<List<Integer>>> sequencesRanges) {
+
+        List<List<List<Integer>>> sequencesRangesCopy = new ArrayList<>();
+
+        for (List<List<Integer>> singleSequencesRanges : sequencesRanges) {
+            List<List<Integer>> elementSequencesRangesCopy = new ArrayList<>();
+            for (List<Integer> sequenceRange : singleSequencesRanges) {
+                elementSequencesRangesCopy.add(new ArrayList<>(sequenceRange));
+            }
+            sequencesRangesCopy.add(elementSequencesRangesCopy);
+        }
+
+        return sequencesRangesCopy;
     }
 
 
@@ -1223,6 +1363,12 @@ public class NonogramLogic extends NonogramLogicParams {
     public void printSolutionBoard() {
         for (List<String> solutionBoardRow : this.getNonogramSolutionBoard()) {
             System.out.println(solutionBoardRow);
+        }
+    }
+
+    public void printSolutionBoardWithMarks() {
+        for (List<String> solutionBoardRowWithMarks : this.getNonogramSolutionBoardWithMarks()) {
+            System.out.println(solutionBoardRowWithMarks);
         }
     }
 

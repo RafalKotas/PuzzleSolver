@@ -2,7 +2,6 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.ActionsConstants;
 import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramParametersComparatorHelper;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,42 +15,44 @@ import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.payload.ActionsConstants.actionsToDoAfterColouringOverlappingSequencesInColumns;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.payload.ActionsConstants.actionsToDoAfterCorrectingRangesWhenMarkingSequencesInColumns;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.EMPTY_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.MARKED_COLUMN_INDICATOR;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.*;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @Slf4j
+@NoArgsConstructor
 public class NonogramColumnLogic extends NonogramLogicParams {
 
     private final static String CORRECT_COLUMN_SEQ_RANGE_MARKING_FIELD = "correcting column sequence range when marking field";
 
     private final static String FILL_OVERLAPPING_FIELDS = "fill overlapping fields";
 
-    String tmpLog;
-
     public NonogramColumnLogic(NonogramLogic nonogramLogic) {
         this.nonogramState = nonogramLogic.getNonogramState();
         this.logs = nonogramLogic.getLogs();
+
         this.rowsSequences = nonogramLogic.getRowsSequences();
         this.rowsSequencesRanges = nonogramLogic.getRowsSequencesRanges();
         this.rowsSequencesIdsNotToInclude = nonogramLogic.getRowsSequencesIdsNotToInclude();
         this.rowsFieldsNotToInclude = nonogramLogic.getRowsFieldsNotToInclude();
+
         this.columnsSequences = nonogramLogic.getColumnsSequences();
         this.columnsSequencesRanges = nonogramLogic.getColumnsSequencesRanges();
         this.columnsSequencesIdsNotToInclude = nonogramLogic.getColumnsSequencesIdsNotToInclude();
         this.columnsFieldsNotToInclude = nonogramLogic.getColumnsFieldsNotToInclude();
+
         this.nonogramSolutionBoardWithMarks = nonogramLogic.getNonogramSolutionBoardWithMarks();
         this.nonogramSolutionBoard = nonogramLogic.getNonogramSolutionBoard();
+
         this.actionsToDoList = nonogramLogic.getActionsToDoList();
     }
 
     /**
-     * @param columnIdx - column index on which mark sequences with char identifiers
+     * @param columnIdx - column index on which mark fields with char sequences identifiers
      */
-    public void markAvailableSequencesInColumn(int columnIdx) {
+    public void markAvailableFieldsInColumn(int columnIdx) {
         Field potentiallyColouredField;
         List<Integer> colouredSequenceIndexes;
         int firstSequenceIndex;
@@ -102,7 +103,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
 
                     sequenceMarker = NonogramLogic.indexToSequenceCharMark(lastMatchingSequenceIndex);
                     for(int sequenceRowIdx = firstSequenceIndex; sequenceRowIdx <= lastSequenceIndex; sequenceRowIdx++) {
-                        if (this.getNonogramSolutionBoardWithMarks().get(sequenceRowIdx).get(columnIdx).substring(2).equals("--")) {
+                        if (this.getNonogramSolutionBoardWithMarks().get(sequenceRowIdx).get(columnIdx).substring(3).equals(EMPTY_FIELD)) {
                             this.markColumnBoardField(sequenceRowIdx, columnIdx, sequenceMarker);
                             this.nonogramState.increaseMadeSteps();
                         } else if (this.showRepetitions) {
@@ -144,12 +145,6 @@ public class NonogramColumnLogic extends NonogramLogicParams {
         List<Integer> colouringRange;
         Field fieldToColour;
 
-        String sequenceCharMark;
-
-        List<String> rowToChangeColumnBoardWithMarks;
-
-        String elementToChangeInsideRowBoardWithMarks;
-
         for(int sequenceIdx = 0; sequenceIdx < sequencesInColumnLengths.size(); sequenceIdx++) {
             sequenceLength = sequencesInColumnLengths.get(sequenceIdx);
             range = sequencesInColumnRanges.get(sequenceIdx);
@@ -160,25 +155,15 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                     .boxed()
                     .toList();
 
-            sequenceCharMark = NonogramLogic.indexToSequenceCharMark(sequenceIdx);
-
             for (int rowIdx : colouringRange) {
-                rowToChangeColumnBoardWithMarks = this.getNonogramSolutionBoardWithMarks().get(rowIdx);
-                elementToChangeInsideRowBoardWithMarks = rowToChangeColumnBoardWithMarks.get(columnIdx);
+                fieldToColour = new Field(rowIdx, columnIdx);
 
-                if (rowToChangeColumnBoardWithMarks.get(columnIdx).substring(2).equals("--")) {
-                    this.nonogramState.increaseMadeSteps();
-                    rowToChangeColumnBoardWithMarks.set(columnIdx, elementToChangeInsideRowBoardWithMarks.substring(0, 2) + MARKED_COLUMN_INDICATOR + sequenceCharMark);
-
-                    this.getNonogramSolutionBoardWithMarks().set(rowIdx, rowToChangeColumnBoardWithMarks);
-
-                    fieldToColour = new Field(rowIdx, columnIdx);
-                    if (isFieldEmpty(fieldToColour)) {
-                        this.colourFieldAtGivenPosition(fieldToColour);
-                        tmpLog = generateColourStepDescription(columnIdx, rowIdx, FILL_OVERLAPPING_FIELDS);
-                        addLog(tmpLog);
-                        this.addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoAfterColouringOverlappingSequencesInColumns);
-                    }
+                if (isFieldEmpty(fieldToColour)) {
+                    this.colourFieldAtGivenPosition(fieldToColour, "--C-");
+                    tmpLog = generateColourStepDescription(columnIdx, rowIdx, FILL_OVERLAPPING_FIELDS);
+                    addLog(tmpLog);
+                    this.addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoAfterColouringOverlappingSequencesInColumns);
+                    this.getNonogramState().increaseMadeSteps();
                 } else if (showRepetitions) {
                     logger.warn("Column field was coloured earlier!");
                 }
@@ -221,7 +206,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                 columnSequencesIndexesIncludingSequenceRange = new ArrayList<>();
                 columnSequencesLengthsIncludingSequenceRange = new ArrayList<>();
 
-                List<Integer> columnSequencesIdsNotToInclude = this.getColumnsSequencesIdsNotToInclude().get(rowIdx);
+                List<Integer> columnSequencesIdsNotToInclude = this.getColumnsSequencesIdsNotToInclude().get(columnIdx);
                 for(int seqNo = 0; seqNo < columnSequencesRanges.size(); seqNo++) {
                     columnSequenceRange = columnSequencesRanges.get(seqNo);
                     if (rangeInsideAnotherRange(colouredSequenceRange, columnSequenceRange) && !columnSequencesIdsNotToInclude.contains(seqNo)) {
@@ -570,7 +555,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                                               int previousSequenceId,
                                               List<Integer> updatedPreviousSequenceRange) {
         if (updatedEndIndex != previousSequenceOldRangeEndRowIndex) {
-            this.getRowsSequencesRanges().get(columnIdx).set(previousSequenceId, updatedPreviousSequenceRange);
+            this.getColumnsSequencesRanges().get(columnIdx).set(previousSequenceId, updatedPreviousSequenceRange);
             this.addColumnToAffectedActionsByIdentifiers(columnIdx, ActionsConstants.actionsToDoAfterCorrectingColumnsSequences);
 
             if (rangeLength(updatedPreviousSequenceRange) == columnSequencesLengths.get(previousSequenceId) && isRowRangeColoured(columnIdx, updatedPreviousSequenceRange)) {
@@ -646,6 +631,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
         }
 
         if (columnSequencesRangesChanged) {
+            this.nonogramState.increaseMadeSteps();
             this.addColumnToAffectedActionsByIdentifiers(columnIdx, ActionsConstants.actionsToDoAfterCorrectingColumnsSequencesWhenMetColouredField);
         }
     }
@@ -704,6 +690,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
         }
 
         if (columnSequencesRangesChanged) {
+            this.nonogramState.increaseMadeSteps();
             this.addColumnToAffectedActionsByIdentifiers(columnIdx, ActionsConstants.actionsToDoAfterCorrectingColumnsSequencesWhenMetColouredField);
         }
     }
@@ -894,7 +881,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                         fieldToColour = new Field(colourRowIdx, columnIdx);
                         try {
                             if (isFieldEmpty(fieldToColour)) {
-                                this.colourFieldAtGivenPosition(fieldToColour);
+                                this.colourFieldAtGivenPosition(fieldToColour, "--C-");
                                 this.addRowToAffectedActionsByIdentifiers(colourRowIdx, ActionsConstants.actionsToDoAfterExtendingColouredFieldsNearXInColumns);
                                 this.nonogramState.increaseMadeSteps();
 
@@ -979,7 +966,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                             fieldToColour = new Field(colourRowIdx, columnIdx);
                             if (isFieldColoured(fieldToColour)) {
                                 fieldToColour = new Field(colourRowIdx, columnIdx);
-                                this.colourFieldAtGivenPosition(fieldToColour);
+                                this.colourFieldAtGivenPosition(fieldToColour, "--C-");
                                 this.addRowToAffectedActionsByIdentifiers(colourRowIdx, ActionsConstants.actionsToDoAfterExtendingColouredFieldsNearXInColumns);
                                 this.nonogramState.increaseMadeSteps();
 
@@ -1082,19 +1069,5 @@ public class NonogramColumnLogic extends NonogramLogicParams {
     private String generateCorrectingColumnSequenceRangeStepDescription(int columnIndex, int sequenceIndex, List<Integer> oldRange, List<Integer> correctedRange, String actionType) {
         return String.format("COLUMN %d, SEQUENCE %d - range correcting - from [%d, %d] to [%d, %d] - %s", columnIndex, sequenceIndex,
                 oldRange.get(0), oldRange.get(1), correctedRange.get(0), correctedRange.get(1), actionType);
-    }
-
-    /**
-     * @param columnIdx board column index
-     * @return nonogram board column of given index
-     */
-    public List<String> getNonogramBoardColumn(int columnIdx) {
-        List<String> solutionBoardColumn = new ArrayList<>();
-
-        for(int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
-            solutionBoardColumn.add(nonogramSolutionBoard.get(rowIdx).get(columnIdx));
-        }
-
-        return solutionBoardColumn;
     }
 }

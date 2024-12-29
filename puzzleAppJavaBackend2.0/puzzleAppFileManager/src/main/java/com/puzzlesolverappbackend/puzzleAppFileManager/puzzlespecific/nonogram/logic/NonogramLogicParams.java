@@ -1,7 +1,7 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.ActionEnum;
-import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramActionDefinition;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramActionDetails;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramSolveAction;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,16 +16,16 @@ import java.util.List;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.rangeLength;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @Slf4j
 public abstract class NonogramLogicParams {
 
     protected final static Logger logger = LoggerFactory.getLogger(NonogramLogic.class);
     protected boolean showRepetitions = false;
     protected NonogramState nonogramState;
-    protected List<NonogramActionDefinition> actionsToDoList = new ArrayList<>();
+    protected List<NonogramActionDetails> actionsToDoList = new ArrayList<>();
 
     protected List<String> logs;
 
@@ -181,15 +181,15 @@ public abstract class NonogramLogicParams {
         return this.getNonogramSolutionBoard().get(field.getRowIdx()).get(field.getColumnIdx()).equals(X_FIELD);
     }
 
-    protected void addColumnToAffectedActionsByIdentifiers(int columnIdx, List<ActionEnum> actions) {
-        for(ActionEnum action : actions) {
-            this.actionsToDoList.add(new NonogramActionDefinition(columnIdx, action));
+    protected void addColumnToAffectedActionsByIdentifiers(int columnIdx, List<NonogramSolveAction> actions) {
+        for(NonogramSolveAction action : actions) {
+            this.actionsToDoList.add(new NonogramActionDetails(columnIdx, action));
         }
     }
 
-    protected void addRowToAffectedActionsByIdentifiers(int rowIdx, List<ActionEnum> actions) {
-        for(ActionEnum action : actions) {
-            this.actionsToDoList.add(new NonogramActionDefinition(rowIdx, action));
+    protected void addRowToAffectedActionsByIdentifiers(int rowIdx, List<NonogramSolveAction> actions) {
+        for(NonogramSolveAction action : actions) {
+            this.actionsToDoList.add(new NonogramActionDetails(rowIdx, action));
         }
     }
 
@@ -223,12 +223,27 @@ public abstract class NonogramLogicParams {
     /**
      * @param fieldToColour - field to colour - place COLOURED_FIELD mark ("O")
      */
-    public void colourFieldAtGivenPosition(Field fieldToColour) {
+    public void colourFieldAtGivenPosition(Field fieldToColour, String mask) {
         int fieldRowIdx = fieldToColour.getRowIdx();
         int fieldColIdx = fieldToColour.getColumnIdx();
+        String currentFieldWithMarks = this.nonogramSolutionBoardWithMarks.get(fieldRowIdx).get(fieldColIdx);
         if (areFieldIndexesValid(fieldToColour)) {
             this.nonogramSolutionBoard.get(fieldRowIdx).set(fieldColIdx, COLOURED_FIELD);
+            this.nonogramSolutionBoardWithMarks.get(fieldRowIdx).set(fieldColIdx, getUpdatedFieldWithMarks(currentFieldWithMarks, mask));
         }
+    }
+
+    private String getUpdatedFieldWithMarks(String currentField, String mask) {
+        StringBuilder updatedField = new StringBuilder();
+        for (int i = 0; i < currentField.length(); i++) {
+            if(currentField.charAt(i) == '-') {
+                updatedField.append(mask.charAt(i));
+            } else {
+                updatedField.append(currentField.charAt(i));
+            }
+        }
+
+        return updatedField.toString();
     }
 
 
@@ -357,6 +372,34 @@ public abstract class NonogramLogicParams {
 
     protected String generateAddingRowSequenceToNotToIncludeDescription(int rowIdx, int seqNo) {
         return String.format("ROW %d - seqNo = %d excluded", rowIdx, seqNo);
+    }
+
+    /**
+     * @param columnIdx board column index
+     * @return nonogram board column of given index
+     */
+    public List<String> getNonogramBoardColumn(int columnIdx) {
+        List<String> solutionBoardColumn = new ArrayList<>();
+
+        for(int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
+            solutionBoardColumn.add(nonogramSolutionBoard.get(rowIdx).get(columnIdx));
+        }
+
+        return solutionBoardColumn;
+    }
+
+    /**
+     * @param columnIdx board column index
+     * @return nonogram board column with marks of given index
+     */
+    public List<String> getNonogramBoardColumnWithMarks(int columnIdx) {
+        List<String> solutionBoardColumnWithMarks = new ArrayList<>();
+
+        for(int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
+            solutionBoardColumnWithMarks.add(nonogramSolutionBoardWithMarks.get(rowIdx).get(columnIdx));
+        }
+
+        return solutionBoardColumnWithMarks;
     }
 
     protected void addLog(String log) {
