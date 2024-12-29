@@ -3,6 +3,7 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.controllers;
 import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.helpers.FileHelper
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@Slf4j
 @RequestMapping("/api/nonogram/logic")
 public class NonogramLogicController {
 
@@ -98,12 +100,14 @@ public class NonogramLogicController {
 
     @PostMapping("/customSolutionPart")
     public ResponseEntity<NonogramLogic> customSolutionPart(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String solutionFileName) {
-
+        log.info("Custom solving endpoint triggered (heuristics)!");
         NonogramLogic logicWithAffectedRowsAndColumns = new NonogramLogic(
                 nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences(), false);
 
+        NonogramLogic customSolution = nonogramLogicService.runSolverWithCorrectnessCheck(logicWithAffectedRowsAndColumns, solutionFileName);
+
         return new ResponseEntity<>(
-                nonogramLogicService.runSolverWithCorrectnessCheck(logicWithAffectedRowsAndColumns, solutionFileName),
+                customSolution,
                 HttpStatus.OK);
     }
 

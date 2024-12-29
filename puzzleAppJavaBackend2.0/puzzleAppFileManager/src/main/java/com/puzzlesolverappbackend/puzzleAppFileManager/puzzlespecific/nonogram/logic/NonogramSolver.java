@@ -53,6 +53,8 @@ public class NonogramSolver {
 
     public NonogramLogic runSolutionAtNode(NonogramSolutionNode nonogramStartNode) {
         log.info("RUN SOLVER AT NODE, DECISIONS SIZE {}", nonogramStartNode.getNonogramGuessDecisions().size());
+        log.info("ROW SEQUENCES RANGES: \n{}", nonogramStartNode.getNonogramLogic().getRowsSequencesRanges());
+        log.info("COLUMN SEQUENCES RANGES: \n{}", nonogramStartNode.getNonogramLogic().getColumnsSequencesRanges());
         this.runHeuristicSolver(nonogramStartNode,  0, maxTreeHeight);
         return this.getSolutionNode().getNonogramLogic();
     }
@@ -72,6 +74,7 @@ public class NonogramSolver {
 
         //solve without guesses - only heuristics
         nonogramSubsolutionNode.getNonogramLogic().fillTrivialRowsAndColumns();
+        log.info("Fields filled after fill trivial rows and columns: " + nonogramSubsolutionNode.getNonogramLogic().fieldsFilled());
         nonogramSubsolutionNode.setNodeLogs(nonogramSubsolutionNode.getNonogramLogic().getLogs());
         nonogramSubsolutionNode.makeBasicSolverActions();
         log.info("COMPLETION PERCENTAGE: {}, DECISIONS SIZE: {}", nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage(), nonogramSubsolutionNode.getNonogramGuessDecisions().size());
