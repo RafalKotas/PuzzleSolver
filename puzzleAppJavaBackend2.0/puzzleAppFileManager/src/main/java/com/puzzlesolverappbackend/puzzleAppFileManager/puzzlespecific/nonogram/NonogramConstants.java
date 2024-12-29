@@ -1,7 +1,6 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram;
 
 public class NonogramConstants {
-    public final static int LAST_ROW_ACTION_ENUM_VALUE = 8;
 
     public final static char MARKED_ROW_INDICATOR = 'R';
 
@@ -21,6 +20,4 @@ public class NonogramConstants {
     public final static String EMPTY_PART_MARKED_BOARD = "--";
 
     public final static String EMPTY_FIELD_MARKED_BOARD = "----";
-
-    public final static String EMPTY_LOG_WARNING = "Trying to add empty log!!!";
 }
