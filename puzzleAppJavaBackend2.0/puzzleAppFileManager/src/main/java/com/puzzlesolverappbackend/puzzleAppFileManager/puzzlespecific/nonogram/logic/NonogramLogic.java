@@ -903,15 +903,11 @@ public class NonogramLogic extends NonogramLogicParams {
     public void basicSolve() {
         int actionListIndex = 0;
         int nextActionRCIndex; // row or column index
-        int logChunkStart;
-        int logChunkEnd = 0;
         int stepsBefore;
         int stepsAfter;
-        int steps = 0;
         NonogramActionDetails currentActionDetails;
 
-        while(actionListIndex < actionsToDoList.size() && steps < 550) {
-            logChunkStart = this.logs.size();
+        while(actionListIndex < actionsToDoList.size()) {
             currentActionDetails = actionsToDoList.get(actionListIndex);
             nextActionRCIndex = currentActionDetails.getIndex();
             try {
@@ -938,26 +934,13 @@ public class NonogramLogic extends NonogramLogicParams {
                         logColumnStateBefore(currentActionDetails, nextActionRCIndex);
                         logColumnStateAfter(currentActionDetails, nextActionRCIndex);
                     }
+
                     this.copyLogicFromNonogramColumnLogic();
                 }
-
-//                if(currentActionDetails.getActionName().equals(MARK_AVAILABLE_FIELDS_IN_ROW) && nextActionRCIndex == 2) {
-//                    log.info("Last action before desired state: {}", currentActionDetails);
-//                    printSolutionBoard();
-//                    printSolutionBoardWithMarks();
-//                    while (true) {
-//
-//                    }
-//                }
-
-                logChunkEnd = this.logs.size();
             } catch (Exception e) {
                 // empty
             }
 
-            //printLogChunk(logChunkStart, logChunkEnd);
-
-            steps++;
             actionListIndex++;
 
             if (this.guessMode && this.nonogramState.isInvalidSolution()) {
@@ -1020,13 +1003,6 @@ public class NonogramLogic extends NonogramLogicParams {
         }
 
         log.info("Column {} after making action {}: {}", nextActionColumnIndex, actionDetails.getActionName(), elementToLog);
-    }
-
-    private void printLogChunk(int logChunkStartIdx, int logChunkEndIdx) {
-        for(int idx = logChunkStartIdx; idx < logChunkEndIdx; idx++) {
-            System.out.println(this.getLogs().get(idx));
-        }
-        System.out.println("-".repeat(50));
     }
 
     public void makeProperActionInRow(int rowIdx, NonogramSolveAction actionToDoInRow) {

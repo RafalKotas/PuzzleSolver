@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.X_FIELD;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramParametersComparatorHelper.*;
 
 @Getter
 @Setter
@@ -63,38 +62,14 @@ public class NonogramSolutionNode {
     }
 
     public void makeBasicSolverActions() {
+        this.getNonogramLogic().basicSolve();
 
-        boolean sequencesRangesDiffered;
-        boolean solutionBoardsDiffered;
-        boolean sequenceIndexesNotToIncludeAddedCondition;
-
-        boolean changesOccurred;
-
-        int iterations = 5;
-        int iteration = 0;
-
-        do {
-            NonogramLogic logicBeforeActionsMade = copyNonogramLogic();
-
-            this.getNonogramLogic().basicSolve();
-
-            NonogramLogic logicAfterActionsMade = copyNonogramLogic();
-
-            this.nodeLogs = logicAfterActionsMade.getLogs();
-
-            sequencesRangesDiffered = sequencesRangesAfterActionsMadeDiffers(logicBeforeActionsMade, logicAfterActionsMade);
-
-            solutionBoardsDiffered = solutionBoardsDiffers(logicBeforeActionsMade.getNonogramSolutionBoard(),
-                    logicAfterActionsMade.getNonogramSolutionBoard());
-
-            sequenceIndexesNotToIncludeAddedCondition = sequenceIndexesNotToIncludeAdded(logicBeforeActionsMade, logicAfterActionsMade);
-
-            changesOccurred = sequencesRangesDiffered || solutionBoardsDiffered || sequenceIndexesNotToIncludeAddedCondition;
-
-            iteration++;
-        } while (
-                (iteration < iterations && changesOccurred && !this.getNonogramLogic().getNonogramState().isInvalidSolution() && !this.getNonogramLogic().isSolved()) || affectedRowsOrColumnsLeft()
-        );
+        NonogramLogic logicAfterActionsMade = copyNonogramLogic();
+        this.nodeLogs = logicAfterActionsMade.getLogs();
+        this.getNonogramLogic().printSolutionBoard();
+        this.getNonogramLogic().printSolutionBoardWithMarks();
+        System.out.println(this.getNonogramLogic().getActionsToDoList().size());
+        System.out.println("-".repeat(100));
     }
 
     private NonogramLogic copyNonogramLogic() {
