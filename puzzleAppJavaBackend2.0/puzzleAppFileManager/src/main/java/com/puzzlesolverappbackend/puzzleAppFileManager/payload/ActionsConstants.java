@@ -59,11 +59,21 @@ public class ActionsConstants {
                     MARK_AVAILABLE_FIELDS_IN_COLUMN
             ));
 
+    public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterColouringOverlappingSequencesInRows = new ArrayList<>(
+            Arrays.asList(
+                    MARK_AVAILABLE_FIELDS_IN_ROW
+            ));
+
     public final static ArrayList<NonogramSolveAction> actionsToDoAfterColouringOverlappingSequencesInColumns = new ArrayList<>(
             Arrays.asList(
                     CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
                     PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES,
                     MARK_AVAILABLE_FIELDS_IN_ROW
+            ));
+
+    public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterColouringOverlappingSequencesInColumns = new ArrayList<>(
+            Arrays.asList(
+                    MARK_AVAILABLE_FIELDS_IN_COLUMN
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoAfterExtendingColouredFieldsNearXInRows = new ArrayList<>(
@@ -115,13 +125,15 @@ public class ActionsConstants {
     public final static ArrayList<NonogramSolveAction> actionsToDoAfterColouringFieldInTrivialRow = new ArrayList<>(
             List.of(
                     CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
-                    EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN
+                    EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN,
+                    MARK_AVAILABLE_FIELDS_IN_COLUMN
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoAfterColouringFieldInTrivialColumn = new ArrayList<>(
             List.of(
                     CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
-                    EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW
+                    EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW,
+                    MARK_AVAILABLE_FIELDS_IN_ROW
             ));
     public final static ArrayList<NonogramSolveAction> actionsToDoAfterPlacingXInTrivialRow = new ArrayList<>(
             List.of(
