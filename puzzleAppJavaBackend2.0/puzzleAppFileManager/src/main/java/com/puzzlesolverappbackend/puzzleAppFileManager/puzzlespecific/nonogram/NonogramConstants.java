@@ -18,6 +18,8 @@ public class NonogramConstants {
 
     public final static String EMPTY_FIELD = "-";
 
+    public final static String EMPTY_PART_MARKED_BOARD = "--";
+
     public final static String EMPTY_FIELD_MARKED_BOARD = "----";
 
     public final static String EMPTY_LOG_WARNING = "Trying to add empty log!!!";

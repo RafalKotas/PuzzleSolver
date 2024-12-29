@@ -59,7 +59,7 @@ public class NonogramLogicService {
                     elementToChangeInsideRowBoardWithMarks = rowToChangeColumnBoardWithMarks.get(columnIdx);
 
 
-                    if (rowToChangeColumnBoardWithMarks.get(columnIdx).substring(2).equals("--")) {
+                    if (rowToChangeColumnBoardWithMarks.get(columnIdx).substring(2).equals(EMPTY_PART_MARKED_BOARD)) {
                         nonogramLogicObject.getNonogramState().increaseMadeSteps();
 
                         rowToChangeColumnBoardWithMarks.set(columnIdx, elementToChangeInsideRowBoardWithMarks.substring(0, 2) + "C" + sequenceCharMark);
@@ -124,7 +124,7 @@ public class NonogramLogicService {
                 for (int columnIdx = colourBeginColumnIndex; columnIdx <= colourEndColumnIndex; columnIdx++) {
                     elementToChangeInsideRowBoardWithMarks = rowToChangeSolutionBoardWithMarks.get(columnIdx);
 
-                    if (rowToChangeSolutionBoardWithMarks.get(columnIdx).startsWith("--")) {
+                    if (rowToChangeSolutionBoardWithMarks.get(columnIdx).startsWith(EMPTY_PART_MARKED_BOARD)) {
                         nonogramLogicObject.getNonogramState().increaseMadeSteps();
                         rowToChangeSolutionBoardWithMarks.set(columnIdx, "R" + sequenceCharMark + elementToChangeInsideRowBoardWithMarks.substring(2, 4));
 
@@ -233,7 +233,7 @@ public class NonogramLogicService {
                     //mark sequence part
                     sequenceMarker = NonogramLogic.indexToSequenceCharMark(lastMatchingSequenceIndex);
                     for(int sequenceColumnIdx = firstSequenceIndex; sequenceColumnIdx <= lastSequenceIndex; sequenceColumnIdx++) {
-                        if (nonogramLogicObject.getNonogramSolutionBoardWithMarks().get(rowIdx).get(sequenceColumnIdx).startsWith("--")) {
+                        if (nonogramLogicObject.getNonogramSolutionBoardWithMarks().get(rowIdx).get(sequenceColumnIdx).startsWith(EMPTY_PART_MARKED_BOARD)) {
                             nonogramLogicObject.getNonogramRowLogic().markRowBoardField(rowIdx, sequenceColumnIdx, sequenceMarker);
                             nonogramLogicObject.getNonogramState().increaseMadeSteps();
                         } else if (showRepetitions) {
@@ -338,7 +338,7 @@ public class NonogramLogicService {
                     //mark sequence part
                     sequenceMarker = NonogramLogic.indexToSequenceCharMark(lastMatchingSequenceIndex);
                     for(int sequenceRowIdx = firstSequenceIndex; sequenceRowIdx <= lastSequenceIndex; sequenceRowIdx++) {
-                        if (nonogramLogicObject.getNonogramSolutionBoardWithMarks().get(sequenceRowIdx).get(columnIdx).substring(2).equals("--")) {
+                        if (nonogramLogicObject.getNonogramSolutionBoardWithMarks().get(sequenceRowIdx).get(columnIdx).substring(2).equals(EMPTY_PART_MARKED_BOARD)) {
                             nonogramLogicObject.getNonogramColumnLogic().markColumnBoardField(sequenceRowIdx, columnIdx, sequenceMarker);
                             nonogramLogicObject.copyLogicFromNonogramColumnLogic();
                             nonogramLogicObject.getNonogramState().increaseMadeSteps();
