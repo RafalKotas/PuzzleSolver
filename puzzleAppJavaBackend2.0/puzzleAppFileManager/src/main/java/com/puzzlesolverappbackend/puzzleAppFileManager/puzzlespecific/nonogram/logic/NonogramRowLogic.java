@@ -159,7 +159,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
                     this.colourFieldAtGivenPosition(fieldToColour, "R---");
                     tmpLog = generateColourStepDescription(rowIdx, columnIdx, FILL_OVERLAPPING_FIELDS);
                     addLog(tmpLog);
-                    this.addColumnToAffectedActionsByIdentifiers(columnIdx, ActionsConstants.actionsToDoAfterColouringOverlappingSequencesInRows);
+                    this.addColumnToAffectedActionsByIdentifiers(columnIdx, ActionsConstants.actionsToDoInColumnAfterColouringOverlappingSequencesInRows);
                     this.addRowToAffectedActionsByIdentifiers(rowIdx, ActionsConstants.actionsToDoInRowAfterColouringOverlappingSequencesInRows);
                     this.getNonogramState().increaseMadeSteps();
                 }

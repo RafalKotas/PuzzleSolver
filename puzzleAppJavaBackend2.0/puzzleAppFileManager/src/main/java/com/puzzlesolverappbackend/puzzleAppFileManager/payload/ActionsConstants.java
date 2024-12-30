@@ -52,11 +52,12 @@ public class ActionsConstants {
                     MARK_AVAILABLE_FIELDS_IN_COLUMN
             ));
 
-    public final static ArrayList<NonogramSolveAction> actionsToDoAfterColouringOverlappingSequencesInRows = new ArrayList<>(
+    public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterColouringOverlappingSequencesInRows = new ArrayList<>(
             Arrays.asList(
                     CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
                     PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES,
-                    MARK_AVAILABLE_FIELDS_IN_COLUMN
+                    MARK_AVAILABLE_FIELDS_IN_COLUMN,
+                    EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterColouringOverlappingSequencesInRows = new ArrayList<>(
@@ -64,11 +65,12 @@ public class ActionsConstants {
                     MARK_AVAILABLE_FIELDS_IN_ROW
             ));
 
-    public final static ArrayList<NonogramSolveAction> actionsToDoAfterColouringOverlappingSequencesInColumns = new ArrayList<>(
+    public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterColouringOverlappingSequencesInColumns = new ArrayList<>(
             Arrays.asList(
                     CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
                     PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES,
-                    MARK_AVAILABLE_FIELDS_IN_ROW
+                    MARK_AVAILABLE_FIELDS_IN_ROW,
+                    EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterColouringOverlappingSequencesInColumns = new ArrayList<>(
@@ -77,10 +79,14 @@ public class ActionsConstants {
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoAfterExtendingColouredFieldsNearXInRows = new ArrayList<>(
-            List.of());
+            List.of(
+                    MARK_AVAILABLE_FIELDS_IN_COLUMN
+            ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoAfterExtendingColouredFieldsNearXInColumns = new ArrayList<>(
-            List.of());
+            List.of(
+                    MARK_AVAILABLE_FIELDS_IN_ROW
+            ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoAfterPlacingXsAtRowsUnreachableFields = new ArrayList<>(
             List.of(
