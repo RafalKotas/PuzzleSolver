@@ -1,4 +1,6 @@
 FrontReact/node_modules
-FrontReact/public/resources/allNonogramsJSON
 nCopy
 otherFolders
+./FrontReact/public/
+/FrontReact/public/
+/FrontReact/my_notes/

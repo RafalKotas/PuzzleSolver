@@ -36,25 +36,5 @@ public class SudokuFileDetails {
                 ", board=" + board +
                 '}';
     }
-
-    public String getYear() { return year; }
-
-    public String getMonth() { return month; }
-
-    public String getSource() {
-        return source;
-    }
-
-    public double getDifficulty() {
-        return difficulty;
-    }
-
-    public int getFilled() {
-        return filled;
-    }
-
-    public List<List<Integer>> getBoard() {
-        return board;
-    }
 }
 

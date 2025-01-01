@@ -1,27 +1,23 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.runners;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.model.Sudoku;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.SudokuFileDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.repository.SudokuRepository;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import jdk.security.jarsigner.JarSignerException;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Set;
 
-@Component
-@Order(6)
+//@Component
+//@Order(6)
 public class SudokuDataInitializer implements CommandLineRunner {
 
-    @Autowired
-    private SudokuRepository sudokuRepository;
+    private final SudokuRepository sudokuRepository;
 
-    @Autowired
+    final
     CommonService commonService;
 
     Sudoku sudoku;
@@ -38,6 +34,11 @@ public class SudokuDataInitializer implements CommandLineRunner {
 
     public final static String puzzlePath = InitializerConstants.PUZZLE_RELATIVE_PATH +
             InitializerConstants.PuzzleMappings.SUDOKU_PATH_SUFFIX;
+
+    public SudokuDataInitializer(SudokuRepository sudokuRepository, CommonService commonService) {
+        this.sudokuRepository = sudokuRepository;
+        this.commonService = commonService;
+    }
 
     @Override
     public void run(String... args) throws Exception {
@@ -81,13 +82,13 @@ public class SudokuDataInitializer implements CommandLineRunner {
                     sudokusSaved++;
                     sudokuRepository.save(sudoku);
                 }
-            } catch (JsonParseException jsonParseException) {
+            } catch (JarSignerException jsonParseException) {
                 System.out.println("Wrong file part: " + sudokuFileName);
                 System.out.println(jsonParseException);
             }
         }
 
-        if(InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
+        if (InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
             System.out.println("SudokusSaved count: " + sudokusSaved);
             System.out.println("SudokusRepeated count: " + sudokusRepeated);
         }

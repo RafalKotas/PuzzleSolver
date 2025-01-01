@@ -1,15 +1,14 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.model;
 
+import jakarta.persistence.*;
+import jakarta.persistence.metamodel.StaticMetamodel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
-import javax.persistence.metamodel.StaticMetamodel;
-
 @Entity
-@Table(name = "architectPuzzlesData")
+@Table(name = "architect_puzzles_data")
 @StaticMetamodel(Architect.class)
 @ToString
 @NoArgsConstructor
@@ -50,33 +49,5 @@ public class Architect {
         this.difficulty = difficulty;
         this.height = height;
         this.width = width;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public String getMonth() {
-        return month;
-    }
-
-    public Double getDifficulty() {
-        return difficulty;
-    }
-
-    public Integer getHeight() {
-        return height;
-    }
-
-    public Integer getWidth() {
-        return width;
     }
 }

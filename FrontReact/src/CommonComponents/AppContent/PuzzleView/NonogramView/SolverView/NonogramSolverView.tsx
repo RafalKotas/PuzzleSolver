@@ -1,13 +1,13 @@
 // react
 import React, { useEffect } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 
 import axios from "axios"
 
 // (sub) components
 import NonogramDisplay from "../NonogramDisplay/NonogramDisplay"
 import NonogramActions from "./NonogramActions/NonogramActions"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import SelectNonogramArrow from "./SelectNonogramArrow/SelectNonogramArrow"
 import { faSquareCaretLeft, faSquareCaretRight } from "@fortawesome/free-solid-svg-icons"
 
 // redux
@@ -17,6 +17,7 @@ import { Dispatch } from "redux"
 // redux - store
 import { AppState } from "../../../../../store"
 import { findNextNonogramName, findPreviousNonogramName, selectedNonogramDetails, SetSelectedNonogram } from "../../../../../store/data/nonogram"
+import { InitializeSolverData } from "../../../../../store/puzzleLogic/nonogram"
 
 // styles
 import "./NonogramSolverView.css"
@@ -32,7 +33,8 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    setSelectedNonogram: (nonogram: selectedNonogramDetails | null) => dispatch(SetSelectedNonogram(nonogram))
+    setSelectedNonogram: (nonogram: selectedNonogramDetails | null) => dispatch(SetSelectedNonogram(nonogram)),
+    initializeSolverData: (rowsSequences: number[][], columnsSequences: number[][]) => dispatch(InitializeSolverData(rowsSequences, columnsSequences)),
 })
 
 const connector = connect(mapStateToProps, mapDispatchToProps)
@@ -41,28 +43,32 @@ type NonogramSolverViewPropsFromRedux = ConnectedProps<typeof connector>
 
 type NonogramSolverViewProps = NonogramSolverViewPropsFromRedux & OwnNonogramSolverViewProps
 
-const NonogramSolverView: React.FC<NonogramSolverViewProps> = ({ selectedNonogram, setSelectedNonogram, 
-    previousNonogramFilename, nextNonogramFilename }) => {
+const NonogramSolverView : React.FC<NonogramSolverViewProps> = ({ selectedNonogram, previousNonogramFilename, nextNonogramFilename, 
+    setSelectedNonogram, initializeSolverData
+     }) => {
 
-    const navigate = useNavigate()
+        useEffect(() => {
+
+            //eslint-disable-next-line
+        }, [selectedNonogram?.filename])
+
     const params = useParams()
 
-    const nonogramPath = "../../resources/allNonogramsJSON/" + params.filename + ".json"
+    const nonogramPath = "../../resources/Nonograms/" + params.filename + ".json"
 
-    console.log(useParams())
+    console.log("selected nonogram: ")
+    console.log(selectedNonogram)
 
     useEffect(() => {
 
         axios.get(nonogramPath).then((response: { data: selectedNonogramDetails }) => {
             let nonogramFromResponse = response.data
             if (nonogramFromResponse) {
-                console.log(nonogramFromResponse)
                 if (params.filename) {
-                    console.log("nonogram filename: " + params.filename)
-                    nonogramFromResponse["filename"] = params.filename
+                    nonogramFromResponse.filename = params.filename
                 }
-                console.log(nonogramFromResponse)
                 setSelectedNonogram(nonogramFromResponse)
+                initializeSolverData(nonogramFromResponse.rowSequences, nonogramFromResponse.columnSequences)
             }
         })
 
@@ -75,17 +81,10 @@ const NonogramSolverView: React.FC<NonogramSolverViewProps> = ({ selectedNonogra
             {
                 renderCondition() ?
                     <React.Fragment>
-                        <div className={"change-puzzle-arrow-wrapper"}>
-                            <FontAwesomeIcon 
-                                className={"change-puzzle-arrow"}
-                                icon={faSquareCaretLeft} 
-                                onClick={() => {
-                                    if(previousNonogramFilename) {
-                                        navigate("../nonogram-solver/" + previousNonogramFilename)
-                                    }
-                                }}
-                            />
-                        </div>
+                        <SelectNonogramArrow 
+                            arrowIcon={faSquareCaretLeft}
+                            fileName={previousNonogramFilename}
+                        />
                         <div
                             id="puzzle-view-container"
                             style={{
@@ -96,17 +95,10 @@ const NonogramSolverView: React.FC<NonogramSolverViewProps> = ({ selectedNonogra
                         >
                             <NonogramDisplay />
                         </div>
-                        <div className={"change-puzzle-arrow-wrapper"}>
-                            <FontAwesomeIcon 
-                                className={"change-puzzle-arrow"}
-                                icon={faSquareCaretRight}
-                                onClick={() => {
-                                    if(nextNonogramFilename) {
-                                        navigate("../nonogram-solver/" + nextNonogramFilename)
-                                    }
-                                }}
-                            />
-                        </div>
+                        <SelectNonogramArrow 
+                            arrowIcon={faSquareCaretRight}
+                            fileName={nextNonogramFilename}
+                        />
                         <NonogramActions />
                     </React.Fragment>
                     : <React.Fragment>

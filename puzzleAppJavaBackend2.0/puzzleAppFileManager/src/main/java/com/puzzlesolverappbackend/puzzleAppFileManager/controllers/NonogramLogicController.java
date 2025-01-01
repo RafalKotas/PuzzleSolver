@@ -1,10 +1,9 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.controllers;
 
 import com.google.gson.Gson;
-import com.puzzlesolverappbackend.puzzleAppFileManager.payload.NonogramLogic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
-import com.puzzlesolverappbackend.puzzleAppFileManager.services.NonogramLogicService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,18 +15,25 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.helpers.FileHelper.generateSavePathForFilename;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@Slf4j
 @RequestMapping("/api/nonogram/logic")
 public class NonogramLogicController {
 
-    @Autowired
+    final
     NonogramLogicService nonogramLogicService;
+
+    public NonogramLogicController(NonogramLogicService nonogramLogicService) {
+        this.nonogramLogicService = nonogramLogicService;
+    }
 
     @PostMapping("/init")
     public ResponseEntity<NonogramLogic> initNonogramLogicObject(@Valid @RequestBody NonogramLogic nonogramLogic) {
         NonogramLogic initialNonogramLogicObject = new NonogramLogic(
-                nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences());
+                nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences(), false);
 
         return new ResponseEntity<>(initialNonogramLogicObject, HttpStatus.OK);
     }
@@ -93,15 +99,15 @@ public class NonogramLogicController {
     }
 
     @PostMapping("/customSolutionPart")
-    public ResponseEntity<NonogramLogic> customSolutionPart(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String solutionFileName) throws CloneNotSupportedException {
-        //nonogramLogicService.listAllNonograms();
-        System.out.println("Custom solver endpoint");
-
+    public ResponseEntity<NonogramLogic> customSolutionPart(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String solutionFileName) {
+        log.info("Custom solving endpoint triggered (heuristics)!");
         NonogramLogic logicWithAffectedRowsAndColumns = new NonogramLogic(
-                nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences());
+                nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences(), false);
+
+        NonogramLogic customSolution = nonogramLogicService.runSolverWithCorrectnessCheck(logicWithAffectedRowsAndColumns, solutionFileName);
 
         return new ResponseEntity<>(
-                nonogramLogicService.runCustomSolverOperationWithCorrectnessCheck(logicWithAffectedRowsAndColumns, solutionFileName),
+                customSolution,
                 HttpStatus.OK);
     }
 
@@ -117,12 +123,11 @@ public class NonogramLogicController {
 
         FileWriter nonogramSolutionWriter;
         try {
-            nonogramSolutionWriter = new FileWriter(InitializerConstants.PUZZLE_RELATIVE_PATH + "nonogramsSolutions/r" + fileName + ".json");
+            nonogramSolutionWriter = new FileWriter(generateSavePathForFilename(fileName));
             gson.toJson(solution, nonogramSolutionWriter);
             nonogramSolutionWriter.close();
             return new ResponseEntity<>("Save success!", HttpStatus.OK);
         } catch (IOException e) {
-            e.printStackTrace();
             return new ResponseEntity<>("Exception external problem.", HttpStatus.OK);
         }
     }
@@ -131,7 +136,7 @@ public class NonogramLogicController {
     public ResponseEntity<NonogramLogic> compareWithSolution(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String fileName) {
         Gson gson = new Gson();
 
-        try (Reader reader = new FileReader(InitializerConstants.PUZZLE_RELATIVE_PATH + "nonogramsSolutions/r" + fileName + ".json")) {
+        try (Reader reader = new FileReader(generateSavePathForFilename(fileName))) {
 
             // Convert JSON File to Java Object
             NonogramLogic solution = gson.fromJson(reader, NonogramLogic.class);
@@ -140,7 +145,6 @@ public class NonogramLogicController {
 
         } catch (IOException e) {
             System.out.println("Exception...");
-            e.printStackTrace();
             return new ResponseEntity<>(nonogramLogic, HttpStatus.OK);
         }
     }

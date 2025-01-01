@@ -1,27 +1,23 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.runners;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.model.Slitherlink;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.SlitherlinkFileDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.repository.SlitherlinkRepository;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Set;
 
-@Component
-@Order(5)
+//@Component
+//@Order(5)
 public class SlitherlinkDataInitializer implements CommandLineRunner {
 
-    @Autowired
-    private SlitherlinkRepository SlitherlinkRepository;
+    private final SlitherlinkRepository SlitherlinkRepository;
 
-    @Autowired
+    final
     CommonService commonService;
 
     Slitherlink Slitherlink;
@@ -39,6 +35,11 @@ public class SlitherlinkDataInitializer implements CommandLineRunner {
 
     public final static String puzzlePath = InitializerConstants.PUZZLE_RELATIVE_PATH +
             InitializerConstants.PuzzleMappings.SLITHERLINK_PATH_SUFFIX;
+
+    public SlitherlinkDataInitializer(SlitherlinkRepository SlitherlinkRepository, CommonService commonService) {
+        this.SlitherlinkRepository = SlitherlinkRepository;
+        this.commonService = commonService;
+    }
 
     @Override
     public void run(String... args) throws Exception {
@@ -66,8 +67,8 @@ public class SlitherlinkDataInitializer implements CommandLineRunner {
 
                 year = SlitherlinkFileDetails.getYear();
                 month = SlitherlinkFileDetails.getMonth();
-                if(source.equals("Logi")) {
-                    if(month.length() > 2) {
+                if (source.equals("Logi")) {
+                    if (month.length() > 2) {
                         source = "logiMix";
                         month = month.substring(0, 2);
                     } else {
@@ -77,7 +78,7 @@ public class SlitherlinkDataInitializer implements CommandLineRunner {
 
                 Slitherlink = new Slitherlink(slitherlinkFileNameWithoutExtension, source, year, month, difficulty, height, width);
 
-                if(SlitherlinkRepository.existsSlitherlinkByGivenParamsFromFile(slitherlinkFileNameWithoutExtension, source, year, month, difficulty, height, width).isPresent()) {
+                if (SlitherlinkRepository.existsSlitherlinkByGivenParamsFromFile(slitherlinkFileNameWithoutExtension, source, year, month, difficulty, height, width).isPresent()) {
                     SlitherlinksRepeated++;
                 } else {
                     SlitherlinksSaved++;
@@ -89,7 +90,7 @@ public class SlitherlinkDataInitializer implements CommandLineRunner {
             }
         }
 
-        if(InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
+        if (InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
             System.out.println("SlitherlinksSaved count: " + SlitherlinksSaved);
             System.out.println("SlitherlinksRepeated count: " + SlitherlinksRepeated);
         }

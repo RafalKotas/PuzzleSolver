@@ -1,15 +1,14 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.logs.nonogram;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.NonogramSolutionDecision;
+import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramSolutionDecision;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NonogramGuessActionsLog {
 
-    NonogramSolutionDecision guessDecision;
+    private final NonogramSolutionDecision guessDecision;
 
-    List<String> actions;
+    private final List<String> actions;
 
     public NonogramGuessActionsLog(NonogramSolutionDecision nonogramSolutionDecision, List<String> actions) {
         this.guessDecision = nonogramSolutionDecision;

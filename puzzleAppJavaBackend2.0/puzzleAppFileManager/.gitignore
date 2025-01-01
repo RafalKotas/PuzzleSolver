@@ -31,3 +31,13 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### resources outputs ###
+**/src/main/resources/to_store/
+**/src/main/resources/
+
+../../FrontReact/public/resources/
+FrontReact/public/resources/
+/results/
+application.properties
+

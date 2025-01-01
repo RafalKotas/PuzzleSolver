@@ -1,21 +1,19 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.runners;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.model.Akari;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.AkariFileDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.repository.AkariRepository;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Set;
 
-@Component
-@Order(1)
+//@Component
+//@Order(1)
 public class AkariDataInitializer implements CommandLineRunner {
 
     @Autowired
@@ -64,7 +62,7 @@ public class AkariDataInitializer implements CommandLineRunner {
 
                 akari = new Akari(akariFileNameWithoutExtension, source, difficulty, height, width);
 
-                if(akariRepository.existsAkariByGivenParamsFromFile(akariFileNameWithoutExtension, source, difficulty, height, width).isPresent()) {
+                if (akariRepository.existsAkariByGivenParamsFromFile(akariFileNameWithoutExtension, source, difficulty, height, width).isPresent()) {
                     akarisRepeated++;
                 } else {
                     System.out.println(akari);
@@ -77,7 +75,7 @@ public class AkariDataInitializer implements CommandLineRunner {
             }
         }
 
-        if(InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
+        if (InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
             System.out.println("akarisSaved count: " + akarisSaved);
             System.out.println("akarisRepeated count: " + akarisRepeated);
         }

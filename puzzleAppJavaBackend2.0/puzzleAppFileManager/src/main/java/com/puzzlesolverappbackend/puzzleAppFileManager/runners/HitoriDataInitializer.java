@@ -1,21 +1,19 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.runners;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.model.Hitori;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.HitoriFileDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.repository.HitoriRepository;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Set;
 
-@Component
-@Order(3)
+//@Component
+//@Order(3)
 public class HitoriDataInitializer implements CommandLineRunner {
 
     @Autowired
@@ -64,7 +62,7 @@ public class HitoriDataInitializer implements CommandLineRunner {
 
                 hitori = new Hitori(hitoriFileNameWithoutExtension, source, difficulty, height, width);
 
-                if(hitoriRepository.existsHitoriByGivenParamsFromFile(hitoriFileNameWithoutExtension, source, difficulty, height, width).isPresent()) {
+                if (hitoriRepository.existsHitoriByGivenParamsFromFile(hitoriFileNameWithoutExtension, source, difficulty, height, width).isPresent()) {
                     hitorisRepeated++;
                 } else {
                     System.out.println(hitori);
@@ -77,7 +75,7 @@ public class HitoriDataInitializer implements CommandLineRunner {
             }
         }
 
-        if(InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
+        if (InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
             System.out.println("hitorisSaved count: " + hitorisSaved);
             System.out.println("hitorisRepeated count: " + hitorisRepeated);
         }

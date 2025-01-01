@@ -12,7 +12,5 @@ public interface NonogramLogicPrinter {
 
     void printLogs();
 
-    void printStatsAfterBasicActionsMade();
-
-    void printAffectedRowsAndColumns(boolean printAffectedArrays, boolean printAffectedSum);
+    void printStats();
 }

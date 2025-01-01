@@ -3,8 +3,7 @@ export type nonogramBoardMarks = "X" | "O" | "-"
 export interface NonogramLogicState {
 
     nonogramRelatedData: nonogramRelatedLogicData,
-    currentMark: nonogramBoardMarks,
-    logicDataInitialized: boolean
+    currentMark: nonogramBoardMarks
 }
 
 export interface nonogramRelatedLogicData {
@@ -118,10 +117,6 @@ interface SetNonogramLogicData {
     }
 }
 
-interface ResetLogicDataInitialized {
-    type: typeof RESET_LOGIC_DATA_INITIALIZED
-}
-
 export const FILL_BOARD_SQUARE = "FILL_BOARD_SQUARE"
 export const PLACE_X_BOARD_SQUARE = "PLACE_X_BOARD_SQUARE"
 
@@ -161,7 +156,7 @@ interface ColourColumnFieldsInColumnsRange {
     }
 }
 
-type LocalLogicActions = ResetLogicDataInitialized | InitializeSolverData | SetNonogramLogicData | FillBoardSquare | PlaceXBoardSquare | SetCurrentMark
+type LocalLogicActions = InitializeSolverData | SetNonogramLogicData | FillBoardSquare | PlaceXBoardSquare | SetCurrentMark
 
 type NonogramSolverActionTypes = ColourColumnFieldsInColumnsRange
 

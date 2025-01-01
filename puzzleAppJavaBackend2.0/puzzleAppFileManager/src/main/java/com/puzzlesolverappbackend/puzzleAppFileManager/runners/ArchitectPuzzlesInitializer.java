@@ -1,23 +1,19 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.runners;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.model.Architect;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.model.Architect;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.ArchitectFileDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.repository.ArchitectRepository;
-import com.puzzlesolverappbackend.puzzleAppFileManager.repository.ArchitectRepository;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Set;
 
-@Component
-@Order(2)
+//@Component
+//@Order(2)
 public class ArchitectPuzzlesInitializer implements CommandLineRunner {
 
     @Autowired
@@ -63,8 +59,8 @@ public class ArchitectPuzzlesInitializer implements CommandLineRunner {
                 source = architectFileDetails.getSource();
                 year = architectFileDetails.getYear();
                 month = architectFileDetails.getMonth();
-                if(source.equals("logiNonograms")) {
-                    if(month.length() > 2) {
+                if (source.equals("logiNonograms")) {
+                    if (month.length() > 2) {
                         source = "logiMix";
                     } else {
                         source = "logi";
@@ -77,7 +73,7 @@ public class ArchitectPuzzlesInitializer implements CommandLineRunner {
 
                 architect = new Architect(architectFileNameWithoutExtension, source, year, month, difficulty, height, width);
 
-                if(architectRepository.existsArchitectByGivenParamsFromFile(architectFileNameWithoutExtension, source, year, month, difficulty, height, width).isPresent()) {
+                if (architectRepository.existsArchitectByGivenParamsFromFile(architectFileNameWithoutExtension, source, year, month, difficulty, height, width).isPresent()) {
                     architectsRepeated++;
                 } else {
                     System.out.println(architect);
@@ -90,7 +86,7 @@ public class ArchitectPuzzlesInitializer implements CommandLineRunner {
             }
         }
 
-        if(InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
+        if (InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
             System.out.println("architectsSaved count: " + architectsSaved);
             System.out.println("architectsRepeated count: " + architectsRepeated);
         }

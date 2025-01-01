@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import java.util.Arrays;
-import java.util.Set;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
+
+import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION_LENGTH;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -26,7 +27,7 @@ public class SudokuController {
     CommonService commonService;
 
     @PostMapping("/save")
-    public ResponseEntity<String> saveSudokuToJsonFile(@RequestParam String fileName, @Valid @RequestBody SudokuFileDetails nfd) {
+    public ResponseEntity<String> saveSudokuToJsonFile(@RequestParam String fileName, @Valid @RequestBody SudokuFileDetails nfd) throws IOException {
 
         System.out.println("SAVE SUDOKU START, FILENAME: " + fileName);
         System.out.println(nfd.toString());
@@ -34,14 +35,13 @@ public class SudokuController {
         Set<String> existingFilesNames = commonService
                 .listFilesUsingJavaIO("../../puzzle-solver-app/public/resources/Sudoku/");
 
-        //int fileNamesSize = existingFilesNames.size();
         String[] fileNamesWithoutExtension = existingFilesNames.toArray(String[]::new);
         List<String> fileNamesWithoutExtensionArray = Arrays.stream(fileNamesWithoutExtension
                 .clone())
-                .map(fN -> fN.substring(0, fN.length() - 5)) // ".json"
-                .collect(Collectors.toList());
+                .map(fN -> fN.substring(0, fN.length() - JSON_EXTENSION_LENGTH))
+                .toList();
 
-        if(fileNamesWithoutExtensionArray.contains(fileName)) {
+        if (fileNamesWithoutExtensionArray.contains(fileName)) {
             return new ResponseEntity<>("Save failed. File with same name already exists.", HttpStatus.OK);
         }
 
@@ -49,15 +49,13 @@ public class SudokuController {
 
         FileWriter abc;
         try {
-            abc = new FileWriter("../../puzzle-solver-app/public/resources/Sudoku/" + fileName + ".json");
+            abc = new FileWriter("../../puzzle-solver-app/public/resources/Sudoku/" + fileName + JSON_EXTENSION);
             gson.toJson(nfd, abc);
             abc.close();
             return new ResponseEntity<>("Save success!", HttpStatus.OK);
         } catch (IOException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>("Exception external problem.", HttpStatus.OK);
+            throw new IOException("Can't save sudoku to file");
         }
-
     }
 }
 

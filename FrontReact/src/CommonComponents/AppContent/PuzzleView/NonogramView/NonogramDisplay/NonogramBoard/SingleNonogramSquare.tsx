@@ -83,8 +83,8 @@ const SingleNonogramSquare: React.FC<SingleNonogramSquareProps> = ({ boardRowInd
     const filledSquare = () => {
         return (
             <div style={{
-                    height: cellSize - 2, 
-                    width: cellSize - 2, 
+                    height: cellSize , 
+                    width: cellSize , 
                     backgroundColor: "black",
                     fontSize: (cellSize - 3) / 2,
                     color: "white"

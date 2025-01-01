@@ -23,7 +23,6 @@ export const initialState: NonogramLogicState = {
         rowsSequencesIdsNotToInclude: [],
         columnsSequencesIdsNotToInclude: []
     },
-    logicDataInitialized: false,
     currentMark: "O"
 }
 
@@ -49,13 +48,7 @@ export const nonogramLogicReducer: Reducer<NonogramLogicState, NonogramLogicActi
                     columnsFieldsNotToInclude: emptyColumnFieldsNotToInclude(width),
                     rowsSequencesIdsNotToInclude: emptyRowsSequencesIdsNotToInclude(height),
                     columnsSequencesIdsNotToInclude: emptyColumnsSequencesIdsNotToInclude(width)
-                },
-                logicDataInitialized: true
-            }
-        case RESET_LOGIC_DATA_INITIALIZED:
-            return {
-                ...state,
-                logicDataInitialized: false
+                }
             }
         case SET_NONOGRAM_LOGIC_DATA:
             return {
