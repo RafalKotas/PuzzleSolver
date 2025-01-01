@@ -1,6 +1,6 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.payload.ActionsConstants;
+import com.puzzlesolverappbackend.puzzleAppFileManager.constants.ActionsConstants;
 import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramParametersComparatorHelper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.payload.ActionsConstants.actionsToDoAfterCorrectingRangesWhenMarkingSequencesInRows;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.ActionsConstants.actionsToDoAfterCorrectingRangesWhenMarkingSequencesInRows;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.EMPTY_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.*;
 
@@ -817,7 +817,8 @@ public class NonogramRowLogic extends NonogramLogicParams {
                     this.placeXAtGivenField(fieldToExclude);
                     this.excludeFieldInRow(fieldToExclude);
                     this.excludeFieldInColumn(fieldToExclude);
-                    this.addColumnToAffectedActionsByIdentifiers(columnIdx, ActionsConstants.actionsToDoAfterPlacingXsAtRowsUnreachableFields);
+                    this.addColumnToAffectedActionsByIdentifiers(columnIdx, ActionsConstants.actionsToDoInColumnAfterPlacingXsAtRowsUnreachableFields);
+                    this.addRowToAffectedActionsByIdentifiers(rowIdx, ActionsConstants.actionsToDoInRowAfterPlacingXsAtRowsUnreachableFields);
 
                     tmpLog = generatePlacingXStepDescription(rowIdx, columnIdx, "placing \"X\" at unreachable field");
                     addLog(tmpLog);
@@ -884,7 +885,8 @@ public class NonogramRowLogic extends NonogramLogicParams {
                         try {
                             if (isFieldEmpty(fieldToColour)) {
                                 this.colourFieldAtGivenPosition(fieldToColour, "R---");
-                                this.addColumnToAffectedActionsByIdentifiers(colourColumnIdx, ActionsConstants.actionsToDoAfterExtendingColouredFieldsNearXInRows);
+                                this.addRowToAffectedActionsByIdentifiers(rowIdx, ActionsConstants.actionsToDoInRowAfterExtendingColouredFieldsNearXInRows);
+                                this.addColumnToAffectedActionsByIdentifiers(colourColumnIdx, ActionsConstants.actionsToDoInColumnAfterExtendingColouredFieldsNearXInRows);
                                 this.nonogramState.increaseMadeSteps();
 
                                 tmpLog = generateColourStepDescription(rowIdx, colourColumnIdx, "extend coloured fields in sequence to left near X " +
@@ -933,6 +935,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
         for(int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
             potentiallyColouredField = new Field(rowIdx, columnIdx);
             if (isFieldColoured(potentiallyColouredField)) {
+
                 //find range of current coloured sequence (left to right)
                 colouredSubsequenceRange = this.findCurrentColouredSequenceRangeLeftToRight(rowIdx, columnIdx);
 
@@ -952,7 +955,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
 
                 /* find distance from nearest X (from colouredSubsequenceRange.get(1) it will be maximum:
                  range length , f.e. [6, 7] -> rangeLength([6, 7]) = 2) -> pos [5, columnIdx] */
-                for(int columnsFromX = rangeLength(colouredSubsequenceRange); colouredSubsequenceRange.get(1) - columnsFromX >= 0 && columnsFromX < minimumPossibleLength - 1; columnsFromX++) {
+                for(int columnsFromX = rangeLength(colouredSubsequenceRange); colouredSubsequenceRange.get(1) - columnsFromX >= 0 && columnsFromX < minimumPossibleLength; columnsFromX++) {
                     potentiallyXField = new Field(rowIdx, colouredSubsequenceRange.get(1) - columnsFromX);
                     if (isFieldWithX(potentiallyXField)) {
                         distanceFromX = columnsFromX;
@@ -968,7 +971,8 @@ public class NonogramRowLogic extends NonogramLogicParams {
                             fieldToColour = new Field(rowIdx, colourColumnIdx);
                             if (isFieldEmpty(fieldToColour)) {
                                 this.colourFieldAtGivenPosition(fieldToColour, "R---");
-                                this.addColumnToAffectedActionsByIdentifiers(colourColumnIdx, ActionsConstants.actionsToDoAfterExtendingColouredFieldsNearXInRows);
+                                this.addRowToAffectedActionsByIdentifiers(rowIdx, ActionsConstants.actionsToDoInRowAfterExtendingColouredFieldsNearXInRows);
+                                this.addColumnToAffectedActionsByIdentifiers(colourColumnIdx, ActionsConstants.actionsToDoInColumnAfterExtendingColouredFieldsNearXInRows);
                                 this.nonogramState.increaseMadeSteps();
 
                                 tmpLog = generateColourStepDescription(rowIdx, colourColumnIdx, "extend coloured fields in sequence to right near X " +

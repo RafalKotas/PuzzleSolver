@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.payload;
+package com.puzzlesolverappbackend.puzzleAppFileManager.constants;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramSolveAction;
 
@@ -78,28 +78,57 @@ public class ActionsConstants {
                     MARK_AVAILABLE_FIELDS_IN_COLUMN
             ));
 
-    public final static ArrayList<NonogramSolveAction> actionsToDoAfterExtendingColouredFieldsNearXInRows = new ArrayList<>(
+    public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterExtendingColouredFieldsNearXInRows = new ArrayList<>(
             List.of(
-                    MARK_AVAILABLE_FIELDS_IN_COLUMN
-            ));
-
-    public final static ArrayList<NonogramSolveAction> actionsToDoAfterExtendingColouredFieldsNearXInColumns = new ArrayList<>(
-            List.of(
+                    PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES,
                     MARK_AVAILABLE_FIELDS_IN_ROW
             ));
 
-    public final static ArrayList<NonogramSolveAction> actionsToDoAfterPlacingXsAtRowsUnreachableFields = new ArrayList<>(
+    public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterExtendingColouredFieldsNearXInRows = new ArrayList<>(
+            List.of(
+                    CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
+                    EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN,
+                    MARK_AVAILABLE_FIELDS_IN_COLUMN
+            ));
+
+    public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterExtendingColouredFieldsNearXInColumns = new ArrayList<>(
+            List.of(
+                    PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES,
+                    MARK_AVAILABLE_FIELDS_IN_COLUMN
+            ));
+
+    public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterExtendingColouredFieldsNearXInColumns = new ArrayList<>(
+            List.of(
+                    CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
+                    EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW,
+                    MARK_AVAILABLE_FIELDS_IN_ROW
+            ));
+
+    public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterPlacingXsAtRowsUnreachableFields = new ArrayList<>(
             List.of(
                     CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY,
                     PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS //+
             ));
 
-    public final static ArrayList<NonogramSolveAction> actionsToDoAfterPlacingXsAtColumnsUnreachableFields = new ArrayList<>(
+    public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterPlacingXsAtRowsUnreachableFields = new ArrayList<>(
+            List.of(
+                    CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY,
+                    EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN,
+                    PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES
+            ));
+
+    public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterPlacingXsAtColumnsUnreachableFields = new ArrayList<>(
             List.of(
                     CORRECT_COLUMN_SEQUENCES_RANGES,
+                    PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS
+            ));
+
+    public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterPlacingXsAtColumnsUnreachableFields = new ArrayList<>(
+            List.of(
                     CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY,
-                    PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS,
-                    PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES //+
+                    EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW,
+                    PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES
+
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoAfterPlacingXsAroundLongestSequencesInRows = new ArrayList<>(
