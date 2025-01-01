@@ -1,4 +1,6 @@
 FrontReact/node_modules
 nCopy
 otherFolders
-FrontReact/public/resources/
+./FrontReact/public/
+/FrontReact/public/
+/FrontReact/my_notes
