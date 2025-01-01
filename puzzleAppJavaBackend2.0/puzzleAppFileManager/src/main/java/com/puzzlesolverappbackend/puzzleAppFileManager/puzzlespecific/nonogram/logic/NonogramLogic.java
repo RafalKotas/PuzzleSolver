@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.payload.ActionsConstants.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.ActionsConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramSolveAction.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.rangeInsideAnotherRange;
@@ -913,6 +913,7 @@ public class NonogramLogic extends NonogramLogicParams {
             try {
                 if (getRowSolveActions().contains(currentActionDetails.getActionName())) {
                     this.copyLogicToNonogramRowLogic();
+
                     stepsBefore = this.getNonogramState().getNewStepsMade();
 
                     makeProperActionInRow(nextActionRCIndex, currentActionDetails.getActionName());
@@ -922,9 +923,11 @@ public class NonogramLogic extends NonogramLogicParams {
                         logRowStateBefore(currentActionDetails, nextActionRCIndex);
                         logRowStateAfter(currentActionDetails, nextActionRCIndex);
                     }
+
                     this.copyLogicFromNonogramRowLogic();
                 } else {
                     this.copyLogicToNonogramColumnLogic();
+
                     stepsBefore = this.getNonogramState().getNewStepsMade();
 
                     makeProperActionInColumn(nextActionRCIndex, currentActionDetails.getActionName());
@@ -1334,18 +1337,6 @@ public class NonogramLogic extends NonogramLogicParams {
         }
 
         return true;
-    }
-
-    public void printSolutionBoard() {
-        for (List<String> solutionBoardRow : this.getNonogramSolutionBoard()) {
-            System.out.println(solutionBoardRow);
-        }
-    }
-
-    public void printSolutionBoardWithMarks() {
-        for (List<String> solutionBoardRowWithMarks : this.getNonogramSolutionBoardWithMarks()) {
-            System.out.println(solutionBoardRowWithMarks);
-        }
     }
 
     public void printRowsSequencesRanges() {

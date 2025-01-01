@@ -382,7 +382,7 @@ public abstract class NonogramLogicParams {
         List<String> solutionBoardColumn = new ArrayList<>();
 
         for(int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
-            solutionBoardColumn.add(nonogramSolutionBoard.get(rowIdx).get(columnIdx));
+            solutionBoardColumn.add(this.nonogramSolutionBoard.get(rowIdx).get(columnIdx));
         }
 
         return solutionBoardColumn;
@@ -407,6 +407,18 @@ public abstract class NonogramLogicParams {
             System.out.println("Trying to add empty log!!!");
         } else {
             this.logs.add(log);
+        }
+    }
+
+    protected void printSolutionBoard() {
+        for (List<String> solutionBoardRow : this.getNonogramSolutionBoard()) {
+            System.out.println(solutionBoardRow);
+        }
+    }
+
+    protected void printSolutionBoardWithMarks() {
+        for (List<String> solutionBoardRowWithMarks : this.getNonogramSolutionBoardWithMarks()) {
+            System.out.println(solutionBoardRowWithMarks);
         }
     }
 }
