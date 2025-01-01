@@ -35,6 +35,8 @@ build/
 ### resources outputs ###
 **/src/main/resources/to_store/
 **/src/main/resources/
-/results/
 
+../../FrontReact/public/
+/results/
 application.properties
+
