@@ -1,5 +1,5 @@
 # PuzzleSolver
-at first a hobby project aimed at solving various types of logic puzzles, and more recently **a source of algorithms that are the subject of description and research in a master's thesis**
+### Project aimed at solving various types of logic puzzles, and source of algorithms that are the subject of description and research in a master's thesis(nonograms)
 
 Technologies and languages used:
 * Java(Spring)
