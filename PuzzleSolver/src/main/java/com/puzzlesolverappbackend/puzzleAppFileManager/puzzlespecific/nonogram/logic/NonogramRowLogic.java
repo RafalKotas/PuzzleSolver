@@ -62,17 +62,18 @@ public class NonogramRowLogic extends NonogramLogicParams {
         int colouredSequenceLength;
         String sequenceMarker;
 
-        List<Integer> oldOnlyMatchingSequenceRange;
+        List<Integer> onlyMatchingSequenceOldRange;
         List<Integer> newSequenceRange;
 
         for(int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
             potentiallyColouredField = new Field(rowIdx, columnIdx);
+
+            // TODO - do while(?), then check length > 0 before marking steps
             if (isFieldColoured(potentiallyColouredField)) {
 
                 colouredSequenceIndexes = new ArrayList<>();
                 colouredSequenceIndexes.add(columnIdx);
 
-                // TODO - do while(?)
                 while(columnIdx < this.getWidth() && isFieldColoured(potentiallyColouredField)) {
                     columnIdx++;
                     potentiallyColouredField = new Field(rowIdx, columnIdx);
@@ -109,11 +110,13 @@ public class NonogramRowLogic extends NonogramLogicParams {
                     }
 
                     //correct sequence range if new range is shorter
-                    oldOnlyMatchingSequenceRange = rowSequencesRanges.get(lastMatchingSequenceIndex);
-                    newSequenceRange = calculateNewRangeFromParameters(colouredSequenceIndexes, rowSequencesLengths.get(lastMatchingSequenceIndex));
-                    if (rangeLength(newSequenceRange) < rangeLength(oldOnlyMatchingSequenceRange)) {
+                    onlyMatchingSequenceOldRange = rowSequencesRanges.get(lastMatchingSequenceIndex);
+                    newSequenceRange = calculateNewRangeFromParameters(onlyMatchingSequenceOldRange, colouredSequenceIndexes,
+                            rowSequencesLengths.get(lastMatchingSequenceIndex));
+
+                    if (rangeLength(newSequenceRange) < rangeLength(onlyMatchingSequenceOldRange)) {
                         this.changeRowSequenceRange(rowIdx, lastMatchingSequenceIndex, newSequenceRange);
-                        tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, lastMatchingSequenceIndex, oldOnlyMatchingSequenceRange, newSequenceRange, CORRECT_ROW_SEQ_RANGE_MARKING_FIELD);
+                        tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, lastMatchingSequenceIndex, onlyMatchingSequenceOldRange, newSequenceRange, CORRECT_ROW_SEQ_RANGE_MARKING_FIELD);
                         addLog(tmpLog);
                         addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoAfterCorrectingRangesWhenMarkingSequencesInRows);
                     }
@@ -122,9 +125,11 @@ public class NonogramRowLogic extends NonogramLogicParams {
         }
     }
 
-    private List<Integer> calculateNewRangeFromParameters(List<Integer> colouredSequenceIndexes, int sequenceLength) {
-        int newRangeBegin = Math.max(0, colouredSequenceIndexes.get(1) - sequenceLength + 1);
-        int newRangeEnd = Math.min(colouredSequenceIndexes.get(0) + sequenceLength - 1, this.getWidth() - 1);
+    private List<Integer> calculateNewRangeFromParameters(List<Integer> oldRange,
+                                                          List<Integer> colouredSequenceIndexes,
+                                                          int sequenceLength) {
+        int newRangeBegin = Math.max(oldRange.get(0), colouredSequenceIndexes.get(1) - sequenceLength + 1);
+        int newRangeEnd = Math.min(oldRange.get(1), colouredSequenceIndexes.get(0) + sequenceLength - 1);
         return List.of(newRangeBegin, newRangeEnd);
     }
 

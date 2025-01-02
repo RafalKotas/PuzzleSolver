@@ -112,7 +112,9 @@ public class NonogramColumnLogic extends NonogramLogicParams {
 
                     //correct sequence range if new range is shorter
                     onlyMatchingSequenceOldRange = columnSequencesRanges.get(lastMatchingSequenceIndex);
-                    newSequenceRange = calculateNewRangeFromParameters(colouredSequenceIndexes, columnSequencesLengths.get(lastMatchingSequenceIndex));
+                    newSequenceRange = calculateNewRangeFromParameters(onlyMatchingSequenceOldRange, colouredSequenceIndexes,
+                            columnSequencesLengths.get(lastMatchingSequenceIndex));
+
                     if (rangeLength(newSequenceRange) < rangeLength(onlyMatchingSequenceOldRange)) {
                         this.changeColumnSequenceRange(columnIdx, lastMatchingSequenceIndex, newSequenceRange);
                         tmpLog = generateCorrectingColumnSequenceRangeStepDescription(columnIdx, lastMatchingSequenceIndex, onlyMatchingSequenceOldRange, newSequenceRange, CORRECT_COLUMN_SEQ_RANGE_MARKING_FIELD);
@@ -124,9 +126,11 @@ public class NonogramColumnLogic extends NonogramLogicParams {
         }
     }
 
-    private List<Integer> calculateNewRangeFromParameters(List<Integer> colouredSequenceIndexes, int sequenceLength) {
-        int newRangeBegin = Math.max(0, colouredSequenceIndexes.get(1) - sequenceLength + 1);
-        int newRangeEnd = Math.min(colouredSequenceIndexes.get(0) + sequenceLength - 1, this.getHeight() - 1);
+    private List<Integer> calculateNewRangeFromParameters(List<Integer> oldRange,
+                                                          List<Integer> colouredSequenceIndexes,
+                                                          int sequenceLength) {
+        int newRangeBegin = Math.max(oldRange.get(0), colouredSequenceIndexes.get(1) - sequenceLength + 1);
+        int newRangeEnd = Math.min(oldRange.get(1), colouredSequenceIndexes.get(0) + sequenceLength - 1);
         return List.of(newRangeBegin, newRangeEnd);
     }
 
