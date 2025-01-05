@@ -16,8 +16,9 @@ import java.util.stream.IntStream;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.ActionsConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.EMPTY_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.MARKED_COLUMN_INDICATOR;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramBoardUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeInsideAnotherRange;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramBoardUtils.*;
 
 @Getter
 @Setter
@@ -401,6 +402,8 @@ public class NonogramColumnLogic extends NonogramLogicParams {
 
     public void placeXsColumnIfOWillCreateTooLongColouredSequence(int columnIdx) {
         List<Integer> colouredFieldsIndexesInColumn = findColouredFieldsIndexesInColumn(nonogramSolutionBoard, columnIdx);
+
+        List<List<Integer>> colouredSequencesRanges = groupConsecutiveIndices(colouredFieldsIndexesInColumn);
     }
 
     public void correctColumnSequencesRanges(int columnIdx) {

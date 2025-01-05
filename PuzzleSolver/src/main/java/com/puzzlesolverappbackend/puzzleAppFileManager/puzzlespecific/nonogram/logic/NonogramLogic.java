@@ -21,10 +21,10 @@ import java.util.stream.Stream;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.ActionsConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramSolveAction.*;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramBoardUtils.getSolutionBoardColumn;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.rangeInsideAnotherRange;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.rangeLength;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramState.buildInitialEmptyNonogramState;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeInsideAnotherRange;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramBoardUtils.getSolutionBoardColumn;
 
 @Data
 @NoArgsConstructor
@@ -940,7 +940,10 @@ public class NonogramLogic extends NonogramLogicParams {
 
                     this.copyLogicFromNonogramColumnLogic();
                 }
-                stopCondition();
+                if (this.getNonogramSolutionBoard().get(10).get(6).equals("O")) {
+                    System.out.println("Should place X if O will create too long possible sequence");
+                    System.out.println("-".repeat(20));
+                }
             } catch (Exception e) {
                 // empty
             }
@@ -953,14 +956,12 @@ public class NonogramLogic extends NonogramLogicParams {
         }
     }
 
-    private void stopCondition() {
-        if (this.getNonogramSolutionBoard().get(4).get(7).equals("O") &&
-                this.getNonogramSolutionBoard().get(5).get(7).equals("O") &&
-                this.getNonogramSolutionBoard().get(9).get(7).equals("X")) {
-            System.out.println("Should place X if O will create too long possible sequence");
-            System.out.println("-".repeat(20));
-        }
-    }
+//    private void stopConditionRow(NonogramActionDetails actionDetails) {
+//        if (this.getNonogramSolutionBoard().get(15).get(17).equals("O")) {
+//            System.out.println("Should place X if O will create too long possible sequence");
+//            System.out.println("-".repeat(20));
+//        }
+//    }
 
     private void logRowStateBefore(NonogramActionDetails actionDetails, int nextActionRowIndex) {
         String elementToLog;
@@ -1047,8 +1048,8 @@ public class NonogramLogic extends NonogramLogicParams {
             case PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES -> nonogramRowLogic.placeXsAroundLongestSequencesInRow(rowIdx);
             case PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES ->
                     nonogramRowLogic.placeXsRowAtTooShortEmptySequences(rowIdx);
-//            case PLACE_XS_ROW_IF_O_WILL_CREATE_TOO_LONG_COLOURED_SEQUENCE ->
-//                    nonogramColumnLogic.placeXsRowIfOWillCreateTooLongColouredSequence(rowIdx);
+            case PLACE_XS_ROW_IF_O_WILL_CREATE_TOO_LONG_COLOURED_SEQUENCE ->
+                    nonogramRowLogic.placeXsRowIfOWillCreateTooLongColouredSequence(rowIdx);
             case MARK_AVAILABLE_FIELDS_IN_ROW -> nonogramRowLogic.markAvailableFieldsInRow(rowIdx);
             default -> {
                 // empty

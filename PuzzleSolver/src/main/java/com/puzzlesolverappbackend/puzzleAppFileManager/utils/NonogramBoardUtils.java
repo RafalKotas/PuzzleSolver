@@ -41,7 +41,11 @@ public class NonogramBoardUtils {
 
         for (int i = 1; i < indices.size(); i++) {
             if (indices.get(i) == indices.get(i - 1) + 1) {
-                currentRange.set(1, indices.get(i));
+                if (currentRange.size() == 1) {
+                    currentRange.add(indices.get(i));
+                } else {
+                    currentRange.set(1, indices.get(i));
+                }
             } else {
                 if (currentRange.size() == 1) {
                     currentRange.add(currentRange.get(0));
@@ -51,9 +55,45 @@ public class NonogramBoardUtils {
                 currentRange.add(indices.get(i));
             }
         }
+        if (currentRange.size() == 1) {
+            currentRange.add(currentRange.get(0));
+        }
         result.add(new ArrayList<>(currentRange));
 
         return result;
+    }
+
+    public List<List<List<Integer>>> createSequencesRangesWithColouredFieldAdded(List<List<Integer>> colouredSequences) {
+        List<List<List<Integer>>> sequencesRangesWithColouredFieldAdded = new ArrayList<>();
+        List<List<Integer>> currentRangesWithFieldAdded;
+
+        for (List<Integer> colouredSequence : colouredSequences) {
+            currentRangesWithFieldAdded = List.of(
+                    List.of(colouredSequence.get(0) - 1, colouredSequence.get(1)),
+                    List.of(colouredSequence.get(0), colouredSequence.get(1) + 1)
+            );
+            sequencesRangesWithColouredFieldAdded.add(currentRangesWithFieldAdded);
+        }
+
+        return sequencesRangesWithColouredFieldAdded;
+    }
+
+    public List<Integer> tryToMergeColouredSequenceWithPrevious(List<Integer> previousColouredSequenceRange,
+                                                          List<Integer> colouredSequenceRangeWithColouredFieldAddedBefore) {
+        if (previousColouredSequenceRange.get(1) + 1 == colouredSequenceRangeWithColouredFieldAddedBefore.get(0)) {
+            return List.of(previousColouredSequenceRange.get(0), colouredSequenceRangeWithColouredFieldAddedBefore.get(1));
+        } else {
+            return colouredSequenceRangeWithColouredFieldAddedBefore;
+        }
+    }
+
+    public List<Integer> tryToMergeColouredSequenceWithNext(List<Integer> colouredSequenceRangeWithColouredFieldAddedAtEnd,
+                                                            List<Integer> nextColouredSequenceRange) {
+        if (colouredSequenceRangeWithColouredFieldAddedAtEnd.get(1) + 1 == nextColouredSequenceRange.get(0)) {
+            return List.of(colouredSequenceRangeWithColouredFieldAddedAtEnd.get(1), nextColouredSequenceRange.get(0));
+        } else {
+            return colouredSequenceRangeWithColouredFieldAddedAtEnd;
+        }
     }
 
     /**

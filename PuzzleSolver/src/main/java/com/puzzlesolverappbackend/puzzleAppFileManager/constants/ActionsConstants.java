@@ -72,7 +72,8 @@ public class ActionsConstants {
                     CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
                     PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES,
                     MARK_AVAILABLE_FIELDS_IN_ROW,
-                    EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW
+                    EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW,
+                    PLACE_XS_ROW_IF_O_WILL_CREATE_TOO_LONG_COLOURED_SEQUENCE
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterColouringOverlappingSequencesInColumns = new ArrayList<>(
@@ -210,4 +211,10 @@ public class ActionsConstants {
                     PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS,
                     MARK_AVAILABLE_FIELDS_IN_COLUMN
             ));
+
+    public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterPlacingXInRowIfColouringWillCreateTooLongSequence = new ArrayList<>(
+            List.of(
+                    CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY
+            )
+    );
 }
