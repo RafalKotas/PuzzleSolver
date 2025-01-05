@@ -332,10 +332,10 @@ public class NonogramRowLogic extends NonogramLogicParams {
         List<Integer> emptyFieldsRange;
         Field fieldToExclude;
 
-        boolean notColouredFieldsInFieldsSequence;
+        boolean onlyEmptyFieldsInSequence;
 
         for(int columnIdx = 1; columnIdx < this.getWidth() - 1; columnIdx++) {
-            notColouredFieldsInFieldsSequence = true;
+            onlyEmptyFieldsInSequence = true;
             potentiallyXPlacedField = new Field(rowIdx, columnIdx);
             if (isFieldWithX(potentiallyXPlacedField)) {
 
@@ -348,12 +348,13 @@ public class NonogramRowLogic extends NonogramLogicParams {
                     if (isFieldEmpty(fieldAfterXToCheck)) {
                         fieldAfterXToCheck = new Field(rowIdx, ++columnIdx);
                     } else if (isFieldColoured(fieldAfterXToCheck)) {
-                        notColouredFieldsInFieldsSequence = false;
+                        onlyEmptyFieldsInSequence = false;
                         break;
                     }
                 }
 
-                if (notColouredFieldsInFieldsSequence) {
+                if (onlyEmptyFieldsInSequence) {
+
                     lastXIndex = columnIdx;
 
                     emptyFieldsRange = Arrays.asList(firstXIndex + 1, lastXIndex - 1);
@@ -373,14 +374,14 @@ public class NonogramRowLogic extends NonogramLogicParams {
                         }
 
                         // if there's not any sequence with length equal or less than emptyFieldSequenceLength
-                        if (sequencesWhichNotFit.size() == sequencesWithinRange.size() && emptyFieldsSequenceLength > 0) {
+                        if (sequencesWhichNotFit.size() == sequencesWithinRange.size()) {
                             for(int emptyFieldColumnIdx = emptyFieldsRange.get(0); emptyFieldColumnIdx <= emptyFieldsRange.get(1); emptyFieldColumnIdx++) {
                                 fieldToExclude = new Field(rowIdx, emptyFieldColumnIdx);
                                 if (isFieldEmpty(fieldToExclude)) {
                                     this.placeXAtGivenField(fieldToExclude);
                                     this.excludeFieldInRow(fieldToExclude);
                                     this.excludeFieldInColumn(fieldToExclude);
-                                    this.addColumnToAffectedActionsByIdentifiers(emptyFieldColumnIdx, ActionsConstants.actionsToDoAfterPlacingXsAtTooShortEmptySequencesInRows);
+                                    this.addColumnToAffectedActionsByIdentifiers(emptyFieldColumnIdx, ActionsConstants.actionsToDoInColumnAfterPlacingXsAtTooShortEmptySequencesInRows);
 
                                     tmpLog = generatePlacingXStepDescription(rowIdx, emptyFieldColumnIdx, "placing \"X\" inside too short empty fields sequence");
                                     addLog(tmpLog);
@@ -391,9 +392,8 @@ public class NonogramRowLogic extends NonogramLogicParams {
                                 }
                             }
                         }
-                    } else {
-                        columnIdx--; // to start from next field with X near to first one
                     }
+                    columnIdx--; // to start from next field with X near to first one
                 }
             }
         }

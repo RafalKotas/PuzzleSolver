@@ -373,14 +373,14 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                         }
 
                         // if there is not any sequence with length equal or less than emptyFieldSequenceLength
-                        if (sequencesWhichNotFit.size() == sequencesWithinRange.size() && emptyFieldsSequenceLength > 0) {
+                        if (sequencesWhichNotFit.size() == sequencesWithinRange.size()) {
                             for(int emptyFieldRowIdx = emptyFieldsRange.get(0); emptyFieldRowIdx <= emptyFieldsRange.get(1); emptyFieldRowIdx++) {
                                 fieldToExclude = new Field(emptyFieldRowIdx, columnIdx);
                                 if (isFieldEmpty(fieldToExclude)) {
                                     this.placeXAtGivenField(fieldToExclude);
                                     this.excludeFieldInRow(fieldToExclude);
                                     this.excludeFieldInColumn(fieldToExclude);
-                                    this.addRowToAffectedActionsByIdentifiers(emptyFieldRowIdx, ActionsConstants.actionsToDoAfterPlacingXsAtTooShortSequencesInColumns);
+                                    this.addRowToAffectedActionsByIdentifiers(emptyFieldRowIdx, ActionsConstants.actionsToDoInRowAfterPlacingXsAtTooShortSequencesInColumns);
 
                                     tmpLog = generatePlacingXStepDescription(columnIdx, emptyFieldRowIdx, "placing \"X\" inside too short empty fields sequence");
                                     addLog(tmpLog);
@@ -391,9 +391,8 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                                 }
                             }
                         }
-                    } else {
-                        rowIdx--; // to start from next field with X near to first one
                     }
+                    rowIdx--; // to start from next field with X near to first one
                 }
             }
         }
