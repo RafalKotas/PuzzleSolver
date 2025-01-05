@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramParametersComparatorHelper.sequencesRangesEqual;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.rangeLength;
 
 @NoArgsConstructor
@@ -346,7 +347,7 @@ public abstract class NonogramLogicParams {
         this.columnsSequencesRanges.get(columnIdx).set(sequenceIdx, updatedRange);
     }
 
-    public boolean isRowTrivial(int rowIdx) {
+    protected boolean isRowTrivial(int rowIdx) {
         List<Integer> rowSequencesLengths = this.getRowsSequences().get(rowIdx);
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
         for(int seqNo = 0; seqNo < rowSequencesLengths.size(); seqNo++) {
@@ -358,7 +359,7 @@ public abstract class NonogramLogicParams {
         return true;
     }
 
-    public boolean isColumnTrivial(int columnIdx) {
+    protected boolean isColumnTrivial(int columnIdx) {
         List<Integer> columnSequencesLengths = this.getColumnsSequences().get(columnIdx);
         List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
         for(int seqNo = 0; seqNo < columnSequencesLengths.size(); seqNo++) {
@@ -368,6 +369,10 @@ public abstract class NonogramLogicParams {
         }
 
         return true;
+    }
+
+    protected boolean isRowEmpty(int rowIdx) {
+        return sequencesRangesEqual(this.getRowsSequencesRanges().get(rowIdx), List.of(List.of(-1, -1)));
     }
 
     protected String generateAddingRowSequenceToNotToIncludeDescription(int rowIdx, int seqNo) {
