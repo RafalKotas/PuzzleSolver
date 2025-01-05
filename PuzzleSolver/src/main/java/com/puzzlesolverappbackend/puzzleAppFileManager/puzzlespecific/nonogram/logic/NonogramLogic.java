@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.ActionsConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramSolveAction.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramBoardUtils.getSolutionBoardColumn;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.rangeInsideAnotherRange;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.rangeLength;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramState.buildInitialEmptyNonogramState;
@@ -676,20 +677,6 @@ public class NonogramLogic extends NonogramLogicParams {
     }
 
     /**
-     * @param columnIdx - column index from solution board to select
-     * @return selected column
-     */
-    List<String> getSolutionBoardColumn(int columnIdx) {
-        List<String> boardColumn = new ArrayList<>();
-
-        for (List<String> strings : nonogramSolutionBoard) {
-            boardColumn.add(strings.get(columnIdx));
-        }
-
-        return boardColumn;
-    }
-
-    /**
      * @param arrayFilledFromStart - array filled with sequences from the earliest possible field
      * @param arrayFilledFromEnd - array filled with sequences from end
      * @return sequences ranges in column calculated from sequences lengths
@@ -779,7 +766,7 @@ public class NonogramLogic extends NonogramLogicParams {
      * @return column sequences ranges inferred from nonogram solution board
      */
     private List<List<Integer>> inferColumnSequencesRangesFromSolutionBoardColumn(int columnIdx) {
-        List<String> boardColumn = this.getSolutionBoardColumn(columnIdx);
+        List<String> boardColumn = getSolutionBoardColumn(nonogramSolutionBoard, columnIdx);
         List<List<Integer>> boardColumnSequencesRanges = new ArrayList<>();
         List<Integer> boardColumnSequencesLengths = this.getColumnsSequences().get(columnIdx);
         List<Integer> boardColumnSequenceRange;
@@ -1060,6 +1047,8 @@ public class NonogramLogic extends NonogramLogicParams {
             case PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES -> nonogramRowLogic.placeXsAroundLongestSequencesInRow(rowIdx);
             case PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES ->
                     nonogramRowLogic.placeXsRowAtTooShortEmptySequences(rowIdx);
+//            case PLACE_XS_ROW_IF_O_WILL_CREATE_TOO_LONG_COLOURED_SEQUENCE ->
+//                    nonogramColumnLogic.placeXsRowIfOWillCreateTooLongColouredSequence(rowIdx);
             case MARK_AVAILABLE_FIELDS_IN_ROW -> nonogramRowLogic.markAvailableFieldsInRow(rowIdx);
             default -> {
                 // empty
@@ -1092,10 +1081,16 @@ public class NonogramLogic extends NonogramLogicParams {
                 nonogramColumnLogic.extendColouredFieldsToTopNearXToMaximumPossibleLengthInColumn(columnIdx);
                 nonogramColumnLogic.extendColouredFieldsToBottomNearXToMaximumPossibleLengthInColumn(columnIdx);
             }
-            case PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS -> nonogramColumnLogic.placeXsColumnAtUnreachableFields(columnIdx);
-            case PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES -> nonogramColumnLogic.placeXsAroundLongestSequencesInColumn(columnIdx);
-            case PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES -> nonogramColumnLogic.placeXsColumnAtTooShortEmptySequences(columnIdx);
-            case MARK_AVAILABLE_FIELDS_IN_COLUMN -> nonogramColumnLogic.markAvailableFieldsInColumn(columnIdx);
+            case PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS ->
+                    nonogramColumnLogic.placeXsColumnAtUnreachableFields(columnIdx);
+            case PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES ->
+                    nonogramColumnLogic.placeXsAroundLongestSequencesInColumn(columnIdx);
+            case PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES ->
+                    nonogramColumnLogic.placeXsColumnAtTooShortEmptySequences(columnIdx);
+//            case PLACE_XS_COLUMN_IF_O_WILL_CREATE_TOO_LONG_COLOURED_SEQUENCE ->
+//                    nonogramColumnLogic.placeXsColumnIfOWillCreateTooLongSequence(columnIdx);
+            case MARK_AVAILABLE_FIELDS_IN_COLUMN ->
+                    nonogramColumnLogic.markAvailableFieldsInColumn(columnIdx);
             default -> {
                 // empty
             }

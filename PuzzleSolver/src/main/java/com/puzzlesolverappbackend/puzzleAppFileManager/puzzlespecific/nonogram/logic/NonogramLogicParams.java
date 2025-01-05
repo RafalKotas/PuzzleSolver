@@ -15,6 +15,7 @@ import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramParametersComparatorHelper.sequencesRangesEqual;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramBoardUtils.isFieldColoured;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.rangeLength;
 
 @NoArgsConstructor
@@ -86,7 +87,7 @@ public abstract class NonogramLogicParams {
         for(int rowIndex = 0; rowIndex < this.getHeight(); rowIndex++) {
             for(int columnIndex = 0; columnIndex < this.getWidth(); columnIndex++) {
                 potentiallyColouredField = new Field(rowIndex, columnIndex);
-                if (isFieldColoured(potentiallyColouredField)) {
+                if (isFieldColoured(nonogramSolutionBoard, potentiallyColouredField)) {
                     colouredFieldsOnBoard++;
                 }
             }
@@ -168,18 +169,6 @@ public abstract class NonogramLogicParams {
 
     public boolean isSolved() {
         return this.fieldsColoured() + this.fieldsWithXPlaced() == this.area();
-    }
-
-    protected boolean isFieldColoured(Field field) {
-        return this.getNonogramSolutionBoard().get(field.getRowIdx()).get(field.getColumnIdx()).equals(COLOURED_FIELD);
-    }
-
-    protected boolean isFieldEmpty(Field field) {
-        return this.getNonogramSolutionBoard().get(field.getRowIdx()).get(field.getColumnIdx()).equals(EMPTY_FIELD);
-    }
-
-    protected boolean isFieldWithX(Field field) {
-        return this.getNonogramSolutionBoard().get(field.getRowIdx()).get(field.getColumnIdx()).equals(X_FIELD);
     }
 
     protected void addColumnToAffectedActionsByIdentifiers(int columnIdx, List<NonogramSolveAction> actions) {

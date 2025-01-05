@@ -11,6 +11,7 @@ import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.COLOURED_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.X_FIELD;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramBoardUtils.getSolutionBoardColumn;
 
 /*TODO 26.05
 For every population member:
@@ -320,7 +321,7 @@ public class NonogramGenetic {
         int maxProbablyCorrect;
 
         for(int columnIdx = 0; columnIdx < populationMember.getWidth(); columnIdx++) {
-            boardColumn = populationMember.getSolutionBoardColumn(columnIdx);
+            boardColumn = getSolutionBoardColumn(populationMember.nonogramSolutionBoard, columnIdx);
             columnSequencesLengths = populationMember.getColumnsSequences().get(columnIdx);
 
             // from top
@@ -380,7 +381,7 @@ public class NonogramGenetic {
         int maxProbablyCorrect;
 
         for(int columnIdx = 0; columnIdx < populationMember.getWidth(); columnIdx++) {
-            boardColumn = populationMember.getSolutionBoardColumn(columnIdx);
+            boardColumn = getSolutionBoardColumn(populationMember.nonogramSolutionBoard, columnIdx);
             columnSequencesLengths = populationMember.getColumnsSequences().get(columnIdx);
 
             //from bottom - analogous
