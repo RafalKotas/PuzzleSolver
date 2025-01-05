@@ -1,11 +1,13 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogic;
+import lombok.experimental.UtilityClass;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+@UtilityClass
 public class NonogramParametersComparatorHelper {
 
     public static boolean sequencesRangesAfterActionsMadeDiffers(NonogramLogic logicBeforeActionsMade, NonogramLogic logicAfterActionsMade) {
