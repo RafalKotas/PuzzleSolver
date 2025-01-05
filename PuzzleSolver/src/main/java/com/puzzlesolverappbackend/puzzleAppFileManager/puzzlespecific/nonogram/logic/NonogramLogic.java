@@ -249,6 +249,15 @@ public class NonogramLogic extends NonogramLogicParams {
                     }
                 }
                 addAllRowSequencesIdxToNotToInclude(rowIdx);
+            } else if (isRowEmpty(rowIdx)) {
+                for (int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
+                    rowField = new Field(rowIdx, columnIdx);
+                    placeXAtGivenPosition(rowField);
+                    addRowFieldToExcluded(rowField);
+                    addColumnFieldToExcluded(rowField);
+                    addColumnToAffectedActionsByIdentifiers(columnIdx, actionsToDoAfterPlacingXInTrivialRow);
+                }
+                addAllRowSequencesIdxToNotToInclude(rowIdx);
             }
         }
     }
@@ -430,20 +439,25 @@ public class NonogramLogic extends NonogramLogicParams {
      */
     private List<List<Integer>> inferInitialRowSequencesRanges (List<Integer> sequencesLengths, int rowIdx) {
 
-        List<String> arrayFilledFromStart = createRowArrayFromSequencesAndChars(rowIdx, sequencesLengths, false);
-        // list filled from end and reversed to place the latest sequences on array end
-        List<String> arrayFilledFromEnd = reverseList(createRowArrayFromSequencesAndChars(rowIdx, sequencesLengths, true));
+        if (sequencesLengths.size() == 1 && sequencesLengths.get(0) == 0) {
+            return List.of(List.of(-1, -1));
+        } else if (sequencesLengths.size() == 1 && sequencesLengths.get(0) == this.getWidth()) {
+            return List.of(List.of(0, this.getWidth() - 1));
+        } else {
+            List<String> arrayFilledFromStart = createRowArrayFromSequencesAndChars(rowIdx, sequencesLengths, false);
+            // list filled from end and reversed to place the latest sequences on array end
+            List<String> arrayFilledFromEnd = reverseList(createRowArrayFromSequencesAndChars(rowIdx, sequencesLengths, true));
 
-        return inferRowSequencesRangesFromArrays(arrayFilledFromStart, arrayFilledFromEnd);
+            return inferRowSequencesRangesFromArrays(arrayFilledFromStart, arrayFilledFromEnd);
+        }
     }
-
 
     /**
      * @param arrayFilledFromStart - array filled with sequences from the earliest possible field
      * @param arrayFilledFromEnd - array filled with sequences from
      * @return sequences ranges in row calculated from sequences lengths
      */
-    List<List<Integer>> inferRowSequencesRangesFromArrays (List<String> arrayFilledFromStart, List<String> arrayFilledFromEnd) {
+    private List<List<Integer>> inferRowSequencesRangesFromArrays (List<String> arrayFilledFromStart, List<String> arrayFilledFromEnd) {
         List<String> collectedSequences = new ArrayList<>();
         List<List<Integer>> sequencesRanges = new ArrayList<>();
         int rangeStartIndex;
@@ -482,8 +496,7 @@ public class NonogramLogic extends NonogramLogicParams {
             charsNeeded = reverseList(charsNeeded);
         }
 
-        int width = nonogramSolutionBoard.get(0).size();
-        List<String> arrayFilledFromStart = createArrayOfEmptyFields(width);
+        List<String> arrayFilledFromStart = createArrayOfEmptyFields(this.getWidth());
 
         boolean canStartSequenceFromIndex;// = false;
         boolean writeSequenceMode = false;
@@ -493,7 +506,7 @@ public class NonogramLogic extends NonogramLogicParams {
         int sequenceLength = sequences.get(currentSequenceIdx);
         boolean breakX = true;
 
-        for(int fieldIdx = 0; fieldIdx < width; fieldIdx++ ) {
+        for(int fieldIdx = 0; fieldIdx < this.getWidth(); fieldIdx++ ) {
 
             if (!writeSequenceMode && currentSequenceIdx < charsNeeded.size() && breakX) {
                 canStartSequenceFromIndex = checkIfCanStartSequenceFromRowIndex(rowIdx, fieldIdx, sequenceLength);
@@ -501,7 +514,7 @@ public class NonogramLogic extends NonogramLogicParams {
                     writeSequenceMode = true; // start fill fields with sequence char mark
                 }
             }
-            if (writeSequenceMode) {
+            if (writeSequenceMode) { /* Marking rows with sequences marks */
                 arrayFilledFromStart.set(fieldIdx, MARKED_ROW_INDICATOR + charToWrite + nonogramSolutionBoardWithMarks.get(rowIdx).get(fieldIdx).substring(2, 4));
 
                 sequencesFieldsFilled++;
@@ -940,6 +953,7 @@ public class NonogramLogic extends NonogramLogicParams {
 
                     this.copyLogicFromNonogramColumnLogic();
                 }
+                stopCondition();
             } catch (Exception e) {
                 // empty
             }
@@ -949,6 +963,15 @@ public class NonogramLogic extends NonogramLogicParams {
             if (this.guessMode && this.nonogramState.isInvalidSolution()) {
                 break;
             }
+        }
+    }
+
+    private void stopCondition() {
+        if (this.getNonogramSolutionBoard().get(4).get(7).equals("O") &&
+                this.getNonogramSolutionBoard().get(5).get(7).equals("O") &&
+                this.getNonogramSolutionBoard().get(9).get(7).equals("X")) {
+            System.out.println("Should place X if O will create too long possible sequence");
+            System.out.println("-".repeat(20));
         }
     }
 
