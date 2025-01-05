@@ -40,6 +40,7 @@ public class ActionsConstants {
             List.of(
                     CORRECT_ROW_SEQUENCES_RANGES,
                     COLOUR_OVERLAPPING_FIELDS_IN_ROW,
+                    EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW,
                     PLACE_XS_ROW_AT_UNREACHABLE_FIELDS,
                     MARK_AVAILABLE_FIELDS_IN_ROW
             ));
@@ -48,6 +49,7 @@ public class ActionsConstants {
             List.of(
                     CORRECT_COLUMN_SEQUENCES_RANGES,
                     COLOUR_OVERLAPPING_FIELDS_IN_COLUMN,
+                    EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN,
                     PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS,
                     MARK_AVAILABLE_FIELDS_IN_COLUMN
             ));
@@ -88,6 +90,7 @@ public class ActionsConstants {
             List.of(
                     CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
                     EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN,
+                    PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES,
                     MARK_AVAILABLE_FIELDS_IN_COLUMN
             ));
 
@@ -101,6 +104,7 @@ public class ActionsConstants {
             List.of(
                     CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
                     EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW,
+                    PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES,
                     MARK_AVAILABLE_FIELDS_IN_ROW
             ));
 
@@ -153,14 +157,16 @@ public class ActionsConstants {
                     PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS
             ));
 
-    public final static ArrayList<NonogramSolveAction> actionsToDoAfterPlacingXsAtTooShortEmptySequencesInRows = new ArrayList<>(
+    public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterPlacingXsAtTooShortEmptySequencesInRows = new ArrayList<>(
             List.of(
-                    CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY
+                    CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY,
+                    PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES
             ));
 
-    public final static ArrayList<NonogramSolveAction> actionsToDoAfterPlacingXsAtTooShortSequencesInColumns = new ArrayList<>(
+    public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterPlacingXsAtTooShortSequencesInColumns = new ArrayList<>(
             List.of(
-                    CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY
+                    CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY,
+                    PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoAfterColouringFieldInTrivialRow = new ArrayList<>(
