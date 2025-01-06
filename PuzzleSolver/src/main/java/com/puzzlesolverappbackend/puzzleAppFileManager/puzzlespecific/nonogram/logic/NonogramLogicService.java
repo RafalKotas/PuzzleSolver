@@ -1,6 +1,5 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.constants.ActionsConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.ActionsConstants.actionsToDoAfterPlacingXsAroundLongestSequencesInRows;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeInsideAnotherRange;
 
@@ -435,8 +435,8 @@ public class NonogramLogicService {
 
                                     nonogramRowLogicDataToChange.getNonogramState().increaseMadeSteps();
 
-                                    nonogramRowLogicDataToChange.addColumnToAffectedActionsByIdentifiers(firstXColumnIndex, ActionsConstants.actionsToDoAfterPlacingXsAroundLongestSequencesInRows);
-                                    nonogramRowLogicDataToChange.addRowToAffectedActionsByIdentifiers(rowIdx, ActionsConstants.actionsToDoAfterPlacingXsAroundLongestSequencesInRows);
+                                    nonogramRowLogicDataToChange.addColumnToAffectedActionsByIdentifiers(firstXColumnIndex, actionsToDoAfterPlacingXsAroundLongestSequencesInRows);
+                                    nonogramRowLogicDataToChange.addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoAfterPlacingXsAroundLongestSequencesInRows);
                                 } else if (showRepetitions) {
                                     System.out.println("Longest sequence in row firstXColumnIndex added earlier!");
                                 }

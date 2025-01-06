@@ -1,6 +1,5 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.constants.ActionsConstants;
 import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramParametersComparatorHelper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.ActionsConstants.actionsToDoAfterCorrectingRangesWhenMarkingSequencesInRows;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.ActionsConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.EMPTY_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeInsideAnotherRange;
@@ -167,8 +166,8 @@ public class NonogramRowLogic extends NonogramLogicParams {
                     this.colourFieldAtGivenPosition(fieldToColour, "R---");
                     tmpLog = generateColourStepDescription(rowIdx, columnIdx, FILL_OVERLAPPING_FIELDS);
                     addLog(tmpLog);
-                    this.addColumnToAffectedActionsByIdentifiers(columnIdx, ActionsConstants.actionsToDoInColumnAfterColouringOverlappingSequencesInRows);
-                    this.addRowToAffectedActionsByIdentifiers(rowIdx, ActionsConstants.actionsToDoInRowAfterColouringOverlappingSequencesInRows);
+                    this.addColumnToAffectedActionsByIdentifiers(columnIdx, actionsToDoInColumnAfterColouringOverlappingSequencesInRows);
+                    this.addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoInRowAfterColouringOverlappingSequencesInRows);
                     this.getNonogramState().increaseMadeSteps();
                 }
                 else if (showRepetitions) {
@@ -276,8 +275,8 @@ public class NonogramRowLogic extends NonogramLogicParams {
             this.excludeFieldInRow(fieldToExclude);
             this.excludeFieldInColumn(fieldToExclude);
 
-            this.addColumnToAffectedActionsByIdentifiers(currentColumnIndex, ActionsConstants.actionsToDoAfterPlacingXsAroundLongestSequencesInRows);
-            this.addRowToAffectedActionsByIdentifiers(rowIdx, ActionsConstants.actionsToDoAfterPlacingXsAroundLongestSequencesInRows);
+            this.addColumnToAffectedActionsByIdentifiers(currentColumnIndex, actionsToDoAfterPlacingXsAroundLongestSequencesInRows);
+            this.addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoAfterPlacingXsAroundLongestSequencesInRows);
 
             this.nonogramState.increaseMadeSteps();
         }
@@ -384,7 +383,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
                                     this.placeXAtGivenField(fieldToExclude);
                                     this.excludeFieldInRow(fieldToExclude);
                                     this.excludeFieldInColumn(fieldToExclude);
-                                    this.addColumnToAffectedActionsByIdentifiers(emptyFieldColumnIdx, ActionsConstants.actionsToDoInColumnAfterPlacingXsAtTooShortEmptySequencesInRows);
+                                    this.addColumnToAffectedActionsByIdentifiers(emptyFieldColumnIdx, actionsToDoInColumnAfterPlacingXsAtTooShortEmptySequencesInRows);
 
                                     tmpLog = generatePlacingXStepDescription(rowIdx, emptyFieldColumnIdx, "placing \"X\" inside too short empty fields sequence");
                                     addLog(tmpLog);
@@ -424,8 +423,6 @@ public class NonogramRowLogic extends NonogramLogicParams {
      *               6. If sequence is not valid, place "X" at field on which trying to place "O", in other case do nothing
      */
     public void placeXsRowIfOWillCreateTooLongColouredSequence(int rowIdx) {
-
-
         List<Integer> colouredFieldsIndexesInRow = findColouredFieldsIndexesInRow(nonogramSolutionBoard, rowIdx);
 
         List<List<Integer>> colouredSequencesRanges = groupConsecutiveIndices(colouredFieldsIndexesInRow);
@@ -465,8 +462,10 @@ public class NonogramRowLogic extends NonogramLogicParams {
                 this.placeXAtGivenField(fieldWithPreviousColumnColoured);
                 this.excludeFieldInRow(fieldWithPreviousColumnColoured);
                 this.excludeFieldInColumn(fieldWithPreviousColumnColoured);
+                this.addRowToAffectedActionsByIdentifiers(rowIdx,
+                        actionsToDoInRowAfterPlacingXInRowIfColouringWillCreateTooLongSequence);
                 this.addColumnToAffectedActionsByIdentifiers(previousColumnIndex,
-                        ActionsConstants.actionsToDoInColumnAfterPlacingXInRowIfColouringWillCreateTooLongSequence);
+                        actionsToDoInColumnAfterPlacingXInRowIfColouringWillCreateTooLongSequence);
 
                 tmpLog = generatePlacingXStepDescription(rowIdx, previousColumnIndex,
                         "placing \"X\" because \"O\" will create too long sequence");
@@ -489,8 +488,10 @@ public class NonogramRowLogic extends NonogramLogicParams {
                 this.placeXAtGivenField(fieldWithNextColumnColoured);
                 this.excludeFieldInRow(fieldWithNextColumnColoured);
                 this.excludeFieldInColumn(fieldWithNextColumnColoured);
+                this.addRowToAffectedActionsByIdentifiers(rowIdx,
+                        actionsToDoInRowAfterPlacingXInRowIfColouringWillCreateTooLongSequence);
                 this.addColumnToAffectedActionsByIdentifiers(nextColumnIndex,
-                        ActionsConstants.actionsToDoInColumnAfterPlacingXInRowIfColouringWillCreateTooLongSequence);
+                        actionsToDoInColumnAfterPlacingXInRowIfColouringWillCreateTooLongSequence);
 
                 tmpLog = generatePlacingXStepDescription(rowIdx, nextColumnIndex,
                         "placing \"X\" because \"O\" will create too long sequence");
@@ -570,7 +571,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
                                          List<Integer> updatedNextSequenceRange) {
         if (updatedStartIndex != nextSequenceOldBeginRangeColumnIndex) {
             this.updateRowSequenceRange(rowIdx, nextSequenceId, updatedNextSequenceRange);
-            this.addRowToAffectedActionsByIdentifiers(rowIdx, ActionsConstants.actionsToDoAfterCorrectingRowsSequences);
+            this.addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoAfterCorrectingRowsSequencesRanges);
             this.nonogramState.increaseMadeSteps();
             tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, nextSequenceId, nextSequenceRange, updatedNextSequenceRange, "correcting from left");
             addLog(tmpLog);
@@ -664,7 +665,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
                                           List<Integer> updatedPreviousSequenceRange) {
         if (updatedEndIndex != previousSequenceOldRangeEndColumnIndex) {
             this.getRowsSequencesRanges().get(rowIdx).set(previousSequenceId, updatedPreviousSequenceRange);
-            this.addRowToAffectedActionsByIdentifiers(rowIdx, ActionsConstants.actionsToDoAfterCorrectingRowsSequences);
+            this.addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoAfterCorrectingRowsSequencesRanges);
 
             if (rangeLength(updatedPreviousSequenceRange) == rowSequencesLengths.get(previousSequenceId) && isColumnRangeColoured(rowIdx, updatedPreviousSequenceRange)) {
                 this.excludeSequenceInRow(rowIdx, previousSequenceId);
@@ -740,7 +741,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
 
         if (rowSequenceRangesChanged) {
             this.nonogramState.increaseMadeSteps();
-            addRowToAffectedActionsByIdentifiers(rowIdx, ActionsConstants.actionsToDoAfterCorrectingRowsSequencesWhenMetColouredField);
+            addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoAfterCorrectingRowsSequencesWhenMetColouredField);
         }
     }
 
@@ -799,7 +800,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
 
         if (rowSequenceRangesChanged) {
             this.nonogramState.increaseMadeSteps();
-            addRowToAffectedActionsByIdentifiers(rowIdx, ActionsConstants.actionsToDoAfterCorrectingRowsSequencesWhenMetColouredField);
+            addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoAfterCorrectingRowsSequencesWhenMetColouredField);
         }
     }
 
@@ -844,7 +845,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
 
         if (rowSequenceRangesChanged) {
             this.nonogramState.increaseMadeSteps();
-            addRowToAffectedActionsByIdentifiers(rowIdx, ActionsConstants.actionsToDoAfterCorrectingRowsSequencesIfXOnWay);
+            addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoAfterCorrectingRowsSequencesIfXOnWay);
         }
     }
 
@@ -923,8 +924,8 @@ public class NonogramRowLogic extends NonogramLogicParams {
                     this.placeXAtGivenField(fieldToExclude);
                     this.excludeFieldInRow(fieldToExclude);
                     this.excludeFieldInColumn(fieldToExclude);
-                    this.addColumnToAffectedActionsByIdentifiers(columnIdx, ActionsConstants.actionsToDoInColumnAfterPlacingXsAtRowsUnreachableFields);
-                    this.addRowToAffectedActionsByIdentifiers(rowIdx, ActionsConstants.actionsToDoInRowAfterPlacingXsAtRowsUnreachableFields);
+                    this.addColumnToAffectedActionsByIdentifiers(columnIdx, actionsToDoInColumnAfterPlacingXsAtRowsUnreachableFields);
+                    this.addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoInRowAfterPlacingXsAtRowsUnreachableFields);
 
                     tmpLog = generatePlacingXStepDescription(rowIdx, columnIdx, "placing \"X\" at unreachable field");
                     addLog(tmpLog);
@@ -991,8 +992,8 @@ public class NonogramRowLogic extends NonogramLogicParams {
                         try {
                             if (isFieldEmpty(nonogramSolutionBoard, fieldToColour)) {
                                 this.colourFieldAtGivenPosition(fieldToColour, "R---");
-                                this.addRowToAffectedActionsByIdentifiers(rowIdx, ActionsConstants.actionsToDoInRowAfterExtendingColouredFieldsNearXInRows);
-                                this.addColumnToAffectedActionsByIdentifiers(colourColumnIdx, ActionsConstants.actionsToDoInColumnAfterExtendingColouredFieldsNearXInRows);
+                                this.addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoInRowAfterExtendingColouredFieldsNearXInRows);
+                                this.addColumnToAffectedActionsByIdentifiers(colourColumnIdx, actionsToDoInColumnAfterExtendingColouredFieldsNearXInRows);
                                 this.nonogramState.increaseMadeSteps();
 
                                 tmpLog = generateColourStepDescription(rowIdx, colourColumnIdx, "extend coloured fields in sequence to left near X " +
@@ -1077,8 +1078,8 @@ public class NonogramRowLogic extends NonogramLogicParams {
                             fieldToColour = new Field(rowIdx, colourColumnIdx);
                             if (isFieldEmpty(nonogramSolutionBoard, fieldToColour)) {
                                 this.colourFieldAtGivenPosition(fieldToColour, "R---");
-                                this.addRowToAffectedActionsByIdentifiers(rowIdx, ActionsConstants.actionsToDoInRowAfterExtendingColouredFieldsNearXInRows);
-                                this.addColumnToAffectedActionsByIdentifiers(colourColumnIdx, ActionsConstants.actionsToDoInColumnAfterExtendingColouredFieldsNearXInRows);
+                                this.addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoInRowAfterExtendingColouredFieldsNearXInRows);
+                                this.addColumnToAffectedActionsByIdentifiers(colourColumnIdx, actionsToDoInColumnAfterExtendingColouredFieldsNearXInRows);
                                 this.nonogramState.increaseMadeSteps();
 
                                 tmpLog = generateColourStepDescription(rowIdx, colourColumnIdx, "extend coloured fields in sequence to right near X " +
