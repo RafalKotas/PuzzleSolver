@@ -13,10 +13,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.COLOURED_FIELD;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.X_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramParametersComparatorHelper.sequencesRangesEqual;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramBoardUtils.isFieldColoured;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.rangeLength;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramBoardUtils.isFieldColoured;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -362,6 +363,10 @@ public abstract class NonogramLogicParams {
 
     protected boolean isRowEmpty(int rowIdx) {
         return sequencesRangesEqual(this.getRowsSequencesRanges().get(rowIdx), List.of(List.of(-1, -1)));
+    }
+
+    protected boolean isColumnEmpty(int columnIdx) {
+        return sequencesRangesEqual(this.getColumnsSequencesRanges().get(columnIdx), List.of(List.of(-1, -1)));
     }
 
     protected String generateAddingRowSequenceToNotToIncludeDescription(int rowIdx, int seqNo) {
