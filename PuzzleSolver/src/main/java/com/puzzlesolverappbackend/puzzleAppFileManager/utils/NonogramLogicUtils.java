@@ -6,8 +6,8 @@ import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.rangeLength;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeInsideAnotherRange;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeLength;
 
 @UtilityClass
 public class NonogramLogicUtils {

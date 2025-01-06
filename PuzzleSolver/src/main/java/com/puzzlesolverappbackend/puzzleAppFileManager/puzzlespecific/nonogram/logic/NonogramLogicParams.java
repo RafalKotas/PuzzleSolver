@@ -16,7 +16,7 @@ import java.util.List;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.COLOURED_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.X_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramParametersComparatorHelper.sequencesRangesEqual;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.rangeLength;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeLength;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramBoardUtils.isFieldColoured;
 
 @NoArgsConstructor

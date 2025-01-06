@@ -21,4 +21,10 @@ public class ArrayUtils {
             return false;
         }
     }
+
+    public static int rangeLength(List<Integer> range) {
+        int rangeStart = range.get(0);
+        int rangeEnd = range.get(range.size() - 1);
+        return rangeEnd - rangeStart + 1;
+    }
 }

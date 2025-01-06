@@ -10,6 +10,7 @@ import java.util.List;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.ActionsConstants.actionsToDoAfterPlacingXsAroundLongestSequencesInRows;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeInsideAnotherRange;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeLength;
 
 @Service
 @Slf4j
@@ -1351,12 +1352,6 @@ public class NonogramLogicService {
         }
 
         return filteredLengths;
-    }
-
-    public static int rangeLength(List<Integer> range) {
-        int rangeStart = range.get(0);
-        int rangeEnd = range.get(range.size() - 1);
-        return rangeEnd - rangeStart + 1;
     }
 
     public NonogramLogic runSolverWithCorrectnessCheck(NonogramLogic nonogramLogicObject, String solutionFileName) {
