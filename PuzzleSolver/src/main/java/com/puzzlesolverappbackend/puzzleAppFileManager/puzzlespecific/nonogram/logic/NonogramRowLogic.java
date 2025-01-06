@@ -14,8 +14,10 @@ import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.ActionsConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.EMPTY_FIELD;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.filterSequencesRangesIncludingAnotherAndReturnCorrespondingLengths;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.rangesListIncludingAnotherRange;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeInsideAnotherRange;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeLength;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramBoardUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramLogicUtils.colouredSequenceInRowIsValid;
 
@@ -326,7 +328,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
         Field fieldAfterXToCheck;
 
         List<Integer> sequencesWhichNotFit;
-        List<Integer> sequencesWithinRange;
+        List<Integer> sequencesWithinEmptyFieldsRange;
 
         int firstXIndex;
         int lastXIndex;
@@ -342,7 +344,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
             if (isFieldWithX(nonogramSolutionBoard, potentiallyXPlacedField)) {
 
                 sequencesWhichNotFit = new ArrayList<>();
-                sequencesWithinRange = new ArrayList<>();
+                sequencesWithinEmptyFieldsRange = new ArrayList<>();
 
                 firstXIndex = columnIdx;
                 fieldAfterXToCheck = new Field(rowIdx, ++columnIdx);
@@ -368,7 +370,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
                             rowSequenceLength = rowSequencesLengths.get(seqNo);
 
                             if (rangeInsideAnotherRange(emptyFieldsRange, rowSequenceRange) || emptyFieldsSequenceLength > rowSequenceLength) {
-                                sequencesWithinRange.add(seqNo);
+                                sequencesWithinEmptyFieldsRange.add(seqNo);
                                 if (emptyFieldsSequenceLength < rowSequenceLength) {
                                     sequencesWhichNotFit.add(seqNo);
                                 }
@@ -376,7 +378,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
                         }
 
                         // if there's not any sequence with length equal or less than emptyFieldSequenceLength
-                        if (sequencesWhichNotFit.size() == sequencesWithinRange.size()) {
+                        if (sequencesWhichNotFit.size() == sequencesWithinEmptyFieldsRange.size()) {
                             for(int emptyFieldColumnIdx = emptyFieldsRange.get(0); emptyFieldColumnIdx <= emptyFieldsRange.get(1); emptyFieldColumnIdx++) {
                                 fieldToExclude = new Field(rowIdx, emptyFieldColumnIdx);
                                 if (isFieldEmpty(nonogramSolutionBoard, fieldToExclude)) {
