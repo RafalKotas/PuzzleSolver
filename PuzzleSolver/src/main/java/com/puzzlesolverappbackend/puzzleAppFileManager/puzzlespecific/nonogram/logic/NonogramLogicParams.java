@@ -2,9 +2,7 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramActionDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramSolveAction;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +17,8 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.non
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeLength;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramBoardUtils.isFieldColoured;
 
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -30,7 +30,7 @@ public abstract class NonogramLogicParams {
     protected NonogramState nonogramState;
     protected List<NonogramActionDetails> actionsToDoList = new ArrayList<>();
 
-    protected List<String> logs;
+    protected List<String> logs = new ArrayList<>();
 
     protected String tmpLog;
 
@@ -49,6 +49,20 @@ public abstract class NonogramLogicParams {
     protected List<List<Integer>> columnsSequencesIdsNotToInclude;
 
     protected List<NonogramSolutionDecision> availableChoices;
+
+    public void setColumnSequencesRanges(int columnIdx, List<List<Integer>> columnsSequencesRanges) {
+        this.getColumnsSequencesRanges().set(columnIdx, columnsSequencesRanges);
+    }
+
+    public void setNonogramBoardColumn(int columnIdx, List<String> boardColumn) {
+        for(int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
+            this.nonogramSolutionBoard.get(rowIdx).set(columnIdx, boardColumn.get(rowIdx));
+        }
+    }
+
+    public void setColumnSequencesLengths(int columnIdx, List<Integer> sequencesLengths) {
+        this.getColumnsSequences().set(columnIdx, sequencesLengths);
+    }
 
     /**
      * @return "X" count on nonogram solution board
