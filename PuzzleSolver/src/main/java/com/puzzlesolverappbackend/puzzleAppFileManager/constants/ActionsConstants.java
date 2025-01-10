@@ -136,7 +136,6 @@ public class ActionsConstants {
                     CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY,
                     EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW,
                     PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES
-
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoAfterPlacingXsAroundLongestSequencesInRows = new ArrayList<>(
