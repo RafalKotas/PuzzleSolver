@@ -21,9 +21,9 @@ import java.util.stream.Stream;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.ActionsConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramSolveAction.*;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.rangeLength;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramState.buildInitialEmptyNonogramState;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeInsideAnotherRange;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeLength;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramBoardUtils.getSolutionBoardColumn;
 
 @Data
@@ -223,6 +223,9 @@ public class NonogramLogic extends NonogramLogicParams {
     private void fillTrivialRows() {
         Field rowField;
         for(int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
+            if(rowIdx == 7) {
+                System.out.println("Check if row 7 is trivial");
+            }
             if (isRowTrivial(rowIdx)) {
                 addFillTrivialRowLog(rowIdx);
                 int seqNo = 0;
@@ -954,8 +957,7 @@ public class NonogramLogic extends NonogramLogicParams {
 
                     this.copyLogicFromNonogramColumnLogic();
                 }
-//                if (this.getNonogramSolutionBoard().get(26).get(0).equals(X_FIELD) &&
-//                        this.getNonogramSolutionBoard().get(26).get(1).equals(COLOURED_FIELD)) {
+//                if (this.getNonogramSolutionBoard().get(7).get(0).equals(COLOURED_FIELD)) {
 //                    System.out.println("-".repeat(20));
 //                }
             } catch (Exception e) {
