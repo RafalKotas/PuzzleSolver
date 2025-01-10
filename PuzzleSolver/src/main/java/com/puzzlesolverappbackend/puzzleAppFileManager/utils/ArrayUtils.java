@@ -27,4 +27,8 @@ public class ArrayUtils {
         int rangeEnd = range.get(range.size() - 1);
         return rangeEnd - rangeStart + 1;
     }
+
+    public static boolean allElementsLowerThanValue(List<Integer> elements, int value) {
+        return elements.stream().allMatch(columnSequence -> columnSequence < value);
+    }
 }
