@@ -1,7 +1,6 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,15 +14,13 @@ public class NonogramColumnLogicTest {
 
     NonogramColumnLogic nonogramColumnLogic;
 
-    int COLUMN_TO_TEST = 4;
-    int HEIGHT = 35;
-    int WIDTH = 30;
-
     @BeforeEach
     void setUp() {
         nonogramColumnLogic = new NonogramColumnLogic();
         nonogramColumnLogic.setNonogramState(buildInitialEmptyNonogramState());
+    }
 
+    void prepareNonogramColumnLogic(int HEIGHT, int WIDTH) {
         nonogramColumnLogic.setNonogramSolutionBoard(generateEmptyBoard(HEIGHT, WIDTH));
         nonogramColumnLogic.setNonogramSolutionBoardWithMarks(generateEmptyBoardWithMarks(HEIGHT, WIDTH));
 
@@ -39,10 +36,13 @@ public class NonogramColumnLogicTest {
     }
 
     @Test
-    @Disabled
     @DisplayName(value = "Should not place X too short empty sequences - o08398 column 4")
     void shouldNotPlaceXAtTooShortEmptySequences() {
         // given
+        int COLUMN_TO_TEST = 4;
+        int HEIGHT = 35;
+        int WIDTH = 30;
+        prepareNonogramColumnLogic(HEIGHT, WIDTH);
         nonogramColumnLogic.setColumnSequencesRanges(COLUMN_TO_TEST, List.of(
                 List.of(0, 1), List.of(3, 15), List.of(17, 21), List.of(23, 23), List.of(25, 25), List.of(26, 27), List.of(29, 34)
         ));
@@ -61,5 +61,34 @@ public class NonogramColumnLogicTest {
 
         // then
         assertThat(nonogramColumnLogic.getNonogramBoardColumn(COLUMN_TO_TEST)).isEqualTo(columnBeforeActionMade);
+    }
+
+    @Test
+    @DisplayName(value = "Should place X if O will create too long coloured sequence - o07959 column 6")
+    void shouldPlaceXIfOWillCreateTooLongColumnColouredSequence() {
+        // given
+        int COLUMN_TO_TEST = 7;
+        int HEIGHT = 20;
+        int WIDTH = 20;
+        prepareNonogramColumnLogic(HEIGHT, WIDTH);
+        nonogramColumnLogic.setColumnSequencesRanges(COLUMN_TO_TEST, List.of(
+                List.of(0, 5), List.of(4, 8), List.of(10, 15), List.of(18, 19)
+        ));
+        nonogramColumnLogic.setColumnSequencesLengths(COLUMN_TO_TEST, List.of(3, 2, 6, 2));
+        List<String> columnBeforeActionMade = List.of("-", "-", "-", "-", "O",
+                "O", "-", "-", "-", "X",
+                "O", "O", "O", "O", "O",
+                "O", "X", "X", "O", "O");
+        nonogramColumnLogic.setNonogramBoardColumn(COLUMN_TO_TEST, columnBeforeActionMade);
+
+        // when
+        nonogramColumnLogic.placeXsColumnIfOWillCreateTooLongColouredSequence(COLUMN_TO_TEST);
+
+        // then
+        List<String> expectedColumnAfterActionMade = List.of("-", "-", "-", "-", "O",
+                "O", "X", "-", "-", "X",
+                "O", "O", "O", "O", "O",
+                "O", "X", "X", "O", "O");
+        assertThat(nonogramColumnLogic.getNonogramBoardColumn(COLUMN_TO_TEST)).isEqualTo(expectedColumnAfterActionMade);
     }
 }

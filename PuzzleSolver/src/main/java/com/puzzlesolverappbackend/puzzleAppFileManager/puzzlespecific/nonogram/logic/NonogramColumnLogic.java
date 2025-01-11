@@ -17,7 +17,8 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.non
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.MARKED_COLUMN_INDICATOR;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.filterSequencesRangesIncludingAnotherAndReturnCorrespondingLengths;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.rangesListIncludingAnotherRange;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeInsideAnotherRange;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeLength;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramBoardUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramLogicUtils.colouredSequenceInColumnIsValid;
 
@@ -318,18 +319,14 @@ public class NonogramColumnLogic extends NonogramLogicParams {
     public void placeXsColumnAtTooShortEmptySequences(int columnIdx) {
 
         List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
-        List<Integer> columnSequenceRange;
-
         List<Integer> columnSequencesLengths = this.getColumnsSequences().get(columnIdx);
+        List<Integer> columnsSequencesIdsNotToInclude = this.getColumnsSequencesIdsNotToInclude().get(columnIdx);
 
         Field potentiallyXPlacedField;
         Field fieldAfterXToCheck;
 
-        List<Integer> columnSequencesCandidatesToNotFitInRange;
-        int candidateSeqIdx;
-        int candidateSeqLength;
-        boolean allCandidatesNotFit;
-        boolean emptySequenceRangeBiggerThanAllSequencesLengths;
+        List<Integer> columnSequencesIdsIncludingEmptyRange = new ArrayList<>();
+        List<Integer> columnSequencesIdsThatNotFitInEmptyRange = new ArrayList<>();
 
         int firstXIndex;
         int lastXIndex;
@@ -346,47 +343,42 @@ public class NonogramColumnLogic extends NonogramLogicParams {
 
                 firstXIndex = rowIdx;
                 fieldAfterXToCheck = new Field(++rowIdx, columnIdx);
-                while(rowIdx < this.getHeight() && !isFieldWithX(nonogramSolutionBoard, fieldAfterXToCheck)) {
+                while(rowIdx < this.getHeight()) {
                     if (isFieldEmpty(nonogramSolutionBoard, fieldAfterXToCheck)) {
                         fieldAfterXToCheck = new Field(++rowIdx, columnIdx);
-                    } else if (isFieldColoured(nonogramSolutionBoard, fieldAfterXToCheck)) {
-                        onlyEmptyFieldsInSequence = false;
+                    } else {
+                        if (isFieldColoured(nonogramSolutionBoard, fieldAfterXToCheck)) {
+                            onlyEmptyFieldsInSequence = false;
+                        }
                         break;
                     }
                 }
 
                 lastXIndex = rowIdx;
 
-                emptyFieldsRange = Arrays.asList(firstXIndex + 1, lastXIndex - 1);
-                emptyFieldsSequenceLength = rangeLength(emptyFieldsRange);
+                if (lastXIndex == firstXIndex + 1) {
+                    rowIdx--;
+                } else {
+                    emptyFieldsRange = Arrays.asList(firstXIndex + 1, lastXIndex - 1);
+                    emptyFieldsSequenceLength = rangeLength(emptyFieldsRange);
 
-                emptySequenceRangeBiggerThanAllSequencesLengths = allElementsLowerThanValue(columnSequencesLengths,
-                        emptyFieldsSequenceLength);
+                    columnSequencesIdsIncludingEmptyRange.clear();
+                    columnSequencesIdsThatNotFitInEmptyRange.clear();
 
-                if (!emptySequenceRangeBiggerThanAllSequencesLengths
-                        && onlyEmptyFieldsInSequence
-                            && emptyFieldsSequenceLength > 0) {
-                    columnSequencesCandidatesToNotFitInRange = new ArrayList<>();
-
-                    allCandidatesNotFit = true;
-
-                    for (int seqNo = 0; seqNo < columnSequencesRanges.size(); seqNo++) {
-                        columnSequenceRange = columnSequencesRanges.get(seqNo);
-                        if (rangeInsideAnotherRange(emptyFieldsRange, columnSequenceRange)) {
-                            columnSequencesCandidatesToNotFitInRange.add(seqNo);
+                    for (int columnSequenceId = 0; columnSequenceId < columnSequencesLengths.size(); columnSequenceId++) {
+                        if (!columnsSequencesIdsNotToInclude.contains(columnSequenceId)
+                                && rangeInsideAnotherRange(emptyFieldsRange, columnSequencesRanges.get(columnSequenceId))) {
+                            columnSequencesIdsIncludingEmptyRange.add(columnSequenceId);
+                        }
+                        if (!columnsSequencesIdsNotToInclude.contains(columnSequenceId)
+                                && columnSequencesLengths.get(columnSequenceId) > emptyFieldsSequenceLength) {
+                            columnSequencesIdsThatNotFitInEmptyRange.add(columnSequenceId);
                         }
                     }
 
-                    for (Integer seqNo : columnSequencesCandidatesToNotFitInRange) {
-                        candidateSeqIdx = seqNo;
-                        candidateSeqLength = columnSequencesLengths.get(candidateSeqIdx);
-
-                        if (candidateSeqLength <= emptyFieldsSequenceLength) {
-                            allCandidatesNotFit = false;
-                        }
-                    }
-
-                    if (!columnSequencesCandidatesToNotFitInRange.isEmpty() && allCandidatesNotFit) {
+                    if (onlyEmptyFieldsInSequence
+                            && columnSequencesIdsIncludingEmptyRange.equals(columnSequencesIdsThatNotFitInEmptyRange)
+                            && !columnSequencesIdsIncludingEmptyRange.isEmpty()) {
                         for (int emptyFieldRowIdx = emptyFieldsRange.get(0); emptyFieldRowIdx <= emptyFieldsRange.get(1); emptyFieldRowIdx++) {
                             fieldToExclude = new Field(emptyFieldRowIdx, columnIdx);
                             if (isFieldEmpty(nonogramSolutionBoard, fieldToExclude)) {
@@ -395,21 +387,15 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                                 this.excludeFieldInColumn(fieldToExclude);
                                 this.addRowToAffectedActionsByIdentifiers(emptyFieldRowIdx, actionsToDoInRowAfterPlacingXsAtTooShortSequencesInColumns);
 
-                                if (columnIdx == 4 && emptyFieldRowIdx == 25) {
-                                    System.out.println("Wrong x placing");
-                                }
-
                                 tmpLog = generatePlacingXStepDescription(columnIdx, emptyFieldRowIdx, "placing \"X\" inside too short empty fields sequence");
                                 addLog(tmpLog);
 
                                 this.nonogramState.increaseMadeSteps();
-                            }  else if (showRepetitions) {
+                            } else if (showRepetitions) {
                                 System.out.println("X placed in too short column empty field sequence earlier!");
                             }
                         }
                     }
-                } else {
-                    rowIdx--;
                 }
             }
         }
@@ -471,31 +457,32 @@ public class NonogramColumnLogic extends NonogramLogicParams {
 
             mergedSequenceWithFieldAddedAfter = currentColouredSequenceRangesWithColouredFieldAdded.get(1);
 
-            nextRowIndex = mergedSequenceWithFieldAddedAfter.get(1);
-            fieldWithNextRowColoured = new Field(nextRowIndex, columnIdx);
+            if(mergedSequenceWithFieldAddedAfter.get(1) != this.getHeight()) {
+                nextRowIndex = mergedSequenceWithFieldAddedAfter.get(1);
+                fieldWithNextRowColoured = new Field(nextRowIndex, columnIdx);
 
-            if (seqRangeIndex < colouredSequencesRanges.size() - 1) {
-                colouredSequenceRangeAfterCurrent = colouredSequencesRanges.get(seqRangeIndex + 1);
-                mergedSequenceWithFieldAddedAfter = tryToMergeColouredSequenceWithNext(
-                        mergedSequenceWithFieldAddedAfter, colouredSequenceRangeAfterCurrent);
-            }
-            colouredSequenceValid = colouredSequenceInColumnIsValid(mergedSequenceWithFieldAddedAfter, columnIdx, this);
-            if (!colouredSequenceValid && isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithNextRowColoured)) {
-                System.out.println("def");
-                this.placeXAtGivenField(fieldWithNextRowColoured);
-                this.excludeFieldInRow(fieldWithNextRowColoured);
-                this.excludeFieldInColumn(fieldWithNextRowColoured);
-                this.addRowToAffectedActionsByIdentifiers(nextRowIndex,
-                        actionsToDoInRowAfterPlacingXInColumnIfColouringWillCreateTooLongSequence);
-                this.addColumnToAffectedActionsByIdentifiers(columnIdx,
-                        actionsToDoInColumnAfterPlacingXInColumnIfColouringWillCreateTooLongSequence);
+                if (seqRangeIndex < colouredSequencesRanges.size() - 1) {
+                    colouredSequenceRangeAfterCurrent = colouredSequencesRanges.get(seqRangeIndex + 1);
+                    mergedSequenceWithFieldAddedAfter = tryToMergeColouredSequenceWithNext(
+                            mergedSequenceWithFieldAddedAfter, colouredSequenceRangeAfterCurrent);
+                }
+                colouredSequenceValid = colouredSequenceInColumnIsValid(mergedSequenceWithFieldAddedAfter, columnIdx, this);
+                if (!colouredSequenceValid && isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithNextRowColoured)) {
+                    this.placeXAtGivenField(fieldWithNextRowColoured);
+                    this.excludeFieldInRow(fieldWithNextRowColoured);
+                    this.excludeFieldInColumn(fieldWithNextRowColoured);
+                    this.addRowToAffectedActionsByIdentifiers(nextRowIndex,
+                            actionsToDoInRowAfterPlacingXInColumnIfColouringWillCreateTooLongSequence);
+                    this.addColumnToAffectedActionsByIdentifiers(columnIdx,
+                            actionsToDoInColumnAfterPlacingXInColumnIfColouringWillCreateTooLongSequence);
 
-                tmpLog = generatePlacingXStepDescription(nextRowIndex, columnIdx,
-                        "placing \"X\" because \"O\" will create too long sequence");
-                addLog(tmpLog);
-                this.nonogramState.increaseMadeSteps();
-            }  else if (showRepetitions) {
-                System.out.println("X because \"O\" will create too long sequence in row placed earlier!");
+                    tmpLog = generatePlacingXStepDescription(nextRowIndex, columnIdx,
+                            "placing \"X\" because \"O\" will create too long sequence");
+                    addLog(tmpLog);
+                    this.nonogramState.increaseMadeSteps();
+                }  else if (showRepetitions) {
+                    System.out.println("X because \"O\" will create too long sequence in row placed earlier!");
+                }
             }
         }
     }

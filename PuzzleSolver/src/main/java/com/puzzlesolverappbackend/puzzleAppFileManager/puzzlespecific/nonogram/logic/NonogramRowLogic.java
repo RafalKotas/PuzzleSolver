@@ -336,8 +336,6 @@ public class NonogramRowLogic extends NonogramLogicParams {
 
         boolean onlyEmptyFieldsInSequence;
 
-        List<String> rowAtStart = this.getNonogramSolutionBoard().get(rowIdx);
-
         for (int columnIdx = 0; columnIdx < this.getWidth() - 1; columnIdx++) {
             onlyEmptyFieldsInSequence = true;
             potentiallyXPlacedField = new Field(rowIdx, columnIdx);
@@ -401,11 +399,6 @@ public class NonogramRowLogic extends NonogramLogicParams {
                     }
                 }
             }
-        }
-
-        List<String> rowAtEnd = this.getNonogramSolutionBoard().get(rowIdx);
-        if (!rowAtStart.equals(rowAtEnd)) {
-            System.out.println("ROW AT START AND AT END");
         }
     }
 
