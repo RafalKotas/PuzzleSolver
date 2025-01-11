@@ -49,6 +49,17 @@ public class NonogramCreatorUtils {
         return columnsFieldsNotToInclude;
     }
 
+    public static List<List<Integer>> generateEmptyColumnsSequencesNotToInclude(int width) {
+        List<List<Integer>> columnsSequencesNotToInclude = new ArrayList<>();
+
+        for (int columnIdx = 0; columnIdx < width; columnIdx++) {
+            List<Integer> columnFieldsNotToInclude = new ArrayList<>();
+            columnsSequencesNotToInclude.add(columnFieldsNotToInclude);
+        }
+
+        return columnsSequencesNotToInclude;
+    }
+
     public static List<List<List<Integer>>> generateEmptyColumnSequencesRanges(int width) {
         List<List<List<Integer>>> emptyColumnSequencesRanges = new ArrayList<>();
 
