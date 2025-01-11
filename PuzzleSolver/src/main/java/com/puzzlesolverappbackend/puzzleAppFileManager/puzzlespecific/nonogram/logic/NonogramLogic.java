@@ -101,27 +101,18 @@ public class NonogramLogic extends NonogramLogicParams {
     public NonogramLogic(List<List<Integer>> rowsSequences, List<List<Integer>> columnsSequences, List<List<String>> nonogramSolutionBoard) {
 
         this.logs = new ArrayList<>();
-        //ok
         this.rowsSequences = rowsSequences;
-        //ok
         this.columnsSequences = columnsSequences;
-        //ok
         this.nonogramSolutionBoard = nonogramSolutionBoard;
 
-        //ok
         int height = this.getHeight();
-        //ok
         int width = this.getWidth();
 
-        //ok - can be inferred from nonogramSolutionBoard
         this.nonogramSolutionBoardWithMarks = generateEmptyBoard(height, width, 4);
 
-        //ok (all/none)
         this.rowsFieldsNotToInclude = generateEmptyRowsNotToInclude();
-        //ok (all/none)
         this.columnsFieldsNotToInclude = generateEmptyColumnsNotToInclude();
 
-        //ok?
         this.rowsSequencesRanges = inferRowsSequencesRangesFromSolutionBoard();
         this.columnsSequencesRanges = inferColumnsSequencesRangesFromSolutionBoard();
 
@@ -510,7 +501,7 @@ public class NonogramLogic extends NonogramLogicParams {
 
         List<String> arrayFilledFromStart = createArrayOfEmptyFields(this.getWidth());
 
-        boolean canStartSequenceFromIndex;// = false;
+        boolean canStartSequenceFromIndex;
         boolean writeSequenceMode = false;
         int currentSequenceIdx = 0;
         int sequencesFieldsFilled = 0;
@@ -571,8 +562,6 @@ public class NonogramLogic extends NonogramLogicParams {
 
         return xs.isEmpty();
     }
-
-    // columns
 
     private List<List<List<Integer>>> inferInitialColumnsSequencesRanges() {
         List<List<List<Integer>>> initialColumnsSequencesRanges = new ArrayList<>();
@@ -808,7 +797,7 @@ public class NonogramLogic extends NonogramLogicParams {
         return boardColumnSequencesRanges;
     }
 
-    // common functions
+    // TODO - move to common Class common functions
 
     /**
      * @param marksNo - number of sequences marks to create array
@@ -957,9 +946,10 @@ public class NonogramLogic extends NonogramLogicParams {
 
                     this.copyLogicFromNonogramColumnLogic();
                 }
-//                if (this.getNonogramSolutionBoard().get(7).get(0).equals(COLOURED_FIELD)) {
-//                    System.out.println("-".repeat(20));
-//                }
+                if (this.getNonogramSolutionBoard().get(20).get(22).equals(X_FIELD) &&
+                    this.getNonogramSolutionBoard().get(20).get(17).equals(X_FIELD)) {
+                    System.out.println("tu");
+                }
             } catch (Exception e) {
                 // empty
             }
@@ -971,13 +961,6 @@ public class NonogramLogic extends NonogramLogicParams {
             }
         }
     }
-
-//    private void stopConditionRow(NonogramActionDetails actionDetails) {
-//        if (this.getNonogramSolutionBoard().get(15).get(17).equals("O")) {
-//            System.out.println("Should place X if O will create too long possible sequence");
-//            System.out.println("-".repeat(20));
-//        }
-//    }
 
     private void logRowStateBefore(NonogramActionDetails actionDetails, int nextActionRowIndex) {
         String elementToLog;
@@ -1258,23 +1241,23 @@ public class NonogramLogic extends NonogramLogicParams {
 
         while(subsolutionNonogramBoardIterator.hasNext() && solutionNonogramBoardIterator.hasNext()) {
 
-            List<String> subsolutionNonogramBoardRow = subsolutionNonogramBoardIterator.next();
+            List<String> subSolutionNonogramBoardRow = subsolutionNonogramBoardIterator.next();
             List<String> solutionNonogramBoardRow = solutionNonogramBoardIterator.next();
 
             System.out.println("rows (subsolution and solution)");
-            System.out.println(subsolutionNonogramBoardRow);
+            System.out.println(subSolutionNonogramBoardRow);
             System.out.println(solutionNonogramBoardRow);
 
-            Iterator<String> subsolutionNonogramBoardRowIterator = subsolutionNonogramBoardRow.iterator();
+            Iterator<String> subsolutionNonogramBoardRowIterator = subSolutionNonogramBoardRow.iterator();
             Iterator<String> solutionNonogramBoardRowIterator = solutionNonogramBoardRow.iterator();
 
             while(subsolutionNonogramBoardRowIterator.hasNext() && solutionNonogramBoardRowIterator.hasNext()) {
-                String subsolutionNonogramBoardField = subsolutionNonogramBoardRowIterator.next();
+                String subSolutionNonogramBoardField = subsolutionNonogramBoardRowIterator.next();
                 String solutionNonogramBoardField = solutionNonogramBoardRowIterator.next();
 
                 // "X" or "O"
-                if (subsolutionNonogramBoardField.equals(COLOURED_FIELD)) {
-                    if (!subsolutionNonogramBoardField.equals(solutionNonogramBoardField)) {
+                if (subSolutionNonogramBoardField.equals(COLOURED_FIELD)) {
+                    if (!subSolutionNonogramBoardField.equals(solutionNonogramBoardField)) {
                         return false;
                     }
                 }
@@ -1359,7 +1342,7 @@ public class NonogramLogic extends NonogramLogicParams {
 
     public boolean areRowsSequencesIdenticalWithColumnsSequences() {
         if (this.rowsSequences.size() != this.columnsSequences.size()) {
-            return false; // Różna liczba podlist - listy nie są identyczne
+            return false;
         }
 
         for (int i = 0; i < rowsSequences.size(); i++) {
