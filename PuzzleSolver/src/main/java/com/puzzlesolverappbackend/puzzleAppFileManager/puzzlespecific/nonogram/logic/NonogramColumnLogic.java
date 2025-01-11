@@ -376,9 +376,12 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                         }
                     }
 
-                    if (onlyEmptyFieldsInSequence
-                            && columnSequencesIdsIncludingEmptyRange.equals(columnSequencesIdsThatNotFitInEmptyRange)
-                            && !columnSequencesIdsIncludingEmptyRange.isEmpty()) {
+                    if (onlyEmptyFieldsInSequence &&
+                            (
+                                (columnSequencesIdsIncludingEmptyRange.equals(columnSequencesIdsThatNotFitInEmptyRange) && !columnSequencesIdsIncludingEmptyRange.isEmpty()) ||
+                                        columnSequencesIdsThatNotFitInEmptyRange.size() == columnSequencesLengths.size()
+                            )
+                    ) {
                         for (int emptyFieldRowIdx = emptyFieldsRange.get(0); emptyFieldRowIdx <= emptyFieldsRange.get(1); emptyFieldRowIdx++) {
                             fieldToExclude = new Field(emptyFieldRowIdx, columnIdx);
                             if (isFieldEmpty(nonogramSolutionBoard, fieldToExclude)) {
@@ -396,6 +399,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                             }
                         }
                     }
+                    rowIdx--;
                 }
             }
         }

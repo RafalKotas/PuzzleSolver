@@ -277,8 +277,8 @@ public class NonogramRowLogic extends NonogramLogicParams {
             this.excludeFieldInRow(fieldToExclude);
             this.excludeFieldInColumn(fieldToExclude);
 
-            this.addColumnToAffectedActionsByIdentifiers(currentColumnIndex, actionsToDoAfterPlacingXsAroundLongestSequencesInRows);
-            this.addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoAfterPlacingXsAroundLongestSequencesInRows);
+            this.addColumnToAffectedActionsByIdentifiers(currentColumnIndex, actionsToDoInColumnAfterPlacingXsAroundLongestSequencesInRows);
+            this.addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoInRowDoAfterPlacingXsAroundLongestSequencesInRows);
 
             this.nonogramState.increaseMadeSteps();
         }
@@ -377,9 +377,12 @@ public class NonogramRowLogic extends NonogramLogicParams {
                     }
 
                     // TODO onlyEmptyFieldsInSequence/emptyFieldsSequenceLength - check earlier - if is there is no sense to check another conditions
-                    if (onlyEmptyFieldsInSequence
-                            && rowSequencesIdsIncludingEmptyRange.equals(rowSequencesIdsThatNotFitInEmptyRange)
-                            && !rowSequencesIdsIncludingEmptyRange.isEmpty()) {
+                    if (onlyEmptyFieldsInSequence &&
+                            (
+                                (rowSequencesIdsIncludingEmptyRange.equals(rowSequencesIdsThatNotFitInEmptyRange) && !rowSequencesIdsIncludingEmptyRange.isEmpty()) ||
+                                        rowSequencesIdsThatNotFitInEmptyRange.size() == rowSequencesLengths.size()
+                            )
+                    ) {
                         for (int emptyFieldColumnIdx = emptyFieldsRange.get(0); emptyFieldColumnIdx <= emptyFieldsRange.get(1); emptyFieldColumnIdx++) {
                             fieldToExclude = new Field(rowIdx, emptyFieldColumnIdx);
                             if (isFieldEmpty(nonogramSolutionBoard, fieldToExclude)) {
@@ -397,6 +400,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
                             }
                         }
                     }
+                    columnIdx--;
                 }
             }
         }
