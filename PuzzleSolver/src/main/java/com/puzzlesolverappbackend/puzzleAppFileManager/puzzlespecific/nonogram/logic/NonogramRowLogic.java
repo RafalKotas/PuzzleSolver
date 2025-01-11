@@ -957,8 +957,6 @@ public class NonogramRowLogic extends NonogramLogicParams {
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
         List<Integer> rowSequencesLengths = this.getRowsSequences().get(rowIdx);
 
-        List<String> rowBefore = this.getNonogramSolutionBoard().get(rowIdx);
-
         List<Integer> possibleSequenceLengths;
         int minimumPossibleLength;
         List<Integer> colouredSubsequenceRange;
