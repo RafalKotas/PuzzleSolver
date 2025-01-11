@@ -946,10 +946,6 @@ public class NonogramLogic extends NonogramLogicParams {
 
                     this.copyLogicFromNonogramColumnLogic();
                 }
-                if (this.getNonogramSolutionBoard().get(20).get(22).equals(X_FIELD) &&
-                    this.getNonogramSolutionBoard().get(20).get(17).equals(X_FIELD)) {
-                    System.out.println("tu");
-                }
             } catch (Exception e) {
                 // empty
             }
