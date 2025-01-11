@@ -16,7 +16,8 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.ActionsC
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramConstants.EMPTY_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.filterSequencesRangesIncludingAnotherAndReturnCorrespondingLengths;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramLogicService.rangesListIncludingAnotherRange;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeInsideAnotherRange;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeLength;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramBoardUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramLogicUtils.colouredSequenceInRowIsValid;
 
@@ -318,18 +319,14 @@ public class NonogramRowLogic extends NonogramLogicParams {
     public void placeXsRowAtTooShortEmptySequences(int rowIdx) {
 
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
-        List<Integer> rowSequenceRange;
-
         List<Integer> rowSequencesLengths = this.getRowsSequences().get(rowIdx);
+        List<Integer> rowsSequencesIdsNotToInclude = this.getRowsSequencesIdsNotToInclude().get(rowIdx);
 
         Field potentiallyXPlacedField;
         Field fieldAfterXToCheck;
 
-        List<Integer> rowSequencesCandidatesToNotFitInRange;
-        int candidateSeqIdx;
-        int candidateSeqLength;
-        boolean allCandidatesNotFit;
-        boolean emptySequenceRangeBiggerThanAllSequencesLengths;
+        List<Integer> rowSequencesIdsIncludingEmptyRange = new ArrayList<>();
+        List<Integer> rowSequencesIdsThatNotFitInEmptyRange = new ArrayList<>();
 
         int firstXIndex;
         int lastXIndex;
@@ -339,6 +336,8 @@ public class NonogramRowLogic extends NonogramLogicParams {
 
         boolean onlyEmptyFieldsInSequence;
 
+        List<String> rowAtStart = this.getNonogramSolutionBoard().get(rowIdx);
+
         for (int columnIdx = 0; columnIdx < this.getWidth() - 1; columnIdx++) {
             onlyEmptyFieldsInSequence = true;
             potentiallyXPlacedField = new Field(rowIdx, columnIdx);
@@ -346,47 +345,43 @@ public class NonogramRowLogic extends NonogramLogicParams {
 
                 firstXIndex = columnIdx;
                 fieldAfterXToCheck = new Field(rowIdx, ++columnIdx);
-                while(columnIdx < this.getWidth() && !isFieldWithX(nonogramSolutionBoard, fieldAfterXToCheck)) {
+                while(columnIdx < this.getWidth()) {
                     if (isFieldEmpty(nonogramSolutionBoard, fieldAfterXToCheck)) {
                         fieldAfterXToCheck = new Field(rowIdx, ++columnIdx);
-                    } else if (isFieldColoured(nonogramSolutionBoard, fieldAfterXToCheck)) {
-                        onlyEmptyFieldsInSequence = false;
+                    } else {
+                        if (isFieldColoured(nonogramSolutionBoard, fieldAfterXToCheck)) {
+                            onlyEmptyFieldsInSequence = false;
+                        }
                         break;
                     }
                 }
 
                 lastXIndex = columnIdx;
 
-                emptyFieldsRange = Arrays.asList(firstXIndex + 1, lastXIndex - 1);
-                emptyFieldsSequenceLength = rangeLength(emptyFieldsRange);
+                if (lastXIndex == firstXIndex + 1) {
+                    columnIdx--;
+                } else {
+                    emptyFieldsRange = Arrays.asList(firstXIndex + 1, lastXIndex - 1);
+                    emptyFieldsSequenceLength = rangeLength(emptyFieldsRange);
 
-                emptySequenceRangeBiggerThanAllSequencesLengths = allElementsLowerThanValue(rowSequencesLengths,
-                        emptyFieldsSequenceLength);
+                    rowSequencesIdsIncludingEmptyRange.clear();
+                    rowSequencesIdsThatNotFitInEmptyRange.clear();
 
-                if (!emptySequenceRangeBiggerThanAllSequencesLengths &&
-                        onlyEmptyFieldsInSequence &&
-                            emptyFieldsSequenceLength > 0) {
-                    rowSequencesCandidatesToNotFitInRange = new ArrayList<>();
-
-                    allCandidatesNotFit = true;
-
-                    for (int seqNo = 0; seqNo < rowSequencesRanges.size(); seqNo++) {
-                        rowSequenceRange = rowSequencesRanges.get(seqNo);
-                        if (rangeInsideAnotherRange(emptyFieldsRange, rowSequenceRange)) {
-                            rowSequencesCandidatesToNotFitInRange.add(seqNo);
+                    for (int rowSequenceId = 0; rowSequenceId < rowSequencesLengths.size(); rowSequenceId++) {
+                        if (!rowsSequencesIdsNotToInclude.contains(rowSequenceId)
+                                && rangeInsideAnotherRange(emptyFieldsRange, rowSequencesRanges.get(rowSequenceId))) {
+                            rowSequencesIdsIncludingEmptyRange.add(rowSequenceId);
+                        }
+                        if (!rowsSequencesIdsNotToInclude.contains(rowSequenceId)
+                                && rowSequencesLengths.get(rowSequenceId) > emptyFieldsSequenceLength) {
+                            rowSequencesIdsThatNotFitInEmptyRange.add(rowSequenceId);
                         }
                     }
 
-                    for (Integer seqNo : rowSequencesCandidatesToNotFitInRange) {
-                        candidateSeqIdx = seqNo;
-                        candidateSeqLength = rowSequencesLengths.get(candidateSeqIdx);
-
-                        if (candidateSeqLength <= emptyFieldsSequenceLength) {
-                            allCandidatesNotFit = false;
-                        }
-                    }
-
-                    if (!rowSequencesCandidatesToNotFitInRange.isEmpty() && allCandidatesNotFit) {
+                    // TODO onlyEmptyFieldsInSequence/emptyFieldsSequenceLength - check earlier - if is there is no sense to check another conditions
+                    if (onlyEmptyFieldsInSequence
+                            && rowSequencesIdsIncludingEmptyRange.equals(rowSequencesIdsThatNotFitInEmptyRange)
+                            && !rowSequencesIdsIncludingEmptyRange.isEmpty()) {
                         for (int emptyFieldColumnIdx = emptyFieldsRange.get(0); emptyFieldColumnIdx <= emptyFieldsRange.get(1); emptyFieldColumnIdx++) {
                             fieldToExclude = new Field(rowIdx, emptyFieldColumnIdx);
                             if (isFieldEmpty(nonogramSolutionBoard, fieldToExclude)) {
@@ -404,10 +399,13 @@ public class NonogramRowLogic extends NonogramLogicParams {
                             }
                         }
                     }
-                } else {
-                    columnIdx--;
                 }
             }
+        }
+
+        List<String> rowAtEnd = this.getNonogramSolutionBoard().get(rowIdx);
+        if (!rowAtStart.equals(rowAtEnd)) {
+            System.out.println("ROW AT START AND AT END");
         }
     }
 
