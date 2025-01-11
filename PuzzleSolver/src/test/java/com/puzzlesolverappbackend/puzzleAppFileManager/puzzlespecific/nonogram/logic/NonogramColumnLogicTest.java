@@ -26,6 +26,7 @@ public class NonogramColumnLogicTest {
 
         nonogramColumnLogic.setColumnsSequences(generateEmptyColumnSequencesLengths(WIDTH));
         nonogramColumnLogic.setColumnsFieldsNotToInclude(generateEmptyColumnsFieldsNotToInclude(WIDTH));
+        nonogramColumnLogic.setColumnsSequencesIdsNotToInclude(generateEmptyColumnsSequencesNotToInclude(WIDTH));
 
         nonogramColumnLogic.setRowsSequences(generateEmptyRowSequencesLengths(HEIGHT));
         nonogramColumnLogic.setRowsFieldsNotToInclude(generateEmptyRowsFieldsNotToInclude(HEIGHT));
@@ -43,6 +44,15 @@ public class NonogramColumnLogicTest {
         int HEIGHT = 35;
         int WIDTH = 30;
         prepareNonogramColumnLogic(HEIGHT, WIDTH);
+
+        nonogramColumnLogic.excludeSequenceInColumn(COLUMN_TO_TEST, 0);
+        nonogramColumnLogic.excludeSequenceInColumn(COLUMN_TO_TEST, 1);
+        nonogramColumnLogic.excludeSequenceInColumn(COLUMN_TO_TEST, 2);
+        nonogramColumnLogic.excludeSequenceInColumn(COLUMN_TO_TEST, 3);
+        nonogramColumnLogic.excludeSequenceInColumn(COLUMN_TO_TEST, 4);
+        nonogramColumnLogic.excludeSequenceInColumn(COLUMN_TO_TEST, 5);
+        nonogramColumnLogic.excludeSequenceInColumn(COLUMN_TO_TEST, 6);
+
         nonogramColumnLogic.setColumnSequencesRanges(COLUMN_TO_TEST, List.of(
                 List.of(0, 1), List.of(3, 15), List.of(17, 21), List.of(23, 23), List.of(25, 25), List.of(26, 27), List.of(29, 34)
         ));
