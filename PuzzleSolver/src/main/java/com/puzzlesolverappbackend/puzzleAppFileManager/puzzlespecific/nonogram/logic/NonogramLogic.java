@@ -1229,14 +1229,14 @@ public class NonogramLogic extends NonogramLogicParams {
      * @param solutionFileName - String fileName with correct solution board
      * @return true if fields are colored correctly in the partial solution, false in other cases
      */
-    public boolean subsolutionBoardCorrectComparisonWithSolutionBoard(String solutionFileName) {
-        List<List<String>> subsolutionNonogramBoard = this.nonogramSolutionBoard;
+    public boolean subSolutionBoardCorrectComparisonWithSolutionBoard(String solutionFileName) {
+        List<List<String>> subSolutionNonogramBoard = this.nonogramSolutionBoard;
         NonogramBoardTemplate solutionBoardTemplate = new NonogramBoardTemplate(solutionFileName);
         System.out.println("solution board template:");
         solutionBoardTemplate.printBoard();
         List<List<String>> solutionNonogramBoard = solutionBoardTemplate.getBoard();
 
-        Iterator<List<String>> subsolutionNonogramBoardIterator = subsolutionNonogramBoard.iterator();
+        Iterator<List<String>> subsolutionNonogramBoardIterator = subSolutionNonogramBoard.iterator();
         Iterator<List<String>> solutionNonogramBoardIterator = solutionNonogramBoard.iterator();
 
         while(subsolutionNonogramBoardIterator.hasNext() && solutionNonogramBoardIterator.hasNext()) {
@@ -1244,7 +1244,7 @@ public class NonogramLogic extends NonogramLogicParams {
             List<String> subSolutionNonogramBoardRow = subsolutionNonogramBoardIterator.next();
             List<String> solutionNonogramBoardRow = solutionNonogramBoardIterator.next();
 
-            System.out.println("rows (subsolution and solution)");
+            System.out.println("rows (subSolution and solution)");
             System.out.println(subSolutionNonogramBoardRow);
             System.out.println(solutionNonogramBoardRow);
 

@@ -240,7 +240,7 @@ public class NonogramGenetic {
 
                         if (firstLessOrEqualElementIndex != populationCount) {
                             nextPopulation.add(firstLessOrEqualElementIndex, firstChild);
-                            if (firstChild.subsolutionBoardCorrectComparisonWithSolutionBoard("r" + InitializerConstants.PUZZLE_NAME)) {
+                            if (firstChild.subSolutionBoardCorrectComparisonWithSolutionBoard("r" + InitializerConstants.PUZZLE_NAME)) {
                                 setSolutionFound(true);
                             }
                             maxCorrectFieldsInColumnsSums.add(firstLessOrEqualElementIndex, firstChildMaxPossibleCorrectFieldsSum);
