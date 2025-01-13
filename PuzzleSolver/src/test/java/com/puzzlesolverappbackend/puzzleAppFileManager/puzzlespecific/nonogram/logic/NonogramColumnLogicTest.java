@@ -92,7 +92,7 @@ public class NonogramColumnLogicTest {
         nonogramColumnLogic.setNonogramBoardColumn(COLUMN_TO_TEST, columnBeforeActionMade);
 
         // when
-        nonogramColumnLogic.placeXsColumnIfOWillCreateTooLongColouredSequence(COLUMN_TO_TEST);
+        nonogramColumnLogic.placeXsColumnIfOWillMergeNearFieldsToTooLongColouredSequence(COLUMN_TO_TEST);
 
         // then
         List<String> expectedColumnAfterActionMade = List.of("-", "-", "-", "-", "O",

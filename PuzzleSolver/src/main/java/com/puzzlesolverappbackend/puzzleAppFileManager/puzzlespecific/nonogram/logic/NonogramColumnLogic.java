@@ -405,7 +405,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
         }
     }
 
-    public void placeXsColumnIfOWillCreateTooLongColouredSequence(int columnIdx) {
+    public void placeXsColumnIfOWillMergeNearFieldsToTooLongColouredSequence(int columnIdx) {
         List<Integer> colouredFieldsIndexesInColumn = findColouredFieldsIndexesInColumn(nonogramSolutionBoard, columnIdx);
 
         List<List<Integer>> colouredSequencesRanges = groupConsecutiveIndices(colouredFieldsIndexesInColumn);

@@ -160,7 +160,8 @@ public class ActionsConstants {
     public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterPlacingXsAroundLongestSequencesInColumns = new ArrayList<>(
             List.of(
                     CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY,
-                    PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES
+                    PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES,
+                    PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterPlacingXsAtTooShortEmptySequencesInRows = new ArrayList<>(
@@ -244,7 +245,12 @@ public class ActionsConstants {
                     CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY,
                     EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW,
                     PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES
-
             )
+    );
+
+    public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterPlacingXsIfONearWillBeginTooLongPossibleColouredSequence = new ArrayList<>(
+      List.of(
+              CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY
+      )
     );
 }

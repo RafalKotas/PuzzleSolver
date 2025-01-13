@@ -955,6 +955,11 @@ public class NonogramLogic extends NonogramLogicParams {
             if (this.guessMode && this.nonogramState.isInvalidSolution()) {
                 break;
             }
+
+//            // o09983 < 1800
+//            if (this.actionsToDoList.size() > 1800) {
+//                break;
+//            }
         }
     }
 
@@ -1045,6 +1050,11 @@ public class NonogramLogic extends NonogramLogicParams {
                     nonogramRowLogic.placeXsRowAtTooShortEmptySequences(rowIdx);
             case PLACE_XS_ROW_IF_O_WILL_CREATE_TOO_LONG_COLOURED_SEQUENCE ->
                     nonogramRowLogic.placeXsRowIfOWillCreateTooLongColouredSequence(rowIdx);
+            case PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE -> {
+                if (rowIdx == 7) {
+                    nonogramRowLogic.placeXsRowIfONearXWillBeginTooLongPossibleColouredSequence(rowIdx);
+                }
+            }
             case MARK_AVAILABLE_FIELDS_IN_ROW -> nonogramRowLogic.markAvailableFieldsInRow(rowIdx);
             default -> {
                 // empty
@@ -1084,7 +1094,7 @@ public class NonogramLogic extends NonogramLogicParams {
             case PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES ->
                     nonogramColumnLogic.placeXsColumnAtTooShortEmptySequences(columnIdx);
             case PLACE_XS_COLUMN_IF_O_WILL_CREATE_TOO_LONG_COLOURED_SEQUENCE ->
-                    nonogramColumnLogic.placeXsColumnIfOWillCreateTooLongColouredSequence(columnIdx);
+                    nonogramColumnLogic.placeXsColumnIfOWillMergeNearFieldsToTooLongColouredSequence(columnIdx);
             case MARK_AVAILABLE_FIELDS_IN_COLUMN ->
                     nonogramColumnLogic.markAvailableFieldsInColumn(columnIdx);
             default -> {
