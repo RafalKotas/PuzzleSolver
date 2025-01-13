@@ -1,12 +1,10 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.constants;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramSolveAction;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramSolveAction.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.NonogramSolveAction.*;
 
 public class ActionsConstants {
 

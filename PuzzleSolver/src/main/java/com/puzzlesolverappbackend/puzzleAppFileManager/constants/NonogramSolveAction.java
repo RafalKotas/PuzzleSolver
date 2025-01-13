@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram;
+package com.puzzlesolverappbackend.puzzleAppFileManager.constants;
 
 import java.util.List;
 
