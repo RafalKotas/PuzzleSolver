@@ -50,11 +50,11 @@ public abstract class NonogramLogicParams {
 
     protected List<NonogramSolutionDecision> availableChoices;
 
-    public void setColumnSequencesRanges(int columnIdx, List<List<Integer>> columnsSequencesRanges) {
-        this.getColumnsSequencesRanges().set(columnIdx, columnsSequencesRanges);
+    public void setColumnSequencesRanges(int columnIdx, List<List<Integer>> columnSequencesRanges) {
+        this.getColumnsSequencesRanges().set(columnIdx, columnSequencesRanges);
     }
 
-    public void setNonogramBoardColumn(int columnIdx, List<String> boardColumn) {
+    public void setNonogramSolutionBoardColumn(int columnIdx, List<String> boardColumn) {
         for(int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
             this.nonogramSolutionBoard.get(rowIdx).set(columnIdx, boardColumn.get(rowIdx));
         }
@@ -62,6 +62,20 @@ public abstract class NonogramLogicParams {
 
     public void setColumnSequencesLengths(int columnIdx, List<Integer> sequencesLengths) {
         this.getColumnsSequences().set(columnIdx, sequencesLengths);
+    }
+
+    public void setRowSequencesRanges(int rowIdx, List<List<Integer>> rowSequencesRanges) {
+        this.getRowsSequencesRanges().set(rowIdx, rowSequencesRanges);
+    }
+
+    public void setNonogramSolutionBoardRow(int rowIdx, List<String> boardRow) {
+        for(int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
+            this.nonogramSolutionBoard.get(rowIdx).set(columnIdx, boardRow.get(columnIdx));
+        }
+    }
+
+    public void setRowSequencesLengths(int rowIdx, List<Integer> sequencesLengths) {
+        this.getRowsSequences().set(rowIdx, sequencesLengths);
     }
 
     /**
