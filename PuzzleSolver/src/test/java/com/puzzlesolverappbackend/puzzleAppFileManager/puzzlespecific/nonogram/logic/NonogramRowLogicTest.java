@@ -30,10 +30,47 @@ class NonogramRowLogicTest {
 
         nonogramRowLogic.setRowsSequences(generateEmptyRowSequencesLengths(HEIGHT));
         nonogramRowLogic.setRowsFieldsNotToInclude(generateEmptyRowsFieldsNotToInclude(HEIGHT));
+        nonogramRowLogic.setRowsSequencesIdsNotToInclude(generateEmptyRowsSequencesNotToInclude(HEIGHT));
 
         nonogramRowLogic.setRowsSequencesRanges(
                 generateEmptyRowSequencesRanges(HEIGHT)
         );
+    }
+
+    @Test
+    @DisplayName(value = "Should place X too short empty sequences - o05765 row 25")
+    void shouldPlaceXAtTooShortEmptySequences() {
+        // given
+        int ROW_TO_TEST = 25;
+        int HEIGHT = 30;
+        int WIDTH = 30;
+        prepareNonogramRowLogic(HEIGHT, WIDTH);
+
+        nonogramRowLogic.excludeSequenceInRow(ROW_TO_TEST, 0);
+
+        nonogramRowLogic.setRowSequencesRanges(ROW_TO_TEST, List.of(
+                List.of(3, 3), List.of(6, 11), List.of(12, 20), List.of(18, 29)
+        ));
+        nonogramRowLogic.setRowSequencesLengths(ROW_TO_TEST, List.of(1, 5, 1, 3));
+        List<String> rowBeforeActionMade = List.of("X", "X", "X", "O", "X",
+                "X", "-", "O", "O", "O",
+                "O", "-", "-", "-", "-",
+                "-", "-", "-", "-", "-",
+                "O", "X", "-", "-", "X",
+                "-", "-", "-", "-", "-");
+        nonogramRowLogic.setNonogramSolutionBoardRow(ROW_TO_TEST, rowBeforeActionMade);
+
+        // when
+        nonogramRowLogic.placeXsRowAtTooShortEmptySequences(ROW_TO_TEST);
+
+        // then
+        List<String> expectedRowAfterActionMade = List.of("X", "X", "X", "O", "X",
+                "X", "-", "O", "O", "O",
+                "O", "-", "-", "-", "-",
+                "-", "-", "-", "-", "-",
+                "O", "X", "X", "X", "X",
+                "-", "-", "-", "-", "-");
+        assertThat(nonogramRowLogic.getNonogramSolutionBoard().get(ROW_TO_TEST)).isEqualTo(expectedRowAfterActionMade);
     }
 
     @Test

@@ -326,7 +326,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
         Field fieldAfterXToCheck;
 
         List<Integer> rowSequencesIdsIncludingEmptyRange = new ArrayList<>();
-        List<Integer> rowSequencesIdsThatNotFitInEmptyRange = new ArrayList<>();
+        List<Integer> rowSequencesIdsIncludingEmptyRangeAndNotFitInIt = new ArrayList<>();
 
         int firstXIndex;
         int lastXIndex;
@@ -363,25 +363,22 @@ public class NonogramRowLogic extends NonogramLogicParams {
                     emptyFieldsSequenceLength = rangeLength(emptyFieldsRange);
 
                     rowSequencesIdsIncludingEmptyRange.clear();
-                    rowSequencesIdsThatNotFitInEmptyRange.clear();
+                    rowSequencesIdsIncludingEmptyRangeAndNotFitInIt.clear();
 
                     for (int rowSequenceId = 0; rowSequenceId < rowSequencesLengths.size(); rowSequenceId++) {
                         if (!rowsSequencesIdsNotToInclude.contains(rowSequenceId)
                                 && rangeInsideAnotherRange(emptyFieldsRange, rowSequencesRanges.get(rowSequenceId))) {
                             rowSequencesIdsIncludingEmptyRange.add(rowSequenceId);
+                            if (rowSequencesLengths.get(rowSequenceId) > emptyFieldsSequenceLength) {
+                                rowSequencesIdsIncludingEmptyRangeAndNotFitInIt.add(rowSequenceId);
+                            }
                         }
-                        if (!rowsSequencesIdsNotToInclude.contains(rowSequenceId)
-                                && rowSequencesLengths.get(rowSequenceId) > emptyFieldsSequenceLength) {
-                            rowSequencesIdsThatNotFitInEmptyRange.add(rowSequenceId);
-                        }
+
                     }
 
                     // TODO onlyEmptyFieldsInSequence/emptyFieldsSequenceLength - check earlier - if is there is no sense to check another conditions
-                    if (onlyEmptyFieldsInSequence &&
-                            (
-                                (rowSequencesIdsIncludingEmptyRange.equals(rowSequencesIdsThatNotFitInEmptyRange) && !rowSequencesIdsIncludingEmptyRange.isEmpty()) ||
-                                        rowSequencesIdsThatNotFitInEmptyRange.size() == rowSequencesLengths.size()
-                            )
+                    if (onlyEmptyFieldsInSequence && !rowSequencesIdsIncludingEmptyRange.isEmpty()
+                            && (rowSequencesIdsIncludingEmptyRange.equals(rowSequencesIdsIncludingEmptyRangeAndNotFitInIt))
                     ) {
                         for (int emptyFieldColumnIdx = emptyFieldsRange.get(0); emptyFieldColumnIdx <= emptyFieldsRange.get(1); emptyFieldColumnIdx++) {
                             fieldToExclude = new Field(rowIdx, emptyFieldColumnIdx);
