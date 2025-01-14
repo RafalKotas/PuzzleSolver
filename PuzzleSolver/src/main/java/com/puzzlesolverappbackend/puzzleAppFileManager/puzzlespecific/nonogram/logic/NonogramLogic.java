@@ -5,14 +5,12 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.logicOperators.LogicFunct
 import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramActionDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.templates.nonogram.NonogramBoardTemplate;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -27,8 +25,9 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.r
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramBoardUtils.getSolutionBoardColumn;
 
 @Data
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Slf4j
 public class NonogramLogic extends NonogramLogicParams {
 
@@ -907,27 +906,28 @@ public class NonogramLogic extends NonogramLogicParams {
     }
 
     public void basicSolve() {
+
         int actionListIndex = 0;
-        int nextActionRCIndex; // row or column index
+        int currentActionRCIndex; // row or column index
         int stepsBefore;
         int stepsAfter;
         NonogramActionDetails currentActionDetails;
 
         while(actionListIndex < actionsToDoList.size()) {
             currentActionDetails = actionsToDoList.get(actionListIndex);
-            nextActionRCIndex = currentActionDetails.getIndex();
+            currentActionRCIndex = currentActionDetails.getIndex();
             try {
                 if (getRowSolveActions().contains(currentActionDetails.getActionName())) {
                     this.copyLogicToNonogramRowLogic();
 
                     stepsBefore = this.getNonogramState().getNewStepsMade();
 
-                    makeProperActionInRow(nextActionRCIndex, currentActionDetails.getActionName());
+                    makeProperActionInRow(currentActionRCIndex, currentActionDetails.getActionName());
                     stepsAfter = this.getNonogramState().getNewStepsMade();
 
                     if (stepsBefore != stepsAfter) {
-                        logRowStateBefore(currentActionDetails, nextActionRCIndex);
-                        logRowStateAfter(currentActionDetails, nextActionRCIndex);
+                        logRowStateBefore(currentActionDetails, currentActionRCIndex);
+                        logRowStateAfter(currentActionDetails, currentActionRCIndex);
                     }
 
                     this.copyLogicFromNonogramRowLogic();
@@ -936,12 +936,12 @@ public class NonogramLogic extends NonogramLogicParams {
 
                     stepsBefore = this.getNonogramState().getNewStepsMade();
 
-                    makeProperActionInColumn(nextActionRCIndex, currentActionDetails.getActionName());
+                    makeProperActionInColumn(currentActionRCIndex, currentActionDetails.getActionName());
                     stepsAfter = this.getNonogramState().getNewStepsMade();
 
                     if (stepsBefore != stepsAfter) {
-                        logColumnStateBefore(currentActionDetails, nextActionRCIndex);
-                        logColumnStateAfter(currentActionDetails, nextActionRCIndex);
+                        logColumnStateBefore(currentActionDetails, currentActionRCIndex);
+                        logColumnStateAfter(currentActionDetails, currentActionRCIndex);
                     }
 
                     this.copyLogicFromNonogramColumnLogic();
@@ -950,16 +950,11 @@ public class NonogramLogic extends NonogramLogicParams {
                 // empty
             }
 
-            actionListIndex++;
-
             if (this.guessMode && this.nonogramState.isInvalidSolution()) {
                 break;
             }
 
-//            // o09983 < 1800
-//            if (this.actionsToDoList.size() > 1800) {
-//                break;
-//            }
+            actionListIndex++;
         }
     }
 
@@ -1361,6 +1356,71 @@ public class NonogramLogic extends NonogramLogicParams {
         }
 
         return true;
+    }
+
+    public static NonogramLogic exampleLogicToCompare() {
+        NonogramRowLogic nonogramRowLogic = new NonogramRowLogic();
+
+        List<List<String>> o09923_solution_board =
+                List.of(
+                        List.of("X", "X", "X", "X", "X", "X", "X", "X", "O", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X", "X", "X", "O", "X", "X", "X"),
+                        List.of("X", "X", "X", "X", "X", "X", "O", "O", "O", "X", "X", "X", "X", "X", "O", "O", "O", "X", "X", "X", "X", "O", "O", "X", "X"),
+                        List.of("X", "X", "X", "X", "X", "O", "O", "X", "X", "O", "O", "O", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X", "O", "O", "X"),
+                        List.of("X", "X", "X", "X", "O", "O", "X", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X", "O", "O"),
+                        List.of("X", "X", "X", "X", "O", "X", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X", "X", "O"),
+                        List.of("X", "X", "X", "O", "O", "X", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "X", "X", "O", "O", "X", "O"),
+                        List.of("X", "X", "X", "O", "X", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "X"),
+                        List.of("X", "X", "X", "O", "X", "O", "O", "O", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "O", "O", "O", "X", "O", "O", "X"),
+                        List.of("X", "X", "O", "O", "X", "X", "X", "X", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "X", "X", "X", "O", "O", "X", "O"),
+                        List.of("X", "O", "O", "X", "X", "O", "O", "O", "O", "O", "X", "X", "X", "X", "X", "X", "X", "O", "O", "O", "O", "O", "X", "O", "O"),
+                        List.of("O", "O", "X", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X", "O", "O", "X", "X", "X", "X", "O", "X", "X", "O", "O", "X"),
+                        List.of("O", "X", "O", "O", "O", "O", "O", "O", "O", "X", "X", "X", "O", "O", "O", "O", "X", "O", "O", "O", "X", "X", "O", "X", "X"),
+                        List.of("O", "X", "O", "O", "O", "X", "X", "O", "O", "X", "X", "X", "X", "O", "O", "O", "X", "O", "O", "X", "X", "X", "O", "X", "X"),
+                        List.of("O", "O", "O", "O", "O", "X", "O", "O", "O", "X", "X", "X", "X", "X", "X", "X", "X", "O", "X", "X", "X", "X", "O", "O", "X"),
+                        List.of("X", "O", "O", "O", "O", "X", "X", "O", "O", "X", "X", "X", "X", "O", "O", "X", "X", "O", "O", "X", "X", "X", "X", "O", "X"),
+                        List.of("X", "X", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X", "X", "O", "X", "X", "X", "X", "O", "X", "X", "X", "X", "O", "O"),
+                        List.of("X", "X", "X", "X", "X", "O", "O", "X", "X", "X", "O", "X", "X", "O", "O", "O", "O", "O", "O", "X", "O", "X", "X", "X", "O"),
+                        List.of("X", "X", "X", "X", "X", "X", "O", "X", "X", "X", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "X", "X", "X", "O"),
+                        List.of("X", "X", "X", "X", "X", "X", "O", "O", "X", "X", "X", "O", "O", "O", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X", "O"),
+                        List.of("X", "X", "X", "X", "X", "O", "O", "O", "O", "X", "X", "X", "X", "X", "X", "O", "O", "O", "X", "X", "X", "X", "O", "O", "O"),
+                        List.of("X", "X", "X", "O", "O", "O", "X", "X", "O", "O", "X", "X", "X", "X", "O", "O", "O", "O", "O", "O", "O", "X", "O", "O", "O"),
+                        List.of("X", "X", "O", "O", "X", "O", "O", "X", "X", "O", "O", "O", "X", "X", "X", "X", "O", "O", "X", "X", "O", "O", "O", "O", "O"),
+                        List.of("X", "O", "O", "X", "X", "X", "O", "O", "X", "X", "X", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X", "O", "O", "O", "O"),
+                        List.of("O", "O", "O", "O", "X", "X", "X", "O", "O", "X", "X", "X", "X", "X", "X", "O", "O", "O", "O", "X", "X", "X", "X", "X", "X"),
+                        List.of("O", "O", "O", "O", "O", "X", "X", "X", "O", "O", "X", "O", "O", "O", "O", "X", "O", "O", "O", "O", "X", "X", "X", "X", "X"),
+                        List.of("O", "O", "O", "O", "O", "O", "X", "X", "X", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X"),
+                        List.of("X", "O", "O", "O", "O", "O", "X", "X", "X", "X", "O", "O", "O", "O", "O", "X", "O", "O", "O", "O", "O", "O", "X", "X", "X"),
+                        List.of("X", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X", "O", "O", "O", "O", "X", "O", "O", "O", "O", "O", "O", "O", "X", "X"),
+                        List.of("X", "X", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X", "O", "O", "X", "X", "O", "O", "O", "O", "X", "X", "O", "O", "X"),
+                        List.of("X", "X", "X", "O", "O", "O", "O", "O", "O", "X", "X", "X", "O", "O", "X", "X", "O", "O", "O", "O", "X", "X", "X", "O", "O"),
+                        List.of("X", "X", "X", "X", "O", "O", "O", "O", "O", "O", "X", "X", "O", "O", "X", "X", "O", "O", "O", "X", "X", "X", "X", "X", "O"),
+                        List.of("X", "X", "X", "X", "X", "O", "O", "O", "O", "O", "O", "X", "O", "O", "X", "O", "O", "O", "O", "X", "X", "X", "X", "X", "X"),
+                        List.of("X", "X", "X", "O", "X", "X", "X", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "X", "X", "O", "X", "X", "X", "X"),
+                        List.of("X", "X", "O", "O", "X", "X", "X", "X", "X", "O", "O", "O", "O", "O", "O", "O", "O", "X", "X", "X", "O", "O", "X", "X", "X"),
+                        List.of("X", "O", "O", "O", "X", "X", "X", "X", "X", "X", "X", "X", "O", "O", "O", "O", "X", "X", "X", "X", "O", "O", "O", "X", "X")
+                );
+
+        nonogramRowLogic.setNonogramSolutionBoard(o09923_solution_board);
+
+        return NonogramLogic.builder()
+                .nonogramRowLogic(nonogramRowLogic)
+                .build();
+    }
+
+    private boolean subSolutionDifferFromSolutionPart(NonogramLogic subSolution, NonogramLogic fullSolution) {
+        List<List<String>> subSolutionBoard = subSolution.getNonogramRowLogic().getNonogramSolutionBoard();
+        List<List<String>> solutionBoard = fullSolution.getNonogramRowLogic().getNonogramSolutionBoard();
+
+        for (int rowIdx = 0; rowIdx < solutionBoard.size(); rowIdx++) {
+            for (int columnIdx = 0; columnIdx < solutionBoard.get(rowIdx).size(); columnIdx++) {
+                if (!subSolutionBoard.get(rowIdx).get(columnIdx).equals(EMPTY_FIELD) && !Objects.equals(subSolutionBoard.get(rowIdx).get(columnIdx), solutionBoard.get(rowIdx).get(columnIdx))) {
+                    System.out.println("rowIdx: " + rowIdx + " , columnIdx: " + columnIdx);
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public void printRowsSequencesRanges() {
