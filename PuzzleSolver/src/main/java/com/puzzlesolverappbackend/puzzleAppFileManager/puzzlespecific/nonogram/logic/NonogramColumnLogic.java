@@ -375,6 +375,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                         }
                     }
 
+                    // TODO onlyEmptyFieldsInSequence/emptyFieldsSequenceLength - check earlier - if is there is no sense to check another conditions (similarly to row)
                     if (onlyEmptyFieldsInSequence && !columnSequencesIdsIncludingEmptyRange.isEmpty()
                             && (columnSequencesIdsIncludingEmptyRange.equals(columnSequencesIdsIncludingEmptyRangeAndNotFitInIt))
                     ) {
@@ -438,7 +439,6 @@ public class NonogramColumnLogic extends NonogramLogicParams {
             }
             colouredSequenceValid = colouredSequenceInColumnIsValid(mergedSequenceWithFieldAddedBefore, columnIdx, this);
             if (!colouredSequenceValid && isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithPreviousRowColoured)) {
-                System.out.println("abc");
                 this.placeXAtGivenField(fieldWithPreviousRowColoured);
                 this.excludeFieldInRow(fieldWithPreviousRowColoured);
                 this.excludeFieldInColumn(fieldWithPreviousRowColoured);
