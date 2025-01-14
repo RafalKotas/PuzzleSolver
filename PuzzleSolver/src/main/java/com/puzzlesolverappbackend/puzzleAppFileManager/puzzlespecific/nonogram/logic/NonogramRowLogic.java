@@ -373,7 +373,6 @@ public class NonogramRowLogic extends NonogramLogicParams {
                                 rowSequencesIdsIncludingEmptyRangeAndNotFitInIt.add(rowSequenceId);
                             }
                         }
-
                     }
 
                     // TODO onlyEmptyFieldsInSequence/emptyFieldsSequenceLength - check earlier - if is there is no sense to check another conditions
