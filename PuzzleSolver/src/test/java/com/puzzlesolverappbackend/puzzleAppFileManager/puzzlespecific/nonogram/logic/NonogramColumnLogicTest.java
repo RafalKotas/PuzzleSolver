@@ -64,7 +64,7 @@ public class NonogramColumnLogicTest {
                 "O", "O", "X", "O", "X",
                 "-", "-", "-", "X", "O",
                 "O", "O", "O", "O", "O");
-        nonogramColumnLogic.setNonogramBoardColumn(COLUMN_TO_TEST, columnBeforeActionMade);
+        nonogramColumnLogic.setNonogramSolutionBoardColumn(COLUMN_TO_TEST, columnBeforeActionMade);
 
         // when
         nonogramColumnLogic.placeXsColumnAtTooShortEmptySequences(COLUMN_TO_TEST);
@@ -89,7 +89,7 @@ public class NonogramColumnLogicTest {
                 "O", "-", "-", "-", "X",
                 "O", "O", "O", "O", "O",
                 "O", "X", "X", "O", "O");
-        nonogramColumnLogic.setNonogramBoardColumn(COLUMN_TO_TEST, columnBeforeActionMade);
+        nonogramColumnLogic.setNonogramSolutionBoardColumn(COLUMN_TO_TEST, columnBeforeActionMade);
 
         // when
         nonogramColumnLogic.placeXsColumnIfOWillMergeNearFieldsToTooLongColouredSequence(COLUMN_TO_TEST);
