@@ -1175,7 +1175,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
             if (isFieldWithX(this.getNonogramSolutionBoard(), fieldToCheckX)) {
                 emptyFieldsRange = getEmptyFieldsRangeFromXToFirstColouredFieldOnRight(fieldToCheckX);
                 if (!emptyFieldsRange.equals(List.of(-1, -1))) {
-                    firstColouredField = new Field(rowIdx, emptyFieldsRange.get(0) + 1);
+                    firstColouredField = new Field(rowIdx, emptyFieldsRange.get(1) + 1);
                     colouredFieldsRange = getColouredFieldsRangeNearEmptySequenceOnRight(firstColouredField);
 
                     if (!colouredFieldsRange.equals(List.of(-1, -1))) {
@@ -1293,9 +1293,9 @@ public class NonogramRowLogic extends NonogramLogicParams {
             if (colouredFieldsRange.isEmpty()) {
                 colouredFieldsRange.add(fieldToCheckO.getColumnIdx());
             } else if (colouredFieldsRange.size() == 1) {
-                colouredFieldsRange.add(0, fieldToCheckO.getColumnIdx());
+                colouredFieldsRange.add(1, fieldToCheckO.getColumnIdx());
             } else {
-                colouredFieldsRange.set(0, fieldToCheckO.getColumnIdx());
+                colouredFieldsRange.set(1, fieldToCheckO.getColumnIdx());
             }
             fieldToCheckO.setColumnIdx(fieldToCheckO.getColumnIdx() + 1);
         }
