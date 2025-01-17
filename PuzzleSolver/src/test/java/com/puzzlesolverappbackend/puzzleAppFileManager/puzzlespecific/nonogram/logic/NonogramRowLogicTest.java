@@ -74,7 +74,7 @@ class NonogramRowLogicTest {
     }
 
     @Test
-    @DisplayName(value = "Should place X if O will create too long coloured sequence - o09983 row 10")
+    @DisplayName(value = "Should place X if O will create too long coloured sequence [no changes] - o09983 row 10")
     void shouldPlaceXIfOWillCreateTooLongColumnColouredSequence() {
         // given
         int ROW_TO_TEST = 10;
