@@ -1071,9 +1071,9 @@ public class NonogramRowLogic extends NonogramLogicParams {
                 this.excludeFieldInRow(fieldWithPreviousColumnColoured);
                 this.excludeFieldInColumn(fieldWithPreviousColumnColoured);
                 this.addRowToAffectedActionsByIdentifiers(rowIdx,
-                        actionsToDoInRowAfterPlacingXInRowIfColouringWillCreateTooLongSequence);
+                        actionsToDoInRowAfterPlacingXInRowIfOWillMergeNearFieldsToTooLongColouredSequence);
                 this.addColumnToAffectedActionsByIdentifiers(previousColumnIndex,
-                        actionsToDoInColumnAfterPlacingXInRowIfColouringWillCreateTooLongSequence);
+                        actionsToDoInColumnAfterPlacingXInRowIfOWillMergeNearFieldsToTooLongColouredSequence);
 
                 tmpLog = generatePlacingXStepDescription(rowIdx, previousColumnIndex,
                         "placing \"X\" because \"O\" will create too long sequence");
@@ -1100,9 +1100,9 @@ public class NonogramRowLogic extends NonogramLogicParams {
                     this.excludeFieldInRow(fieldWithNextColumnColoured);
                     this.excludeFieldInColumn(fieldWithNextColumnColoured);
                     this.addRowToAffectedActionsByIdentifiers(rowIdx,
-                            actionsToDoInRowAfterPlacingXInRowIfColouringWillCreateTooLongSequence);
+                            actionsToDoInRowAfterPlacingXInRowIfOWillMergeNearFieldsToTooLongColouredSequence);
                     this.addColumnToAffectedActionsByIdentifiers(nextColumnIndex,
-                            actionsToDoInColumnAfterPlacingXInRowIfColouringWillCreateTooLongSequence);
+                            actionsToDoInColumnAfterPlacingXInRowIfOWillMergeNearFieldsToTooLongColouredSequence);
 
                     tmpLog = generatePlacingXStepDescription(rowIdx, nextColumnIndex,
                             "placing \"X\" because \"O\" will create too long sequence");
