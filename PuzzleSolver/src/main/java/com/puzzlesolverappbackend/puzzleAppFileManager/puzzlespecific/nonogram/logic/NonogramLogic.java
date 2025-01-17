@@ -913,7 +913,7 @@ public class NonogramLogic extends NonogramLogicParams {
         int stepsAfter;
         NonogramActionDetails currentActionDetails;
 
-        while(actionListIndex < actionsToDoList.size()) {
+        while (actionListIndex < actionsToDoList.size()) {
             currentActionDetails = actionsToDoList.get(actionListIndex);
             currentActionRCIndex = currentActionDetails.getIndex();
             try {
@@ -1040,11 +1040,7 @@ public class NonogramLogic extends NonogramLogicParams {
             case PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES -> nonogramRowLogic.placeXsAroundLongestSequencesInRow(rowIdx);
             case PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES -> nonogramRowLogic.placeXsRowAtTooShortEmptySequences(rowIdx);
             case PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE -> nonogramRowLogic.placeXsRowIfOWillMergeNearFieldsToTooLongColouredSequence(rowIdx);
-            case PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE -> {
-                if (rowIdx == 7) {
-                    nonogramRowLogic.placeXsRowIfONearXWillBeginTooLongPossibleColouredSequence(rowIdx);
-                }
-            }
+            case PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE -> nonogramRowLogic.placeXsRowIfONearXWillBeginTooLongPossibleColouredSequence(rowIdx);
             case MARK_AVAILABLE_FIELDS_IN_ROW -> nonogramRowLogic.markAvailableFieldsInRow(rowIdx);
             default -> {
                 // empty
@@ -1343,6 +1339,40 @@ public class NonogramLogic extends NonogramLogicParams {
         }
 
         return true;
+    }
+
+    public static NonogramLogic o11775_solutionToCompare() {
+        NonogramRowLogic o11775_rowLogic = new NonogramRowLogic();
+
+        List<List<String>> o11775_solution_board =
+                List.of(
+                        List.of("X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "O", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X"),
+                        List.of("X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "O", "O", "O", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X"),
+                        List.of("X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X", "X", "X", "X", "X", "X"),
+                        List.of("X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X", "X", "X", "X", "X", "X"),
+                        List.of("X", "X", "X", "X", "X", "X", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X", "X", "X"),
+                        List.of("X", "X", "X", "X", "X", "O", "O", "O", "O", "O", "O", "X", "X", "X", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X", "X"),
+                        List.of("X", "X", "X", "X", "O", "O", "X", "X", "O", "O", "X", "X", "X", "X", "X", "O", "X", "X", "X", "O", "O", "O", "X", "X", "O", "O", "X", "X", "X", "X"),
+                        List.of("X", "X", "X", "O", "O", "X", "O", "O", "O", "O", "X", "X", "O", "O", "X", "X", "X", "X", "X", "X", "O", "O", "O", "O", "X", "O", "O", "X", "X", "X"),
+                        List.of("X", "X", "O", "O", "X", "O", "O", "O", "O", "O", "X", "X", "O", "O", "X", "X", "X", "O", "O", "X", "O", "O", "O", "O", "O", "X", "O", "O", "O", "X"),
+                        List.of("O", "O", "O", "X", "O", "O", "O", "O", "O", "O", "X", "X", "O", "O", "X", "X", "X", "X", "X", "X", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X"),
+                        List.of("X", "X", "X", "O", "O", "X", "O", "O", "O", "O", "O", "X", "X", "X", "X", "O", "X", "X", "X", "O", "O", "O", "O", "O", "X", "O", "O", "X", "X", "X"),
+                        List.of("X", "X", "O", "O", "X", "X", "O", "X", "X", "O", "O", "O", "X", "X", "O", "O", "O", "O", "O", "O", "O", "O", "X", "O", "X", "X", "O", "O", "O", "O"),
+                        List.of("O", "O", "O", "X", "X", "X", "O", "X", "O", "O", "O", "O", "O", "O", "O", "O", "O", "X", "O", "O", "O", "O", "X", "O", "X", "X", "X", "X", "X", "X"),
+                        List.of("X", "X", "X", "X", "X", "X", "O", "X", "O", "X", "X", "O", "O", "O", "O", "X", "X", "O", "O", "X", "X", "O", "X", "O", "X", "X", "X", "X", "X", "X"),
+                        List.of("X", "X", "X", "X", "X", "X", "O", "X", "O", "X", "X", "X", "O", "O", "O", "O", "O", "O", "X", "X", "X", "O", "X", "O", "O", "X", "X", "X", "X", "X"),
+                        List.of("X", "X", "X", "X", "X", "O", "O", "X", "O", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "O", "X", "X", "O", "O", "X", "X", "X", "X"),
+                        List.of("X", "X", "X", "X", "O", "O", "X", "X", "O", "X", "X", "X", "X", "X", "X", "O", "X", "X", "X", "X", "O", "O", "X", "X", "X", "O", "O", "X", "X", "X"),
+                        List.of("X", "X", "O", "O", "O", "X", "X", "X", "O", "X", "X", "X", "X", "X", "O", "O", "O", "O", "O", "O", "O", "X", "X", "X", "X", "X", "O", "O", "O", "X"),
+                        List.of("X", "X", "X", "X", "X", "X", "X", "O", "O", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X"),
+                        List.of("X", "X", "X", "X", "X", "O", "O", "O", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X")
+                );
+
+        o11775_rowLogic.setNonogramSolutionBoard(o11775_solution_board);
+
+        return NonogramLogic.builder()
+                .nonogramRowLogic(o11775_rowLogic)
+                .build();
     }
 
     public static NonogramLogic exampleLogicToCompare() {
