@@ -13,7 +13,7 @@ public class ActionsConstants {
                     CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY,
                     COLOUR_OVERLAPPING_FIELDS_IN_ROW,
                     PLACE_XS_ROW_AT_UNREACHABLE_FIELDS,
-                    PLACE_XS_ROW_IF_O_WILL_CREATE_TOO_LONG_COLOURED_SEQUENCE
+                    PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoAfterCorrectingColumnsSequencesRanges = new ArrayList<>(
@@ -21,7 +21,7 @@ public class ActionsConstants {
                     CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY,
                     COLOUR_OVERLAPPING_FIELDS_IN_COLUMN,
                     PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS,
-                    PLACE_XS_COLUMN_IF_O_WILL_CREATE_TOO_LONG_COLOURED_SEQUENCE
+                    PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoAfterCorrectingRowsSequencesWhenMetColouredField = new ArrayList<>(
@@ -60,7 +60,7 @@ public class ActionsConstants {
                     PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES,
                     MARK_AVAILABLE_FIELDS_IN_COLUMN,
                     EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN,
-                    PLACE_XS_COLUMN_IF_O_WILL_CREATE_TOO_LONG_COLOURED_SEQUENCE
+                    PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterColouringOverlappingSequencesInRows = new ArrayList<>(
@@ -74,7 +74,7 @@ public class ActionsConstants {
                     PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES,
                     MARK_AVAILABLE_FIELDS_IN_ROW,
                     EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW,
-                    PLACE_XS_ROW_IF_O_WILL_CREATE_TOO_LONG_COLOURED_SEQUENCE
+                    PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterColouringOverlappingSequencesInColumns = new ArrayList<>(
@@ -94,7 +94,7 @@ public class ActionsConstants {
                     EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN,
                     PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES,
                     MARK_AVAILABLE_FIELDS_IN_COLUMN,
-                    PLACE_XS_COLUMN_IF_O_WILL_CREATE_TOO_LONG_COLOURED_SEQUENCE
+                    PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterExtendingColouredFieldsNearXInColumns = new ArrayList<>(
@@ -109,7 +109,7 @@ public class ActionsConstants {
                     EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW,
                     PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES,
                     MARK_AVAILABLE_FIELDS_IN_ROW,
-                    PLACE_XS_ROW_IF_O_WILL_CREATE_TOO_LONG_COLOURED_SEQUENCE
+                    PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterPlacingXsAtRowsUnreachableFields = new ArrayList<>(
@@ -221,7 +221,7 @@ public class ActionsConstants {
     public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterPlacingXInRowIfColouringWillCreateTooLongSequence = new ArrayList<>(
             List.of(
                     CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY,
-                    PLACE_XS_ROW_IF_O_WILL_CREATE_TOO_LONG_COLOURED_SEQUENCE
+                    PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE
             )
     );
 
@@ -236,7 +236,7 @@ public class ActionsConstants {
     public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterPlacingXInColumnIfColouringWillCreateTooLongSequence = new ArrayList<>(
             List.of(
                     CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY,
-                    PLACE_XS_COLUMN_IF_O_WILL_CREATE_TOO_LONG_COLOURED_SEQUENCE
+                    PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE
             )
     );
 

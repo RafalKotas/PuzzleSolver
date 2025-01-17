@@ -180,9 +180,9 @@ public class NonogramLogic extends NonogramLogicParams {
      */
     private List<List<String>> generateEmptyBoard(int height, int width, int emptyFieldCharRepeatCount) {
         List<List<String>> emptyBoard = new ArrayList<>(height);
-        for(int rowIdx = 0; rowIdx < height; rowIdx++) {
+        for (int rowIdx = 0; rowIdx < height; rowIdx++) {
             List<String> boardRow = new ArrayList<>();
-            for(int column = 0; column < width; column++) {
+            for (int column = 0; column < width; column++) {
                 boardRow.add(EMPTY_FIELD.repeat(emptyFieldCharRepeatCount));
             }
             emptyBoard.add(boardRow);
@@ -212,8 +212,8 @@ public class NonogramLogic extends NonogramLogicParams {
 
     private void fillTrivialRows() {
         Field rowField;
-        for(int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
-            if(rowIdx == 7) {
+        for (int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
+            if (rowIdx == 7) {
                 System.out.println("Check if row 7 is trivial");
             }
             if (isRowTrivial(rowIdx)) {
@@ -222,7 +222,7 @@ public class NonogramLogic extends NonogramLogicParams {
                 int subsequentXs = 0;
                 List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
                 List<Integer> rowSequenceRange = rowSequencesRanges.get(seqNo);
-                for(int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
+                for (int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
                     rowField = new Field(rowIdx, columnIdx);
                     if (rangeInsideAnotherRange(List.of(columnIdx, columnIdx), rowSequenceRange)) {
                         subsequentXs = 0;
@@ -298,14 +298,14 @@ public class NonogramLogic extends NonogramLogicParams {
 
     private void fillTrivialColumns() {
         Field columnField;
-        for(int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
+        for (int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
             if (isColumnTrivial(columnIdx)) {
                 addFillTrivialColumnLog(columnIdx);
                 int seqNo = 0;
                 int subsequentXs = 0;
                 List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
                 List<Integer> columnSequenceRange = columnSequencesRanges.get(seqNo);
-                for(int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
+                for (int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
                     columnField = new Field(rowIdx, columnIdx);
                     if (rangeInsideAnotherRange(List.of(rowIdx), columnSequenceRange)) {
                         subsequentXs = 0;
@@ -428,7 +428,7 @@ public class NonogramLogic extends NonogramLogicParams {
     private List<List<List<Integer>>> inferInitialRowsSequencesRanges() {
         List<List<List<Integer>>> initialRowSequencesRanges = new ArrayList<>();
 
-        for(int rowIdx = 0; rowIdx < rowsSequences.size(); rowIdx++) {
+        for (int rowIdx = 0; rowIdx < rowsSequences.size(); rowIdx++) {
             initialRowSequencesRanges.add(inferInitialRowSequencesRanges(rowsSequences.get(rowIdx), rowIdx));
         }
 
@@ -465,7 +465,7 @@ public class NonogramLogic extends NonogramLogicParams {
         int rangeStartIndex;
         int rangeLastIndex;
 
-        for(int idx = 0; idx < arrayFilledFromStart.size(); idx++) {
+        for (int idx = 0; idx < arrayFilledFromStart.size(); idx++) {
             String field = arrayFilledFromStart.get(idx);
             String fieldSequenceChar = field.substring(1, 2);
             if (field.indexOf(MARKED_ROW_INDICATOR) == 0 && !collectedSequences.contains(fieldSequenceChar)) {
@@ -508,7 +508,7 @@ public class NonogramLogic extends NonogramLogicParams {
         int sequenceLength = sequences.get(currentSequenceIdx);
         boolean breakX = true;
 
-        for(int fieldIdx = 0; fieldIdx < this.getWidth(); fieldIdx++ ) {
+        for (int fieldIdx = 0; fieldIdx < this.getWidth(); fieldIdx++ ) {
 
             if (!writeSequenceMode && currentSequenceIdx < charsNeeded.size() && breakX) {
                 canStartSequenceFromIndex = checkIfCanStartSequenceFromRowIndex(rowIdx, fieldIdx, sequenceLength);
@@ -546,7 +546,7 @@ public class NonogramLogic extends NonogramLogicParams {
      */
     private List<String> createArrayOfEmptyFields (int arrLength) {
         List<String> emptyFields = new ArrayList<>();
-        for(int i = 0; i < arrLength; i++) {
+        for (int i = 0; i < arrLength; i++) {
             emptyFields.add("----");
         }
         return emptyFields;
@@ -565,7 +565,7 @@ public class NonogramLogic extends NonogramLogicParams {
     private List<List<List<Integer>>> inferInitialColumnsSequencesRanges() {
         List<List<List<Integer>>> initialColumnsSequencesRanges = new ArrayList<>();
 
-        for(int columnIdx = 0; columnIdx < columnsSequences.size(); columnIdx ++) {
+        for (int columnIdx = 0; columnIdx < columnsSequences.size(); columnIdx ++) {
             initialColumnsSequencesRanges.add( inferInitialColumnSequencesRanges( columnsSequences.get(columnIdx), columnIdx) );
         }
 
@@ -617,7 +617,7 @@ public class NonogramLogic extends NonogramLogicParams {
         int sequenceLength = sequences.get(currentSequenceIdx);
         boolean breakX = true;
 
-        for(int fieldIdx = 0; fieldIdx < height; fieldIdx++ ) {
+        for (int fieldIdx = 0; fieldIdx < height; fieldIdx++ ) {
 
             if (!writeSequenceMode && currentSequenceIdx < charsNeeded.size() && breakX) {
                 canStartSequenceFromIndex = checkIfCanStartSequenceFromColumnIndex(columnIdx, fieldIdx, sequenceLength);
@@ -692,7 +692,7 @@ public class NonogramLogic extends NonogramLogicParams {
         int rangeStartIndex;
         int rangeLastIndex;
 
-        for(int idx = 0; idx < arrayFilledFromStart.size(); idx++) {
+        for (int idx = 0; idx < arrayFilledFromStart.size(); idx++) {
             String field = arrayFilledFromStart.get(idx);
             String fieldSequenceChar = field.substring(3, 4);
             if (field.indexOf(MARKED_COLUMN_INDICATOR) == 2 && !collectedSequences.contains(fieldSequenceChar)) {
@@ -715,7 +715,7 @@ public class NonogramLogic extends NonogramLogicParams {
     private List<List<List<Integer>>> inferRowsSequencesRangesFromSolutionBoard() {
         List<List<List<Integer>>> inferredRowsSequencesRanges = new ArrayList<>();
 
-        for(int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
+        for (int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
             inferredRowsSequencesRanges.add(inferRowSequencesRangesFromSolutionBoardRow(rowIdx));
         }
 
@@ -734,7 +734,7 @@ public class NonogramLogic extends NonogramLogicParams {
         List<Integer> boardRowSequenceRange;
         int sequenceNo = 0;
 
-        for(int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
+        for (int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
             if (boardRow.get(columnIdx).equals(COLOURED_FIELD)) {
                 boardRowSequenceRange = new ArrayList<>();
                 boardRowSequenceRange.add(columnIdx);
@@ -759,7 +759,7 @@ public class NonogramLogic extends NonogramLogicParams {
     private List<List<List<Integer>>> inferColumnsSequencesRangesFromSolutionBoard() {
         List<List<List<Integer>>> inferredColumnsSequencesRanges = new ArrayList<>();
 
-        for(int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
+        for (int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
             inferredColumnsSequencesRanges.add(inferColumnSequencesRangesFromSolutionBoardColumn(columnIdx));
         }
 
@@ -777,7 +777,7 @@ public class NonogramLogic extends NonogramLogicParams {
         List<Integer> boardColumnSequenceRange;
         int sequenceNo = 0;
 
-        for(int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
+        for (int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
             if (boardColumn.get(rowIdx).equals(COLOURED_FIELD)) {
                 boardColumnSequenceRange = new ArrayList<>();
                 boardColumnSequenceRange.add(rowIdx);
@@ -805,7 +805,7 @@ public class NonogramLogic extends NonogramLogicParams {
     private List<String> generateArrayOfSequenceMarks (int marksNo) {
         List<String> arrayOfSequenceMarks = new ArrayList<>();
 
-        for(int charIdx = 0; charIdx < marksNo; charIdx++) {
+        for (int charIdx = 0; charIdx < marksNo; charIdx++) {
             arrayOfSequenceMarks.add( indexToSequenceCharMark(charIdx) );
         }
 
@@ -839,7 +839,7 @@ public class NonogramLogic extends NonogramLogicParams {
      */
     private int findLastIndexContaining (List<String> array, String matchingSubstring) {
 
-        for( int arrIdx = array.size() - 1; arrIdx >= 0; arrIdx--) {
+        for ( int arrIdx = array.size() - 1; arrIdx >= 0; arrIdx--) {
             if (array.get(arrIdx).contains(matchingSubstring)) {
                 return arrIdx;
             }
@@ -857,10 +857,10 @@ public class NonogramLogic extends NonogramLogicParams {
         NonogramSolutionDecision decision;
         Field decisionField;
 
-        for(int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
+        for (int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
             rowFieldsNotToInclude = this.getRowsFieldsNotToInclude().get(rowIdx);
             if (!(rowFieldsNotToInclude.size() == this.getWidth())) {
-                for(int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
+                for (int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
                     if (!nonogramSolutionBoard.get(rowIdx).get(columnIdx).equals(COLOURED_FIELD) && !nonogramSolutionBoard.get(rowIdx).get(columnIdx).equals(X_FIELD)) {
                         decisionField = new Field(rowIdx, columnIdx);
                         decision = new NonogramSolutionDecision(X_FIELD, decisionField);
@@ -1035,16 +1035,11 @@ public class NonogramLogic extends NonogramLogicParams {
                 }
             }
             case COLOUR_OVERLAPPING_FIELDS_IN_ROW -> nonogramRowLogic.fillOverlappingFieldsInRow(rowIdx);
-            case EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW -> {
-                nonogramRowLogic.extendColouredFieldsToLeftNearXToMaximumPossibleLengthInRow(rowIdx);
-                nonogramRowLogic.extendColouredFieldsToRightNearXToMaximumPossibleLengthInRow(rowIdx);
-            }
+            case EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW -> nonogramRowLogic.extendColouredFieldsNearXToMaximumPossibleLengthInRow(rowIdx);
             case PLACE_XS_ROW_AT_UNREACHABLE_FIELDS -> nonogramRowLogic.placeXsRowAtUnreachableFields(rowIdx);
             case PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES -> nonogramRowLogic.placeXsAroundLongestSequencesInRow(rowIdx);
-            case PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES ->
-                    nonogramRowLogic.placeXsRowAtTooShortEmptySequences(rowIdx);
-            case PLACE_XS_ROW_IF_O_WILL_CREATE_TOO_LONG_COLOURED_SEQUENCE ->
-                    nonogramRowLogic.placeXsRowIfOWillCreateTooLongColouredSequence(rowIdx);
+            case PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES -> nonogramRowLogic.placeXsRowAtTooShortEmptySequences(rowIdx);
+            case PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE -> nonogramRowLogic.placeXsRowIfOWillMergeNearFieldsToTooLongColouredSequence(rowIdx);
             case PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE -> {
                 if (rowIdx == 7) {
                     nonogramRowLogic.placeXsRowIfONearXWillBeginTooLongPossibleColouredSequence(rowIdx);
@@ -1078,20 +1073,12 @@ public class NonogramLogic extends NonogramLogicParams {
                 }
             }
             case COLOUR_OVERLAPPING_FIELDS_IN_COLUMN -> nonogramColumnLogic.fillOverlappingFieldsInColumn(columnIdx);
-            case EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN -> {
-                nonogramColumnLogic.extendColouredFieldsToTopNearXToMaximumPossibleLengthInColumn(columnIdx);
-                nonogramColumnLogic.extendColouredFieldsToBottomNearXToMaximumPossibleLengthInColumn(columnIdx);
-            }
-            case PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS ->
-                    nonogramColumnLogic.placeXsColumnAtUnreachableFields(columnIdx);
-            case PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES ->
-                    nonogramColumnLogic.placeXsAroundLongestSequencesInColumn(columnIdx);
-            case PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES ->
-                    nonogramColumnLogic.placeXsColumnAtTooShortEmptySequences(columnIdx);
-            case PLACE_XS_COLUMN_IF_O_WILL_CREATE_TOO_LONG_COLOURED_SEQUENCE ->
-                    nonogramColumnLogic.placeXsColumnIfOWillMergeNearFieldsToTooLongColouredSequence(columnIdx);
-            case MARK_AVAILABLE_FIELDS_IN_COLUMN ->
-                    nonogramColumnLogic.markAvailableFieldsInColumn(columnIdx);
+            case EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN -> nonogramColumnLogic.extendColouredFieldsNearXToMaximumPossibleLengthInColumn(columnIdx);
+            case PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS -> nonogramColumnLogic.placeXsColumnAtUnreachableFields(columnIdx);
+            case PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES -> nonogramColumnLogic.placeXsAroundLongestSequencesInColumn(columnIdx);
+            case PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES -> nonogramColumnLogic.placeXsColumnAtTooShortEmptySequences(columnIdx);
+            case PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE -> nonogramColumnLogic.placeXsColumnIfOWillMergeNearFieldsToTooLongColouredSequence(columnIdx);
+            case MARK_AVAILABLE_FIELDS_IN_COLUMN -> nonogramColumnLogic.markAvailableFieldsInColumn(columnIdx);
             default -> {
                 // empty
             }
@@ -1102,7 +1089,7 @@ public class NonogramLogic extends NonogramLogicParams {
         List<Integer> sequencesLengths = this.nonogramColumnLogic.getColumnsSequences().get(columnIndex);
         List<List<Integer>> columnSequencesRanges = this.nonogramColumnLogic.getColumnsSequencesRanges().get(columnIndex);
 
-        for(int seqNo = 0; seqNo < columnSequencesRanges.size(); seqNo++) {
+        for (int seqNo = 0; seqNo < columnSequencesRanges.size(); seqNo++) {
             if (rangeLength(columnSequencesRanges.get(seqNo)) < sequencesLengths.get(seqNo)) {
                 this.nonogramColumnLogic.getNonogramState().invalidateSolution();
                 break;
@@ -1114,7 +1101,7 @@ public class NonogramLogic extends NonogramLogicParams {
         List<Integer> sequencesLengths = this.getRowsSequences().get(rowIndex);
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIndex);
 
-        for(int seqNo = 0; seqNo < rowSequencesRanges.size(); seqNo++) {
+        for (int seqNo = 0; seqNo < rowSequencesRanges.size(); seqNo++) {
             if (rangeLength(rowSequencesRanges.get(seqNo)) < sequencesLengths.get(seqNo)) {
                 this.nonogramRowLogic.getNonogramState().invalidateSolution();
                 break;
@@ -1284,7 +1271,7 @@ public class NonogramLogic extends NonogramLogicParams {
     }
 
     public NonogramLogic setNonogramBoardRow(int rowIdx, List<String> boardRow) {
-        for(int colIdx = 0; colIdx < this.getWidth(); colIdx++) {
+        for (int colIdx = 0; colIdx < this.getWidth(); colIdx++) {
             this.nonogramSolutionBoard.get(rowIdx).set(colIdx, boardRow.get(colIdx));
         }
         return this;
@@ -1426,7 +1413,7 @@ public class NonogramLogic extends NonogramLogicParams {
     public void printRowsSequencesRanges() {
         int rowIdx = 0;
         System.out.println("Rows sequences ranges:");
-        for(List<List<Integer>> rowSequencesRanges : this.getRowsSequencesRanges()) {
+        for (List<List<Integer>> rowSequencesRanges : this.getRowsSequencesRanges()) {
             System.out.println(rowIdx + ": " + rowSequencesRanges);
             rowIdx++;
         }
@@ -1435,7 +1422,7 @@ public class NonogramLogic extends NonogramLogicParams {
     public void printColumnsSequencesRanges() {
         int columnIdx = 0;
         System.out.println("Columns sequences ranges:");
-        for(List<List<Integer>> columnSequencesRanges : this.getColumnsSequencesRanges()) {
+        for (List<List<Integer>> columnSequencesRanges : this.getColumnsSequencesRanges()) {
             System.out.println(columnIdx + ": " + columnSequencesRanges);
             columnIdx++;
         }

@@ -21,7 +21,7 @@ public class NonogramPrinter extends NonogramLogicParams implements NonogramLogi
         List<String> rowsWithIndexes = IntStream.range(0, this.getNonogramSolutionBoard().size())
                 .mapToObj(rowIndex -> this.getNonogramSolutionBoard().get(rowIndex) + " " + rowIndex)
                 .toList();
-        for(String boardRow : rowsWithIndexes) {
+        for (String boardRow : rowsWithIndexes) {
             System.out.println(boardRow);
         }
     }
@@ -50,7 +50,7 @@ public class NonogramPrinter extends NonogramLogicParams implements NonogramLogi
      * prints nonogramSolutionBoardWithMarks(fields like "RxCy"/"Rx--"/"--Cx"/"----") in readable format
      */
     public void printNonogramBoardWithMarks() {
-        for(List<String> boardRow : this.getNonogramSolutionBoardWithMarks()) {
+        for (List<String> boardRow : this.getNonogramSolutionBoardWithMarks()) {
             System.out.println(boardRow);
         }
     }
@@ -60,7 +60,7 @@ public class NonogramPrinter extends NonogramLogicParams implements NonogramLogi
      */
     public void printRowsSequencesRanges() {
         int rowIdx = 0;
-        for(List<List<Integer>> rowSequencesRanges : this.getRowsSequencesRanges()) {
+        for (List<List<Integer>> rowSequencesRanges : this.getRowsSequencesRanges()) {
             System.out.println(rowIdx + " " + rowSequencesRanges);
             rowIdx++;
         }
@@ -71,7 +71,7 @@ public class NonogramPrinter extends NonogramLogicParams implements NonogramLogi
      */
     public void printColumnsSequencesRanges() {
         int colIdx = 0;
-        for(List<List<Integer>> colSequencesRanges : this.getColumnsSequencesRanges()) {
+        for (List<List<Integer>> colSequencesRanges : this.getColumnsSequencesRanges()) {
             System.out.println(colIdx + " " + colSequencesRanges);
             colIdx++;
         }
@@ -83,7 +83,7 @@ public class NonogramPrinter extends NonogramLogicParams implements NonogramLogi
     public void printLogs() {
         int logIndex = 0;
         if (!this.getLogs().isEmpty()) {
-            for(String log : this.getLogs()) {
+            for (String log : this.getLogs()) {
                 System.out.println(logIndex + " : "  + log);
                 logIndex++;
             }

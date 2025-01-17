@@ -64,7 +64,7 @@ public class NonogramGenetic {
 
     public void solve() {
         generateInitialPopulation();
-        for(int iterationNo = 0; iterationNo < 20; iterationNo++) {
+        for (int iterationNo = 0; iterationNo < 20; iterationNo++) {
             generateNextPopulation(iterationNo);
             if (solutionFound) {
                 System.out.println("Solution found!!!, iterationNo: " + iterationNo);
@@ -82,10 +82,10 @@ public class NonogramGenetic {
         populationColumnsMaximumCorrectIndexFromTop = new ArrayList<>();
         populationColumnsMaximumCorrectIndexFromBottom = new ArrayList<>();
 
-        for(int index = 0; index < populationCount; index++) {
+        for (int index = 0; index < populationCount; index++) {
             populationMember = gson.fromJson(gson.toJson(nonogramObject), NonogramLogic.class);
 
-            for(int rowIdx = 0; rowIdx < nonogramObject.getHeight(); rowIdx++) {
+            for (int rowIdx = 0; rowIdx < nonogramObject.getHeight(); rowIdx++) {
                 nonogramBoardRow =  generateRandomRowArray(populationMember, rowIdx);
 
                 populationMember = populationMember.setNonogramBoardRow(rowIdx, nonogramBoardRow);
@@ -137,9 +137,9 @@ public class NonogramGenetic {
         int crossingCount = 0;
         this.setSolutionFound(false);
             // crossing
-        for(int firstPopulationMemberIndex = 0; firstPopulationMemberIndex < populationCount; firstPopulationMemberIndex++) {
+        for (int firstPopulationMemberIndex = 0; firstPopulationMemberIndex < populationCount; firstPopulationMemberIndex++) {
             firstPopulationMember = currentPopulation.get(firstPopulationMemberIndex);
-            for(int secondPopulationMemberIndex = 0; secondPopulationMemberIndex < populationCount; secondPopulationMemberIndex++) {
+            for (int secondPopulationMemberIndex = 0; secondPopulationMemberIndex < populationCount; secondPopulationMemberIndex++) {
                 secondPopulationMember = currentPopulation.get(secondPopulationMemberIndex);
                 //System.out.println("Population indexes: " + firstPopulationMemberIndex + " and " + secondPopulationMemberIndex);
 
@@ -320,7 +320,7 @@ public class NonogramGenetic {
         int fieldsNeeded;
         int maxProbablyCorrect;
 
-        for(int columnIdx = 0; columnIdx < populationMember.getWidth(); columnIdx++) {
+        for (int columnIdx = 0; columnIdx < populationMember.getWidth(); columnIdx++) {
             boardColumn = getSolutionBoardColumn(populationMember.nonogramSolutionBoard, columnIdx);
             columnSequencesLengths = populationMember.getColumnsSequences().get(columnIdx);
 
@@ -330,7 +330,7 @@ public class NonogramGenetic {
             colouredInRow = 0;
             maxProbablyCorrect = 0;
 
-            for(int rowIdx = 0;  rowIdx < populationMember.getHeight(); rowIdx++) {
+            for (int rowIdx = 0;  rowIdx < populationMember.getHeight(); rowIdx++) {
                 if (boardColumn.get(rowIdx).equals("X")) {
                     if (colouredInRow == currentSequenceLength) {
                         currentSequenceNo++;
@@ -380,7 +380,7 @@ public class NonogramGenetic {
         int fieldsNeeded;
         int maxProbablyCorrect;
 
-        for(int columnIdx = 0; columnIdx < populationMember.getWidth(); columnIdx++) {
+        for (int columnIdx = 0; columnIdx < populationMember.getWidth(); columnIdx++) {
             boardColumn = getSolutionBoardColumn(populationMember.nonogramSolutionBoard, columnIdx);
             columnSequencesLengths = populationMember.getColumnsSequences().get(columnIdx);
 
@@ -390,7 +390,7 @@ public class NonogramGenetic {
             colouredInRow = 0;
             maxProbablyCorrect = 0;
 
-            for(int rowIdx = populationMember.getHeight() - 1;  rowIdx >= 0; rowIdx--) {
+            for (int rowIdx = populationMember.getHeight() - 1;  rowIdx >= 0; rowIdx--) {
                 if (boardColumn.get(rowIdx).equals("X")) {
                     if (colouredInRow == currentSequenceLength) {
                         currentSequenceNo--;
@@ -430,14 +430,14 @@ public class NonogramGenetic {
         int sequencesLengthsSum = 0;
         int sequencesCount = 0;
         if (direction.equals("fromTop")) {
-            for(int seqNo = 0; seqNo < sequencesLengths.size(); seqNo++) {
+            for (int seqNo = 0; seqNo < sequencesLengths.size(); seqNo++) {
                 if (seqNo >= currentSeqNo) {
                     sequencesCount++;
                     sequencesLengthsSum += sequencesLengths.get(seqNo);
                 }
             }
         } else {
-            for(int seqNo = sequencesLengths.size() - 1; seqNo >= 0; seqNo--) {
+            for (int seqNo = sequencesLengths.size() - 1; seqNo >= 0; seqNo--) {
                 if (seqNo <= currentSeqNo) {
                     sequencesCount++;
                     sequencesLengthsSum += sequencesLengths.get(seqNo);
@@ -462,7 +462,7 @@ public class NonogramGenetic {
         int choosenStartPointIndex;
         List<Integer> updatedRange;
 
-        for(int rowSequence = 0; rowSequence < rowSequencesRanges.size(); rowSequence++) {
+        for (int rowSequence = 0; rowSequence < rowSequencesRanges.size(); rowSequence++) {
             sequenceRange = rowSequencesRanges.get(rowSequence);
             sequenceLength = rowSequencesLengths.get(rowSequence);
 
@@ -498,7 +498,7 @@ public class NonogramGenetic {
 
         List<Integer> indexesToColour = flattenArray(indexesToFillRanges);
 
-        for(int j = 0; j < this.getNonogramObject().getWidth(); j++) {
+        for (int j = 0; j < this.getNonogramObject().getWidth(); j++) {
             if (indexesToColour.contains(j)) {
                 rowArray.add(COLOURED_FIELD);
             } else {
@@ -538,7 +538,7 @@ public class NonogramGenetic {
     public List<Integer> findAllIntegersInRange(List<Integer> range) {
         List<Integer> IntegersInRange = new ArrayList<>();
 
-        for(int startIndex = range.get(0); startIndex <= range.get(1); startIndex++) {
+        for (int startIndex = range.get(0); startIndex <= range.get(1); startIndex++) {
             IntegersInRange.add(startIndex);
         }
 
@@ -571,11 +571,11 @@ public class NonogramGenetic {
         List<String> boardToCheckRow;
         List<String> populationBoardRow;
 
-        for(int rowIdx = 0; rowIdx < boardToCheck.size(); rowIdx++) {
+        for (int rowIdx = 0; rowIdx < boardToCheck.size(); rowIdx++) {
             boardToCheckRow = boardToCheck.get(rowIdx);
             populationBoardRow = populationBoard.get(rowIdx);
 
-            for(int colIdx = 0; colIdx < boardToCheckRow.size(); colIdx++) {
+            for (int colIdx = 0; colIdx < boardToCheckRow.size(); colIdx++) {
                 if (!boardToCheckRow.get(colIdx).equals(populationBoardRow.get(colIdx))) {
                     return false;
                 }

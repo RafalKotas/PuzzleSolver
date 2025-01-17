@@ -55,7 +55,7 @@ public abstract class NonogramLogicParams {
     }
 
     public void setNonogramSolutionBoardColumn(int columnIdx, List<String> boardColumn) {
-        for(int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
+        for (int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
             this.nonogramSolutionBoard.get(rowIdx).set(columnIdx, boardColumn.get(rowIdx));
         }
     }
@@ -69,7 +69,7 @@ public abstract class NonogramLogicParams {
     }
 
     public void setNonogramSolutionBoardRow(int rowIdx, List<String> boardRow) {
-        for(int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
+        for (int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
             this.nonogramSolutionBoard.get(rowIdx).set(columnIdx, boardRow.get(columnIdx));
         }
     }
@@ -83,8 +83,8 @@ public abstract class NonogramLogicParams {
      */
     public int fieldsWithXPlaced() {
         int fieldsWithXOnBoard = 0;
-        for(int rowIndex = 0; rowIndex < this.getHeight(); rowIndex++) {
-            for(int columnIndex = 0; columnIndex < this.getWidth(); columnIndex++) {
+        for (int rowIndex = 0; rowIndex < this.getHeight(); rowIndex++) {
+            for (int columnIndex = 0; columnIndex < this.getWidth(); columnIndex++) {
                 if (this.getNonogramSolutionBoard().get(rowIndex).get(columnIndex).equals("X")) {
                     fieldsWithXOnBoard++;
                 }
@@ -113,8 +113,8 @@ public abstract class NonogramLogicParams {
     public int fieldsColoured() {
         int colouredFieldsOnBoard = 0;
         Field potentiallyColouredField;
-        for(int rowIndex = 0; rowIndex < this.getHeight(); rowIndex++) {
-            for(int columnIndex = 0; columnIndex < this.getWidth(); columnIndex++) {
+        for (int rowIndex = 0; rowIndex < this.getHeight(); rowIndex++) {
+            for (int columnIndex = 0; columnIndex < this.getWidth(); columnIndex++) {
                 potentiallyColouredField = new Field(rowIndex, columnIndex);
                 if (isFieldColoured(nonogramSolutionBoard, potentiallyColouredField)) {
                     colouredFieldsOnBoard++;
@@ -145,7 +145,7 @@ public abstract class NonogramLogicParams {
         int fieldsToColourOnBoard = 0;
         int fieldsToColourInRow;
 
-        for(int rowIndex = 0; rowIndex < this.getHeight(); rowIndex++) {
+        for (int rowIndex = 0; rowIndex < this.getHeight(); rowIndex++) {
             fieldsToColourInRow = this.getRowsSequences()
                     .get(rowIndex)
                     .stream()
@@ -201,13 +201,13 @@ public abstract class NonogramLogicParams {
     }
 
     protected void addColumnToAffectedActionsByIdentifiers(int columnIdx, List<NonogramSolveAction> actions) {
-        for(NonogramSolveAction action : actions) {
+        for (NonogramSolveAction action : actions) {
             this.actionsToDoList.add(new NonogramActionDetails(columnIdx, action));
         }
     }
 
     protected void addRowToAffectedActionsByIdentifiers(int rowIdx, List<NonogramSolveAction> actions) {
-        for(NonogramSolveAction action : actions) {
+        for (NonogramSolveAction action : actions) {
             this.actionsToDoList.add(new NonogramActionDetails(rowIdx, action));
         }
     }
@@ -368,7 +368,7 @@ public abstract class NonogramLogicParams {
     protected boolean isRowTrivial(int rowIdx) {
         List<Integer> rowSequencesLengths = this.getRowsSequences().get(rowIdx);
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
-        for(int seqNo = 0; seqNo < rowSequencesLengths.size(); seqNo++) {
+        for (int seqNo = 0; seqNo < rowSequencesLengths.size(); seqNo++) {
             if (rowSequencesLengths.get(seqNo) != rangeLength(rowSequencesRanges.get(seqNo))) {
                 return false;
             }
@@ -380,7 +380,7 @@ public abstract class NonogramLogicParams {
     protected boolean isColumnTrivial(int columnIdx) {
         List<Integer> columnSequencesLengths = this.getColumnsSequences().get(columnIdx);
         List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
-        for(int seqNo = 0; seqNo < columnSequencesLengths.size(); seqNo++) {
+        for (int seqNo = 0; seqNo < columnSequencesLengths.size(); seqNo++) {
             if (columnSequencesLengths.get(seqNo) != rangeLength(columnSequencesRanges.get(seqNo))) {
                 return false;
             }
@@ -408,7 +408,7 @@ public abstract class NonogramLogicParams {
     public List<String> getNonogramBoardColumn(int columnIdx) {
         List<String> solutionBoardColumn = new ArrayList<>();
 
-        for(int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
+        for (int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
             solutionBoardColumn.add(this.nonogramSolutionBoard.get(rowIdx).get(columnIdx));
         }
 
@@ -422,7 +422,7 @@ public abstract class NonogramLogicParams {
     public List<String> getNonogramBoardColumnWithMarks(int columnIdx) {
         List<String> solutionBoardColumnWithMarks = new ArrayList<>();
 
-        for(int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
+        for (int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
             solutionBoardColumnWithMarks.add(nonogramSolutionBoardWithMarks.get(rowIdx).get(columnIdx));
         }
 

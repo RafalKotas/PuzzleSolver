@@ -62,7 +62,7 @@ public class SymmetricNonogramLoggerInitializer implements CommandLineRunner {
         }
 
         System.out.println("Nonograms 4 axis symmetrical filenames: ");
-        for(String nonogramSym : nonograms3Dsymmetrical) {
+        for (String nonogramSym : nonograms3Dsymmetrical) {
             System.out.println(nonogramSym);
         }
     }

@@ -17,7 +17,7 @@ public class NonogramLogicUtils {
         List<Integer> rowSequencesLengths = nonogramRowLogic.getRowsSequences().get(rowIdx);
         List<List<Integer>> rowSequencesRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
 
-        for(int seqNo = 0; seqNo < rowSequencesLengths.size(); seqNo++) {
+        for (int seqNo = 0; seqNo < rowSequencesLengths.size(); seqNo++) {
             if (rangeInsideAnotherRange(colouredSequence, rowSequencesRanges.get(seqNo)) &&
                     rangeLength(colouredSequence) <= rowSequencesLengths.get(seqNo)) {
                 return true;
@@ -32,7 +32,7 @@ public class NonogramLogicUtils {
         List<Integer> columnSequencesLengths = nonogramColumnLogic.getColumnsSequences().get(columnIdx);
         List<List<Integer>> columnSequencesRanges = nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx);
 
-        for(int seqNo = 0; seqNo < columnSequencesLengths.size(); seqNo++) {
+        for (int seqNo = 0; seqNo < columnSequencesLengths.size(); seqNo++) {
             if (rangeInsideAnotherRange(colouredSequence, columnSequencesRanges.get(seqNo)) &&
                     rangeLength(colouredSequence) <= columnSequencesLengths.get(seqNo)) {
                 return true;

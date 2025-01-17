@@ -79,7 +79,7 @@ public class NonogramSolver {
         nonogramSubsolutionNode.makeBasicSolverActions();
         log.info("COMPLETION PERCENTAGE: {}, DECISIONS SIZE: {}", nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage(), nonogramSubsolutionNode.getNonogramGuessDecisions().size());
         log.info("SOLUTION STEPS: ");
-        for(String nonogramNodeLog : nonogramSubsolutionNode.getNodeLogs()) {
+        for (String nonogramNodeLog : nonogramSubsolutionNode.getNodeLogs()) {
             System.out.println(nonogramNodeLog);
         }
 
@@ -113,7 +113,7 @@ public class NonogramSolver {
                 List<NonogramSolutionDecision> availableChoices = nonogramSubsolutionNode.getNonogramLogic().getAvailableChoices();
 //                start = System.currentTimeMillis();
                 gson = new Gson();
-                for(NonogramSolutionDecision decision : availableChoices) {
+                for (NonogramSolutionDecision decision : availableChoices) {
                     leftNodeO = copyNodeAndAddDecision(decision, COLOURED_FIELD, nonogramSubsolutionNode);
                     rightNodeX = copyNodeAndAddDecision(decision, X_FIELD, nonogramSubsolutionNode);
 
@@ -188,7 +188,7 @@ public class NonogramSolver {
                         int maxNextFilled = 0;
                         int leftNodeFilled;
                         int rightNodeFilled;
-                        for(NonogramSolutionDecision decision : nonogramSubsolutionNode.getNonogramLogic().getAvailableChoices()) {
+                        for (NonogramSolutionDecision decision : nonogramSubsolutionNode.getNonogramLogic().getAvailableChoices()) {
                             leftNodeO = copyNodeAndAddDecision(decision, COLOURED_FIELD, nonogramSubsolutionNode);
                             leftNodeO.makeBasicSolverActions();
                             leftNodeFilled = leftNodeO.getNonogramLogic().fieldsFilled();
@@ -229,7 +229,7 @@ public class NonogramSolver {
                         int leftNodeFilled;
                         int rightNodeFilled;
 
-                        for(NonogramSolutionDecision decision : nonogramSubsolutionNode.getNonogramLogic().getAvailableChoices()) {
+                        for (NonogramSolutionDecision decision : nonogramSubsolutionNode.getNonogramLogic().getAvailableChoices()) {
                             leftNodeO = copyNodeAndAddDecision(decision, COLOURED_FIELD, nonogramSubsolutionNode);
                             leftNodeO.makeBasicSolverActions();
                             leftNodeFilled = leftNodeO.getNonogramLogic().fieldsFilled();
