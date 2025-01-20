@@ -437,6 +437,31 @@ public abstract class NonogramLogicParams {
         }
     }
 
+    protected void printSolutionBoardAsCode() {
+        int rowIdx = 0;
+        int columnIdx;
+        System.out.println("List.of(");
+        for (List<String> solutionBoardRow : this.getNonogramSolutionBoard()) {
+            columnIdx = 0;
+            System.out.print("List.of(");
+            for (String boardCell : solutionBoardRow) {
+                System.out.print("\"" + boardCell + "\"");
+                if (columnIdx != solutionBoardRow.size() - 1) {
+                    System.out.print(", ");
+                }
+                columnIdx++;
+            }
+            if (rowIdx != this.getNonogramSolutionBoard().size() - 1) {
+                System.out.println("),");
+            } else {
+                System.out.println(")");
+            }
+
+            rowIdx++;
+        }
+        System.out.println(");");
+    }
+
     protected void printSolutionBoard() {
         for (List<String> solutionBoardRow : this.getNonogramSolutionBoard()) {
             System.out.println(solutionBoardRow);
