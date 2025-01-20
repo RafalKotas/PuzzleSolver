@@ -1126,7 +1126,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
         List<Integer> columnSequencesLengths = this.getColumnsSequences().get(columnIdx);
         List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
         List<Integer> sequencesIdsWhichWillBeginTooLongPossibleColoured;
-        List<Integer> sequencesIdsWhichAreNotLongEnough;
+        List<Integer> sequencesIdsWhichNotReachColouredField;
 
         for (int rowIdx = this.getHeight() - 1; rowIdx > 0; rowIdx--) {
             fieldToCheckX = new Field(rowIdx, columnIdx);
@@ -1141,19 +1141,20 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                         emptyFieldsRangeLength = rangeLength(emptyFieldsRange);
                         colouredFieldsRangeLength = rangeLength(colouredFieldsRange);
                         sequencesIdsWhichWillBeginTooLongPossibleColoured = new ArrayList<>();
-                        sequencesIdsWhichAreNotLongEnough = new ArrayList<>();
+                        sequencesIdsWhichNotReachColouredField = new ArrayList<>();
                         for (int seqNo = 0; seqNo < columnSequencesLengths.size(); seqNo++) {
                             int sequenceLength = columnSequencesLengths.get(seqNo);
-                            if (rangeInsideAnotherRange(emptyFieldsRange, columnSequencesRanges.get(seqNo))) {
+                            if (rangeInsideAnotherRange(emptyFieldsRange, columnSequencesRanges.get(seqNo))
+                                || columnSequenceCanFitAfterColouredField(columnIdx, seqNo, emptyFieldsRange)) {
                                 if (emptyFieldsRangeLength <= sequenceLength) {
                                     sequencesIdsWhichWillBeginTooLongPossibleColoured.add(seqNo);
                                 } else {
-                                    sequencesIdsWhichAreNotLongEnough.add(seqNo);
+                                    sequencesIdsWhichNotReachColouredField.add(seqNo);
                                 }
                             }
                         }
                         int mergedSequenceLength = emptyFieldsRangeLength + colouredFieldsRangeLength;
-                        if (sequencesIdsWhichAreNotLongEnough.isEmpty() &&
+                        if (sequencesIdsWhichNotReachColouredField.isEmpty() &&
                                 !sequencesIdsWhichWillBeginTooLongPossibleColoured.isEmpty() &&
                                 sequencesIdsWhichWillBeginTooLongPossibleColoured.stream().allMatch(seqNo -> mergedSequenceLength > columnSequencesLengths.get(seqNo))) {
                             Field emptyFieldNearX = new Field(emptyFieldsRange.get(1), columnIdx);
@@ -1182,19 +1183,20 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                         emptyFieldsRangeLength = rangeLength(emptyFieldsRange);
                         colouredFieldsRangeLength = rangeLength(colouredFieldsRange);
                         sequencesIdsWhichWillBeginTooLongPossibleColoured = new ArrayList<>();
-                        sequencesIdsWhichAreNotLongEnough = new ArrayList<>();
+                        sequencesIdsWhichNotReachColouredField = new ArrayList<>();
                         for (int seqNo = 0; seqNo < columnSequencesLengths.size(); seqNo++) {
                             int sequenceLength = columnSequencesLengths.get(seqNo);
-                            if (rangeInsideAnotherRange(emptyFieldsRange, columnSequencesRanges.get(seqNo))) {
+                            if (rangeInsideAnotherRange(emptyFieldsRange, columnSequencesRanges.get(seqNo))
+                                    || columnSequenceCanFitBeforeColouredField(columnIdx, seqNo, emptyFieldsRange)) {
                                 if (emptyFieldsRangeLength <= sequenceLength) {
                                     sequencesIdsWhichWillBeginTooLongPossibleColoured.add(seqNo);
                                 } else {
-                                    sequencesIdsWhichAreNotLongEnough.add(seqNo);
+                                    sequencesIdsWhichNotReachColouredField.add(seqNo);
                                 }
                             }
                         }
                         int mergedSequenceLength = emptyFieldsRangeLength + colouredFieldsRangeLength;
-                        if (sequencesIdsWhichAreNotLongEnough.isEmpty() &&
+                        if (sequencesIdsWhichNotReachColouredField.isEmpty() &&
                                 !sequencesIdsWhichWillBeginTooLongPossibleColoured.isEmpty() &&
                                 sequencesIdsWhichWillBeginTooLongPossibleColoured.stream().allMatch(seqNo -> mergedSequenceLength > columnSequencesLengths.get(seqNo))) {
                             Field emptyFieldNearX = new Field(emptyFieldsRange.get(0), columnIdx);
@@ -1261,6 +1263,14 @@ public class NonogramColumnLogic extends NonogramLogicParams {
         return colouredFieldsRange;
     }
 
+    private boolean  columnSequenceCanFitAfterColouredField(int columnIdx, int seqNo, List<Integer> emptyFieldsRange) {
+        List<Integer> columnPossibleRange = this.getColumnsSequencesRanges().get(columnIdx).get(seqNo);
+        int seqLength = this.getColumnsSequences().get(columnIdx).get(seqNo);
+        List<Integer> lastRangeAfterColouredField = List.of(columnPossibleRange.get(0), columnPossibleRange.get(0) + seqLength - 1);
+
+        return rangeInsideAnotherRange(lastRangeAfterColouredField, emptyFieldsRange);
+    }
+
     private List<Integer> getEmptyFieldsRangeFromXToFirstColouredFieldOnBottom(Field xField) {
         List<Integer> emptyFieldsRange = new ArrayList<>();
         Field fieldToCheckEmpty = new Field(xField.getRowIdx() + 1, xField.getColumnIdx());
@@ -1307,6 +1317,14 @@ public class NonogramColumnLogic extends NonogramLogicParams {
         }
 
         return colouredFieldsRange;
+    }
+
+    private boolean columnSequenceCanFitBeforeColouredField(int columnIdx, int seqNo, List<Integer> emptyFieldsRange) {
+        List<Integer> columnPossibleRange = this.getColumnsSequencesRanges().get(columnIdx).get(seqNo);
+        int seqLength = this.getColumnsSequences().get(columnIdx).get(seqNo);
+        List<Integer> lastRangeBeforeColouredField = List.of(columnPossibleRange.get(1) - seqLength + 1, columnPossibleRange.get(1));
+
+        return rangeInsideAnotherRange(lastRangeBeforeColouredField, emptyFieldsRange);
     }
 
     private boolean isRowRangeColoured(int columnIdx, List<Integer> rowRange) {
