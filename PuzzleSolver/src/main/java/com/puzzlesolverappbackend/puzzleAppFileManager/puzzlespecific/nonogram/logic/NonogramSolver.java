@@ -284,6 +284,7 @@ public class NonogramSolver {
         if (nodeToCheckCompletionPercentage > oldNodeCompletionPercentage) {
             System.out.println("Replace solutionLogic with new nonogramLogic, percentage completion: " + nodeToCheckCompletionPercentage);
             nodeToCheck.getNonogramLogic().printSolutionBoard();
+            nodeToCheck.getNonogramLogic().printSolutionBoardAsCode();
             this.solutionNode = gson.fromJson(gson.toJson(nodeToCheck), NonogramSolutionNode.class);
             this.solutionLogic = new NonogramLogic(nodeToCheck.getNonogramLogic());// gson.fromJson(gson.toJson(nodeToCheck.getNonogramLogic()), NonogramLogic.class);
         } else {
