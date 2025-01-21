@@ -6,6 +6,8 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.N
 import com.puzzlesolverappbackend.puzzleAppFileManager.repository.NonogramRepository;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,8 +21,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-//@Component
-//@Order(4)
+@Component
+@Order(4)
 public class NonogramsDataInitializer implements CommandLineRunner {
 
     private final NonogramRepository nonogramRepository;
