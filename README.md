@@ -7,7 +7,7 @@ Technologies and languages used:
 * MySQL (logic puzzle parameters, i.e. file name, difficulty, source, size, etc.).
 
 Logic puzzles included in the application:
-1. Nonograms/Japanese puzzles
+1. Nonograms/Japanese puzzles (files available on branch f.e. _recursion_v1_code_cleanup_)
 * the current version allows solving nonograms with heuristics consisting of a total of 9 sub-procedures analogous for rows and columns.
 * in addition to the subprocedure-based logic itself, a trial-and-error method ("one-level recursion") has been implemented. This method checks whether a solution with a step
 forward is invalid for one of the decisions ("X" or "O", a field "drawn"/"blank" or "colored").
