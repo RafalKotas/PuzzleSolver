@@ -269,15 +269,17 @@ public class ActionsConstants {
             )
     );
 
-    public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterPlacingXsIfONearWillBeginTooLongPossibleColouredSequence = new ArrayList<>(
+    public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterPlacingXsInRowIfONearWillBeginTooLongPossibleColouredSequence = new ArrayList<>(
             List.of(
-                    CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY
+                    CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY,
+                    PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES
             )
     );
 
-    public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterPlacingXsIfONearWillBeginTooLongPossibleColouredSequence = new ArrayList<>(
+    public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterPlacingXsInColumnIfONearWillBeginTooLongPossibleColouredSequence = new ArrayList<>(
             List.of(
-                    CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY
+                    CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY,
+                    PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES
             )
     );
 }

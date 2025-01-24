@@ -1315,7 +1315,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
                                 this.excludeFieldInRow(emptyFieldNearX);
                                 this.excludeFieldInColumn(emptyFieldNearX);
                                 this.addColumnToAffectedActionsByIdentifiers(emptyFieldNearX.getColumnIdx(),
-                                        actionsToDoInColumnAfterPlacingXsIfONearWillBeginTooLongPossibleColouredSequence);
+                                        actionsToDoInColumnAfterPlacingXsInRowIfONearWillBeginTooLongPossibleColouredSequence);
                             }
                         }
                     }
@@ -1357,7 +1357,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
                                 this.excludeFieldInRow(emptyFieldNearX);
                                 this.excludeFieldInColumn(emptyFieldNearX);
                                 this.addColumnToAffectedActionsByIdentifiers(emptyFieldNearX.getColumnIdx(),
-                                        actionsToDoInColumnAfterPlacingXsIfONearWillBeginTooLongPossibleColouredSequence);
+                                        actionsToDoInColumnAfterPlacingXsInRowIfONearWillBeginTooLongPossibleColouredSequence);
                             }
                         }
                     }
