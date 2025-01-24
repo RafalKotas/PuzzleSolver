@@ -533,6 +533,158 @@ public class NonogramRowLogic extends NonogramLogicParams {
         return updatedRowRangeEndIndex;
     }
 
+    public void correctRowSequencesRangesWhenMatchingFieldsToSequences(int rowIdx) {
+        List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
+        List<Integer> rowSequencesLengths = this.getRowsSequences().get(rowIdx);
+
+        Field fieldToCheckIfIsColoured;
+        List<List<Integer>> colouredSequencesPartsRanges = new ArrayList<>();
+        List<Integer> colouredSequencePartRange;
+
+        // extract coloured sequences ranges from board
+        for (int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
+            fieldToCheckIfIsColoured = new Field(rowIdx, columnIdx);
+            if (isFieldColoured(this.nonogramSolutionBoard, fieldToCheckIfIsColoured)) {
+                colouredSequencePartRange = getColouredRangeInRowNearField(fieldToCheckIfIsColoured);
+                colouredSequencesPartsRanges.add(colouredSequencePartRange);
+                columnIdx = colouredSequencePartRange.get(1);
+            }
+        }
+
+        List<List<Integer>> partsMaxRanges = new ArrayList<>();
+        List<Integer> partMaxRange;
+
+        // calculate max possible ranges for corresponding coloured sequences
+        for (List<Integer> colouredSequencesPartsRange : colouredSequencesPartsRanges) {
+            partMaxRange = getRowSequenceMaxPossibleRange(rowIdx, colouredSequencesPartsRange);
+            partsMaxRanges.add(partMaxRange);
+        }
+
+        List<List<Integer>> colouredSequencesPartsMatches = new ArrayList<>();
+        List<Integer> colouredSequencePartMatches;
+        int minSeqNo = 0; // if X between coloured sequences parts -> increase (sequences that can't be merged)
+        List<Integer> currentColouredSeqPart;
+        int partMaxLength;
+
+        // match coloured sequences parts to possible sequences that may include them
+        for (int seqPartNo = 0; seqPartNo < partsMaxRanges.size(); seqPartNo++) {
+            currentColouredSeqPart = colouredSequencesPartsRanges.get(seqPartNo);
+            partMaxLength = rangeLength(partsMaxRanges.get(seqPartNo));
+
+            colouredSequencePartMatches = new ArrayList<>();
+            for (int seqNo = minSeqNo; seqNo < rowSequencesRanges.size(); seqNo++) {
+                if (rangeInsideAnotherRange(currentColouredSeqPart, rowSequencesRanges.get(seqNo)) &&
+                        rowSequencesLengths.get(seqNo) <= partMaxLength) {
+                    colouredSequencePartMatches.add(seqNo);
+                }
+            }
+            colouredSequencesPartsMatches.add(colouredSequencePartMatches);
+            if (seqPartNo < partsMaxRanges.size() - 1 &&
+                    areXsBetweenColouredRangesInRow(rowIdx, currentColouredSeqPart, colouredSequencesPartsRanges.get(seqPartNo + 1))) {
+                minSeqNo++;
+            }
+        }
+
+        List<Integer> matchingSequencesIds;
+        int matchingSeqId;
+        int matchingSequenceLength;
+        List<Integer> oldMatchingSequenceRange;
+
+        int firstColouredPossibleRowAccordingToSequenceRanges;
+        int updatedMatchingSequenceRangeStartIndex;
+
+        int lastColouredPossibleRowAccordingToSequenceRanges;
+        int updatedMatchingSequenceRangeEndIndex;
+
+        List<Integer> updatedMatchingSequenceRange;
+
+        // if there are uniquely assigned sequences then mark and correct range
+        for (int matchedSeqNo = 0; matchedSeqNo < colouredSequencesPartsMatches.size(); matchedSeqNo++) {
+            matchingSequencesIds = colouredSequencesPartsMatches.get(matchedSeqNo);
+            if (matchingSequencesIds.size() == 1) {
+                matchingSeqId = matchingSequencesIds.get(0);
+                oldMatchingSequenceRange = rowSequencesRanges.get(matchingSeqId);
+                matchingSequenceLength = rowSequencesLengths.get(matchingSeqId);
+
+                firstColouredPossibleRowAccordingToSequenceRanges = colouredSequencesPartsRanges.get(matchedSeqNo).get(1) - matchingSequenceLength + 1;
+                updatedMatchingSequenceRangeStartIndex = Math.max(oldMatchingSequenceRange.get(0), firstColouredPossibleRowAccordingToSequenceRanges);
+
+                lastColouredPossibleRowAccordingToSequenceRanges = colouredSequencesPartsRanges.get(matchedSeqNo).get(0) + matchingSequenceLength - 1;
+                updatedMatchingSequenceRangeEndIndex = Math.min(oldMatchingSequenceRange.get(1), lastColouredPossibleRowAccordingToSequenceRanges);
+
+                updatedMatchingSequenceRange = new ArrayList<>(Arrays.asList(updatedMatchingSequenceRangeStartIndex, updatedMatchingSequenceRangeEndIndex));
+
+                if (!rangesEqual(oldMatchingSequenceRange, updatedMatchingSequenceRange)) {
+                    this.updateColumnSequenceRange(rowIdx, matchingSeqId, updatedMatchingSequenceRange);
+                    this.addColumnToAffectedActionsByIdentifiers(rowIdx, actionsToDoInRowAfterCorrectingColumnsSequencesRangesWhenMatchingFieldsToSequences);
+                    this.nonogramState.increaseMadeSteps();
+                    tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, matchingSeqId, oldMatchingSequenceRange, updatedMatchingSequenceRange, "correcting sequence when matching fields to only possible coloured sequences");
+                    addLog(tmpLog);
+
+                    if (rangeLength(updatedMatchingSequenceRange) == rowSequencesLengths.get(matchingSeqId) && isColumnRangeColoured(rowIdx, updatedMatchingSequenceRange)) {
+                        this.excludeSequenceInRow(rowIdx, matchingSeqId);
+                    }
+                }
+            }
+        }
+    }
+
+    private List<Integer> getColouredRangeInRowNearField(Field colouredField) {
+        List<Integer> colouredSequenceRangeNearField = new ArrayList<>(List.of(colouredField.getColumnIdx()));
+        int rowIdx = colouredField.getRowIdx();
+
+        int columnToRight = colouredField.getColumnIdx() + 1;
+        Field fieldRight = new Field(rowIdx, columnToRight);
+
+        while (columnToRight < this.getWidth() && isFieldColoured(this.getNonogramSolutionBoard(), fieldRight)) {
+            fieldRight = new Field(rowIdx, ++columnToRight);
+        }
+        fieldRight = new Field(rowIdx, --columnToRight);
+
+        colouredSequenceRangeNearField.add(fieldRight.getColumnIdx());
+
+        return colouredSequenceRangeNearField;
+    }
+
+    private List<Integer> getRowSequenceMaxPossibleRange(int rowIdx, List<Integer> colouredSequencePartRange) {
+        Field fieldToCheckX;
+
+        int columnLeft = colouredSequencePartRange.get(0) - 1;
+        fieldToCheckX = new Field(rowIdx, columnLeft);
+        while (areFieldIndexesValid(fieldToCheckX) && !isFieldWithX(this.getNonogramSolutionBoard(), fieldToCheckX)) {
+            fieldToCheckX = new Field(rowIdx, --columnLeft);
+        }
+        columnLeft++;
+
+        int columnRight = colouredSequencePartRange.get(1) + 1;
+        fieldToCheckX = new Field(rowIdx, columnRight);
+        while (areFieldIndexesValid(fieldToCheckX) && !isFieldWithX(this.getNonogramSolutionBoard(), fieldToCheckX)) {
+            fieldToCheckX = new Field(rowIdx, ++columnRight);
+        }
+        columnRight--;
+
+        return new ArrayList<>(List.of(columnLeft, columnRight));
+    }
+
+    private boolean areXsBetweenColouredRangesInRow(int rowIdx, List<Integer> firstRange, List<Integer> secondRange) {
+        if (firstRange.size() != 2 || secondRange.size() != 2 || firstRange.get(1) >= secondRange.get(0)) {
+            return false;
+        }
+
+        List<Integer> rangeBetweenColouredRanges = new ArrayList<>(Arrays.asList(firstRange.get(1) + 1, secondRange.get(0) - 1));
+
+        Field fieldToCheck;
+
+        for (int columnIdx : rangeBetweenColouredRanges) {
+            fieldToCheck = new Field(rowIdx, columnIdx);
+            if (isFieldWithX(this.getNonogramSolutionBoard(), fieldToCheck)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * fill fields in row where ranges met specific condition (range_length < sequence_length * 2)
      */

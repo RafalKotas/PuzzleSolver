@@ -1037,9 +1037,9 @@ public class NonogramLogic extends NonogramLogicParams {
                     invalidateSolutionIfRowSequencesWrong(rowIdx);
                 }
             }
-//            case CORRECT_ROW_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES -> {
-//                nonogramRowLogic.correctRowSequencesRangesWhenMatchingFieldsToSequences(rowIdx);
-//            }
+            case CORRECT_ROW_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES -> {
+                nonogramRowLogic.correctRowSequencesRangesWhenMatchingFieldsToSequences(rowIdx);
+            }
             case COLOUR_OVERLAPPING_FIELDS_IN_ROW -> nonogramRowLogic.fillOverlappingFieldsInRow(rowIdx);
             case EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW -> nonogramRowLogic.extendColouredFieldsNearXToMaximumPossibleLengthInRow(rowIdx);
             case PLACE_XS_ROW_AT_UNREACHABLE_FIELDS -> nonogramRowLogic.placeXsRowAtUnreachableFields(rowIdx);
