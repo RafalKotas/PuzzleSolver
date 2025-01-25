@@ -615,7 +615,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
                 updatedMatchingSequenceRange = new ArrayList<>(Arrays.asList(updatedMatchingSequenceRangeStartIndex, updatedMatchingSequenceRangeEndIndex));
 
                 if (!rangesEqual(oldMatchingSequenceRange, updatedMatchingSequenceRange)) {
-                    this.updateColumnSequenceRange(rowIdx, matchingSeqId, updatedMatchingSequenceRange);
+                    this.updateRowSequenceRange(rowIdx, matchingSeqId, updatedMatchingSequenceRange);
                     this.addColumnToAffectedActionsByIdentifiers(rowIdx, actionsToDoInRowAfterCorrectingColumnsSequencesRangesWhenMatchingFieldsToSequences);
                     this.nonogramState.increaseMadeSteps();
                     tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, matchingSeqId, oldMatchingSequenceRange, updatedMatchingSequenceRange, "correcting sequence when matching fields to only possible coloured sequences");
