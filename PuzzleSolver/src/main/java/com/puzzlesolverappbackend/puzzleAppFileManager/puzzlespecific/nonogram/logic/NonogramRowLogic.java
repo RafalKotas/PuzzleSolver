@@ -1365,10 +1365,6 @@ public class NonogramRowLogic extends NonogramLogicParams {
                 }
             }
         }
-
-        List<String> rowAtEnd = this.getNonogramSolutionBoard().get(14);
-
-        System.out.println("bac");
     }
 
     private List<Integer> getEmptyFieldsRangeFromXToFirstColouredFieldOnLeft(Field xField) {
