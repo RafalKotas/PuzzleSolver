@@ -243,7 +243,9 @@ public class ActionsConstants {
     public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterPlacingXInRowIfOWillMergeNearFieldsToTooLongColouredSequence = new ArrayList<>(
             List.of(
                     CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY,
-                    PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE
+                    CORRECT_ROW_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES,
+                    PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE // TODO - check if necessary (actionX->actionX, infinite loop)
+
             )
     );
 
@@ -259,7 +261,8 @@ public class ActionsConstants {
     public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterPlacingXInColumnIfOWillMergeNearFieldsToTooLongColouredSequence = new ArrayList<>(
             List.of(
                     CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY,
-                    PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE
+                    CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES,
+                    PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE // TODO - check if necessary (actionX->actionX, infinite loop)
             )
     );
 
