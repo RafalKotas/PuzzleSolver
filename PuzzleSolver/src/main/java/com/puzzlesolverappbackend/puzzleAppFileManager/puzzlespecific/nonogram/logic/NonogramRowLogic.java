@@ -1209,16 +1209,16 @@ public class NonogramRowLogic extends NonogramLogicParams {
 
             mergedSequenceWithFieldAddedBefore = currentColouredSequenceRangesWithColouredFieldAdded.get(0);
 
-            previousColumnIndex = mergedSequenceWithFieldAddedBefore.get(0);
-            fieldWithPreviousColumnColoured = new Field(rowIdx, previousColumnIndex);
-
             if (seqRangeIndex > 0) {
                 colouredSequenceRangeBeforeCurrent = colouredSequencesRanges.get(seqRangeIndex - 1);
                 mergedSequenceWithFieldAddedBefore = tryToMergeColouredSequenceWithPrevious(
                         colouredSequenceRangeBeforeCurrent, mergedSequenceWithFieldAddedBefore);
             }
+
+            previousColumnIndex = mergedSequenceWithFieldAddedBefore.get(0);
+            fieldWithPreviousColumnColoured = new Field(rowIdx, previousColumnIndex);
             colouredSequenceValid = colouredSequenceInRowIsValid(mergedSequenceWithFieldAddedBefore, rowIdx, this);
-            if (!colouredSequenceValid && isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithPreviousColumnColoured)) {
+            if (!colouredSequenceValid && isColumnIndexValid(previousColumnIndex) && isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithPreviousColumnColoured)) {
                 this.placeXAtGivenField(fieldWithPreviousColumnColoured);
                 this.excludeFieldInRow(fieldWithPreviousColumnColoured);
                 this.excludeFieldInColumn(fieldWithPreviousColumnColoured);
@@ -1237,15 +1237,16 @@ public class NonogramRowLogic extends NonogramLogicParams {
 
             mergedSequenceWithFieldAddedAfter = currentColouredSequenceRangesWithColouredFieldAdded.get(1);
 
-            if (mergedSequenceWithFieldAddedAfter.get(1) != this.getWidth()) {
-                nextColumnIndex = mergedSequenceWithFieldAddedAfter.get(1);
-                fieldWithNextColumnColoured = new Field(rowIdx, nextColumnIndex);
+            nextColumnIndex = mergedSequenceWithFieldAddedAfter.get(1);
+            if (nextColumnIndex != this.getWidth()) {
 
                 if (seqRangeIndex < colouredSequencesRanges.size() - 1) {
                     colouredSequenceRangeAfterCurrent = colouredSequencesRanges.get(seqRangeIndex + 1);
                     mergedSequenceWithFieldAddedAfter = tryToMergeColouredSequenceWithNext(
                             mergedSequenceWithFieldAddedAfter, colouredSequenceRangeAfterCurrent);
                 }
+
+                fieldWithNextColumnColoured = new Field(rowIdx, nextColumnIndex);
                 colouredSequenceValid = colouredSequenceInRowIsValid(mergedSequenceWithFieldAddedAfter, rowIdx, this);
                 if (!colouredSequenceValid && isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithNextColumnColoured)) {
                     this.placeXAtGivenField(fieldWithNextColumnColoured);

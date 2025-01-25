@@ -1209,16 +1209,16 @@ public class NonogramColumnLogic extends NonogramLogicParams {
 
             mergedSequenceWithFieldAddedBefore = currentColouredSequenceRangesWithColouredFieldAdded.get(0);
 
-            previousRowIndex = mergedSequenceWithFieldAddedBefore.get(0);
-            fieldWithPreviousRowColoured = new Field(previousRowIndex, columnIdx);
-
             if (seqRangeIndex > 0) {
                 colouredSequenceRangeBeforeCurrent = colouredSequencesRanges.get(seqRangeIndex - 1);
                 mergedSequenceWithFieldAddedBefore = tryToMergeColouredSequenceWithPrevious(
                         colouredSequenceRangeBeforeCurrent, mergedSequenceWithFieldAddedBefore);
             }
+
+            previousRowIndex = mergedSequenceWithFieldAddedBefore.get(0);
+            fieldWithPreviousRowColoured = new Field(previousRowIndex, columnIdx);
             colouredSequenceValid = colouredSequenceInColumnIsValid(mergedSequenceWithFieldAddedBefore, columnIdx, this);
-            if (!colouredSequenceValid && isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithPreviousRowColoured)) {
+            if (!colouredSequenceValid && isRowIndexValid(previousRowIndex) && isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithPreviousRowColoured)) {
                 this.placeXAtGivenField(fieldWithPreviousRowColoured);
                 this.excludeFieldInRow(fieldWithPreviousRowColoured);
                 this.excludeFieldInColumn(fieldWithPreviousRowColoured);
@@ -1237,8 +1237,9 @@ public class NonogramColumnLogic extends NonogramLogicParams {
 
             mergedSequenceWithFieldAddedAfter = currentColouredSequenceRangesWithColouredFieldAdded.get(1);
 
-            if (mergedSequenceWithFieldAddedAfter.get(1) != this.getHeight()) {
-                nextRowIndex = mergedSequenceWithFieldAddedAfter.get(1);
+            nextRowIndex = mergedSequenceWithFieldAddedAfter.get(1);
+            if (nextRowIndex != this.getHeight()) {
+
                 fieldWithNextRowColoured = new Field(nextRowIndex, columnIdx);
 
                 if (seqRangeIndex < colouredSequencesRanges.size() - 1) {
