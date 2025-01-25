@@ -1196,6 +1196,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                 (colouredSequencesRanges);
         List<List<Integer>> currentColouredSequenceRangesWithColouredFieldAdded;
 
+        List<Integer> sequenceWithFieldAddedBefore;
         List<Integer> mergedSequenceWithFieldAddedBefore;
         List<Integer> colouredSequenceRangeBeforeCurrent;
 
@@ -1207,15 +1208,17 @@ public class NonogramColumnLogic extends NonogramLogicParams {
         for (int seqRangeIndex = 0; seqRangeIndex < colouredSequencesRanges.size(); seqRangeIndex++) {
             currentColouredSequenceRangesWithColouredFieldAdded = colouredSequencesRangesWithColouredFieldAdded.get(seqRangeIndex);
 
-            mergedSequenceWithFieldAddedBefore = currentColouredSequenceRangesWithColouredFieldAdded.get(0);
+            sequenceWithFieldAddedBefore = currentColouredSequenceRangesWithColouredFieldAdded.get(0);
 
             if (seqRangeIndex > 0) {
                 colouredSequenceRangeBeforeCurrent = colouredSequencesRanges.get(seqRangeIndex - 1);
                 mergedSequenceWithFieldAddedBefore = tryToMergeColouredSequenceWithPrevious(
-                        colouredSequenceRangeBeforeCurrent, mergedSequenceWithFieldAddedBefore);
+                        colouredSequenceRangeBeforeCurrent, sequenceWithFieldAddedBefore);
+            } else {
+                mergedSequenceWithFieldAddedBefore = sequenceWithFieldAddedBefore;
             }
 
-            previousRowIndex = mergedSequenceWithFieldAddedBefore.get(0);
+            previousRowIndex = sequenceWithFieldAddedBefore.get(0);
             fieldWithPreviousRowColoured = new Field(previousRowIndex, columnIdx);
             colouredSequenceValid = colouredSequenceInColumnIsValid(mergedSequenceWithFieldAddedBefore, columnIdx, this);
             if (!colouredSequenceValid && isRowIndexValid(previousRowIndex) && isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithPreviousRowColoured)) {
