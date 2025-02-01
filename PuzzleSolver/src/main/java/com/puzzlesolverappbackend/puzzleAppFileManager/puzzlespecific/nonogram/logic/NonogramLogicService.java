@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -214,11 +215,9 @@ public class NonogramLogicService {
 
                     matchingSequenceLength = rowSequences.get(lastMatchingSequenceIndex);
                     sequenceEqualsRowSequenceLength = colouredSequenceLength == matchingSequenceLength;
-                    rowSequenceRange = new ArrayList<>();
 
                     if (sequenceEqualsRowSequenceLength) {
-                        rowSequenceRange.add(firstSequenceIndex);
-                        rowSequenceRange.add(lastSequenceIndex);
+                        rowSequenceRange = Arrays.asList(firstSequenceIndex, lastSequenceIndex);
                     } else {
                         oldRangeBeginIndex = nonogramLogicObject.getRowsSequencesRanges().get(rowIdx).get(lastMatchingSequenceIndex).get(0);
                         oldRangeEndIndex = nonogramLogicObject.getRowsSequencesRanges().get(rowIdx).get(lastMatchingSequenceIndex).get(1);
@@ -227,9 +226,8 @@ public class NonogramLogicService {
                                 nonogramLogicObject.getNonogramRowLogic().minimumColumnIndexWithoutX(rowIdx, lastSequenceIndex, matchingSequenceLength));
                         updatedRangeEndIndex = Math.min(nonogramLogicObject.getWidth() - 1,
                                 nonogramLogicObject.getNonogramRowLogic().maximumColumnIndexWithoutX(rowIdx, firstSequenceIndex, matchingSequenceLength));
-                        rowSequenceRange.add( Math.max(oldRangeBeginIndex ,updatedRangeBeginIndex) );
-                        rowSequenceRange.add( Math.min(oldRangeEndIndex, updatedRangeEndIndex) );
-
+                        rowSequenceRange = Arrays.asList(Math.max(oldRangeBeginIndex, updatedRangeBeginIndex),
+                                Math.min(oldRangeEndIndex, updatedRangeEndIndex));
                     }
                     nonogramLogicObject.getNonogramRowLogic().updateRowSequenceRange(rowIdx, lastMatchingSequenceIndex, rowSequenceRange);
 
@@ -330,9 +328,7 @@ public class NonogramLogicService {
                         updatedRangeEndIndex = Math.min(nonogramLogicObject.getHeight() - 1,
                                 nonogramLogicObject.getNonogramColumnLogic().maximumRowIndexWithoutX(columnIdx, firstSequenceIndex, matchingSequenceLength));
 
-                        columnSequenceRange = new ArrayList<>();
-                        columnSequenceRange.add( Math.max(oldRangeBeginIndex ,updatedRangeBeginIndex) );
-                        columnSequenceRange.add( Math.min(oldRangeEndIndex, updatedRangeEndIndex) );
+                        columnSequenceRange = Arrays.asList(Math.max(oldRangeBeginIndex, updatedRangeBeginIndex), Math.min(oldRangeEndIndex, updatedRangeEndIndex));
 
                         nonogramLogicObject.getNonogramColumnLogic().updateColumnSequenceRange(columnIdx, lastMatchingSequenceIndex, columnSequenceRange);
                         nonogramLogicObject.copyLogicFromNonogramColumnLogic();
@@ -429,7 +425,7 @@ public class NonogramLogicService {
 
                         if (sequenceOnBoardLength == rowSequencesLengthsIncludingSequenceRange.get(0)) {
                             firstXFieldToExclude = new Field(rowIdx, firstXColumnIndex);
-                            if (firstXColumnIndex > -1) {
+                            if (firstXColumnIndex >= 0) {
                                 if (isFieldEmpty(nonogramRowLogicDataToChange, firstXFieldToExclude)) {
                                     nonogramRowLogicDataToChange.placeXAtGivenField(firstXFieldToExclude);
                                     nonogramRowLogicDataToChange.excludeFieldInRow(firstXFieldToExclude);
@@ -444,7 +440,7 @@ public class NonogramLogicService {
                                 }
                             }
 
-                            if ((firstXColumnIndex > -1 && isFieldEmpty(nonogramRowLogicDataToChange, firstXFieldToExclude))
+                            if ((firstXColumnIndex >= 0 && isFieldEmpty(nonogramRowLogicDataToChange, firstXFieldToExclude))
                              || (lastXColumnIndex < width && nonogramRowLogicDataToChange.getNonogramSolutionBoard().get(rowIdx).get(lastXColumnIndex).equals(EMPTY_FIELD)) ) {
                                 List<Field> rowFieldsToExclude = List.of(new Field(rowIdx, firstXColumnIndex), new Field(rowIdx, lastXColumnIndex));
                                 List<Field> columnFieldsToExclude = List.of(new Field(firstXColumnIndex, rowIdx), new Field(lastXColumnIndex, rowIdx));
@@ -583,7 +579,7 @@ public class NonogramLogicService {
                             nonogramLogicDataToChange.getNonogramColumnLogic().excludeSequenceInColumn(columnIdx, columnSequenceIdxNotToInclude);
                             nonogramLogicDataToChange.copyLogicToNonogramColumnLogic();
 
-                            if (firstXIndex > -1) {
+                            if (firstXIndex >= 0) {
                                 if (nonogramLogicDataToChange.getNonogramSolutionBoard().get(firstXIndex).get(columnIdx).equals(EMPTY_FIELD)) {
                                     fieldToExclude = new Field(firstXIndex, columnIdx);
                                     nonogramLogicDataToChange = nonogramLogicDataToChange
@@ -673,10 +669,8 @@ public class NonogramLogicService {
         Field fieldToExclude;
 
         for (int columnIdx = 0; columnIdx < width; columnIdx++) {
-            fieldAsRange = new ArrayList<>();
-            fieldAsRange.add(columnIdx);
-            fieldAsRange.add(columnIdx);
-            existRangeIncludingColumn = rangesListIncludingAnotherRange(rowSequencesRanges ,fieldAsRange);
+            fieldAsRange = Arrays.asList(columnIdx, columnIdx);
+            existRangeIncludingColumn = rangesListIncludingAnotherRange(rowSequencesRanges, fieldAsRange);
 
             if (!existRangeIncludingColumn) {
                 if (nonogramLogicDataToChange.getNonogramSolutionBoard().get(rowIdx).get(columnIdx).equals(EMPTY_FIELD)) {
@@ -774,9 +768,7 @@ public class NonogramLogicService {
             }
 
             List<Integer> oldFirstSequenceRange = rowSequencesRanges.get(0);
-            List<Integer> updatedFirstSequenceRange = new ArrayList<>();
-            updatedFirstSequenceRange.add(fieldIdx);
-            updatedFirstSequenceRange.add(oldFirstSequenceRange.get(1));
+            List<Integer> updatedFirstSequenceRange = new ArrayList<>(Arrays.asList(fieldIdx, oldFirstSequenceRange.get(1)));
 
             nonogramLogicObject.getRowsSequencesRanges().get(rowIdx).set(0, updatedFirstSequenceRange);
         }
@@ -798,30 +790,25 @@ public class NonogramLogicService {
                 oldNextSequenceBeginRangeColumnIndex = oldNextSequenceRange.get(0);
                 oldNextSequenceEndRangeColumnIndex = oldNextSequenceRange.get(1);
 
-                updatedNextSequenceRange = new ArrayList<>();
-
                 //experimental
                 while(rowFieldsNotToInclude.contains(oldNextSequenceEndRangeColumnIndex)) {
                     oldNextSequenceEndRangeColumnIndex--;
                 }
 
-                updatedNextSequenceRange.add(Math.max(oldNextSequenceBeginRangeColumnIndex, updatedNextSequenceBeginRangeColumnIndex));
-                updatedNextSequenceRange.add(oldNextSequenceEndRangeColumnIndex);
+                updatedNextSequenceRange = Arrays.asList(Math.max(oldNextSequenceBeginRangeColumnIndex, updatedNextSequenceBeginRangeColumnIndex),
+                        oldNextSequenceEndRangeColumnIndex);
 
                 nonogramLogicObject.getRowsSequencesRanges().get(rowIdx).set(sequenceIdx + 1, updatedNextSequenceRange);
             }
 
             //second range update
-            updatedNextSequenceRange = new ArrayList<>();
+
             //rangeBegin
-            int oldNextSequenceRangeBegin = rowSequencesRanges.get(sequenceIdx + 1 ).get(0);
+            int oldNextSequenceRangeBegin = rowSequencesRanges.get(sequenceIdx + 1).get(0);
             int currentSequenceRangeBegin = rowSequencesRanges.get(sequenceIdx).get(0);
             int currentSequenceLengthPlusX = (rowSequences.get(sequenceIdx) + 1);
-            updatedNextSequenceRange.add(
-                    Math.max( oldNextSequenceRangeBegin, currentSequenceRangeBegin + currentSequenceLengthPlusX )
-            );
-            //rangeEnd
-            updatedNextSequenceRange.add(rowSequencesRanges.get(sequenceIdx + 1).get(1));
+            updatedNextSequenceRange = Arrays.asList(Math.max( oldNextSequenceRangeBegin, currentSequenceRangeBegin + currentSequenceLengthPlusX),
+                    rowSequencesRanges.get(sequenceIdx + 1).get(1));
 
             nonogramLogicObject.getRowsSequencesRanges().get(rowIdx).set(sequenceIdx + 1, updatedNextSequenceRange);
         }
@@ -848,33 +835,23 @@ public class NonogramLogicService {
                 oldPreviousSequenceBeginRangeColumnIndex = oldPreviousSequenceRange.get(0);
                 oldPreviousSequenceEndRangeColumnIndex = oldPreviousSequenceRange.get(1);
 
-                updatedPreviousSequenceRange = new ArrayList<>();
-
                 //experimental
                 while(rowFieldsNotToInclude.contains(oldPreviousSequenceBeginRangeColumnIndex)) {
                     oldPreviousSequenceBeginRangeColumnIndex++;
                 }
 
-                updatedPreviousSequenceRange.add(oldPreviousSequenceBeginRangeColumnIndex);
-                int newEnd = Math.min(oldPreviousSequenceEndRangeColumnIndex, updatedPreviousSequenceEndRangeColumnIndex);
-                updatedPreviousSequenceRange.add(newEnd);
+                int newEndIndex = Math.min(oldPreviousSequenceEndRangeColumnIndex, updatedPreviousSequenceEndRangeColumnIndex);
+                updatedPreviousSequenceRange = Arrays.asList(oldPreviousSequenceBeginRangeColumnIndex, newEndIndex);
 
                 nonogramLogicObject.getRowsSequencesRanges().get(rowIdx).set(sequenceIdx - 1, updatedPreviousSequenceRange);
             }
-
-            //second range update
-            updatedPreviousSequenceRange = new ArrayList<>();
-            //rangeBegin
-            updatedPreviousSequenceRange.add(rowSequencesRanges.get(sequenceIdx - 1).get(0));
 
             int oldPreviousSequenceRangeEnd = rowSequencesRanges.get(sequenceIdx - 1 ).get(1);
             int currentSequenceRangeEnd = rowSequencesRanges.get(sequenceIdx).get(1);
             int currentSequenceLengthPlusX = (rowSequences.get(sequenceIdx) + 1);
 
-            //rangeEnd
-            updatedPreviousSequenceRange.add(
-                    Math.min( oldPreviousSequenceRangeEnd, currentSequenceRangeEnd - currentSequenceLengthPlusX )
-            );
+            updatedPreviousSequenceRange = Arrays.asList(rowSequencesRanges.get(sequenceIdx - 1).get(0),
+                    Math.min( oldPreviousSequenceRangeEnd, currentSequenceRangeEnd - currentSequenceLengthPlusX));
 
             nonogramLogicObject.getRowsSequencesRanges().get(rowIdx).set(sequenceIdx - 1, updatedPreviousSequenceRange);
         }
@@ -891,9 +868,7 @@ public class NonogramLogicService {
             }
 
             List<Integer> oldLastSequenceRange = rowSequencesRanges.get(lastRowSequenceIndex);
-            List<Integer> updatedLastSequenceRange = new ArrayList<>();
-            updatedLastSequenceRange.add(oldLastSequenceRange.get(0));
-            updatedLastSequenceRange.add(fieldIdx);
+            List<Integer> updatedLastSequenceRange = Arrays.asList(oldLastSequenceRange.get(0), fieldIdx);
 
             nonogramLogicObject.getRowsSequencesRanges().get(rowIdx).set(lastRowSequenceIndex, updatedLastSequenceRange);
         }
@@ -919,9 +894,7 @@ public class NonogramLogicService {
                 rowSequenceRangeEnd = rowSequencesRanges.get(sequenceId).get(1);
                 maximumPossibleSequenceRangeEnd = columnIdx + sequenceLength - 1;
 
-                updatedRange = new ArrayList<>();
-                updatedRange.add(rowSequenceRangeStart);
-                updatedRange.add(Math.min(rowSequenceRangeEnd, maximumPossibleSequenceRangeEnd));
+                updatedRange = Arrays.asList(rowSequenceRangeStart, Math.min(rowSequenceRangeEnd, maximumPossibleSequenceRangeEnd));
                 nonogramLogicObject.getRowsSequencesRanges().get(rowIdx).set(sequenceId, updatedRange);
 
                 columnIdx = columnIdx + sequenceLength;
@@ -955,14 +928,12 @@ public class NonogramLogicService {
                 rowSequenceRangeStart = rowSequencesRanges.get(sequenceId).get(0);
                 rowSequenceRangeEnd = rowSequencesRanges.get(sequenceId).get(1);
 
-                updatedRange = new ArrayList<>();
-                updatedRange.add(Math.max(minimumPossibleSequenceRangeStart, rowSequenceRangeStart));
-                updatedRange.add(rowSequenceRangeEnd);
+                updatedRange = Arrays.asList(Math.max(minimumPossibleSequenceRangeStart, rowSequenceRangeStart), rowSequenceRangeEnd);
                 nonogramLogicObject.getRowsSequencesRanges().get(rowIdx).set(sequenceId, updatedRange);
 
                 columnIdx = columnIdx - sequenceLength;
                 sequenceId--;
-                if (sequenceId > -1) {
+                if (sequenceId >= 0) {
                     sequenceLength = rowSequencesLengths.get(sequenceId);
                 } else {
                     break;
@@ -986,7 +957,7 @@ public class NonogramLogicService {
         boolean indexOk;
         int updatedRowRangeStartIndex;
         int updatedRowRangeEndIndex;
-        List<Integer> updatedRowRange = new ArrayList<>();
+        List<Integer> updatedRowRange;
 
         for (int seqNo = 0; seqNo < nonogramRowSequencesRanges.size(); seqNo++) {
             if (!nonogramRowSequencesIdsNotToInclude.contains(seqNo)) {
@@ -1030,8 +1001,7 @@ public class NonogramLogicService {
                     }
                 }
 
-                updatedRowRange.add(updatedRowRangeStartIndex);
-                updatedRowRange.add(updatedRowRangeEndIndex);
+                updatedRowRange = Arrays.asList(updatedRowRangeStartIndex, updatedRowRangeEndIndex);
 
                 nonogramLogicObject.getNonogramRowLogic().updateRowSequenceRange(rowIdx, seqNo, updatedRowRange);
                 nonogramLogicObject.copyLogicFromNonogramRowLogic();
@@ -1065,13 +1035,13 @@ public class NonogramLogicService {
         int updatedNextSequenceBeginRangeRowIndex;
         int oldNextSequenceBeginRangeRowIndex;
         int oldNextSequenceEndRangeRowIndex;
-        List<Integer> updatedNextSequenceRange;
 
         List<Integer> columnSequencesIdsNotToInclude = nonogramLogicObject.getColumnsSequencesIdsNotToInclude().get(columnIdx);
 
         List<Integer> columnIndexesNotToInclude = nonogramLogicObject.getColumnsFieldsNotToInclude().get(columnIdx);
 
         //for first sequence in column
+        List<Integer> updatedFirstSequenceRange;
         if (!columnSequencesIdsNotToInclude.contains(0)) {
             int fieldIdx = 0;
 
@@ -1080,14 +1050,13 @@ public class NonogramLogicService {
             }
 
             List<Integer> oldFirstSequenceRange = columnSequencesRanges.get(0);
-            List<Integer> updatedFirstSequenceRange = new ArrayList<>();
-            updatedFirstSequenceRange.add(Math.max(fieldIdx, oldFirstSequenceRange.get(0)));
-            updatedFirstSequenceRange.add(oldFirstSequenceRange.get(1));
+            updatedFirstSequenceRange = Arrays.asList(Math.max(fieldIdx, oldFirstSequenceRange.get(0)), oldFirstSequenceRange.get(1));
 
             nonogramLogicObject.getColumnsSequencesRanges().get(columnIdx).set(0, updatedFirstSequenceRange);
         }
 
         //from top - start
+        List<Integer> updatedNextSequenceRange;
         for (int sequenceIdx = 0; sequenceIdx < columnSequencesRanges.size() - 1; sequenceIdx++) {
 
             if (columnSequencesIdsNotToInclude.contains(sequenceIdx) && !columnSequencesIdsNotToInclude.contains(sequenceIdx + 1)) {
@@ -1104,33 +1073,27 @@ public class NonogramLogicService {
                 oldNextSequenceBeginRangeRowIndex = oldNextSequenceRange.get(0);
                 oldNextSequenceEndRangeRowIndex = oldNextSequenceRange.get(1);
 
-                updatedNextSequenceRange = new ArrayList<>();
-
                 //experimental
                 while(columnFieldsNotToInclude.contains(oldNextSequenceEndRangeRowIndex)) {
                     oldNextSequenceEndRangeRowIndex--;
                 }
 
-                updatedNextSequenceRange.add(Math.max(oldNextSequenceBeginRangeRowIndex, updatedNextSequenceBeginRangeRowIndex));
-                updatedNextSequenceRange.add(oldNextSequenceEndRangeRowIndex);
+                updatedNextSequenceRange = Arrays.asList(Math.max(oldNextSequenceBeginRangeRowIndex, updatedNextSequenceBeginRangeRowIndex),
+                        oldNextSequenceEndRangeRowIndex);
 
                 if (!columnIndexesNotToInclude.contains(columnIdx)) {
                     nonogramLogicObject.getColumnsSequencesRanges().get(columnIdx).set(sequenceIdx + 1, updatedNextSequenceRange);
                 }
             }
 
-            //second range update
-            updatedNextSequenceRange = new ArrayList<>();
-
             //rangeBegin
             int oldNextSequenceRangeBegin = columnSequencesRanges.get(sequenceIdx + 1 ).get(0);
             int currentSequenceRangeBegin = columnSequencesRanges.get(sequenceIdx).get(0);
             int currentSequenceLengthPlusX = (columnSequences.get(sequenceIdx) + 1);
-            updatedNextSequenceRange.add(
-                    Math.max( oldNextSequenceRangeBegin, currentSequenceRangeBegin + currentSequenceLengthPlusX )
+            updatedNextSequenceRange = Arrays.asList(
+                    Math.max( oldNextSequenceRangeBegin, currentSequenceRangeBegin + currentSequenceLengthPlusX),
+                    columnSequencesRanges.get(sequenceIdx + 1).get(1)
             );
-            //rangeEnd
-            updatedNextSequenceRange.add(columnSequencesRanges.get(sequenceIdx + 1).get(1));
 
             if (!columnIndexesNotToInclude.contains(columnIdx)) {
                 nonogramLogicObject.getColumnsSequencesRanges().get(columnIdx).set(sequenceIdx + 1, updatedNextSequenceRange);
@@ -1159,35 +1122,26 @@ public class NonogramLogicService {
                 oldPreviousSequenceBeginRangeRowIndex = oldPreviousSequenceRange.get(0);
                 oldPreviousSequenceEndRangeRowIndex = oldPreviousSequenceRange.get(1);
 
-                updatedPreviousSequenceRange = new ArrayList<>();
-
                 //experimental
                 while(columnFieldsNotToInclude.contains(oldPreviousSequenceBeginRangeRowIndex)) {
                     oldPreviousSequenceBeginRangeRowIndex++;
                 }
 
-                updatedPreviousSequenceRange.add(oldPreviousSequenceBeginRangeRowIndex);
-                updatedPreviousSequenceRange.add(Math.min(oldPreviousSequenceEndRangeRowIndex, updatedPreviousSequenceEndRangeRowIndex));
+                updatedPreviousSequenceRange = Arrays.asList(oldPreviousSequenceBeginRangeRowIndex,
+                        Math.min(oldPreviousSequenceEndRangeRowIndex, updatedPreviousSequenceEndRangeRowIndex));
 
                 if (!columnIndexesNotToInclude.contains(columnIdx)) {
                     nonogramLogicObject.getColumnsSequencesRanges().get(columnIdx).set(sequenceIdx - 1, updatedPreviousSequenceRange);
                 }
             }
 
-            //second range update
-            updatedPreviousSequenceRange = new ArrayList<>();
-            //rangeBegin
-            updatedPreviousSequenceRange.add(columnSequencesRanges.get(sequenceIdx - 1).get(0));
-
             int oldPreviousSequenceRangeEnd = columnSequencesRanges.get(sequenceIdx - 1 ).get(1);
             int currentSequenceRangeEnd = columnSequencesRanges.get(sequenceIdx).get(1);
             int currentSequenceLengthPlusX = (columnSequences.get(sequenceIdx) + 1);
             int possibleLowerPreviousSequenceRangeEnd = currentSequenceRangeEnd - currentSequenceLengthPlusX;
 
-            //rangeEnd
-            updatedPreviousSequenceRange.add(
-                    Math.min( oldPreviousSequenceRangeEnd, possibleLowerPreviousSequenceRangeEnd )
-            );
+            updatedPreviousSequenceRange = Arrays.asList(columnSequencesRanges.get(sequenceIdx - 1).get(0),
+                    Math.min( oldPreviousSequenceRangeEnd, possibleLowerPreviousSequenceRangeEnd));
 
             if (!columnIndexesNotToInclude.contains(columnIdx)) {
                 nonogramLogicObject.getColumnsSequencesRanges().get(columnIdx).set(sequenceIdx - 1, updatedPreviousSequenceRange);
@@ -1206,9 +1160,7 @@ public class NonogramLogicService {
             }
 
             List<Integer> oldLastSequenceRange = columnSequencesRanges.get(lastColumnSequenceIndex);
-            List<Integer> updatedLastSequenceRange = new ArrayList<>();
-            updatedLastSequenceRange.add(oldLastSequenceRange.get(0));
-            updatedLastSequenceRange.add(Math.min(fieldIdx, oldLastSequenceRange.get(1)));
+            List<Integer> updatedLastSequenceRange = Arrays.asList(oldLastSequenceRange.get(0), Math.min(fieldIdx, oldLastSequenceRange.get(1)));
 
             if (!columnIndexesNotToInclude.contains(columnIdx)) {
                 nonogramLogicObject.getColumnsSequencesRanges().get(columnIdx).set(lastColumnSequenceIndex, updatedLastSequenceRange);
@@ -1232,7 +1184,7 @@ public class NonogramLogicService {
         boolean indexOk;
         int updatedColumnSequenceRangeStartIndex;
         int updatedColumnSequenceRangeEndIndex;
-        List<Integer> updatedColumnSequenceRange = new ArrayList<>();
+        List<Integer> updatedColumnSequenceRange;
 
         for (int seqNo = 0; seqNo < nonogramColumnSequencesRanges.size(); seqNo++) {
             if (!nonogramColumnsSequencesIdsNotToInclude.contains(seqNo)) {
@@ -1247,7 +1199,7 @@ public class NonogramLogicService {
                 for (int rowStartIndex = columnSequenceRangeStartIndex; rowStartIndex < columnSequenceRangeEndIndex - columnSequenceLength + 1; rowStartIndex++) {
                     indexOk = true;
                     for (int rowIdx = rowStartIndex; rowIdx < rowStartIndex + columnSequenceLength; rowIdx++) {
-                        if (nonogramBoard.get(rowIdx).get(columnIdx).equals("X".repeat(4))) {
+                        if (nonogramBoard.get(rowIdx).get(columnIdx).equals(X_FIELD_MARKED_BOARD)) {
                             indexOk = false;
                             break;
                         }
@@ -1264,7 +1216,7 @@ public class NonogramLogicService {
                 for (int rowEndIndex = columnSequenceRangeEndIndex; rowEndIndex > columnSequenceRangeStartIndex + columnSequenceLength - 1; rowEndIndex--) {
                     indexOk = true;
                     for (int rowIdx = rowEndIndex; rowIdx > rowEndIndex - columnSequenceLength; rowIdx--) {
-                        if (nonogramBoard.get(rowIdx).get(columnIdx).equals("X".repeat(4))) {
+                        if (nonogramBoard.get(rowIdx).get(columnIdx).equals(X_FIELD_MARKED_BOARD)) {
                             indexOk = false;
                             break;
                         }
@@ -1276,8 +1228,7 @@ public class NonogramLogicService {
                     }
                 }
 
-                updatedColumnSequenceRange.add(updatedColumnSequenceRangeStartIndex);
-                updatedColumnSequenceRange.add(updatedColumnSequenceRangeEndIndex);
+                updatedColumnSequenceRange = Arrays.asList(updatedColumnSequenceRangeStartIndex, updatedColumnSequenceRangeEndIndex);
 
                 nonogramLogicObject.getNonogramColumnLogic().updateColumnSequenceRange(columnIdx, seqNo,
                         updatedColumnSequenceRange);
@@ -1312,9 +1263,7 @@ public class NonogramLogicService {
                 columnSequenceRangeEnd = columnSequencesRanges.get(sequenceId).get(1);
                 maximumPossibleSequenceRangeEnd = rowIdx + sequenceLength - 1;
 
-                updatedRange = new ArrayList<>();
-                updatedRange.add(columnSequenceRangeStart);
-                updatedRange.add(Math.min(columnSequenceRangeEnd, maximumPossibleSequenceRangeEnd));
+                updatedRange = Arrays.asList(columnSequenceRangeStart, Math.min(columnSequenceRangeEnd, maximumPossibleSequenceRangeEnd));
                 nonogramLogicObject.getColumnsSequencesRanges().get(columnIdx).set(sequenceId, updatedRange);
 
                 rowIdx = rowIdx + sequenceLength;
