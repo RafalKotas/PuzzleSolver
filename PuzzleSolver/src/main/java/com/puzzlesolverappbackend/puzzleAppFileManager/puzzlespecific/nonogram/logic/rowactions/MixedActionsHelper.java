@@ -74,7 +74,7 @@ public class MixedActionsHelper {
         return colouredSequencesRangesInRowInRange;
     }
 
-    public List<List<Integer>> getColouredSequencesRangesInRowInRangeOnRight(List<List<String>> solutionBoard, int rowIdx, int potentiallyColouredFieldColumn, int maxSequenceLength) {
+    public static List<List<Integer>> getColouredSequencesRangesInRowInRangeOnRight(List<List<String>> solutionBoard, int rowIdx, int potentiallyColouredFieldColumn, int maxSequenceLength) {
         int width = solutionBoard.get(0).size();
 
         List<List<Integer>> colouredSequencesRangesInRowInRange = new ArrayList<>();
@@ -163,7 +163,7 @@ public class MixedActionsHelper {
             if (contactIndex >= coloredSequenceStart - 1) {
                 int firstPartLength = contactIndex - colouredColumnIndexAfterX + 1;
                 int secondPartStartIndex = contactIndex + 1;
-                int secondPartLength = contactIndex == coloredSequenceEnd ? 0 : Math.max(0, secondPartStartIndex  - coloredSequenceEnd + 1);
+                int secondPartLength = contactIndex == coloredSequenceEnd ? 0 : Math.max(0, coloredSequenceEnd - secondPartStartIndex + 1);
                 return firstPartLength + secondPartLength > expectedLength;
             }
             return false;

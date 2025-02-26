@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.logic.NonogramState.buildInitialEmptyNonogramState;
@@ -104,5 +106,95 @@ class NonogramRowLogicTest {
                 "-", "-", "-", "-", "-"
         );
         assertThat(nonogramRowLogic.getNonogramSolutionBoard().get(ROW_TO_TEST)).isEqualTo(expectedRowAfterActionMade);
+    }
+
+    @Test
+    @DisplayName(value = "Should match field at columnIdx 18 to seqId 3 when prevent extending to excess length and correct it range")
+    void shouldPreventExtendingColouredSequenceToExcessLengthInRowToLeftWithUniqueSequenceMatch() {
+        // given
+        int ROW_TO_TEST = 8;
+        int HEIGHT = 35;
+        int WIDTH = 40;
+        prepareNonogramRowLogic(HEIGHT, WIDTH);
+        nonogramRowLogic.setRowSequencesRanges(8, new ArrayList<>(Arrays.asList(
+                List.of(0, 13), List.of(2, 18), List.of(13, 27), List.of(18, 29), List.of(25, 33), List.of(37, 39)
+        )));
+        nonogramRowLogic.getRowsSequences().set(8, new ArrayList<>(Arrays.asList(1, 4, 3, 1, 3, 3)));
+        List<String> rowBeforeActionMade = new ArrayList<>(Arrays.asList(
+                "-", "-", "-", "-", "-",
+                "-", "-", "-", "-", "-",
+                "-", "-", "-", "-", "O",
+                "O", "-", "-", "O", "X",
+                "X", "X", "X", "X", "X",
+                "O", "O", "O", "X", "-",
+                "-", "-", "-", "-", "X",
+                "X", "X", "O", "O", "O"
+        ));
+        nonogramRowLogic.setNonogramSolutionBoardRow(ROW_TO_TEST, rowBeforeActionMade);
+
+        // when
+        nonogramRowLogic.preventExtendingColouredSequenceToExcessLengthInRow(ROW_TO_TEST);
+
+        // then
+        List<String> expectedRowAfterActionMade = new ArrayList<>(Arrays.asList(
+                "-", "-", "-", "-", "-",
+                "-", "-", "-", "-", "-",
+                "-", "-", "-", "-", "O",
+                "O", "-", "X", "O", "X",
+                "X", "X", "X", "X", "X",
+                "O", "O", "O", "X", "-",
+                "-", "-", "-", "-", "X",
+                "X", "X", "O", "O", "O"
+        ));
+        List<List<Integer>> expectedRowSequencesRangesAfterActionMade = List.of(
+                List.of(0, 13), List.of(2, 18), List.of(13, 27), List.of(18, 18), List.of(25, 33), List.of(37, 39)
+        );
+        assertThat(nonogramRowLogic.getNonogramSolutionBoard().get(ROW_TO_TEST)).isEqualTo(expectedRowAfterActionMade);
+        assertThat(nonogramRowLogic.getRowsSequencesRanges().get(ROW_TO_TEST)).isEqualTo(expectedRowSequencesRangesAfterActionMade);
+    }
+
+    @Test
+    @DisplayName(value = "Should match field at columnIdx 21 to seqId 2 when prevent extending to excess length and correct its range")
+    void shouldPreventExtendingColouredSequenceToExcessLengthInRowToRightWithUniqueSequenceMatch() {
+        // given
+        int ROW_TO_TEST = 8;
+        int HEIGHT = 35;
+        int WIDTH = 40;
+        prepareNonogramRowLogic(HEIGHT, WIDTH);
+        nonogramRowLogic.setRowSequencesRanges(8, new ArrayList<>(Arrays.asList(
+                List.of(0, 2), List.of(6, 14), List.of(10, 21), List.of(12, 26), List.of(21, 37), List.of(26, 39)
+        )));
+        nonogramRowLogic.getRowsSequences().set(8, new ArrayList<>(Arrays.asList(3, 3, 1, 3, 4, 1)));
+        List<String> rowBeforeActionMade = new ArrayList<>(Arrays.asList(
+                "O", "O", "O", "X", "X",
+                "X", "-", "-", "-", "-",
+                "-", "X", "O", "O", "O",
+                "X", "X", "X", "X", "X",
+                "X", "O", "-", "-", "O",
+                "O", "-", "-", "-", "-",
+                "-", "-", "-", "-", "-",
+                "-", "-", "-", "-", "-"
+        ));
+        nonogramRowLogic.setNonogramSolutionBoardRow(ROW_TO_TEST, rowBeforeActionMade);
+
+        // when
+        nonogramRowLogic.preventExtendingColouredSequenceToExcessLengthInRow(ROW_TO_TEST);
+
+        // then
+        List<String> expectedRowAfterActionMade = new ArrayList<>(Arrays.asList(
+                "O", "O", "O", "X", "X",
+                "X", "-", "-", "-", "-",
+                "-", "X", "O", "O", "O",
+                "X", "X", "X", "X", "X",
+                "X", "O", "X", "-", "O",
+                "O", "-", "-", "-", "-",
+                "-", "-", "-", "-", "-",
+                "-", "-", "-", "-", "-"
+        ));
+        List<List<Integer>> expectedRowSequencesRangesAfterActionMade = List.of(
+                List.of(0, 2), List.of(6, 14), List.of(21, 21), List.of(12, 26), List.of(21, 37), List.of(26, 39)
+        );
+        assertThat(nonogramRowLogic.getNonogramSolutionBoard().get(ROW_TO_TEST)).isEqualTo(expectedRowAfterActionMade);
+        assertThat(nonogramRowLogic.getRowsSequencesRanges().get(ROW_TO_TEST)).isEqualTo(expectedRowSequencesRangesAfterActionMade);
     }
 }
