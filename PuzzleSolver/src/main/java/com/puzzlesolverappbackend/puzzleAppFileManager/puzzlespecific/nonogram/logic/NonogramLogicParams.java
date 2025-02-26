@@ -202,13 +202,17 @@ public abstract class NonogramLogicParams {
 
     protected void addColumnToAffectedActionsByIdentifiers(int columnIdx, List<NonogramSolveAction> actions) {
         for (NonogramSolveAction action : actions) {
-            this.actionsToDoList.add(new NonogramActionDetails(columnIdx, action));
+            if (isColumnIndexValid(columnIdx)) {
+                this.actionsToDoList.add(new NonogramActionDetails(columnIdx, action));
+            }
         }
     }
 
     protected void addRowToAffectedActionsByIdentifiers(int rowIdx, List<NonogramSolveAction> actions) {
         for (NonogramSolveAction action : actions) {
-            this.actionsToDoList.add(new NonogramActionDetails(rowIdx, action));
+            if (isRowIndexValid(rowIdx)) {
+                this.actionsToDoList.add(new NonogramActionDetails(rowIdx, action));
+            }
         }
     }
 
@@ -302,7 +306,7 @@ public abstract class NonogramLogicParams {
      */
     protected void excludeSequenceInColumn(int columnIdx, int seqIdx) {
         if (!this.columnsSequencesIdsNotToInclude.get(columnIdx).contains(seqIdx)) {
-            tmpLog = generateAddingRowSequenceToNotToIncludeDescription(columnIdx, seqIdx);
+            tmpLog = generateAddingColumnSequenceToNotToIncludeDescription(columnIdx, seqIdx);
             addLog(tmpLog);
             this.columnsSequencesIdsNotToInclude.get(columnIdx).add(seqIdx);
             Collections.sort(this.columnsSequencesIdsNotToInclude.get(columnIdx));
@@ -399,6 +403,10 @@ public abstract class NonogramLogicParams {
 
     protected String generateAddingRowSequenceToNotToIncludeDescription(int rowIdx, int seqNo) {
         return String.format("ROW %d - seqNo = %d excluded", rowIdx, seqNo);
+    }
+
+    protected String generateAddingColumnSequenceToNotToIncludeDescription(int columnIdx, int seqNo) {
+        return String.format("COLUMN %d - seqNo = %d excluded", columnIdx, seqNo);
     }
 
     /**

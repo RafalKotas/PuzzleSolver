@@ -301,7 +301,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
             }
 
             this.nonogramState.increaseMadeSteps();
-            tmpLog = generateCorrectingColumnSequenceRangeStepDescription(columnIdx, previousSequenceId, oldPreviousSequenceRange, updatedPreviousSequenceRange, "correcting from right");
+            tmpLog = generateCorrectingColumnSequenceRangeStepDescription(columnIdx, previousSequenceId, oldPreviousSequenceRange, updatedPreviousSequenceRange, "correcting from bottom");
             addLog(tmpLog);
         }
     }
@@ -794,7 +794,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                                 this.addColumnToAffectedActionsByIdentifiers(columnIdx, actionsToDoInColumnAfterExtendingColouredFieldsNearXInColumns);
                                 this.nonogramState.increaseMadeSteps();
 
-                                tmpLog = generateColourStepDescription(columnIdx, colourRowIdx, "extend coloured fields in sequence to left near X " +
+                                tmpLog = generateColourStepDescription(columnIdx, colourRowIdx, "extend coloured fields in sequence to top near X " +
                                         "to length of shortest possible sequence in column");
                                 addLog(tmpLog);
                             } else if (showRepetitions) {
@@ -881,7 +881,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                                 this.nonogramState.increaseMadeSteps();
 
                                 tmpLog = generateColourStepDescription(columnIdx, colourRowIdx, "extend coloured fields in sequence to bottom near X " +
-                                        "to length of shortest possible sequence in row");
+                                        "to length of shortest possible sequence in column");
                                 addLog(tmpLog);
                             } else if (showRepetitions) {
                                 System.out.println("Column field was coloured earlier (extending to minimum required - to bottom).");

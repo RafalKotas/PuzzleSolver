@@ -359,11 +359,6 @@ public class NonogramLogic extends NonogramLogicParams {
         addLog(tmpLog);
     }
 
-    private void generateAddingColumnSequenceToNotToIncludeDescription(int columnIdx, int seqNo) {
-        tmpLog = String.format("COLUMN %d - seqNo = %d excluded", columnIdx, seqNo);
-        addLog(tmpLog);
-    }
-
     private void fillTrivialColumnField(Field trivialColumnField, int seqNo) {
         String seqMark = indexToSequenceCharMark(seqNo);
         colourFieldAtGivenPosition(trivialColumnField);
@@ -921,6 +916,7 @@ public class NonogramLogic extends NonogramLogicParams {
             currentActionRCIndex = currentActionDetails.getIndex();
             try {
                 if (getRowSolveActions().contains(currentActionDetails.getActionName())) {
+
                     this.copyLogicToNonogramRowLogic();
 
                     stepsBefore = this.getNonogramState().getNewStepsMade();
@@ -1047,6 +1043,7 @@ public class NonogramLogic extends NonogramLogicParams {
             case PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES -> nonogramRowLogic.placeXsRowAtTooShortEmptySequences(rowIdx);
             case PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE -> nonogramRowLogic.placeXsRowIfOWillMergeNearFieldsToTooLongColouredSequence(rowIdx);
             case PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE -> nonogramRowLogic.placeXsRowIfONearXWillBeginTooLongPossibleColouredSequence(rowIdx);
+            case ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH -> nonogramRowLogic.preventExtendingColouredSequenceToExcessLengthInRow(rowIdx);
             case MARK_AVAILABLE_FIELDS_IN_ROW -> nonogramRowLogic.markAvailableFieldsInRow(rowIdx);
             default -> {
                 // empty
