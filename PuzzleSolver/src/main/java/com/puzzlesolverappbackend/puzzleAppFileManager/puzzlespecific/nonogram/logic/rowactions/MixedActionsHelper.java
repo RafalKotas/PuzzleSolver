@@ -15,7 +15,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.NonogramBoar
 @UtilityClass
 public class MixedActionsHelper {
 
-    public static int DISTANCE_WITH_ONE_EMPTY_FIELD_TO_POSSIBLE_COLOURED = 2;
+    private final static int DISTANCE_WITH_ONE_EMPTY_FIELD_TO_POSSIBLE_COLOURED = 2;
 
     public static List<Integer> sequencesIdsInRowIncludingField(List<List<Integer>> rowSequencesRanges, Field field) {
 

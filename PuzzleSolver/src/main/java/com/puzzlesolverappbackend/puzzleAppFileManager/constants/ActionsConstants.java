@@ -79,7 +79,7 @@ public class ActionsConstants {
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterColouringOverlappingSequencesInRows = new ArrayList<>(
-            Arrays.asList(
+            List.of(
                     MARK_AVAILABLE_FIELDS_IN_ROW
             ));
 
@@ -94,7 +94,7 @@ public class ActionsConstants {
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterColouringOverlappingSequencesInColumns = new ArrayList<>(
-            Arrays.asList(
+            List.of(
                     MARK_AVAILABLE_FIELDS_IN_COLUMN
             ));
 

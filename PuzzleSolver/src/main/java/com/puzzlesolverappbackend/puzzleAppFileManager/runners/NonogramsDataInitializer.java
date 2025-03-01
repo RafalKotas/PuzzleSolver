@@ -5,6 +5,7 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.model.Nonogram;
 import com.puzzlesolverappbackend.puzzleAppFileManager.puzzlespecific.nonogram.NonogramFileDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.repository.NonogramRepository;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -23,13 +24,27 @@ import java.util.stream.Collectors;
 
 @Component
 @Order(4)
+@Slf4j
 public class NonogramsDataInitializer implements CommandLineRunner {
+
+    private static final int JSON_EXTENSION_LENGTH = 5;
+
+    private static final double SEQUENCES_IN_ONE_SECTION_COUNT = 5.0;
 
     private final NonogramRepository nonogramRepository;
 
     private final CommonService commonService;
 
-    private final List<String> fileConstantProperties = List.of("filename", "source", "year", "month", "difficulty", "height", "width", "rowSequences", "columnSequences");
+    private final List<String> fileConstantProperties = List.of(
+            "filename",
+            "source",
+            "year",
+            "month",
+            "difficulty",
+            "height",
+            "width",
+            "rowSequences",
+            "columnSequences");
 
     Nonogram nonogram;
 
@@ -80,7 +95,7 @@ public class NonogramsDataInitializer implements CommandLineRunner {
 
             // Iterate through files list and print its contents line after line
             for (Path filePath : files) {
-                collectFilesToCorrect(filePath);
+                parseNonogramFile(filePath);
             }
         } catch (IOException e) {
             throw new IOException("Can't read file/s from directory " + puzzlePath);
@@ -96,7 +111,7 @@ public class NonogramsDataInitializer implements CommandLineRunner {
             try {
                 NonogramFileDetails nonogramFileDetails = objectMapper.readValue(new File(puzzlePath + nonogramFileName), NonogramFileDetails.class);
 
-                nonogramFileNameWithoutExtension = nonogramFileName.substring(0, nonogramFileName.length() - 5);
+                nonogramFileNameWithoutExtension = nonogramFileName.substring(0, nonogramFileName.length() - JSON_EXTENSION_LENGTH);
                 source = nonogramFileDetails.getSource();
                 year = nonogramFileDetails.getYear();
                 month = nonogramFileDetails.getMonth();
@@ -123,12 +138,14 @@ public class NonogramsDataInitializer implements CommandLineRunner {
     }
 
     private void updateOldNewNonogramsStats() {
+
         if (nonogramRepository.existsNonogramByGivenParamsFromFile(nonogramFileNameWithoutExtension, source, year, month, difficulty,
                 height, width).isPresent()) {
             nonogramsRepeated++;
         } else {
-            newNonogramsSaved++;
+            log.info("Saving nonogram with name {}", nonogram.getFilename());
             nonogramRepository.save(nonogram);
+            newNonogramsSaved++;
         }
     }
 
@@ -151,7 +168,7 @@ public class NonogramsDataInitializer implements CommandLineRunner {
         }
     }
 
-    private void collectFilesToCorrect(java.nio.file.Path filePath) {
+    private void parseNonogramFile(Path filePath) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
 
         // Read lines from file
@@ -159,35 +176,47 @@ public class NonogramsDataInitializer implements CommandLineRunner {
         try {
             fileLines = Files.lines(filePath).collect(Collectors.toList());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IOException(e);
         }
         NonogramFileDetails nonogramFileDetails;
         try {
             nonogramFileDetails = objectMapper.readValue(new File(puzzlePath + filePath.getFileName()), NonogramFileDetails.class);
+            analyzeNonogramFileCorrectness(fileLines, filePath, nonogramFileDetails);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            log.error("error while mapping, filename: {}", filePath.getFileName());
+            throw new IOException(e);
         }
 
+        filesCount++;
+    }
+
+    private void analyzeNonogramFileCorrectness(List<String> fileLines, Path filePath, NonogramFileDetails nonogramFileDetails) {
         String fullFilename = filePath.getFileName().toString();
+        String fileNameWithoutExtension = fullFilename.substring(0, fullFilename.length() - JSON_EXTENSION_LENGTH);
 
         List<String> nonogramPropsInOrder = getNonogramPropsFromFile(fileLines);
 
-        boolean requiredMinimumLinesCondition = fileLines.size() == calculateMinimumNonogramFileLinesNeeded(nonogramPropsInOrder, nonogramFileDetails);
+        int minimumLinesRequired = calculateMinimumNonogramFileLinesNeeded(nonogramPropsInOrder, nonogramFileDetails);
+
+        boolean requiredMinimumLinesCondition = fileLines.size() == minimumLinesRequired;
         boolean arePropsInRequiredOrder = verifyIfPropsInRequiredOrder(nonogramPropsInOrder);
 
-        if (requiredMinimumLinesCondition && arePropsInRequiredOrder) {
-            filesOK++;
+        if (!requiredMinimumLinesCondition) {
+            log.error("File {} not has minimum required lines({})", fullFilename, minimumLinesRequired);
+            filesToCorrect.add(fileNameWithoutExtension);
+        } else if (!arePropsInRequiredOrder) {
+            log.error("File {} props are not in correct order", fullFilename);
+            filesToCorrect.add(fileNameWithoutExtension);
         } else {
-            filesToCorrect.add(fullFilename.substring(0, fullFilename.length() - 5));
+            filesOK++;
         }
-        filesCount++;
     }
 
     private List<String> getNonogramPropsFromFile(List<String> fileLines) {
         Pattern propertyPattern = Pattern.compile("\"[a-zA-Z]*\" :");
 
-        return fileLines.stream().filter(fileline -> {
-            Matcher matcher = propertyPattern.matcher(fileline);
+        return fileLines.stream().filter(fileLine -> {
+            Matcher matcher = propertyPattern.matcher(fileLine);
             return matcher.find();
         }).map(propertyLine -> {
             Matcher matcher = propertyPattern.matcher(propertyLine);
@@ -199,8 +228,12 @@ public class NonogramsDataInitializer implements CommandLineRunner {
     private int calculateMinimumNonogramFileLinesNeeded(List<String> nonogramPropsInOrder, NonogramFileDetails nonogramFileDetails) {
         int FIXED_LINES_COUNT = 4;
 
-        int linesForRowsSequences = (int) Math.ceil(nonogramFileDetails.getHeight() / 5.0);
-        int linesForColumnsSequences = (int) Math.ceil(nonogramFileDetails.getWidth() / 5.0);
+        int linesForRowsSequences = (int) Math.ceil(nonogramFileDetails.getHeight() / SEQUENCES_IN_ONE_SECTION_COUNT);
+        int linesForColumnsSequences = (int) Math.ceil(nonogramFileDetails.getWidth() / SEQUENCES_IN_ONE_SECTION_COUNT);
+
+        if (nonogramFileDetails.getFilename().startsWith("o06456") || nonogramFileDetails.getFilename().startsWith("o09040")) {
+            System.out.println("here");
+        }
 
         return FIXED_LINES_COUNT + nonogramPropsInOrder.size() + linesForRowsSequences + linesForColumnsSequences;
     }

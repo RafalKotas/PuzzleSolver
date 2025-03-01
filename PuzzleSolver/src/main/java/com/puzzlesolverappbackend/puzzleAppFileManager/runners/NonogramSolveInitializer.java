@@ -23,7 +23,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedCo
 //@Order(7)
 public class NonogramSolveInitializer implements CommandLineRunner {
 
-    private final boolean saveSolutions = true;
+    private static final boolean saveSolutions = true;
 
     @Autowired
     private NonogramRepository nonogramRepository;
