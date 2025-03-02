@@ -231,10 +231,6 @@ public class NonogramsDataInitializer implements CommandLineRunner {
         int linesForRowsSequences = (int) Math.ceil(nonogramFileDetails.getHeight() / SEQUENCES_IN_ONE_SECTION_COUNT);
         int linesForColumnsSequences = (int) Math.ceil(nonogramFileDetails.getWidth() / SEQUENCES_IN_ONE_SECTION_COUNT);
 
-        if (nonogramFileDetails.getFilename().startsWith("o06456") || nonogramFileDetails.getFilename().startsWith("o09040")) {
-            System.out.println("here");
-        }
-
         return FIXED_LINES_COUNT + nonogramPropsInOrder.size() + linesForRowsSequences + linesForColumnsSequences;
     }
 
