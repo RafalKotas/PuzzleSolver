@@ -8,7 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "nonogram_puzzles_data")
+@Table(name = "nonogram")
 @StaticMetamodel(Nonogram.class)
 @ToString
 @NoArgsConstructor
@@ -18,7 +18,7 @@ public class Nonogram {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "filename")
     private String filename;

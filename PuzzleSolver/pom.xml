@@ -99,6 +99,11 @@
 			<artifactId>jakarta.annotation-api</artifactId>
 			<version>3.0.0-M1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<version>4.25.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

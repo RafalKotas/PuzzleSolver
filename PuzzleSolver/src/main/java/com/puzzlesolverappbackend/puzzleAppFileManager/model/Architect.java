@@ -8,7 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "architect_puzzles_data")
+@Table(name = "architect")
 @StaticMetamodel(Architect.class)
 @ToString
 @NoArgsConstructor
@@ -18,7 +18,7 @@ public class Architect {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "filename")
     private String filename;

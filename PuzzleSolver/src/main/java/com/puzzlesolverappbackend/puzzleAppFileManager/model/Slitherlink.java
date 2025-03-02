@@ -6,10 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
-
 @Entity
-@Table(name = "slitherlink_puzzles_data")
+@Table(name = "slitherlink")
 @StaticMetamodel(Slitherlink.class)
 @ToString
 @NoArgsConstructor
@@ -18,7 +16,7 @@ public class Slitherlink {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "filename")
     private String filename;

@@ -17,37 +17,37 @@ import java.util.Optional;
 public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, JpaSpecificationExecutor {
 
     @Query(value = "SELECT distinct(npd.source)" +
-            " FROM nonogram_puzzles_data npd",
+            " FROM nonogram npd",
             nativeQuery = true)
     List<String> selectNonogramSources();
 
     @Query(value = "SELECT distinct(npd.year)" +
-            " FROM nonogram_puzzles_data npd",
+            " FROM nonogram npd",
             nativeQuery = true)
     List<String> selectNonogramYears();
 
     @Query(value = "SELECT distinct(npd.month)" +
-            " FROM nonogram_puzzles_data npd",
+            " FROM nonogram npd",
             nativeQuery = true)
     List<String> selectNonogramMonths();
 
     @Query(value = "SELECT distinct(npd.difficulty)" +
-            " FROM nonogram_puzzles_data npd",
+            " FROM nonogram npd",
             nativeQuery = true)
     List<Double> selectNonogramDifficulties();
 
     @Query(value = "SELECT distinct(npd.width)" +
-            " FROM nonogram_puzzles_data npd",
+            " FROM nonogram npd",
             nativeQuery = true)
     List<Integer> selectNonogramWidths();
 
     @Query(value = "SELECT distinct(npd.height)" +
-            " FROM nonogram_puzzles_data npd",
+            " FROM nonogram npd",
             nativeQuery = true)
     List<Integer> selectNonogramHeights();
 
     @Query(value = "SELECT *" +
-            " FROM nonogram_puzzles_data npd" +
+            " FROM nonogram npd" +
             " WHERE source IN :sources" +
             " AND npd.difficulty BETWEEN :minDifficulty and :maxDifficulty",
             nativeQuery = true)
@@ -56,7 +56,7 @@ public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, Jp
                                                       @Param("maxDifficulty") Double maxDifficulty);
 
     @Query(value = "SELECT *" +
-            " FROM nonogram_puzzles_data npd" +
+            " FROM nonogram npd" +
             " WHERE (npd.filename=:filename" + //LIKE %:filename% +
             " AND npd.source LIKE %:source%" +
             " AND npd.year LIKE %:year%" +
@@ -75,7 +75,7 @@ public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, Jp
 
     // all available - page
     @Query(value = "SELECT *" +
-            " FROM nonogram_puzzles_data npd" +
+            " FROM nonogram npd" +
             " WHERE (npd.source IN :sources" +
             " AND npd.year IN :years" +
             " AND npd.month IN :months" +
