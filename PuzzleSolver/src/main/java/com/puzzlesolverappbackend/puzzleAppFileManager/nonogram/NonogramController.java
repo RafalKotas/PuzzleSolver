@@ -1,8 +1,7 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram;
 
-import com.google.gson.Gson;
-import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,74 +11,45 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-
-import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION_LENGTH;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@Slf4j
 @RequestMapping("/api/nonogram")
 public class NonogramController {
 
     @Autowired
-    CommonService commonService;
+    private CommonService commonService;
 
     @Autowired
-    NonogramService nonogramService;
+    private NonogramService nonogramService;
 
     @Autowired
-    NonogramRepository nonogramRepository;
+    private NonogramRepository nonogramRepository;
 
-    Pageable nonogramsPageable;
+    private static final String DEFAULT_PAGE = "0";
+
+    private static final String DEFAULT_ITEMS_ON_PAGE_COUNT = "3";
 
     @PostMapping("/save")
     public ResponseEntity<String> saveNonogramToJsonFile(@RequestParam String fileName,
                                                          @Valid @RequestBody NonogramFileDetails nonogramFileDetails) {
-        System.out.println("saving nonogram: " + fileName);
-
-        String nonogramsPath = InitializerConstants.PUZZLE_RELATIVE_PATH + InitializerConstants.PuzzleMappings.NONOGRAM_PATH_SUFFIX;
-
-        Set<String> existingFilesNames = commonService
-                .listFilesUsingJavaIO(nonogramsPath);
-
-        String[] fileNamesWithoutExtension = existingFilesNames.toArray(String[]::new);
-        List<String> fileNamesWithoutExtensionArray = Arrays.stream(fileNamesWithoutExtension
-                .clone())
-                .map(fN -> fN.substring(0, fN.length() - JSON_EXTENSION_LENGTH))
-                .toList();
-
-        if (fileNamesWithoutExtensionArray.contains(fileName)) {
-            return new ResponseEntity<>("Nonogram not saved. File with same name already exists.", HttpStatus.OK);
-        }
-
-        Gson gson = new Gson();
-
-        FileWriter fileWriter;
-        try {
-            fileWriter = new FileWriter(nonogramsPath + fileName + JSON_EXTENSION);
-            gson.toJson(nonogramFileDetails, fileWriter);
-            fileWriter.close();
-            return new ResponseEntity<>("Save success!", HttpStatus.OK);
-        } catch (IOException e) {
-            return new ResponseEntity<>("Exception external problem.", HttpStatus.OK);
-        }
+        log.info("Saving nonogram with name {}", fileName);
+        String responeMessage = nonogramService.saveCreatedNonogramToFile(fileName, nonogramFileDetails);
+        return new ResponseEntity<>(responeMessage, HttpStatus.OK);
     }
 
     @GetMapping("/getNonogramsUsingFilters")
-    public ResponseEntity<List<Nonogram>> getNonogramsUsingFilters(@RequestParam(name="page", defaultValue = "0") int page,
-                                                                   @RequestParam(name="itemsOnPage", defaultValue = "3") int itemsOnPage,
+    public ResponseEntity<List<Nonogram>> getNonogramsUsingFilters(@RequestParam(name="page", defaultValue = DEFAULT_PAGE) int page,
+                                                                   @RequestParam(name="itemsOnPage", defaultValue = DEFAULT_ITEMS_ON_PAGE_COUNT) int itemsOnPage,
                                                                    @RequestParam List<String> sources,
                                                                    @RequestParam List<String> years,
                                                                    @RequestParam List<String> months,
                                                                    @RequestParam Double minDifficulty, @RequestParam Double maxDifficulty,
                                                                    @RequestParam Integer minHeight, @RequestParam Integer maxHeight,
                                                                    @RequestParam Integer minWidth, @RequestParam Integer maxWidth) {
-        nonogramsPageable = PageRequest.of(page, itemsOnPage);
+        Pageable nonogramsPageable = PageRequest.of(page, itemsOnPage);
 
         Page<Nonogram> nonogramsMatching = nonogramRepository.getNonogramsUsingFilters(sources, years, months, minDifficulty, maxDifficulty,
                 minHeight, maxHeight, minWidth, maxWidth, nonogramsPageable);
