@@ -29,11 +29,13 @@ const InputSlider : React.FC<OwnInputSliderProps> = ({label, propertyName,
     }
 
     const handleBlur = () => {
-        if (value < minValue) {
-          setValue(minValue)
-        } else if (value > maxValue) {
-          setValue(maxValue)
-        }
+      const valueToCheck = Array.isArray(value) ? value[0] : value;
+
+      if (valueToCheck < minValue) {
+        setValue(minValue)
+      } else if (valueToCheck > maxValue) {
+        setValue(maxValue)
+      }
     };
 
     useEffect(() => {
