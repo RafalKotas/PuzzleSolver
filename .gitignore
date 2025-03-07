@@ -1,6 +1,16 @@
+# FE
+*.css
+*.css.map
 FrontReact/node_modules
-nCopy
-otherFolders
-./FrontReact/public/
+FrontReact/build/
+FrontReact/build/resources/Nonograms/
 /FrontReact/public/
 /FrontReact/my_notes/
+
+# BE
+.idea/
+PuzzleSolver/src/main/tools/MySQL/docker-compose.yml
+
+# other
+nCopy
+otherFolders
