@@ -6,5 +6,6 @@ export interface propDetails {
     helperText: string,
     regex: RegExp,
     required: boolean,
-    notProvidedValue: string
+    notProvidedValue: string,
+    defaultValues: Array<string>
 }

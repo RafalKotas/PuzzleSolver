@@ -9,6 +9,7 @@ export const AkariStringProps : propDetails[] = [
         helperText: "Letters and numbers only (3 - 20)",
         regex: /[a-zA-Z1-9_]/,
         required: true,
-        notProvidedValue: ""
+        notProvidedValue: "",
+        defaultValues: ["pazyl_pl"]
     }
 ]
