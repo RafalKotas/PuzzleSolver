@@ -6,7 +6,21 @@ import { inferInitialColumnsSequencesRanges } from "./logic-columns"
 import { inferInitialRowsSequencesRanges } from "./logic-rows"
 
 // store
-import { COLOUR_FIELDS_IN_COLUMNS_RANGE, createEmptyNonogramBoard, emptyColumnFieldsNotToInclude, emptyColumnsSequencesIdsNotToInclude, emptyRowsFieldsNotToInclude, emptyRowsSequencesIdsNotToInclude, FILL_BOARD_SQUARE, INIT_SOLVER_DATA, NonogramLogicActionTypes, NonogramLogicState, PLACE_X_BOARD_SQUARE, RESET_LOGIC_DATA_INITIALIZED, SET_CURRENT_NONOGRAM_MARK, SET_NONOGRAM_LOGIC_DATA } from "./types"
+import { createEmptyNonogramBoard, 
+    emptyColumnFieldsNotToInclude, 
+    emptyColumnsSequencesIdsNotToInclude, 
+    emptyRowsFieldsNotToInclude, 
+    emptyRowsSequencesIdsNotToInclude,
+    NonogramLogicActionTypes, 
+    NonogramLogicState, 
+    COLOUR_FIELDS_IN_COLUMNS_RANGE, 
+    SET_NONOGRAM_LOGIC_DATA,
+    RESET_NONOGRAM_BOARD,
+    FILL_BOARD_SQUARE, 
+    INIT_SOLVER_DATA, 
+    PLACE_X_BOARD_SQUARE, 
+    SET_CURRENT_NONOGRAM_MARK, 
+} from "./types"
 
 export const initialState: NonogramLogicState = {
     nonogramRelatedData: {
@@ -25,6 +39,10 @@ export const initialState: NonogramLogicState = {
     },
     currentMark: "O"
 }
+
+const createEmptyList = (length: number): any[] => {
+    return Array.from({ length }, () => []);
+};
 
 export const nonogramLogicReducer: Reducer<NonogramLogicState, NonogramLogicActionTypes> = (state = initialState, action : NonogramLogicActionTypes) => {
     switch (action.type) {
@@ -54,6 +72,17 @@ export const nonogramLogicReducer: Reducer<NonogramLogicState, NonogramLogicActi
             return {
                 ...state,
                 nonogramRelatedData: action.payload.nonogramLogicData
+            }
+        case RESET_NONOGRAM_BOARD:
+            return {
+                ...state,
+                nonogramRelatedData: {
+                    ...state.nonogramRelatedData,
+                    nonogramSolutionBoard: state.nonogramRelatedData.nonogramSolutionBoard.map(innerArray => innerArray.map(() => "-")),
+                    nonogramSolutionBoardWithMarks: state.nonogramRelatedData.nonogramSolutionBoardWithMarks.map(innerArray => innerArray.map(() => "----")),
+                    rowsSequencesIdsNotToInclude: createEmptyList(state.nonogramRelatedData.nonogramSolutionBoard.length),
+                    columnsSequencesIdsNotToInclude: createEmptyList(state.nonogramRelatedData.nonogramSolutionBoard[0].length)
+                }
             }
         case FILL_BOARD_SQUARE:
             let { rowIdx, columnIdx } = action.payload

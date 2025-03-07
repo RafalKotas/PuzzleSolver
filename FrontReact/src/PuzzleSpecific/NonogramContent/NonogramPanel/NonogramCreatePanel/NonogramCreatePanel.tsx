@@ -31,6 +31,7 @@ import "./NonogramCreatePanel.min.css"
 //other
 import { sliders } from "./sliders"
 import { modes, SetMode } from "../../../../store/display"
+import { ResetNonogramBoard } from "../../../../store/puzzleLogic/nonogram"
 
 interface OwnNonogramCreatePanelProps {
 
@@ -48,7 +49,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     changeNonogramDetail: (property : keyof nonogramInformation, value: string | number | number[]) => 
         dispatch(ChangeNonogramDetail(property, value)),
     saveCreatedTemplate: () => dispatch(SaveTemporaryNonogram()),
-
+    resetNonogramBoard: () => dispatch(ResetNonogramBoard()),
     setMode: (updatedMode : modes) => dispatch(SetMode(updatedMode))
 })
 
@@ -58,11 +59,12 @@ type NonogramCreatePanelPropsFromRedux = ConnectedProps<typeof connector>
 
 type NonogramCreatePanelProps = NonogramCreatePanelPropsFromRedux & OwnNonogramCreatePanelProps
 
-const NonogramCreatePanel : React.FC<NonogramCreatePanelProps> = ({addNonogramDetail, removeNonogramDetail, 
-    changeNonogramDetail, saveCreatedTemplate, detailsSet, setMode}) => {
+const NonogramCreatePanel : React.FC<NonogramCreatePanelProps> = ({detailsSet, addNonogramDetail, removeNonogramDetail, 
+    changeNonogramDetail, saveCreatedTemplate, resetNonogramBoard, setMode}) => {
 
     useEffect(() => {
         setMode("CREATE")
+        resetNonogramBoard()
         // eslint-disable-next-line
     }, [])
 
