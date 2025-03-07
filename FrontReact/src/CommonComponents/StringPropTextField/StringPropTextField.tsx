@@ -36,7 +36,7 @@ type StringPropTextFieldProps = StringPropTextFieldPropsFromRedux & OwnStringPro
 const StringPropTextField : React.FC<StringPropTextFieldProps> = ({prop, passValueToParent}) => {
     const options = ["logi", "logiMix", "katana", "pazyl_pl"]
 
-    let {label, defaultValue, helperText, required, notProvidedValue, minLength, maxLength, regex} = prop
+    let {label, defaultValue, helperText, required, notProvidedValue, minLength, maxLength, regex, defaultValues} = prop
 
     const propValidationSuccess = (text: string) => {
         return ((text.length >= minLength && text.length <= maxLength && regex.test(text)) || (!required && text === notProvidedValue))
@@ -63,32 +63,36 @@ const StringPropTextField : React.FC<StringPropTextFieldProps> = ({prop, passVal
     }
 
     return (
-        <div className="puzzle-string-prop-tf">
-            <Autocomplete
-                options={options}
-                freeSolo // Pozwala użytkownikowi wpisać własną wartość (możesz usunąć, jeśli chcesz ograniczyć do listy)
-                value={value}
-                onChange={(_, newValue) => onInputChange({ target: { value: newValue || "default" } } as React.ChangeEvent<HTMLInputElement>, prop)}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label={label.charAt(0).toUpperCase() + label.slice(1).toLowerCase()}
-                        helperText={!propValidationSuccess(value) ? helperText : ""}
-                        error={!propValidationSuccess(value)}
-                        margin="normal"
-                        variant="standard"
-                    />
-                )}
-            />
-            {!required && 
-                <FormControlLabel 
-                    control={
-                    <Checkbox 
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => onCheckChange(event, checked)}
-                    />} 
-                    label="N/D" 
+        <div className="puzzle-string-prop">
+            <div className="string-prop-tf">
+                <Autocomplete
+                    options={defaultValues}
+                    freeSolo // Pozwala użytkownikowi wpisać własną wartość (możesz usunąć, jeśli chcesz ograniczyć do listy)
+                    value={value}
+                    onChange={(_, newValue) => onInputChange({ target: { value: newValue || "default" } } as React.ChangeEvent<HTMLInputElement>, prop)}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label={label.charAt(0).toUpperCase() + label.slice(1).toLowerCase()}
+                            helperText={!propValidationSuccess(value) ? helperText : ""}
+                            error={!propValidationSuccess(value)}
+                            margin="normal"
+                            variant="standard"
+                        />
+                    )}
                 />
-            }
+            </div>
+            <div className="string-prop-not-provided-value">
+                {!required && 
+                    <FormControlLabel 
+                        control={
+                        <Checkbox 
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => onCheckChange(event, checked)}
+                        />} 
+                        label="N/D" 
+                    />
+                }
+            </div>
         </div>
     )
 }
