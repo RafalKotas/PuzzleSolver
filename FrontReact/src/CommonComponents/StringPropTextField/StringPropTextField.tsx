@@ -34,7 +34,6 @@ type StringPropTextFieldPropsFromRedux = ConnectedProps<typeof connector>
 type StringPropTextFieldProps = StringPropTextFieldPropsFromRedux & OwnStringPropTextFieldProps
 
 const StringPropTextField : React.FC<StringPropTextFieldProps> = ({prop, passValueToParent}) => {
-    const options = ["logi", "logiMix", "katana", "pazyl_pl"]
 
     let {label, defaultValue, helperText, required, notProvidedValue, minLength, maxLength, regex, defaultValues} = prop
 

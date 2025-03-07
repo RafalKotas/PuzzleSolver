@@ -38,6 +38,7 @@ interface OwnNonogramCreatePanelProps {
 
 const mapStateToProps = (state: AppState) => ({
     selectedNonogram: state.nonogramDataReducer.selectedNonogram,
+    nonogramCorrect: state.nonogramDataReducer.nonogramCorrect,
     detailsSet: state.nonogramDataReducer.detailsSet
 })
 
