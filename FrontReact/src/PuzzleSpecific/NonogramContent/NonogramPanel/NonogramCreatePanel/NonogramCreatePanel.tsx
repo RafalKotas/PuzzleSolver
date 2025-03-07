@@ -38,7 +38,6 @@ interface OwnNonogramCreatePanelProps {
 
 const mapStateToProps = (state: AppState) => ({
     selectedNonogram: state.nonogramDataReducer.selectedNonogram,
-    nonogramCorrect: state.nonogramDataReducer.nonogramCorrect,
     detailsSet: state.nonogramDataReducer.detailsSet
 })
 
@@ -122,7 +121,7 @@ const NonogramCreatePanel : React.FC<NonogramCreatePanelProps> = ({addNonogramDe
             }
             <ColorButton onClick={() => saveCreatedTemplate()}
                 disabled={detailsSet.length < 6} color="success">
-                ADD<FontAwesomeIcon icon={faPlus}/>
+                ADD <FontAwesomeIcon icon={faPlus}/>
             </ColorButton>
         </section>
     )

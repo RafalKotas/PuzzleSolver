@@ -23,7 +23,6 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch : Dispatch) => ({
-    setCorrectness: (correctness: correctnessIndicator) => dispatch(SetCorrectness(correctness)),
     setEditMode: (editMode : boolean) => dispatch(SetEditMode(editMode))
 })
 
@@ -33,7 +32,7 @@ type ValidateNonogramSectionPropsFromRedux = ConnectedProps<typeof connector>
 
 type ValidateNonogramSectionProps = ValidateNonogramSectionPropsFromRedux
 
-const ValidateNonogramSection : React.FC<ValidateNonogramSectionProps> = ({correct, setCorrectness, setEditMode}) => {
+const ValidateNonogramSection : React.FC<ValidateNonogramSectionProps> = ({correct, editMode, setEditMode}) => {
 
     useEffect(() => {
         setEditMode(true)
@@ -48,7 +47,7 @@ const ValidateNonogramSection : React.FC<ValidateNonogramSectionProps> = ({corre
         <section id="validate-nonogram-section">
             <PreviewButton passModeToParent={getEditModeFromChild}/>
             <CheckCorrectButton/>
-            <SaveSection disabledCondition={!correct}/>
+            <SaveSection disabledCondition={correct != 1 || editMode}/>
         </section>
     )
 }
