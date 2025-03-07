@@ -7,7 +7,7 @@ import { Dispatch } from "redux"
 
 // redux - store
 import { AppState } from "../../../../../../store"
-import { correctnessIndicator, SetCorrectness, SetEditMode} from "../../../../../../store/data/nonogram"
+import { SetEditMode} from "../../../../../../store/data/nonogram"
 
 // (sub) components
 import PreviewButton from "./PreviewButton/PreviewButton"
@@ -47,7 +47,7 @@ const ValidateNonogramSection : React.FC<ValidateNonogramSectionProps> = ({corre
         <section id="validate-nonogram-section">
             <PreviewButton passModeToParent={getEditModeFromChild}/>
             <CheckCorrectButton/>
-            <SaveSection disabledCondition={correct != 1 || editMode}/>
+            <SaveSection disabledCondition={correct !== 1 || editMode}/>
         </section>
     )
 }
