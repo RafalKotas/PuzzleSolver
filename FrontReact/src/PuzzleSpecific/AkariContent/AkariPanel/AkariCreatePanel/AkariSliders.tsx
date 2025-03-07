@@ -61,6 +61,7 @@ const AkariSliders : React.FC<AkariSlidersProps> = ({addAkariDetail, changeAkari
                             initialValue={slider.initialValue}
                             maxValue={slider.maxValue}
                             step={slider.step}
+                            icon={slider.icon}
                             passValueToParent={handleNumberProperty}
                         />
                     )

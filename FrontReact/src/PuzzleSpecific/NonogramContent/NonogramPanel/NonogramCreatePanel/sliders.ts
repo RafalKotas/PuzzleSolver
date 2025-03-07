@@ -4,7 +4,8 @@ interface inputSliderProps {
     minValue: number,
     maxValue: number,
     initialValue: number,
-    step: number
+    step: number,
+    icon: string
 }
 
 export const sliders : inputSliderProps[] = [
@@ -14,7 +15,8 @@ export const sliders : inputSliderProps[] = [
         minValue: 1.0,
         maxValue: 5.0,
         initialValue: 3.0,
-        step: 0.1
+        step: 0.1,
+        icon: "LeaderboardIcon"
     },
     {
         label: "Height",
@@ -22,7 +24,8 @@ export const sliders : inputSliderProps[] = [
         minValue: 5,
         maxValue: 50,
         initialValue: 20,
-        step: 1
+        step: 1,
+        icon: "HeightIcon"
     },
     {
         label: "Width",
@@ -30,6 +33,7 @@ export const sliders : inputSliderProps[] = [
         minValue: 5,
         maxValue: 80,
         initialValue: 20,
-        step: 1
+        step: 1,
+        icon: "WidthFullIcon"
     }
 ]
