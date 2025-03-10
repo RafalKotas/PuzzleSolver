@@ -686,6 +686,51 @@ public class NonogramRowLogic extends NonogramLogicParams {
         return false;
     }
 
+    /*
+    CORRECT_ROW_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE
+    */
+    public void correctRowSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence(int rowIdx) {
+        List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
+        List<Integer> rowSequenceRange;
+        int rangeStartIndex;
+        int rangeEndIndex;
+
+        List<Integer> updatedSequenceRange;
+
+        boolean anySequenceWasUpdated = false;
+
+        for (int seqNo = 0; seqNo < rowSequencesRanges.size(); seqNo++) {
+            rowSequenceRange = rowSequencesRanges.get(seqNo);
+            rangeStartIndex = rowSequenceRange.get(0);
+            rangeEndIndex = rowSequenceRange.get(1);
+
+            updatedSequenceRange = new ArrayList<>();
+            if (rangeStartIndex >= 1 && isFieldColoured(this.nonogramSolutionBoard, new Field(rowIdx, rangeStartIndex - 1))) {
+                updatedSequenceRange.add(rangeStartIndex + 1);
+            } else {
+                updatedSequenceRange.add(rangeStartIndex);
+            }
+
+            if (rangeEndIndex < this.getHeight() - 1 && isFieldColoured(this.nonogramSolutionBoard, new Field(rowIdx, rangeEndIndex + 1))) {
+                updatedSequenceRange.add(rangeEndIndex - 1);
+            } else {
+                updatedSequenceRange.add(rangeEndIndex);
+            }
+
+            if (!updatedSequenceRange.equals(rowSequenceRange)) {
+                anySequenceWasUpdated = true;
+                this.updateColumnSequenceRange(rowIdx, seqNo, updatedSequenceRange);
+                this.nonogramState.increaseMadeSteps();
+                tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, seqNo, rowSequenceRange, updatedSequenceRange, "correcting row sequence range when start from edge index will create too long sequence.");
+                addLog(tmpLog);
+            }
+        }
+
+        if (anySequenceWasUpdated) {
+            this.addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoInRowAfterCorrectingRowSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence);
+        }
+    }
+
     /**
      * fill fields in row where ranges met specific condition (range_length < sequence_length * 2)
      */

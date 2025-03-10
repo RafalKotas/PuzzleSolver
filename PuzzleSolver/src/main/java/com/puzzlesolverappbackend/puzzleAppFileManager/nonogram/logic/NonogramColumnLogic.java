@@ -139,6 +139,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
         return List.of(newRangeBegin, newRangeEnd);
     }
 
+    // CORRECT_COLUMN_SEQUENCES_RANGES
     public void correctColumnSequencesRanges(int columnIdx) {
         correctSequencesRangesInColumnFromTop(columnIdx);
         correctSequencesRangesInColumnFromBottom(columnIdx);
@@ -307,6 +308,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
     }
 
     /**
+     * CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS
      * corrects column sequences when met coloured field in column (also from top and bottom)
      * @param columnIdx - column index to correct sequences ranges when coloured field met
      */
@@ -431,6 +433,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
     }
 
     /**
+     * CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY
      * @param columnIdx - column to correct sequence/s range/s if x on way (sequence won't fit)
      */
     public void correctColumnRangeIndexesIfXOnWay(int columnIdx) {
@@ -533,6 +536,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
         return  updatedColumnSequenceRangeEndIndex;
     }
 
+    // CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES
     public void correctColumnSequencesRangesWhenMatchingFieldsToSequences(int columnIdx) {
         List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
         List<Integer> columnSequencesLengths = this.getColumnsSequences().get(columnIdx);
@@ -683,6 +687,51 @@ public class NonogramColumnLogic extends NonogramLogicParams {
         }
 
         return false;
+    }
+
+    /*
+        CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE
+     */
+    public void correctColumnSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence(int columnIdx) {
+        List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
+        List<Integer> columnSequenceRange;
+        int rangeStartIndex;
+        int rangeEndIndex;
+
+        List<Integer> updatedSequenceRange;
+
+        boolean anySequenceWasUpdated = false;
+
+        for (int seqNo = 0; seqNo < columnSequencesRanges.size(); seqNo++) {
+            columnSequenceRange = columnSequencesRanges.get(seqNo);
+            rangeStartIndex = columnSequenceRange.get(0);
+            rangeEndIndex = columnSequenceRange.get(1);
+
+            updatedSequenceRange = new ArrayList<>();
+            if (rangeStartIndex >= 1 && isFieldColoured(this.nonogramSolutionBoard, new Field(rangeStartIndex - 1, columnIdx))) {
+                updatedSequenceRange.add(rangeStartIndex + 1);
+            } else {
+                updatedSequenceRange.add(rangeStartIndex);
+            }
+
+            if (rangeEndIndex < this.getHeight() - 1 && isFieldColoured(this.nonogramSolutionBoard, new Field(rangeEndIndex + 1, columnIdx))) {
+                updatedSequenceRange.add(rangeEndIndex - 1);
+            } else {
+                updatedSequenceRange.add(rangeEndIndex);
+            }
+
+            if (!updatedSequenceRange.equals(columnSequenceRange)) {
+                anySequenceWasUpdated = true;
+                this.updateColumnSequenceRange(columnIdx, seqNo, updatedSequenceRange);
+                this.nonogramState.increaseMadeSteps();
+                tmpLog = generateCorrectingColumnSequenceRangeStepDescription(columnIdx, seqNo, columnSequenceRange, updatedSequenceRange, "correcting column sequence range when start from edge index will create too long sequence.");
+                addLog(tmpLog);
+            }
+        }
+
+        if (anySequenceWasUpdated) {
+            this.addColumnToAffectedActionsByIdentifiers(columnIdx, actionsToDoInColumnAfterCorrectingColumnSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence);
+        }
     }
 
     /**
