@@ -719,7 +719,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
 
             if (!updatedSequenceRange.equals(rowSequenceRange)) {
                 anySequenceWasUpdated = true;
-                this.updateColumnSequenceRange(rowIdx, seqNo, updatedSequenceRange);
+                this.updateRowSequenceRange(rowIdx, seqNo, updatedSequenceRange);
                 this.nonogramState.increaseMadeSteps();
                 tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, seqNo, rowSequenceRange, updatedSequenceRange, "correcting row sequence range when start from edge index will create too long sequence.");
                 addLog(tmpLog);
