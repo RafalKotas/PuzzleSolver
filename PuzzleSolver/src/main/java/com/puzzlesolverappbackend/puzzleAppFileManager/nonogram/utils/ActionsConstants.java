@@ -60,12 +60,14 @@ public class ActionsConstants {
 
     public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterCorrectingColumnsSequencesRangesWhenMatchingFieldsToSequences = new ArrayList<>(
             List.of(
+                    CORRECT_ROW_SEQUENCES_RANGES,
                     PLACE_XS_ROW_AT_UNREACHABLE_FIELDS,
                     MARK_AVAILABLE_FIELDS_IN_ROW
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterCorrectingColumnsSequencesRangesWhenMatchingFieldsToSequences = new ArrayList<>(
             List.of(
+                    CORRECT_COLUMN_SEQUENCES_RANGES,
                     PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS,
                     MARK_AVAILABLE_FIELDS_IN_COLUMN
             ));
