@@ -74,16 +74,23 @@ export const nonogramLogicReducer: Reducer<NonogramLogicState, NonogramLogicActi
                 nonogramRelatedData: action.payload.nonogramLogicData
             }
         case RESET_NONOGRAM_BOARD:
-            return {
-                ...state,
-                nonogramRelatedData: {
-                    ...state.nonogramRelatedData,
-                    nonogramSolutionBoard: state.nonogramRelatedData.nonogramSolutionBoard.map(innerArray => innerArray.map(() => "-")),
-                    nonogramSolutionBoardWithMarks: state.nonogramRelatedData.nonogramSolutionBoardWithMarks.map(innerArray => innerArray.map(() => "----")),
-                    rowsSequencesIdsNotToInclude: createEmptyList(state.nonogramRelatedData.nonogramSolutionBoard.length),
-                    columnsSequencesIdsNotToInclude: createEmptyList(state.nonogramRelatedData.nonogramSolutionBoard[0].length)
-                }
+            if (state.nonogramRelatedData.nonogramSolutionBoard && state.nonogramRelatedData.nonogramSolutionBoard.length > 0) {
+                return {
+                    ...state,
+                    nonogramRelatedData: {
+                        ...state.nonogramRelatedData,
+                        nonogramSolutionBoard: state.nonogramRelatedData.nonogramSolutionBoard.map(innerArray => innerArray.map(() => "-")),
+                        nonogramSolutionBoardWithMarks: state.nonogramRelatedData.nonogramSolutionBoardWithMarks.map(innerArray => innerArray.map(() => "----")),
+                        rowsSequencesIdsNotToInclude: createEmptyList(state.nonogramRelatedData.nonogramSolutionBoard.length),
+                        columnsSequencesIdsNotToInclude: state.nonogramRelatedData.nonogramSolutionBoard[0] 
+                            ? createEmptyList(state.nonogramRelatedData.nonogramSolutionBoard[0].length) 
+                            : []
+                    }
+                };
             }
+            return {
+                ...state
+            };
         case FILL_BOARD_SQUARE:
             let { rowIdx, columnIdx } = action.payload
             return {
