@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramState.buildInitialEmptyNonogramState;
@@ -100,5 +101,38 @@ public class NonogramColumnLogicTest {
                 "O", "O", "O", "O", "O",
                 "O", "X", "X", "O", "O");
         assertThat(nonogramColumnLogic.getNonogramBoardColumn(COLUMN_TO_TEST)).isEqualTo(expectedColumnAfterActionMade);
+    }
+
+    @Test
+    @DisplayName(value = "Should correct column sequence range when starting sequence from edge index create too long sequence")
+    void shouldCorrectColumnSequenceRangeWhenStartingSequenceFromIndexCreateTooLongSequence() {
+        // given
+        int COLUMN_TO_TEST = 15;
+        int HEIGHT = 30;
+        int WIDTH = 35;
+        prepareNonogramColumnLogic(HEIGHT, WIDTH);
+        nonogramColumnLogic.setColumnSequencesRanges(COLUMN_TO_TEST, new ArrayList<>(List.of(
+                new ArrayList<>(List.of(0, 15)),
+                new ArrayList<>(List.of(15, 21)),
+                new ArrayList<>(List.of(19, 24)),
+                new ArrayList<>(List.of(22, 29))
+        )));
+        nonogramColumnLogic.setColumnSequencesLengths(COLUMN_TO_TEST, List.of(3, 2, 6, 2));
+        List<String> columnBeforeActionMade = List.of("-", "-", "O", "O", "O",
+                "O", "O", "O", "O", "O",
+                "O", "O", "O", "O", "-",
+                "-", "-", "-", "-", "-",
+                "-", "O", "-", "-", "-",
+                "-", "-", "-", "-", "-");
+        nonogramColumnLogic.setNonogramSolutionBoardColumn(COLUMN_TO_TEST, columnBeforeActionMade);
+
+        // when
+        nonogramColumnLogic.correctColumnSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence(COLUMN_TO_TEST);
+
+        // then
+        List<List<Integer>> expectedColumnSequencesRangesAfterActionMade = List.of(
+                List.of(0, 15), List.of(15, 21), List.of(19, 24), List.of(23, 29)
+        );
+        assertThat(nonogramColumnLogic.getColumnsSequencesRanges().get(COLUMN_TO_TEST)).isEqualTo(expectedColumnSequencesRangesAfterActionMade);
     }
 }
