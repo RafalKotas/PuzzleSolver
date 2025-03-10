@@ -72,6 +72,16 @@ public class ActionsConstants {
                     MARK_AVAILABLE_FIELDS_IN_COLUMN
             ));
 
+    public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterCorrectingColumnSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence = new ArrayList<>(
+            List.of(
+                    COLOUR_OVERLAPPING_FIELDS_IN_COLUMN
+            ));
+
+    public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterCorrectingRowSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence = new ArrayList<>(
+            List.of(
+                    COLOUR_OVERLAPPING_FIELDS_IN_ROW
+            ));
+
     public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterColouringOverlappingSequencesInRows = new ArrayList<>(
             Arrays.asList(
                     CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
@@ -112,8 +122,10 @@ public class ActionsConstants {
             List.of(
                     CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
                     CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES,
+                    CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE,
                     EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN,
                     PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES,
+                    COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH,
                     PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE,
                     MARK_AVAILABLE_FIELDS_IN_COLUMN
             ));
@@ -127,6 +139,8 @@ public class ActionsConstants {
     public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterExtendingColouredFieldsNearXInColumns = new ArrayList<>(
             List.of(
                     CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
+                    CORRECT_ROW_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES,
+                    CORRECT_ROW_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE,
                     EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW,
                     PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES,
                     ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH,
