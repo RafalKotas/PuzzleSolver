@@ -280,6 +280,8 @@ public abstract class NonogramLogicParams {
     public void placeXAtGivenField(Field x_field) {
         int fieldColIdx = x_field.getColumnIdx();
         int fieldRowIdx = x_field.getRowIdx();
+        this.excludeFieldInRow(x_field);
+        this.excludeFieldInColumn(x_field);
         if (areFieldIndexesValid(x_field)) {
             this.nonogramSolutionBoard.get(fieldRowIdx).set(fieldColIdx, X_FIELD);
             this.nonogramSolutionBoardWithMarks.get(fieldRowIdx).set(fieldColIdx, X_FIELD.repeat(4));
