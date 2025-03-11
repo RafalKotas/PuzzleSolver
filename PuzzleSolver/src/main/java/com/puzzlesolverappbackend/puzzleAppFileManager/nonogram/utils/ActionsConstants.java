@@ -312,13 +312,27 @@ public class ActionsConstants {
             )
     );
 
+    // TODO - rename
     public final static ArrayList<NonogramSolveAction> actionsToDoInColumnDuringColouringPartPreventingExcessLengthInRows = new ArrayList<>(
             List.of(
                     CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY
             )
     );
 
-    public final static ArrayList<NonogramSolveAction> actionsToDoInRowDuringUpdateOnlyMatchingSequencePartPreventingExcessLengthInRows = new ArrayList<>(
+    // TODO - rename
+    public final static ArrayList<NonogramSolveAction> actionsToDoInRowDuringColouringPartPreventingExcessLengthInColumns = new ArrayList<>(
+            List.of(
+                    CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY
+            )
+    );
+
+    public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterUpdateOnlyMatchingSequencePartPreventingExcessLengthInRows = new ArrayList<>(
+            List.of(
+
+            )
+    );
+
+    public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterUpdateOnlyMatchingSequencePartPreventingExcessLengthInColumns = new ArrayList<>(
             List.of(
 
             )
