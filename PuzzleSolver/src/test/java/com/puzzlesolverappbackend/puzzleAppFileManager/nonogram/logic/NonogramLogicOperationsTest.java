@@ -90,11 +90,11 @@ class NonogramLogicOperationsTest {
         o06005_difficulty_1.fillTrivialRowsAndColumns();
         /* 3 */
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         /* 12 */
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         /* 1 */
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
@@ -140,11 +140,11 @@ class NonogramLogicOperationsTest {
         o06005_difficulty_1.fillTrivialRowsAndColumns();
         /* 3 */
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         /* 12 */
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         /* 10 */
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
@@ -179,14 +179,14 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
         /* 12 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -228,14 +228,14 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
         /* 12 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -277,14 +277,14 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
         /* 12 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -333,14 +333,14 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
         /* 12 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -394,14 +394,14 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
         /* 12 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -476,14 +476,14 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
         /* 12 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -532,7 +532,7 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -550,14 +550,14 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
         /* 12 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -606,7 +606,7 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -646,14 +646,14 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
         /* 12 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -702,7 +702,7 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -716,7 +716,7 @@ class NonogramLogicOperationsTest {
         /* 12 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -734,14 +734,14 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
         /* 12 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -790,7 +790,7 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -804,7 +804,7 @@ class NonogramLogicOperationsTest {
         /* 12 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -841,14 +841,14 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
         /* 12 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -897,7 +897,7 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -911,7 +911,7 @@ class NonogramLogicOperationsTest {
         /* 12 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -958,14 +958,14 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
         /* 12 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -1014,7 +1014,7 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -1028,7 +1028,7 @@ class NonogramLogicOperationsTest {
         /* 12 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -1049,7 +1049,7 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -1070,14 +1070,14 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
         /* 12 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -1126,7 +1126,7 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -1140,7 +1140,7 @@ class NonogramLogicOperationsTest {
         /* 12 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().fillOverlappingFieldsInColumn(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().colourOverlappingFieldsInColumn(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -1161,7 +1161,7 @@ class NonogramLogicOperationsTest {
         /* 3 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().fillOverlappingFieldsInRow(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().colourOverlappingFieldsInRow(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 

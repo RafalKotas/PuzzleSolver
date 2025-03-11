@@ -1037,7 +1037,7 @@ public class NonogramLogic extends NonogramLogicParams {
                     nonogramRowLogic.correctRowSequencesRangesWhenMatchingFieldsToSequences(rowIdx);
             case CORRECT_ROW_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE ->
                     nonogramRowLogic.correctRowSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence(rowIdx);
-            case COLOUR_OVERLAPPING_FIELDS_IN_ROW -> nonogramRowLogic.fillOverlappingFieldsInRow(rowIdx);
+            case COLOUR_OVERLAPPING_FIELDS_IN_ROW -> nonogramRowLogic.colourOverlappingFieldsInRow(rowIdx);
             case EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW -> nonogramRowLogic.extendColouredFieldsNearXToMaximumPossibleLengthInRow(rowIdx);
             case PLACE_XS_ROW_AT_UNREACHABLE_FIELDS -> nonogramRowLogic.placeXsRowAtUnreachableFields(rowIdx);
             case PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES -> nonogramRowLogic.placeXsAroundLongestSequencesInRow(rowIdx);
@@ -1076,7 +1076,7 @@ public class NonogramLogic extends NonogramLogicParams {
                     nonogramColumnLogic.correctColumnSequencesRangesWhenMatchingFieldsToSequences(columnIdx);
             case CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE ->
                     nonogramColumnLogic.correctColumnSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence(columnIdx);
-            case COLOUR_OVERLAPPING_FIELDS_IN_COLUMN -> nonogramColumnLogic.fillOverlappingFieldsInColumn(columnIdx);
+            case COLOUR_OVERLAPPING_FIELDS_IN_COLUMN -> nonogramColumnLogic.colourOverlappingFieldsInColumn(columnIdx);
             case EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN -> nonogramColumnLogic.extendColouredFieldsNearXToMaximumPossibleLengthInColumn(columnIdx);
             case PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS -> nonogramColumnLogic.placeXsColumnAtUnreachableFields(columnIdx);
             case PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES -> nonogramColumnLogic.placeXsAroundLongestSequencesInColumn(columnIdx);

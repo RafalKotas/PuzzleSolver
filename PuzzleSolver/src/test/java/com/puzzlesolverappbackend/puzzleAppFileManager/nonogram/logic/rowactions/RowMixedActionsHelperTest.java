@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.MixedActionsHelper.findValidSequencesIdsMergingToRight;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.MixedActionsHelper.getColouredSequencesRangesInRowInRangeOnRight;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowMixedActionsHelper.findValidSequencesIdsMergingToRight;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowMixedActionsHelper.getColouredSequencesRangesInRowInRangeOnRight;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramCreatorUtils.generateEmptyBoard;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class MixedActionsHelperTest {
+class RowMixedActionsHelperTest {
 
     @Test
     @DisplayName("Should collect coloured ranges(from test columnIdx 21 to seqId 2 in NonogramRowLogicTest)")
