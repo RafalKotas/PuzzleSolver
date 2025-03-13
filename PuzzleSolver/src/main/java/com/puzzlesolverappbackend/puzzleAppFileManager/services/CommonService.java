@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 public class CommonService {
 
     public Set<String> listFilesUsingJavaIO(String dir) {
-        log.info("Trying to load files from directory: {}", dir);
+        log.info("Start loading files from directory: {}", dir);
         try {
             return Stream.of(new File(dir).listFiles())
                     .filter(file -> !file.isDirectory())
