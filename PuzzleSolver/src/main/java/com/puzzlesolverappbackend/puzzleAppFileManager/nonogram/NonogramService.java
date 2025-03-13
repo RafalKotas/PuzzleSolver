@@ -7,7 +7,6 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramJs
 import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileWriter;
@@ -35,11 +34,13 @@ public class NonogramService {
 
     private final static double DEFAULT_MAX_DIFFICULTY = 2.0;
 
-    @Autowired
-    CommonService commonService;
+    private final CommonService commonService;
+    private final NonogramRepository nonogramRepository;
 
-    @Autowired
-    NonogramRepository nonogramRepository;
+    public NonogramService(CommonService commonService, NonogramRepository nonogramRepository) {
+        this.commonService = commonService;
+        this.nonogramRepository = nonogramRepository;
+    }
 
     public List<String> getNonogramSources() {
       return nonogramRepository.selectNonogramSources().stream().sorted().collect(Collectors.toList());

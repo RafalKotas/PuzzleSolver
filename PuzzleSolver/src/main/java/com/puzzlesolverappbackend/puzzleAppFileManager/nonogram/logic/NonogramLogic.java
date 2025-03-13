@@ -39,6 +39,8 @@ public class NonogramLogic extends NonogramLogicParams {
     protected NonogramColumnLogic nonogramColumnLogic;
     protected NonogramRowLogic nonogramRowLogic;
 
+    private boolean LOG_CHANGES = false;
+
     @Override
     public String toString() {
         return "NonogramLogic{" +
@@ -216,9 +218,6 @@ public class NonogramLogic extends NonogramLogicParams {
     private void fillTrivialRows() {
         Field rowField;
         for (int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
-            if (rowIdx == 7) {
-                System.out.println("Check if row 7 is trivial");
-            }
             if (isRowTrivial(rowIdx)) {
                 addFillTrivialRowLog(rowIdx);
                 int seqNo = 0;
@@ -924,7 +923,7 @@ public class NonogramLogic extends NonogramLogicParams {
                     makeProperActionInRow(currentActionRCIndex, currentActionDetails.getActionName());
                     stepsAfter = this.getNonogramState().getNewStepsMade();
 
-                    if (stepsBefore != stepsAfter) {
+                    if (LOG_CHANGES && stepsBefore != stepsAfter) {
                         logRowStateBefore(currentActionDetails, currentActionRCIndex);
                         logRowStateAfter(currentActionDetails, currentActionRCIndex);
                     }
@@ -938,7 +937,7 @@ public class NonogramLogic extends NonogramLogicParams {
                     makeProperActionInColumn(currentActionRCIndex, currentActionDetails.getActionName());
                     stepsAfter = this.getNonogramState().getNewStepsMade();
 
-                    if (stepsBefore != stepsAfter) {
+                    if (LOG_CHANGES && stepsBefore != stepsAfter) {
                         logColumnStateBefore(currentActionDetails, currentActionRCIndex);
                         logColumnStateAfter(currentActionDetails, currentActionRCIndex);
                     }

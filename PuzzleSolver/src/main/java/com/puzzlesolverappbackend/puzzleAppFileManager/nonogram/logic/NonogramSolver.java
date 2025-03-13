@@ -5,6 +5,7 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramGuessAct
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramNodeLog;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -17,35 +18,32 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramC
 @Getter
 @Setter
 @Slf4j
+@ToString(onlyExplicitlyIncluded = true)
 public class NonogramSolver {
-    @Override
-    public String toString() {
-        return "NonogramSolver{" +
-                "solutionFileName='" + solutionFileName +
-                '}';
-    }
 
     private final int maxTreeHeight = 50;
     private final GuessMode guessMode = GuessMode.DISABLED;
     private final boolean recursionModeEnabled = false;
 
-    boolean printNodeCompletionPercentage = true;
-
+    private boolean printNodeCompletionPercentage = true;
     private boolean solved = false;
     private boolean oneOfTwoWrong;
     private NonogramSolutionNode rootNode;
     private NonogramSolutionNode solutionNode;
     private NonogramLogic finalSolutionLogic;
+    @ToString.Include
     private String solutionFileName;
     private NonogramLogic solutionLogic;
-    private Gson gson = new Gson();
-    private final GuessMode guessMode = GuessMode.DISABLED;
-    private final boolean recursionModeEnabled = false;
+    private Gson gson;
 
-    private List<NonogramSolutionNode> nonogramNodes = new ArrayList<>();
+
+    private List<NonogramSolutionNode> nonogramNodes;
 
     public NonogramSolver(NonogramLogic nonogramLogic, GuessMode guessMode) {
+        this.solutionNode = new NonogramSolutionNode(nonogramLogic);
         this.solutionLogic = new NonogramLogic(nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences(), guessMode);
+        this.nonogramNodes = new ArrayList<>();
+        this.gson = new Gson();
     }
 
     public NonogramSolver(NonogramLogic nonogramLogic, String fileName) {
@@ -55,14 +53,20 @@ public class NonogramSolver {
         this.finalSolutionLogic = new NonogramLogic(nonogramLogic.getRowsSequences(),
                 nonogramLogic.getColumnsSequences(), guessMode);
         this.solutionFileName = "r" + fileName;
+        this.gson = new Gson();
+        this.nonogramNodes = new ArrayList<>();
     }
 
     public NonogramLogic runSolutionAtNode(NonogramSolutionNode nonogramStartNode) {
+        solvingAtNodeInitialLogs(nonogramStartNode);
+        this.runHeuristicSolver(nonogramStartNode,  0, maxTreeHeight);
+        return this.getSolutionNode().getNonogramLogic();
+    }
+
+    private void solvingAtNodeInitialLogs(NonogramSolutionNode nonogramStartNode) {
         log.info("RUN SOLVER AT NODE, DECISIONS SIZE {}", nonogramStartNode.getNonogramGuessDecisions().size());
         log.info("ROW SEQUENCES RANGES: \n{}", nonogramStartNode.getNonogramLogic().getRowsSequencesRanges());
         log.info("COLUMN SEQUENCES RANGES: \n{}", nonogramStartNode.getNonogramLogic().getColumnsSequencesRanges());
-        this.runHeuristicSolver(nonogramStartNode,  0, maxTreeHeight);
-        return this.getSolutionNode().getNonogramLogic();
     }
 
     public void runHeuristicSolver(NonogramSolutionNode nonogramStartNode,

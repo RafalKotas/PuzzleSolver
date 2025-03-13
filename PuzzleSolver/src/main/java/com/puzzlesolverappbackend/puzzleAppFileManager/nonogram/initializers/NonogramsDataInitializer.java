@@ -91,7 +91,6 @@ public class NonogramsDataInitializer implements CommandLineRunner {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
-            // Get files paths from given folder
             List<Path> files = Files.list(Paths.get(puzzlePath)).toList();
 
             // Iterate through files list and print its contents line after line

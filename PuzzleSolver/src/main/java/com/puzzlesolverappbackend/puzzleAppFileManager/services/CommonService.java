@@ -23,6 +23,5 @@ public class CommonService {
         } catch (NullPointerException exception) {
             return Collections.emptySet();
         }
-
     }
 }
