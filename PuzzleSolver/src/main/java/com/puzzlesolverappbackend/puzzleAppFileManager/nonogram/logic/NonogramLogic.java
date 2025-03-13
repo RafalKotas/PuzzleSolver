@@ -34,7 +34,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.r
 @Slf4j
 public class NonogramLogic extends NonogramLogicParams {
 
-    protected boolean guessMode;
+    protected GuessMode guessMode;
 
     protected NonogramColumnLogic nonogramColumnLogic;
     protected NonogramRowLogic nonogramRowLogic;
@@ -55,7 +55,7 @@ public class NonogramLogic extends NonogramLogicParams {
                 '}';
     }
 
-    public NonogramLogic(List<List<Integer>> rowsSequences, List<List<Integer>> columnsSequences, boolean guessMode) {
+    public NonogramLogic(List<List<Integer>> rowsSequences, List<List<Integer>> columnsSequences, GuessMode guessMode) {
         this.logs = new ArrayList<>();
 
         this.rowsSequences = rowsSequences;
@@ -134,7 +134,7 @@ public class NonogramLogic extends NonogramLogicParams {
                 that.getNonogramSolutionBoard(),
                 that.getNonogramSolutionBoardWithMarks(),
                 that.getNonogramState().isInvalidSolution(),
-                that.isGuessMode());
+                that.getGuessMode());
     }
 
     public NonogramLogic(List<List<Integer>> rowsSequences,
@@ -148,7 +148,7 @@ public class NonogramLogic extends NonogramLogicParams {
                          List<List<String>> nonogramSolutionBoard,
                          List<List<String>> nonogramSolutionBoardWithMarks,
                          boolean isSolutionInvalid,
-                         boolean guessMode) {
+                         GuessMode guessMode) {
         this.logs = new ArrayList<>();
 
         this.rowsSequences = new ArrayList<>(rowsSequences);
@@ -949,7 +949,7 @@ public class NonogramLogic extends NonogramLogicParams {
                 // empty
             }
 
-            if (this.guessMode && this.nonogramState.isInvalidSolution()) {
+            if (guessMode == GuessMode.ENABLED && this.nonogramState.isInvalidSolution()) {
                 break;
             }
 
@@ -1017,19 +1017,19 @@ public class NonogramLogic extends NonogramLogicParams {
         switch (actionToDoInRow) {
             case CORRECT_ROW_SEQUENCES_RANGES -> {
                 nonogramRowLogic.correctRowSequencesRanges(rowIdx);
-                if (guessMode) {
+                if (guessMode == GuessMode.ENABLED) {
                     invalidateSolutionIfRowSequencesWrong(rowIdx);
                 }
             }
             case CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS -> {
                 nonogramRowLogic.correctRowSequencesRangesWhenMetColouredField(rowIdx);
-                if (guessMode) {
+                if (guessMode == GuessMode.ENABLED) {
                     invalidateSolutionIfRowSequencesWrong(rowIdx);
                 }
             }
             case CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY -> {
                 nonogramRowLogic.correctRowRangeIndexesIfXOnWay(rowIdx);
-                if (guessMode) {
+                if (guessMode == GuessMode.ENABLED) {
                     invalidateSolutionIfRowSequencesWrong(rowIdx);
                 }
             }
@@ -1056,19 +1056,19 @@ public class NonogramLogic extends NonogramLogicParams {
         switch (actionToDoInColumn) {
             case CORRECT_COLUMN_SEQUENCES_RANGES -> {
                 nonogramColumnLogic.correctColumnSequencesRanges(columnIdx);
-                if (guessMode) {
+                if (guessMode == GuessMode.ENABLED) {
                     invalidateSolutionIfColumnSequencesWrong(columnIdx);
                 }
             }
             case CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS -> {
                 nonogramColumnLogic.correctColumnSequencesWhenMetColouredField(columnIdx);
-                if (guessMode) {
+                if (guessMode == GuessMode.ENABLED) {
                     invalidateSolutionIfColumnSequencesWrong(columnIdx);
                 }
             }
             case CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY -> {
                 nonogramColumnLogic.correctColumnRangeIndexesIfXOnWay(columnIdx);
-                if (guessMode) {
+                if (guessMode == GuessMode.ENABLED) {
                     invalidateSolutionIfColumnSequencesWrong(columnIdx);
                 }
             }

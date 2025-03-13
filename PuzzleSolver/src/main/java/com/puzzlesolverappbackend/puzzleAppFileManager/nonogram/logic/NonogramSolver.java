@@ -37,17 +37,21 @@ public class NonogramSolver {
     private String solutionFileName;
     private NonogramLogic solutionLogic;
     private Gson gson = new Gson();
-    private final boolean guessModeEnabled = false;
+    private final GuessMode guessMode = GuessMode.DISABLED;
     private final boolean recursionModeEnabled = false;
 
     private List<NonogramSolutionNode> nonogramNodes = new ArrayList<>();
 
+    public NonogramSolver(NonogramLogic nonogramLogic, GuessMode guessMode) {
+        this.solutionLogic = new NonogramLogic(nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences(), guessMode);
+    }
+
     public NonogramSolver(NonogramLogic nonogramLogic, String fileName) {
         this.solutionNode = new NonogramSolutionNode(nonogramLogic);
         this.rootNode = this.solutionNode;
-        this.solutionLogic = new NonogramLogic(nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences(), false);
+        this.solutionLogic = new NonogramLogic(nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences(), guessMode);
         this.finalSolutionLogic = new NonogramLogic(nonogramLogic.getRowsSequences(),
-                nonogramLogic.getColumnsSequences(), false);
+                nonogramLogic.getColumnsSequences(), guessMode);
         this.solutionFileName = "r" + fileName;
     }
 
@@ -94,7 +98,7 @@ public class NonogramSolver {
             replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
         }
 
-        if (guessModeEnabled && nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage() != 100) {
+        if (guessMode == GuessMode.ENABLED && nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage() != 100) {
             System.out.println("Guess mode needed!");
 
             int wrongCount;
