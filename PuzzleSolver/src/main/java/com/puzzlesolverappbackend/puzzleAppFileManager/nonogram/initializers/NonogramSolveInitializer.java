@@ -5,6 +5,7 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.Nonogram;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramFileDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramRepository;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramService;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicService;
 import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
@@ -646,8 +647,7 @@ public class NonogramSolveInitializer implements CommandLineRunner {
                     new File(puzzlePath + filename + JSON_EXTENSION), NonogramFileDetails.class
             );
 
-            nonogramLogicToSolve = new NonogramLogic(
-                    nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences(), false);
+            nonogramLogicToSolve = new NonogramLogic(nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences(), GuessMode.DISABLED);
 
             if (!filesTooLongSolving.contains(filename)) {
                 long start = System.currentTimeMillis();

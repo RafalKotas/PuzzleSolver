@@ -25,7 +25,9 @@ public class NonogramSolver {
                 '}';
     }
 
-    final int maxTreeHeight = 50;
+    private final int maxTreeHeight = 50;
+    private final GuessMode guessMode = GuessMode.DISABLED;
+    private final boolean recursionModeEnabled = false;
 
     boolean printNodeCompletionPercentage = true;
 

@@ -64,7 +64,7 @@ class NonogramLogicOperationsTest {
 
     @BeforeEach
     void setUp() {
-        o06005_difficulty_1 = new NonogramLogic(o06005_rowsSequences, o06005_columnsSequences, false);
+        o06005_difficulty_1 = new NonogramLogic(o06005_rowsSequences, o06005_columnsSequences, GuessMode.DISABLED);
     }
 
     @Test

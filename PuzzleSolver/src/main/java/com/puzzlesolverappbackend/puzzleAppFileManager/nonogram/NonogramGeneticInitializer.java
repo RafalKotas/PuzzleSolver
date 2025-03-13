@@ -1,6 +1,7 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramGenetic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
@@ -32,7 +33,7 @@ public class NonogramGeneticInitializer implements CommandLineRunner {
         nonogramFileDetails = objectMapper.readValue(
                 new File(puzzlePath + InitializerConstants.PUZZLE_NAME + JSON_EXTENSION), NonogramFileDetails.class
         );
-        nonogramLogicToSolve = new NonogramLogic(nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences(), false);
+        nonogramLogicToSolve = new NonogramLogic(nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences(), GuessMode.DISABLED);
         nonogramGenetic = new NonogramGenetic(nonogramLogicToSolve);
         nonogramGenetic.solve();
     }

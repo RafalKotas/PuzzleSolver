@@ -2,6 +2,7 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.initializers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramFileDetails;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
@@ -41,7 +42,7 @@ public class SymmetricNonogramLoggerInitializer implements CommandLineRunner {
 
             try {
                 NonogramFileDetails nonogramFileDetails = objectMapper.readValue(new File(puzzlePath + nonogramFileName), NonogramFileDetails.class);
-                NonogramLogic nonogramLogic = new NonogramLogic(nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences(), false);
+                NonogramLogic nonogramLogic = new NonogramLogic(nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences(), GuessMode.DISABLED);
 
                 switch(nonogramLogic.nonogramSymmetricalGrade()) {
                     case "4 axis":
