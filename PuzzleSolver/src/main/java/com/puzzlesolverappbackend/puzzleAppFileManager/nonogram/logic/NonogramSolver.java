@@ -24,10 +24,12 @@ public class NonogramSolver {
     private final int maxTreeHeight = 50;
     private final GuessMode guessMode = GuessMode.DISABLED;
     private final boolean recursionModeEnabled = false;
-
-    private boolean printNodeCompletionPercentage = true;
     private boolean solved = false;
-    private boolean oneOfTwoWrong;
+
+    private boolean LOG_STEPS_SOLVER = false;
+    private boolean printNodeCompletionPercentage = true;
+
+    private boolean oneOfTwoDecisionsWrong;
     private NonogramSolutionNode rootNode;
     private NonogramSolutionNode solutionNode;
     private NonogramLogic finalSolutionLogic;
@@ -58,7 +60,9 @@ public class NonogramSolver {
     }
 
     public NonogramLogic runSolutionAtNode(NonogramSolutionNode nonogramStartNode) {
-        solvingAtNodeInitialLogs(nonogramStartNode);
+        if (LOG_STEPS_SOLVER) {
+            solvingAtNodeInitialLogs(nonogramStartNode);
+        }
         this.runHeuristicSolver(nonogramStartNode,  0, maxTreeHeight);
         return this.getSolutionNode().getNonogramLogic();
     }
@@ -76,7 +80,9 @@ public class NonogramSolver {
         NonogramSolutionNode rightNodeX;
 
         if (nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage() == 100) {
-            System.out.println("Solution found, recursion depth: " + currentTreeHeight);
+            if (LOG_STEPS_SOLVER) {
+                log.info("Solution found, recursion depth: ", currentTreeHeight);
+            }
             replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
         }
 
@@ -84,13 +90,22 @@ public class NonogramSolver {
 
         //solve without guesses - only heuristics
         nonogramSubsolutionNode.getNonogramLogic().fillTrivialRowsAndColumns();
-        log.info("Fields filled after fill trivial rows and columns: {}", nonogramSubsolutionNode.getNonogramLogic().fieldsFilled());
         nonogramSubsolutionNode.setNodeLogs(nonogramSubsolutionNode.getNonogramLogic().getLogs());
         nonogramSubsolutionNode.makeBasicSolverActions();
-        log.info("COMPLETION PERCENTAGE: {}, DECISIONS SIZE: {}", nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage(), nonogramSubsolutionNode.getNonogramGuessDecisions().size());
-        log.info("SOLUTION STEPS: ");
-        for (String nonogramNodeLog : nonogramSubsolutionNode.getNodeLogs()) {
-            System.out.println(nonogramNodeLog);
+
+        if (LOG_STEPS_SOLVER) {
+
+            nonogramSubsolutionNode.getNonogramLogic().printSolutionBoard();
+            nonogramSubsolutionNode.getNonogramLogic().printSolutionBoardWithMarks();
+            System.out.println(nonogramSubsolutionNode.getNonogramLogic().getActionsToDoList().size());
+            System.out.println("-".repeat(100));
+
+            log.info("Fields filled after fill trivial rows and columns: {}", nonogramSubsolutionNode.getNonogramLogic().fieldsFilled());
+            log.info("COMPLETION PERCENTAGE: {}, DECISIONS SIZE: {}", nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage(), nonogramSubsolutionNode.getNonogramGuessDecisions().size());
+            log.info("SOLUTION STEPS: ");
+            for (String nonogramNodeLog : nonogramSubsolutionNode.getNodeLogs()) {
+                log.info("nodeLog: {}", nonogramNodeLog);
+            }
         }
 
         // heuristic logs
@@ -105,9 +120,11 @@ public class NonogramSolver {
         }
 
         if (guessMode == GuessMode.ENABLED && nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage() != 100) {
-            System.out.println("Guess mode needed!");
+            if (LOG_STEPS_SOLVER) {
+                log.info("Completion percentage after heuristics only: {}", nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage());
+            }
 
-            int wrongCount;
+            int wrongDecisionsCount;
 
             do {
                 nonogramSubsolutionNode.getNonogramLogic().updateCurrentAvailableChoices();
@@ -116,13 +133,12 @@ public class NonogramSolver {
                 correctDecision = Optional.empty();
 
                 // two decisions are 'possibly' ok
-                oneOfTwoWrong = false;
+                oneOfTwoDecisionsWrong = false;
 
-                wrongCount = -1;
+                wrongDecisionsCount = -1;
 
                 List<NonogramSolutionDecision> availableChoices = nonogramSubsolutionNode.getNonogramLogic().getAvailableChoices();
-//                start = System.currentTimeMillis();
-                gson = new Gson();
+                //start = System.currentTimeMillis();
                 for (NonogramSolutionDecision decision : availableChoices) {
                     leftNodeO = copyNodeAndAddDecision(decision, COLOURED_FIELD, nonogramSubsolutionNode);
                     rightNodeX = copyNodeAndAddDecision(decision, X_FIELD, nonogramSubsolutionNode);
@@ -135,15 +151,15 @@ public class NonogramSolver {
                             if (currentTreeHeight == 0) {
                                 replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
                             }
-                            oneOfTwoWrong = true;
-                            wrongCount = 1;
+                            oneOfTwoDecisionsWrong = true;
+                            wrongDecisionsCount = 1;
                             break;
                         } else {
-                            wrongCount = 0;
+                            wrongDecisionsCount = 0;
                         }
                     } else { //leftNode0 solution invalid
                         if (rightNodeX.getNonogramLogic().getNonogramState().isInvalidSolution()) {
-                            wrongCount = 2;
+                            wrongDecisionsCount = 2;
                         } else {
                             decision.setDecisionMarker(X_FIELD);
                             correctDecision = Optional.of(decision);
@@ -151,8 +167,8 @@ public class NonogramSolver {
                             if (currentTreeHeight == 0) {
                                 replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
                             }
-                            oneOfTwoWrong = true;
-                            wrongCount = 1;
+                            oneOfTwoDecisionsWrong = true;
+                            wrongDecisionsCount = 1;
                         }
                         break;
                     }
@@ -165,32 +181,35 @@ public class NonogramSolver {
                         nonogramGuessActionsLog = new NonogramGuessActionsLog(correctDecision.get(), nonogramSubsolutionNode.getNonogramLogic().getLogs());
                         guessesLogs.add(nonogramGuessActionsLog);
                     }
-                    if (wrongCount == -1) {
+                    if (wrongDecisionsCount == -1) {
                         this.replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
                     }
                 } else {
                     //fully completion while recursive solving
-                    if (nonogramSubsolutionNode.getNonogramLogic().fieldsFilled() == nonogramSubsolutionNode.getNonogramLogic().area()) {
-                        //System.out.printf("Recursive solved on tree height: %d\n", currentTreeHeight);
+                    if (nonogramSubsolutionNode.getNonogramLogic().isSolved()) {
                         this.replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
-                        System.out.println("Completed, recursion depth: " + currentTreeHeight);
+                        if (LOG_STEPS_SOLVER) {
+                            log.info("Nonogram solved, recursion depth: {}", currentTreeHeight);
+                        }
                     }
                 }
             } while (
-                    guessModeContinueDecision("oneOfTwoWrong")
+                guessModeContinueDecision("oneOfTwoWrong")
             );
 
             if (currentTreeHeight == 0) {
                 replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
             }
 
-            if (wrongCount == 0) {
+            if (wrongDecisionsCount == 0) {
                 if (currentTreeHeight == 0) {
                     nonogramNodeLog.setGuessesLogs(guessesLogs);
                     replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
 
-                    if (nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage() != 100.00) {
-                        System.out.println("Need to use recursion, completion percentage at start: " + nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage());
+                    if (!nonogramSubsolutionNode.getNonogramLogic().isSolved()) {
+                        if (LOG_STEPS_SOLVER) {
+                            log.info("Need to use recursion, completion percentage at start: " + nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage());
+                        }
 
                         this.replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
 
@@ -227,11 +246,15 @@ public class NonogramSolver {
                         runHeuristicSolver(leftNodeRecursive, currentTreeHeight + 1, maxTreeHeight);
                         runHeuristicSolver(rightNodeRecursive, currentTreeHeight + 1, maxTreeHeight);
                     } else {
-                        System.out.println("Don't need to use recursion. Nonogram solved at ");
+                        if (LOG_STEPS_SOLVER) {
+                            log.info("Don't need to use recursion. Nonogram solved at ");
+                        }
                     }
                 } else if (recursionModeEnabled && currentTreeHeight <= maxTreeHeight) {
                     if (nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage() == 100) {
-                        System.out.printf("Solution found recursion (tree height: %d)!!!\n", currentTreeHeight);
+                        if (LOG_STEPS_SOLVER) {
+                            log.info("Solution found recursion (tree height: {})!!!\n", currentTreeHeight);
+                        }
                         replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
                     } else {
                         NonogramSolutionDecision decisionCoefficientsMax = new NonogramSolutionDecision();
@@ -260,14 +283,19 @@ public class NonogramSolver {
                         runHeuristicSolver(rightNodeRecursive, currentTreeHeight + 1, maxTreeHeight);
                     }
                 }
-            } else if (wrongCount == 2) {
-                System.out.printf("Solver ends at node, both decisions wrong (treeHeight: %d, completeness: %,.2f).\n",
-                        currentTreeHeight, nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage());
+            } else if (wrongDecisionsCount == 2) {
+                if (LOG_STEPS_SOLVER) {
+                   log.info("Solver ends at node, both decisions wrong (treeHeight: {}, completeness: {}).\n",
+                            currentTreeHeight, nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage());
+                }
             }
         } else {
-            System.out.println("full solution:");
-            System.out.println(".".repeat(50));
-            System.out.println("currentTreeHeight: " + currentTreeHeight + " , completion percentage without guess enabled: " + nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage());
+            if (LOG_STEPS_SOLVER) {
+                log.info("full solution:");
+                log.info(".".repeat(50));
+                log.info("currentTreeHeight: {} , completion percentage without guess enabled: {}",
+                        currentTreeHeight, nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage());
+            }
         }
     }
 
@@ -287,14 +315,19 @@ public class NonogramSolver {
         double nodeToCheckCompletionPercentage = nodeToCheck.getNonogramLogic().getCompletionPercentage();
 
         if (printNodeCompletionPercentage) {
-            System.out.println("old Node cp: " + oldNodeCompletionPercentage);
-            System.out.println("current Node cp: "+ nodeToCheckCompletionPercentage);
+            if (LOG_STEPS_SOLVER) {
+                log.info("old Node cp: {}", oldNodeCompletionPercentage);
+                log.info("current Node cp: {}", nodeToCheckCompletionPercentage);
+            }
         }
 
         if (nodeToCheckCompletionPercentage > oldNodeCompletionPercentage) {
-            System.out.println("Replace solutionLogic with new nonogramLogic, percentage completion: " + nodeToCheckCompletionPercentage);
-            nodeToCheck.getNonogramLogic().printSolutionBoard();
-            nodeToCheck.getNonogramLogic().printSolutionBoardAsCode();
+            if (LOG_STEPS_SOLVER) {
+                log.info("Replace solutionLogic with new nonogramLogic, percentage completion: {}", nodeToCheckCompletionPercentage);
+                nodeToCheck.getNonogramLogic().printSolutionBoard();
+                nodeToCheck.getNonogramLogic().printSolutionBoardAsCode();
+            }
+
             this.solutionNode = gson.fromJson(gson.toJson(nodeToCheck), NonogramSolutionNode.class);
             this.solutionLogic = new NonogramLogic(nodeToCheck.getNonogramLogic());// gson.fromJson(gson.toJson(nodeToCheck.getNonogramLogic()), NonogramLogic.class);
         } else {
@@ -306,7 +339,7 @@ public class NonogramSolver {
         return switch (wordExpression) {
             case "toFirstDecision" -> this.solutionNode.getNonogramGuessDecisions().isEmpty();
             case "toInvalidSolution" -> !this.solutionNode.getNonogramLogic().getNonogramState().isInvalidSolution();
-            default -> this.oneOfTwoWrong;
+            default -> this.oneOfTwoDecisionsWrong;
         };
     }
 }

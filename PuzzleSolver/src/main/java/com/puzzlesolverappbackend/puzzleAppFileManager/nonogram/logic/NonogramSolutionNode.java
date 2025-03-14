@@ -66,10 +66,6 @@ public class NonogramSolutionNode {
 
         NonogramLogic logicAfterActionsMade = copyNonogramLogic();
         this.nodeLogs = logicAfterActionsMade.getLogs();
-        this.getNonogramLogic().printSolutionBoard();
-        this.getNonogramLogic().printSolutionBoardWithMarks();
-        System.out.println(this.getNonogramLogic().getActionsToDoList().size());
-        System.out.println("-".repeat(100));
     }
 
     private NonogramLogic copyNonogramLogic() {

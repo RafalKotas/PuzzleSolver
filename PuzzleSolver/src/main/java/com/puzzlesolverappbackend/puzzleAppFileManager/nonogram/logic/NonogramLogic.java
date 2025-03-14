@@ -3,7 +3,7 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.logicOperators.LogicFunctions;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramActionDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramBoardTemplate;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramSolveAction;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,12 +20,14 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.*;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramSolveAction.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramState.buildInitialEmptyNonogramState;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.ActionsConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.getSolutionBoardColumn;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeInsideAnotherRange;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeLength;
+
+
 
 @Data
 @Builder
@@ -87,7 +89,9 @@ public class NonogramLogic extends NonogramLogicParams {
 
         this.guessMode = guessMode;
 
-        log.info("CREATED NonogramLogic object from rowSequences and columnSequences");
+        if (LOG_CHANGES) {
+            log.info("CREATED NonogramLogic object from rowSequences and columnSequences");
+        }
     }
 
     private List<NonogramActionDetails> generateInitialActionsToDo(int height, int width) {
@@ -911,6 +915,7 @@ public class NonogramLogic extends NonogramLogicParams {
         NonogramActionDetails currentActionDetails;
 
         while (actionListIndex < actionsToDoList.size()) {
+
             currentActionDetails = actionsToDoList.get(actionListIndex);
             currentActionRCIndex = currentActionDetails.getIndex();
             try {
