@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION_LENGTH;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.sumListElements;
 
 @Service
 @Slf4j
@@ -103,6 +104,49 @@ public class NonogramService {
 
         return new NonogramFiltersResponse(sources, years, months, difficulties, heights, widths);
     }
+
+    public NonogramCorrectnessIndicator checkNonogramCorrectness(NonogramFileDetails nonogramFileDetails) {
+        int width = nonogramFileDetails.getWidth();
+        int height = nonogramFileDetails.getHeight();
+
+        List<List<Integer>> rowSequences = nonogramFileDetails.getRowSequences();
+        List<List<Integer>> columnSequences = nonogramFileDetails.getColumnSequences();
+
+        if (rowSequences.size() != height) {
+            return NonogramCorrectnessIndicator.INVALID_DIMENSIONS_ROWS;
+        }
+        if (columnSequences.size() != width) {
+            return NonogramCorrectnessIndicator.INVALID_DIMENSIONS_COLUMNS;
+        }
+
+        for (List<Integer> row : rowSequences) {
+            if (sumListElements(row) + row.size() - 1 > width) {
+                return NonogramCorrectnessIndicator.TOO_LONG_ROW_SEQUENCE;
+            }
+        }
+
+        for (List<Integer> column : columnSequences) {
+            if (sumListElements(column) + column.size() - 1 > height) {
+                return NonogramCorrectnessIndicator.TOO_LONG_COLUMN_SEQUENCE;
+            }
+        }
+
+        int sumRows = rowSequences.stream()
+                .mapToInt(ArrayUtils::sumListElements)
+                .sum();
+
+        int sumColumns = columnSequences.stream()
+                .mapToInt(ArrayUtils::sumListElements)
+                .sum();
+
+        if (sumRows != sumColumns) {
+            return NonogramCorrectnessIndicator.SUM_MISMATCH_ROWS_COLUMNS;
+        }
+
+        return NonogramCorrectnessIndicator.VALID;
+    }
+
+
 
     public String saveCreatedNonogramToFile(String fileName, NonogramFileDetails nonogramFileDetails) {
         nonogramFileDetails.setFilename(fileName + JSON_EXTENSION);

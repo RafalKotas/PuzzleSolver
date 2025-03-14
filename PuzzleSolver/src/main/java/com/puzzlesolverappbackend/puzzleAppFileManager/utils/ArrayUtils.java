@@ -27,4 +27,8 @@ public class ArrayUtils {
         int rangeEnd = range.get(range.size() - 1);
         return rangeEnd - rangeStart + 1;
     }
+
+    public static int sumListElements(List<Integer> list) {
+        return list.stream().mapToInt(Integer::intValue).sum();
+    }
 }
