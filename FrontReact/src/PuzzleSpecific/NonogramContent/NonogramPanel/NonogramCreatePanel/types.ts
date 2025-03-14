@@ -1,15 +1,20 @@
 import { propDetails } from "../../../../CommonComponents/StringPropTextField/types"
+import { generateMonthsList, generateYearsList } from "../../../../utils/dataGenerator"
+
+const yearDefaultValues = generateYearsList(2015)
+const monthDefaultValues = generateMonthsList()
 
 export const nonogramStringProps : propDetails[] = [
     {
         label: "source",
         minLength: 3,
         maxLength: 20,
-        defaultValue: "src",
+        defaultValue: "logi",
         helperText: "Letters and numbers only (3 - 20)",
         regex: /[a-zA-Z1-9_]/,
         required: true,
-        notProvidedValue: ""
+        notProvidedValue: "",
+        defaultValues: ["logi", "logiMix", "pazyl_pl", "katana"]
     },
     {
         label: "year",
@@ -19,7 +24,8 @@ export const nonogramStringProps : propDetails[] = [
         helperText: "/^(20[0-2][0-9])/",
         regex: /^(20[0-2][0-9])$/,
         required: false,
-        notProvidedValue: "N/D"
+        notProvidedValue: "N/D",
+        defaultValues: yearDefaultValues
     },
     {
         label: "month",
@@ -29,6 +35,7 @@ export const nonogramStringProps : propDetails[] = [
         helperText: "/^(1[0-2]|[1-9])$/",
         regex: /^(0?[1-9]|1[012])$/,// /^(1[0-2]|[1-9])$/,
         required: false,
-        notProvidedValue: "N/D"
+        notProvidedValue: "N/D",
+        defaultValues: monthDefaultValues
     }
 ]

@@ -7,8 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "akari_puzzles_data")
-@StaticMetamodel(Slitherlink.class)
+@Table(name = "akari")
+@StaticMetamodel(Akari.class)
 @ToString
 @NoArgsConstructor
 @Setter
@@ -16,7 +16,7 @@ public class Akari {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "filename")
     private String filename;

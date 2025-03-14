@@ -60,6 +60,7 @@ const ArchitectSliders : React.FC<ArchitectSlidersProps> = ({addArchitectDetail,
                             initialValue={slider.initialValue}
                             maxValue={slider.maxValue}
                             step={slider.step}
+                            icon={slider.icon}
                             passValueToParent={handleNumberProperty}
                         />
                     )

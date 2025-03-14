@@ -105,6 +105,7 @@ const SudokuCreatePanel : React.FC<SudokuCreatePanelProps> = ({addSudokuDetail, 
                             initialValue={slider.initialValue}
                             maxValue={slider.maxValue}
                             step={slider.step}
+                            icon={slider.icon}
                             passValueToParent={handleNumberProperty}
                         />
                     )

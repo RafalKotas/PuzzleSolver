@@ -6,7 +6,7 @@ import { connect, ConnectedProps } from "react-redux"
 import { AppState } from "../../store"
 
 // mui
-import { Checkbox, FormControlLabel, TextField } from "@mui/material"
+import { Autocomplete, Checkbox, FormControlLabel, TextField } from "@mui/material"
 import { useEffect, useState } from "react"
 
 // styles
@@ -35,7 +35,7 @@ type StringPropTextFieldProps = StringPropTextFieldPropsFromRedux & OwnStringPro
 
 const StringPropTextField : React.FC<StringPropTextFieldProps> = ({prop, passValueToParent}) => {
 
-    let {label, defaultValue, helperText, required, notProvidedValue, minLength, maxLength, regex} = prop
+    let {label, defaultValue, helperText, required, notProvidedValue, minLength, maxLength, regex, defaultValues} = prop
 
     const propValidationSuccess = (text: string) => {
         return ((text.length >= minLength && text.length <= maxLength && regex.test(text)) || (!required && text === notProvidedValue))
@@ -62,24 +62,36 @@ const StringPropTextField : React.FC<StringPropTextFieldProps> = ({prop, passVal
     }
 
     return (
-        <div className="puzzle-string-prop-tf">
-            <TextField
-                onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onInputChange(event, prop)}
-                label={label.slice(0, 1).toUpperCase() + label.slice(1).toLocaleLowerCase()}
-                helperText={!propValidationSuccess(value) ? helperText : ""}
-                value={value}
-                error={!propValidationSuccess(value)}
-                margin="normal"
-                variant="standard" 
-            />
-            {!required && 
-                <FormControlLabel 
-                    control={
-                    <Checkbox 
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => onCheckChange(event, checked)}
-                    />} 
-                    label="N/D" />
+        <div className="puzzle-string-prop">
+            <div className="string-prop-tf">
+                <Autocomplete
+                    options={defaultValues}
+                    freeSolo // Pozwala użytkownikowi wpisać własną wartość (możesz usunąć, jeśli chcesz ograniczyć do listy)
+                    value={value}
+                    onChange={(_, newValue) => onInputChange({ target: { value: newValue || "default" } } as React.ChangeEvent<HTMLInputElement>, prop)}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label={label.charAt(0).toUpperCase() + label.slice(1).toLowerCase()}
+                            helperText={!propValidationSuccess(value) ? helperText : ""}
+                            error={!propValidationSuccess(value)}
+                            margin="normal"
+                            variant="standard"
+                        />
+                    )}
+                />
+            </div>
+            <div className="string-prop-not-provided-value">
+                {!required && 
+                    <FormControlLabel 
+                        control={
+                        <Checkbox 
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => onCheckChange(event, checked)}
+                        />} 
+                        label="N/D" 
+                    />
                 }
+            </div>
         </div>
     )
 }

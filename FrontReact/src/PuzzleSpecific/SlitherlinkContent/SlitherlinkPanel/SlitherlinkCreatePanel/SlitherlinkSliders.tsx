@@ -60,6 +60,7 @@ const SlitherlinkSliders : React.FC<SlitherlinkSlidersProps> = ({addSlitherlinkD
                             initialValue={slider.initialValue}
                             maxValue={slider.maxValue}
                             step={slider.step}
+                            icon={slider.icon}
                             passValueToParent={handleNumberProperty}
                         />
                     )

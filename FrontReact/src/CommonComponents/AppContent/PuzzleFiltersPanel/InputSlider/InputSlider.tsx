@@ -1,8 +1,11 @@
 //mui
 import { Box, Grid, Input, Slider, Typography } from "@mui/material"
+import WidthFullIcon from '@mui/icons-material/WidthFull'
+import HeightIcon from '@mui/icons-material/Height';
 
 //react
 import React, { useEffect } from "react"
+import { Leaderboard } from "@mui/icons-material";
 
 interface OwnInputSliderProps {
     label: string,
@@ -11,12 +14,26 @@ interface OwnInputSliderProps {
     initialValue: number,
     maxValue: number,
     step: number,
+    icon: string,
     passValueToParent: (property: string, value: number | Array<number>) => void
 }
 
 const InputSlider : React.FC<OwnInputSliderProps> = ({label, propertyName,
-     minValue, initialValue, maxValue, step, 
+     minValue, initialValue, maxValue, step, icon,
      passValueToParent}) => {
+
+    function getIconByName(iconName: string): React.ReactNode {
+      switch (iconName) {
+        case "LeaderboardIcon":
+          return <Leaderboard />
+        case "HeightIcon":
+          return <HeightIcon />
+        case "WidthFullIcon":
+          return <WidthFullIcon />
+        default:
+          return null;
+      }
+    }
 
     const [value, setValue] = React.useState<number | Array<number>>(initialValue)
 
@@ -29,11 +46,13 @@ const InputSlider : React.FC<OwnInputSliderProps> = ({label, propertyName,
     }
 
     const handleBlur = () => {
-        if (value < minValue) {
-          setValue(minValue)
-        } else if (value > maxValue) {
-          setValue(maxValue)
-        }
+      const valueToCheck = Array.isArray(value) ? value[0] : value;
+
+      if (valueToCheck < minValue) {
+        setValue(minValue)
+      } else if (valueToCheck > maxValue) {
+        setValue(maxValue)
+      }
     };
 
     useEffect(() => {
@@ -48,7 +67,7 @@ const InputSlider : React.FC<OwnInputSliderProps> = ({label, propertyName,
           </Typography>
           <Grid container spacing={2} alignItems="center">
             <Grid item>
-              {label.slice(0, 1).toLocaleUpperCase()}
+              {getIconByName(icon)}
             </Grid>
             <Grid item xs>
               <Slider

@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
-
 @Entity
-@Table(name = "hitori_puzzles_data")
+@Table(name = "hitori")
 @StaticMetamodel(Hitori.class)
 @ToString
 @NoArgsConstructor
@@ -20,7 +18,7 @@ public class Hitori {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "filename")
     private String filename;

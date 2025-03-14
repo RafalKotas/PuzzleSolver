@@ -7,11 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
-
 @Entity
-@Table(name = "sudoku_puzzles_data")
-@StaticMetamodel(Architect.class)
+@Table(name = "sudoku")
+@StaticMetamodel(Sudoku.class)
 @ToString
 @NoArgsConstructor
 @Setter
@@ -20,7 +18,7 @@ public class Sudoku {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "filename")
     private String filename;

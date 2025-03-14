@@ -26,6 +26,19 @@ const saveNonogramToFile = (fileName : string, snd : selectedNonogramDetails) =>
     return axios(saveConfig)
 }
 
+const getNonogramDetailsFromFilePath = (fileName : string) => {
+    
+    var getNonogramsConfig = {
+        method: "get",
+        url: "../../resources/Nonograms/" + fileName + ".json?nocache=${Date.now()}",
+        headers: { 
+          "Content-Type": "application/json"
+        }
+    };
+
+    return axios(getNonogramsConfig)
+}
+
 const getNonogramsUsingFilters = (page : number, itemsOnPage : number,
     sources : string[], years : string[], months : string[],
     minDifficulty : number, maxDifficulty : number,
@@ -82,6 +95,7 @@ const getNonogramsList = () => {
 }
 
 const NonogramService = {
+    getNonogramDetailsFromFilePath,
     saveNonogramToFile,
     getNonogramsUsingFilters,
     getNonogramFilters,

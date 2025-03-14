@@ -1,4 +1,12 @@
-import { COLOUR_FIELDS_IN_COLUMNS_RANGE, FILL_BOARD_SQUARE, INIT_SOLVER_DATA, nonogramBoardMarks, nonogramRelatedLogicData, PLACE_X_BOARD_SQUARE, SET_CURRENT_NONOGRAM_MARK, SET_NONOGRAM_LOGIC_DATA} from "./types"
+import { COLOUR_FIELDS_IN_COLUMNS_RANGE, 
+    FILL_BOARD_SQUARE, 
+    INIT_SOLVER_DATA, 
+    PLACE_X_BOARD_SQUARE, 
+    RESET_NONOGRAM_BOARD, 
+    SET_CURRENT_NONOGRAM_MARK, 
+    SET_NONOGRAM_LOGIC_DATA,
+    nonogramBoardMarks, 
+    nonogramRelatedLogicData } from "./types"
 
 export const InitializeSolverData = (rowsSequences: Array<Array<number>>, columnsSequences : Array<Array<number>>) => {
     return {
@@ -16,6 +24,13 @@ export const SetNonogramLogicData = (nonogramLogicData: nonogramRelatedLogicData
         payload: {
             nonogramLogicData
         }
+    }
+}
+
+export const ResetNonogramBoard = () => {
+    return {
+        type: RESET_NONOGRAM_BOARD,
+
     }
 }
 

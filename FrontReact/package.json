@@ -39,6 +39,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "scss:watch": "sass --watch src/:src/",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -64,6 +65,11 @@
   },
   "devDependencies": {
     "@redux-devtools/core": "^3.13.1",
-    "@types/react-swipeable-views": "^0.13.1"
+    "@types/react-swipeable-views": "^0.13.1",
+    "chokidar": "^4.0.3",
+    "css-loader": "^7.1.2",
+    "sass": "^1.85.1",
+    "sass-loader": "^16.0.5",
+    "style-loader": "^4.0.0"
   }
 }

@@ -1,6 +1,15 @@
-.puzzle-string-prop-tf {
+.puzzle-string-prop {
     display: flex;
     flex-direction: row;
-    width: 75%;
+    width: 85%;
     justify-content: center;
+}
+
+.string-prop-tf {
+    min-width: 50%;
+}
+
+.string-prop-not-provided-value {
+    min-width: 35%;
+    align-content: center;
 }
