@@ -18,7 +18,7 @@ import { faStar} from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 //styles
-import "./FilledRectangle.min.css"
+import "./FilledRectangle.css"
 
 interface OwnFilledRectangleProps {
 }
