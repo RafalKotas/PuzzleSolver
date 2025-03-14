@@ -94,4 +94,6 @@ public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, Jp
                                         @Param("maxWidth") Integer maxWidth,
                                Pageable pageable);
 
+    @Query("SELECT n.filename FROM Nonogram n WHERE n.difficulty = :difficulty AND source LIKE '%logi%' ORDER BY n.height * n.width ASC")
+    List<String> findLogiNonogramsNamesByDifficultySortedByArea(@Param("difficulty") double difficulty);
 }
