@@ -2,13 +2,16 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram;
 
 import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzleAppFileManager.helpers.FileHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramCorrectnessIndicator;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramJsonWriter;
 import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
 import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
+import com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -171,6 +174,19 @@ public class NonogramService {
         } catch (IOException e) {
             log.error("Error while saving nonogram {}: {}", fileName, e.getMessage());
             return "Exception external problem.";
+        }
+    }
+
+
+    public NonogramFileDetails getNonogramDetailsFromFile(String filePath) {
+
+        Gson gson = new Gson();
+
+        try (FileReader reader = new FileReader(filePath)) {
+            return gson.fromJson(reader, NonogramFileDetails.class);
+        } catch (IOException e) {
+            log.error("Error reading file: {}", filePath, e);
+            return null;
         }
     }
 
