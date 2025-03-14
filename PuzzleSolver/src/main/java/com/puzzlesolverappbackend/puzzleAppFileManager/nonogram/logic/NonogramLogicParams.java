@@ -1,7 +1,7 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramActionDetails;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramSolveAction;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -197,7 +197,7 @@ public abstract class NonogramLogicParams {
     }
 
     public boolean isSolved() {
-        return this.fieldsColoured() + this.fieldsWithXPlaced() == this.area();
+        return this.fieldsFilled() == this.area();
     }
 
     protected void addColumnToAffectedActionsByIdentifiers(int columnIdx, List<NonogramSolveAction> actions) {

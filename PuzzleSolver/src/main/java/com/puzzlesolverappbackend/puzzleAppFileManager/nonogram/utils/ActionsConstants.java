@@ -1,12 +1,12 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramSolveAction;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramSolveAction.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction.*;
 
 public class ActionsConstants {
 
@@ -74,11 +74,13 @@ public class ActionsConstants {
 
     public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterCorrectingColumnSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence = new ArrayList<>(
             List.of(
+                    CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY,
                     COLOUR_OVERLAPPING_FIELDS_IN_COLUMN
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterCorrectingRowSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence = new ArrayList<>(
             List.of(
+                    CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY,
                     COLOUR_OVERLAPPING_FIELDS_IN_ROW
             ));
 
@@ -317,14 +319,16 @@ public class ActionsConstants {
     // TODO - rename
     public final static ArrayList<NonogramSolveAction> actionsToDoInColumnDuringColouringPartPreventingExcessLengthInRows = new ArrayList<>(
             List.of(
-                    CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY
+                    CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY,
+                    MARK_AVAILABLE_FIELDS_IN_COLUMN
             )
     );
 
     // TODO - rename
     public final static ArrayList<NonogramSolveAction> actionsToDoInRowDuringColouringPartPreventingExcessLengthInColumns = new ArrayList<>(
             List.of(
-                    CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY
+                    CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY,
+                    MARK_AVAILABLE_FIELDS_IN_ROW
             )
     );
 

@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums;
 
 import java.util.List;
 
