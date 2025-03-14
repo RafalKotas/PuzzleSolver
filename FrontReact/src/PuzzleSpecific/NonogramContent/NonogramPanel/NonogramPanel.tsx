@@ -1,5 +1,4 @@
 //react
-import "./NonogramPanel.min.css"
 import React, {  useEffect, useState } from "react"
 
 // redux
@@ -22,6 +21,9 @@ import Box from "@mui/material/Box"
 
 //services
 import NonogramService from "../../../services/nonogram/nonogram.service"
+
+//styles
+import "./NonogramPanel.css"
 
 const mapStateToProps = (state: AppState) => ({
     mode: state.displayReducer.mode,

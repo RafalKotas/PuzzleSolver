@@ -18,7 +18,7 @@ import CustomMUISlider from "../../../../../CommonComponents/AppContent/PuzzleFi
 import commonFunctions from "../../../../../functions"
 
 //styles
-import "./NonogramFiltersSection.min.css"
+import "./NonogramFiltersSection.css"
 import NonogramService from "../../../../../services/nonogram/nonogram.service"
 
 interface OwnNonogramFiltersSectionProps {

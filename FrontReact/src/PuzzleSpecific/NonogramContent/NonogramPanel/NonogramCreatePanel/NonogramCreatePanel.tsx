@@ -26,7 +26,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import { nonogramStringProps } from "./types"
 
 // styles
-import "./NonogramCreatePanel.min.css"
+import "./NonogramCreatePanel.css"
 
 //other
 import { sliders } from "./sliders"

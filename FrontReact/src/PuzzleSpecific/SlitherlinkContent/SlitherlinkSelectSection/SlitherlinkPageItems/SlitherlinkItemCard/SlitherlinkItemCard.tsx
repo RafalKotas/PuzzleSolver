@@ -13,7 +13,7 @@ import { Card, CardContent, Typography } from "@mui/material"
 import { Link } from "react-router-dom"
 
 // styles
-import "./SlitherlinkItemCard.min.css"
+import "./SlitherlinkItemCard.css"
 
 interface OwnSlitherlinkItemCardProps {
     slitherlinkDetails : slitherlinkInformation,
