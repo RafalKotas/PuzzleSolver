@@ -627,7 +627,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
                 updatedSequenceRange.add(rangeStartIndex);
             }
 
-            if (rangeEndIndex < this.getHeight() - 1 && isFieldColoured(this.nonogramSolutionBoard, new Field(rowIdx, rangeEndIndex + 1))) {
+            if (rangeEndIndex < this.getWidth() - 1 && isFieldColoured(this.nonogramSolutionBoard, new Field(rowIdx, rangeEndIndex + 1))) {
                 updatedSequenceRange.add(rangeEndIndex - 1);
             } else {
                 updatedSequenceRange.add(rangeEndIndex);
