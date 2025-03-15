@@ -913,13 +913,15 @@ public class NonogramLogic extends NonogramLogicParams {
         int stepsBefore;
         int stepsAfter;
         NonogramActionDetails currentActionDetails;
+        NonogramSolveAction nonogramSolveAction;
 
         while (actionListIndex < actionsToDoList.size()) {
-
             currentActionDetails = actionsToDoList.get(actionListIndex);
             currentActionRCIndex = currentActionDetails.getIndex();
+            nonogramSolveAction = currentActionDetails.getActionName();
+
             try {
-                if (getRowSolveActions().contains(currentActionDetails.getActionName())) {
+                if (getRowSolveActions().contains(nonogramSolveAction)) {
 
                     this.copyLogicToNonogramRowLogic();
 
