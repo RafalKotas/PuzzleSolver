@@ -529,7 +529,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
 
                 if (!rangesEqual(oldMatchingSequenceRange, updatedMatchingSequenceRange)) {
                     this.updateRowSequenceRange(rowIdx, matchingSeqId, updatedMatchingSequenceRange);
-                    this.addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoInRowAfterCorrectingColumnsSequencesRangesWhenMatchingFieldsToSequences);
+                    this.addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoInRowAfterCorrectingRowSequencesRangesWhenMatchingFieldsToSequences);
                     this.nonogramState.increaseMadeSteps();
                     tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, matchingSeqId, oldMatchingSequenceRange, updatedMatchingSequenceRange, "correcting sequence when matching fields to only possible coloured sequences");
                     addLog(tmpLog);
@@ -1697,7 +1697,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
                     //correct sequence range if new range is shorter
                     onlyMatchingSequenceOldRange = rowSequencesRanges.get(lastMatchingSequenceIndex);
                     newSequenceRange = calculateNewMarkedRangeFromParameters(onlyMatchingSequenceOldRange, colouredSequenceIndexes,
-                            rowSequencesLengths.get(lastMatchingSequenceIndex));
+                            rowSequencesLengths.get(lastMatchingSequenceIndex)); // ([12, 28], [13, 13], 16)
 
                     if (!rangesEqual(onlyMatchingSequenceOldRange, newSequenceRange)) {
                         this.changeRowSequenceRange(rowIdx, lastMatchingSequenceIndex, newSequenceRange);
@@ -1711,6 +1711,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
     }
 
     // TODO - extract
+    // ([12, 28], [13, 13], 16)
     private List<Integer> calculateNewMarkedRangeFromParameters(List<Integer> oldRange,
                                                                 List<Integer> colouredSequenceIndexes,
                                                                 int sequenceLength) {

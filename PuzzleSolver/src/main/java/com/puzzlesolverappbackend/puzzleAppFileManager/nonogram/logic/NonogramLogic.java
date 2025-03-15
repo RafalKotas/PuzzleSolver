@@ -922,7 +922,6 @@ public class NonogramLogic extends NonogramLogicParams {
 
             try {
                 if (getRowSolveActions().contains(nonogramSolveAction)) {
-
                     this.copyLogicToNonogramRowLogic();
 
                     stepsBefore = this.getNonogramState().getNewStepsMade();
