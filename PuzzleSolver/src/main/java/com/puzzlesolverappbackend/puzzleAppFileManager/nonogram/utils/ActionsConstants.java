@@ -321,16 +321,26 @@ public class ActionsConstants {
     // TODO - rename
     public final static ArrayList<NonogramSolveAction> actionsToDoInColumnDuringColouringPartPreventingExcessLengthInRows = new ArrayList<>(
             List.of(
-                    CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY,
-                    MARK_AVAILABLE_FIELDS_IN_COLUMN
+                    CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS
             )
     );
 
     // TODO - rename
     public final static ArrayList<NonogramSolveAction> actionsToDoInRowDuringColouringPartPreventingExcessLengthInColumns = new ArrayList<>(
             List.of(
-                    CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY,
-                    MARK_AVAILABLE_FIELDS_IN_ROW
+                    CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS
+            )
+    );
+
+    public final static ArrayList<NonogramSolveAction> actionsToDoInColumnDuringPlacingXPartPreventingExcessLengthInRows = new ArrayList<>(
+            List.of(
+                    CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY
+            )
+    );
+
+    public final static ArrayList<NonogramSolveAction> actionsToDoInRowDuringPlacingXPartPreventingExcessLengthInColumns = new ArrayList<>(
+            List.of(
+                    CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY
             )
     );
 
