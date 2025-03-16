@@ -187,6 +187,7 @@ public class ActionsConstants {
     public final static ArrayList<NonogramSolveAction> actionsToDoInRowDoAfterPlacingXsAroundLongestSequencesInRows = new ArrayList<>(
             List.of(
                     CORRECT_ROW_SEQUENCES_RANGES, // TODO - check if can extract correcting range to another place (while only one possible coloured sequence matches)
+                    EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW,
                     PLACE_XS_ROW_AT_UNREACHABLE_FIELDS
             ));
 
@@ -202,8 +203,8 @@ public class ActionsConstants {
     public final static ArrayList<NonogramSolveAction> actionsToDoInColumnAfterPlacingXsAroundLongestSequencesInColumns = new ArrayList<>(
             List.of(
                     CORRECT_COLUMN_SEQUENCES_RANGES, // TODO - check if can extract correcting range to another place (while only one possible coloured sequence matches)
+                    EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN,
                     PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS
-
             ));
 
     public final static ArrayList<NonogramSolveAction> actionsToDoInRowAfterPlacingXsAroundLongestSequencesInColumns = new ArrayList<>(
