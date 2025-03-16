@@ -1524,8 +1524,9 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                         for (int rowToColourIdx = colouredSequenceRowStartIdx; rowToColourIdx <= potentiallyColouredFieldRow; rowToColourIdx++) {
                             fieldToColour = new Field(rowToColourIdx, columnIdx);
                             if (isFieldEmpty(this.getNonogramSolutionBoard(), fieldToColour)) {
-                                this.colourFieldAtGivenPosition(fieldToColour, "R---");
-
+                                this.colourFieldAtGivenPosition(fieldToColour, "--C-");
+                                this.addRowToAffectedActionsByIdentifiers(fieldToColour.getRowIdx(),
+                                        actionsToDoInRowDuringColouringPartPreventingExcessLengthInColumns);
                                 this.nonogramState.increaseMadeSteps();
 
                                 tmpLog = generateColourStepDescription(columnIdx, rowToColourIdx, "extend coloured sequence to matching length to top near X (with placing X before)");
@@ -1537,7 +1538,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                         this.excludeFieldInRow(fieldToPlaceX);
                         this.excludeFieldInColumn(fieldToPlaceX);
                         this.addRowToAffectedActionsByIdentifiers(fieldToPlaceX.getRowIdx(),
-                                actionsToDoInRowDuringColouringPartPreventingExcessLengthInColumns);
+                                actionsToDoInRowDuringPlacingXPartPreventingExcessLengthInColumns);
 
                         // moreover - only one id is valid -> can correct sequence range
                         if (validSequenceIds.size() == 1) {
@@ -1603,7 +1604,8 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                             fieldToColour = new Field(rowToColourIdx, columnIdx);
                             if (isFieldEmpty(this.getNonogramSolutionBoard(), fieldToColour)) {
                                 this.colourFieldAtGivenPosition(fieldToColour, "--C-");
-
+                                this.addRowToAffectedActionsByIdentifiers(fieldToColour.getRowIdx(),
+                                        actionsToDoInRowDuringColouringPartPreventingExcessLengthInColumns);
                                 this.nonogramState.increaseMadeSteps();
 
                                 tmpLog = generateColourStepDescription(columnIdx, rowToColourIdx, "extend coloured sequence to matching length to bottom near X (with placing X before)");
@@ -1616,7 +1618,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                         this.excludeFieldInColumn(fieldToPlaceX);
                         this.excludeFieldInRow(fieldToPlaceX);
                         this.addRowToAffectedActionsByIdentifiers(fieldToPlaceX.getRowIdx(),
-                                actionsToDoInRowDuringColouringPartPreventingExcessLengthInColumns);
+                                actionsToDoInRowDuringPlacingXPartPreventingExcessLengthInColumns);
 
                         if (validSequencesIds.size() == 1) {
                             int matchingSeqId = validSequencesIds.get(0);
