@@ -22,7 +22,6 @@ import java.util.stream.Stream;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramState.buildInitialEmptyNonogramState;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.ActionsConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.getSolutionBoardColumn;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeInsideAnotherRange;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeLength;
@@ -97,10 +96,10 @@ public class NonogramLogic extends NonogramLogicParams {
     private List<NonogramActionDetails> generateInitialActionsToDo(int height, int width) {
 
         List<NonogramActionDetails> overlappingActionsAllRows = IntStream.range(0, height)
-                .mapToObj(rowIdx -> new NonogramActionDetails(rowIdx, COLOUR_OVERLAPPING_FIELDS_IN_ROW))
+                .mapToObj(rowIdx -> new NonogramActionDetails(rowIdx, COLOUR_OVERLAPPING_FIELDS_IN_ROW, null, false))
                 .collect(Collectors.toCollection(ArrayList::new));
         List<NonogramActionDetails> overlappingActionsAllColumns = IntStream.range(0, width)
-                .mapToObj(columnIdx -> new NonogramActionDetails(columnIdx, COLOUR_OVERLAPPING_FIELDS_IN_COLUMN))
+                .mapToObj(columnIdx -> new NonogramActionDetails(columnIdx, COLOUR_OVERLAPPING_FIELDS_IN_COLUMN, null, false))
                 .collect(Collectors.toCollection(ArrayList::new));
 
         return Stream.concat(overlappingActionsAllRows.stream(), overlappingActionsAllColumns.stream()).collect(Collectors.toCollection(ArrayList::new));
@@ -234,12 +233,12 @@ public class NonogramLogic extends NonogramLogicParams {
                         subsequentXs = 0;
                         fillTrivialRowField(rowField, seqNo);
                         addRowFieldToExcluded(rowField);
-                        addColumnToAffectedActionsByIdentifiers(columnIdx, actionsToDoAfterColouringFieldInTrivialRow);
+                        addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.COLOUR_FIELD_IN_TRIVIAL_ROW);
                     } else {
                         placeXAtGivenPosition(rowField);
                         addRowFieldToExcluded(rowField);
                         addColumnFieldToExcluded(rowField);
-                        addColumnToAffectedActionsByIdentifiers(columnIdx, actionsToDoAfterPlacingXInTrivialRow);
+                        addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.PLACING_X_IN_TRIVIAL_ROW);
                         subsequentXs += 1;
                         if (subsequentXs == 1 && seqNo + 1 < rowSequencesRanges.size()) {
                             rowSequenceRange = this.getRowsSequencesRanges().get(rowIdx).get(++seqNo);
@@ -255,7 +254,7 @@ public class NonogramLogic extends NonogramLogicParams {
                     placeXAtGivenPosition(rowField);
                     addRowFieldToExcluded(rowField);
                     addColumnFieldToExcluded(rowField);
-                    addColumnToAffectedActionsByIdentifiers(columnIdx, actionsToDoAfterPlacingXInTrivialRow);
+                    addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.PLACING_X_IN_TRIVIAL_ROW);
                 }
                 addAllRowSequencesIdxToNotToInclude(rowIdx);
             }
@@ -268,16 +267,16 @@ public class NonogramLogic extends NonogramLogicParams {
 
     public void addTrivialRowSequenceIdxToNotToInclude(int rowIdx, int seqIdx) {
         if (!this.rowsSequencesIdsNotToInclude.get(rowIdx).contains(seqIdx)) {
-            tmpLog = generateAddingRowSequenceToNotToIncludeDescription(rowIdx, seqIdx);
-            addLog(tmpLog);
+            this.tmpLog = generateAddingRowSequenceToNotToIncludeDescription(rowIdx, seqIdx);
+            addLog();
             this.rowsSequencesIdsNotToInclude.get(rowIdx).add(seqIdx);
             Collections.sort(this.rowsSequencesIdsNotToInclude.get(rowIdx));
         }
     }
 
     private void addFillTrivialRowLog(int rowIdx) {
-        tmpLog = String.format("ROW %d is trivial - filling whole", rowIdx);
-        addLog(tmpLog);
+        this.tmpLog = String.format("ROW %d is trivial - filling whole", rowIdx);
+        addLog();
     }
 
     private void fillTrivialRowField(Field trivialRowField, int seqNo) {
@@ -317,12 +316,12 @@ public class NonogramLogic extends NonogramLogicParams {
                         subsequentXs = 0;
                         fillTrivialColumnField(columnField, seqNo);
                         addColumnFieldToExcluded(columnField);
-                        addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoAfterColouringFieldInTrivialColumn);
+                        addRowToAffectedActionsByIdentifiers(rowIdx, NonogramSolveAction.COLOUR_FIELD_IN_TRIVIAL_COLUMN);
                     } else {
                         placeXAtGivenPosition(columnField);
                         addColumnFieldToExcluded(columnField);
                         addRowFieldToExcluded(columnField);
-                        addRowToAffectedActionsByIdentifiers(rowIdx, actionsToDoAfterPlacingXInTrivialColumn);
+                        addRowToAffectedActionsByIdentifiers(rowIdx, NonogramSolveAction.PLACING_X_IN_TRIVIAL_COLUMN);
                         subsequentXs += 1;
                         if (subsequentXs == 1 && seqNo + 1 < columnSequencesRanges.size()) {
                             columnSequenceRange = columnSequencesRanges.get(++seqNo);
@@ -338,7 +337,7 @@ public class NonogramLogic extends NonogramLogicParams {
                     placeXAtGivenPosition(columnField);
                     addRowFieldToExcluded(columnField);
                     addColumnFieldToExcluded(columnField);
-                    addColumnToAffectedActionsByIdentifiers(columnIdx, actionsToDoAfterPlacingXInTrivialColumn);
+                    addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.PLACING_X_IN_TRIVIAL_COLUMN);
                 }
                 addAllColumnSequencesIdxToNotToInclude(columnIdx);
             }
@@ -358,8 +357,8 @@ public class NonogramLogic extends NonogramLogicParams {
     }
 
     private void addFillTrivialColumnLog(int columnIdx) {
-        tmpLog = String.format("COLUMN %d is trivial - filling whole", columnIdx);
-        addLog(tmpLog);
+        this.tmpLog = String.format("COLUMN %d is trivial - filling whole", columnIdx);
+        addLog();
     }
 
     private void fillTrivialColumnField(Field trivialColumnField, int seqNo) {
@@ -429,8 +428,8 @@ public class NonogramLogic extends NonogramLogicParams {
     private List<List<List<Integer>>> inferInitialRowsSequencesRanges() {
         List<List<List<Integer>>> initialRowSequencesRanges = new ArrayList<>();
 
-        for (int rowIdx = 0; rowIdx < rowsSequences.size(); rowIdx++) {
-            initialRowSequencesRanges.add(inferInitialRowSequencesRanges(rowsSequences.get(rowIdx), rowIdx));
+        for (int rowIdx = 0; rowIdx < this.rowsSequences.size(); rowIdx++) {
+            initialRowSequencesRanges.add(inferInitialRowSequencesRanges(this.rowsSequences.get(rowIdx), rowIdx));
         }
 
         return initialRowSequencesRanges;
@@ -879,14 +878,22 @@ public class NonogramLogic extends NonogramLogicParams {
         int rowIdx = decision.getDecisionField().getRowIdx();
         int columnIdx = decision.getDecisionField().getColumnIdx();
 
-        this.actionsToDoList.add(new NonogramActionDetails(rowIdx, NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS));
-        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS));
-        this.actionsToDoList.add(new NonogramActionDetails(rowIdx, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW));
-        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN));
-        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES));
-        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES));
-        this.actionsToDoList.add(new NonogramActionDetails(rowIdx, NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW));
-        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN));
+        this.actionsToDoList.add(new NonogramActionDetails(rowIdx,
+                NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS, COLOUR_FIELD_GUESS_OR_RECURSIVE, false));
+        this.actionsToDoList.add(new NonogramActionDetails(columnIdx,
+                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS, COLOUR_FIELD_GUESS_OR_RECURSIVE, false));
+        this.actionsToDoList.add(new NonogramActionDetails(rowIdx,
+                NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW, COLOUR_FIELD_GUESS_OR_RECURSIVE, false));
+        this.actionsToDoList.add(new NonogramActionDetails(columnIdx,
+                NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN, COLOUR_FIELD_GUESS_OR_RECURSIVE, false));
+        this.actionsToDoList.add(new NonogramActionDetails(columnIdx,
+                NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES, COLOUR_FIELD_GUESS_OR_RECURSIVE, false));
+        this.actionsToDoList.add(new NonogramActionDetails(columnIdx,
+                NonogramSolveAction.PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES, COLOUR_FIELD_GUESS_OR_RECURSIVE, false));
+        this.actionsToDoList.add(new NonogramActionDetails(rowIdx,
+                NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW, COLOUR_FIELD_GUESS_OR_RECURSIVE, false));
+        this.actionsToDoList.add(new NonogramActionDetails(columnIdx,
+                NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN, COLOUR_FIELD_GUESS_OR_RECURSIVE, false));
     }
 
     /**
@@ -896,14 +903,22 @@ public class NonogramLogic extends NonogramLogicParams {
         int rowIdx = decision.getDecisionField().getRowIdx();
         int columnIdx = decision.getDecisionField().getColumnIdx();
 
-        this.actionsToDoList.add(new NonogramActionDetails(rowIdx, NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES));
-        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES));
-        this.actionsToDoList.add(new NonogramActionDetails(rowIdx, CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY));
-        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY));
-        this.actionsToDoList.add(new NonogramActionDetails(rowIdx, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW));
-        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN));
-        this.actionsToDoList.add(new NonogramActionDetails(rowIdx, NonogramSolveAction.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES));
-        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES));
+        this.actionsToDoList.add(new NonogramActionDetails(rowIdx, NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES,
+                PLACE_X_FIELD_GUESS_OR_RECURSIVE, false));
+        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES,
+                PLACE_X_FIELD_GUESS_OR_RECURSIVE, false));
+        this.actionsToDoList.add(new NonogramActionDetails(rowIdx, NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY,
+                PLACE_X_FIELD_GUESS_OR_RECURSIVE, false));
+        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY,
+                PLACE_X_FIELD_GUESS_OR_RECURSIVE, false));
+        this.actionsToDoList.add(new NonogramActionDetails(rowIdx, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW,
+                PLACE_X_FIELD_GUESS_OR_RECURSIVE, false));
+        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN,
+                PLACE_X_FIELD_GUESS_OR_RECURSIVE, false));
+        this.actionsToDoList.add(new NonogramActionDetails(rowIdx, NonogramSolveAction.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES,
+                PLACE_X_FIELD_GUESS_OR_RECURSIVE, false));
+        this.actionsToDoList.add(new NonogramActionDetails(columnIdx, NonogramSolveAction.PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES,
+                PLACE_X_FIELD_GUESS_OR_RECURSIVE, false));
     }
 
     public void basicSolve() {

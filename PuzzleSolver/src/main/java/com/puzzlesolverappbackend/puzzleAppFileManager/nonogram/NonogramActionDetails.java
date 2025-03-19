@@ -14,4 +14,8 @@ public class NonogramActionDetails {
     private int index;
 
     private NonogramSolveAction actionName;
+
+    private NonogramSolveAction triggeringActionName;
+
+    private boolean changedState;
 }

@@ -213,13 +213,7 @@ class NonogramRowLogicTest {
                 List.of(0, 1), List.of(4, 6), List.of(6, 10), List.of(13, 14)
         )));
         nonogramRowLogic.getRowsSequences().set(ROW_TO_TEST, new ArrayList<>(Arrays.asList(2, 2, 2, 2)));
-        List<String> rowBeforeActionMade = new ArrayList<>(Arrays.asList(
-                "O", "O", "X", "X", "-",
-                "O", "-", "X", "X", "-",
-                "-", "X", "X", "O", "O",
-                "X", "X", "X", "X", "X",
-                "X", "X", "X", "X", "X"
-        ));
+        List<String> rowBeforeActionMade = new ArrayList<>(Arrays.asList("O", "O", "X", "X", "-", "O", "-", "X", "X", "-", "-", "X", "X", "O", "O", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X"));
         nonogramRowLogic.setNonogramSolutionBoardRow(ROW_TO_TEST, rowBeforeActionMade);
 
         // when
@@ -231,9 +225,13 @@ class NonogramRowLogicTest {
         );
         assertThat(nonogramRowLogic.getRowsSequencesRanges().get(ROW_TO_TEST)).isEqualTo(expectedRowSequencesRangesAfterActionMade);
 
-        NonogramActionDetails expectedActionAdded = new NonogramActionDetails(anyInt(), NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY);
+        NonogramActionDetails expectedActionDetailsAdded = new NonogramActionDetails(anyInt(),
+                NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY,
+                NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE,
+                false
+        );
         assertThat(nonogramRowLogic.getActionsToDoList().contains(
-                expectedActionAdded
+                expectedActionDetailsAdded
         ));
     }
 }

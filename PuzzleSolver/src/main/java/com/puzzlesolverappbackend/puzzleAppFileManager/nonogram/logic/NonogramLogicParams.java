@@ -2,6 +2,7 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramActionDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.ActionDependencyMap;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -200,18 +201,35 @@ public abstract class NonogramLogicParams {
         return this.fieldsFilled() == this.area();
     }
 
-    protected void addColumnToAffectedActionsByIdentifiers(int columnIdx, List<NonogramSolveAction> actions) {
-        for (NonogramSolveAction action : actions) {
-            if (isColumnIndexValid(columnIdx)) {
-                this.actionsToDoList.add(new NonogramActionDetails(columnIdx, action));
+    protected void addRowAndColumnToAffectedByIdentifiers(Field field, NonogramSolveAction actionTriggered) {
+        List<NonogramSolveAction> actionsToDo = ActionDependencyMap.actionDependencies.get(actionTriggered);
+
+        int rowIdx = field.getRowIdx();
+        int columnIdx = field.getColumnIdx();
+
+        for (NonogramSolveAction actionToDo : actionsToDo) {
+            if (actionToDo.isRowAction()) {
+                this.actionsToDoList.add(new NonogramActionDetails(rowIdx, actionToDo, actionTriggered, false));
+            } else {
+                this.actionsToDoList.add(new NonogramActionDetails(columnIdx, actionToDo, actionTriggered, false));
             }
         }
     }
 
-    protected void addRowToAffectedActionsByIdentifiers(int rowIdx, List<NonogramSolveAction> actions) {
-        for (NonogramSolveAction action : actions) {
+    protected void addColumnToAffectedActionsByIdentifiers(int columnIdx, NonogramSolveAction actionTriggered) {
+        List<NonogramSolveAction> actionsToDo = ActionDependencyMap.actionDependencies.get(actionTriggered);
+        for (NonogramSolveAction actionToDo : actionsToDo) {
+            if (isColumnIndexValid(columnIdx)) {
+                this.actionsToDoList.add(new NonogramActionDetails(columnIdx, actionToDo, actionTriggered, false));
+            }
+        }
+    }
+
+    protected void addRowToAffectedActionsByIdentifiers(int rowIdx, NonogramSolveAction actionTriggered) {
+        List<NonogramSolveAction> actionsToDo = ActionDependencyMap.actionDependencies.get(actionTriggered);
+        for (NonogramSolveAction actionToDo : actionsToDo) {
             if (isRowIndexValid(rowIdx)) {
-                this.actionsToDoList.add(new NonogramActionDetails(rowIdx, action));
+                this.actionsToDoList.add(new NonogramActionDetails(rowIdx, actionToDo, actionTriggered, false));
             }
         }
     }
@@ -295,8 +313,8 @@ public abstract class NonogramLogicParams {
     protected void excludeSequenceInRow(int rowIdx, int seqIdx) {
         boolean rowValid = isRowIndexValid(rowIdx);
         if (rowValid && !this.rowsSequencesIdsNotToInclude.get(rowIdx).contains(seqIdx)) {
-            tmpLog = generateAddingRowSequenceToNotToIncludeDescription(rowIdx, seqIdx);
-            addLog(tmpLog);
+            this.tmpLog = generateAddingRowSequenceToNotToIncludeDescription(rowIdx, seqIdx);
+            addLog();
             this.rowsSequencesIdsNotToInclude.get(rowIdx).add(seqIdx);
             Collections.sort(this.rowsSequencesIdsNotToInclude.get(rowIdx));
         }
@@ -308,8 +326,8 @@ public abstract class NonogramLogicParams {
      */
     protected void excludeSequenceInColumn(int columnIdx, int seqIdx) {
         if (!this.columnsSequencesIdsNotToInclude.get(columnIdx).contains(seqIdx)) {
-            tmpLog = generateAddingColumnSequenceToNotToIncludeDescription(columnIdx, seqIdx);
-            addLog(tmpLog);
+            this.tmpLog = generateAddingColumnSequenceToNotToIncludeDescription(columnIdx, seqIdx);
+            addLog();
             this.columnsSequencesIdsNotToInclude.get(columnIdx).add(seqIdx);
             Collections.sort(this.columnsSequencesIdsNotToInclude.get(columnIdx));
         }
@@ -439,11 +457,11 @@ public abstract class NonogramLogicParams {
         return solutionBoardColumnWithMarks;
     }
 
-    protected void addLog(String log) {
-        if (log.isEmpty()) {
+    protected void addLog() {
+        if (this.tmpLog.isEmpty()) {
             System.out.println("Trying to add empty log!!!");
         } else {
-            this.logs.add(log);
+            this.logs.add(this.tmpLog);
         }
     }
 
