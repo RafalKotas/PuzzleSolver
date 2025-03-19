@@ -17,7 +17,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 
 class NonogramRowLogicTest {
 
-    NonogramRowLogic nonogramRowLogic;
+    private NonogramRowLogic nonogramRowLogic;
 
     @BeforeEach
     void setUp() {

@@ -1116,7 +1116,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
                                 addLog();
 
                                 this.nonogramState.increaseMadeSteps();
-                            } else if (showRepetitions) {
+                            } else if (this.showRepetitions) {
                                 System.out.println("X placed in too short row empty field sequence earlier!");
                             }
                         }
@@ -1612,7 +1612,8 @@ public class NonogramRowLogic extends NonogramLogicParams {
                             this.addRowToAffectedActionsByIdentifiers(rowIdx, NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART);
 
                             this.nonogramState.increaseMadeSteps();
-                            tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, matchingSeqId, oldRange, updatedRange, "update only matching sequence part preventing excess length to right");
+                            this.tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, matchingSeqId, oldRange, updatedRange, "update only matching sequence part preventing excess length to right");
+                            addLog();
                         }
                     }
                 }
