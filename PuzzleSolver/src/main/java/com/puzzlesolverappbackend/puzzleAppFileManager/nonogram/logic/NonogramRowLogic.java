@@ -20,6 +20,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.row
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.ActionsConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramLogicUtils.colouredSequenceInRowIsValid;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramSequenceReducer.reduceMatches;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeInsideAnotherRange;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeLength;
 
@@ -475,6 +476,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
 
         List<List<Integer>> colouredSequencesPartsMatches = new ArrayList<>();
         List<Integer> colouredSequencePartMatches;
+        List<Boolean> differentSequencesId = new ArrayList<>();
         int minSeqNo = 0; // if X between coloured sequences parts -> increase (sequences that can't be merged)
         List<Integer> currentColouredSeqPart;
         int partMaxLength;
@@ -495,9 +497,13 @@ public class NonogramRowLogic extends NonogramLogicParams {
             if (seqPartNo < partsMaxRanges.size() - 1 &&
                     areXsBetweenColouredRangesInRow(rowIdx, currentColouredSeqPart, colouredSequencesPartsRanges.get(seqPartNo + 1))) {
                 minSeqNo++;
+                differentSequencesId.add(true);
+            } else {
+                differentSequencesId.add(false);
             }
         }
 
+        List<List<Integer>> reducedSequencesPartsMatches = reduceMatches(colouredSequencesPartsMatches, differentSequencesId);
         List<Integer> matchingSequencesIds;
         int matchingSeqId;
         int matchingSequenceLength;
@@ -512,8 +518,8 @@ public class NonogramRowLogic extends NonogramLogicParams {
         List<Integer> updatedMatchingSequenceRange;
 
         // if there are uniquely assigned sequences then mark and correct range
-        for (int matchedSeqNo = 0; matchedSeqNo < colouredSequencesPartsMatches.size(); matchedSeqNo++) {
-            matchingSequencesIds = colouredSequencesPartsMatches.get(matchedSeqNo);
+        for (int matchedSeqNo = 0; matchedSeqNo < reducedSequencesPartsMatches.size(); matchedSeqNo++) {
+            matchingSequencesIds = reducedSequencesPartsMatches.get(matchedSeqNo);
             if (matchingSequencesIds.size() == 1) {
                 matchingSeqId = matchingSequencesIds.get(0);
                 oldMatchingSequenceRange = rowSequencesRanges.get(matchingSeqId);
