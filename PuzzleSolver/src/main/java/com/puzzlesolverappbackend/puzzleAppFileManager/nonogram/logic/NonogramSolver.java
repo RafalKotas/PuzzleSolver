@@ -119,7 +119,7 @@ public class NonogramSolver {
             replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
         }
 
-        if (guessMode == GuessMode.ENABLED && nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage() != 100) {
+        if (this.guessMode == GuessMode.ENABLED && nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage() != 100) {
             if (LOG_STEPS_SOLVER) {
                 log.info("Completion percentage after heuristics only: {}", nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage());
             }
@@ -133,7 +133,7 @@ public class NonogramSolver {
                 correctDecision = Optional.empty();
 
                 // two decisions are 'possibly' ok
-                oneOfTwoDecisionsWrong = false;
+                this.oneOfTwoDecisionsWrong = false;
 
                 wrongDecisionsCount = -1;
 
@@ -151,7 +151,7 @@ public class NonogramSolver {
                             if (currentTreeHeight == 0) {
                                 replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
                             }
-                            oneOfTwoDecisionsWrong = true;
+                            this.oneOfTwoDecisionsWrong = true;
                             wrongDecisionsCount = 1;
                             break;
                         } else {
@@ -167,7 +167,7 @@ public class NonogramSolver {
                             if (currentTreeHeight == 0) {
                                 replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
                             }
-                            oneOfTwoDecisionsWrong = true;
+                            this.oneOfTwoDecisionsWrong = true;
                             wrongDecisionsCount = 1;
                         }
                         break;

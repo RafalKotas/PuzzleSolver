@@ -225,7 +225,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
             }
 
             this.nonogramState.increaseMadeSteps();
-            tmpLog = generateCorrectingColumnSequenceRangeStepDescription(columnIdx, previousSequenceId, oldPreviousSequenceRange, updatedPreviousSequenceRange, "correcting from bottom");
+            this.tmpLog = generateCorrectingColumnSequenceRangeStepDescription(columnIdx, previousSequenceId, oldPreviousSequenceRange, updatedPreviousSequenceRange, "correcting from bottom");
             addLog();
         }
     }
@@ -263,7 +263,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
 
         for (int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
             potentiallyColouredField = new Field(rowIdx, columnIdx);
-            if (isFieldColoured(nonogramSolutionBoard, potentiallyColouredField)) {
+            if (isFieldColoured(this.nonogramSolutionBoard, potentiallyColouredField)) {
                 oldSequenceRange = columnSequencesRanges.get(sequenceId);
                 columnSequenceRangeStart = oldSequenceRange.get(0);
                 columnSequenceRangeEnd = oldSequenceRange.get(1);
@@ -319,7 +319,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
 
         for (int rowIdx = this.getHeight() - 1; rowIdx >= 0 ; rowIdx--) {
             potentiallyColouredField = new Field(rowIdx, columnIdx);
-            if (isFieldColoured(nonogramSolutionBoard, potentiallyColouredField)) {
+            if (isFieldColoured(this.nonogramSolutionBoard, potentiallyColouredField)) {
                 oldSequenceRange = columnSequencesRanges.get(sequenceId);
                 columnSequenceRangeStart = oldSequenceRange.get(0);
                 columnSequenceRangeEnd = oldSequenceRange.get(1);
@@ -334,7 +334,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                         this.excludeSequenceInColumn(columnIdx, sequenceId);
                     }
 
-                    tmpLog = generateCorrectingColumnSequenceRangeStepDescription(columnIdx, sequenceId,
+                    this.tmpLog = generateCorrectingColumnSequenceRangeStepDescription(columnIdx, sequenceId,
                             oldSequenceRange, updatedSequenceRange, "correcting from bottom (met coloured field).");
                     addLog();
                 }
@@ -415,7 +415,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
 
             for (int rowIdx = rowStartIndex; rowIdx < rowStartIndex + columnSequenceLength; rowIdx++) {
                 potentiallyXOnWayField = new Field(rowIdx, columnIdx);
-                if (isFieldWithX(nonogramSolutionBoard, potentiallyXOnWayField)) {
+                if (isFieldWithX(this.nonogramSolutionBoard, potentiallyXOnWayField)) {
                     indexOk = false;
                     break;
                 }
@@ -444,7 +444,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
             indexOk = true;
             for (int rowIdx = rowEndIndex; rowIdx > rowEndIndex - columnSequenceLength; rowIdx--) {
                 potentiallyXOnWayField = new Field(rowIdx, columnIdx);
-                if (isFieldWithX(nonogramSolutionBoard, potentiallyXOnWayField)) {
+                if (isFieldWithX(this.nonogramSolutionBoard, potentiallyXOnWayField)) {
                     indexOk = false;
                     break;
                 }
@@ -1000,9 +1000,9 @@ public class NonogramColumnLogic extends NonogramLogicParams {
         for (int currentRowIndex : xAtEdges) {
             Field fieldAtEdge = new Field(currentRowIndex, columnIdx);
             if (isRowIndexValid(currentRowIndex)) {
-                if (isFieldEmpty(nonogramSolutionBoard, fieldAtEdge)) {
+                if (isFieldEmpty(this.nonogramSolutionBoard, fieldAtEdge)) {
                     doStuffWhenPlacingXsAfterOrBeforeLongestSequence(columnIdx, currentRowIndex, xAtEdges, logEndPart);
-                } else if (showRepetitions) {
+                } else if (this.showRepetitions) {
                     log.warn("X around longest sequence(pos={}) in column added earlier! {}", fieldAtEdge, logEndPart);
                 }
             }
@@ -1622,7 +1622,8 @@ public class NonogramColumnLogic extends NonogramLogicParams {
                             this.addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART);
 
                             this.nonogramState.increaseMadeSteps();
-                            tmpLog = generateCorrectingColumnSequenceRangeStepDescription(columnIdx, matchingSeqId, oldRange, updatedRange, "update only matching sequence part preventing excess length to bottom");
+                            this.tmpLog = generateCorrectingColumnSequenceRangeStepDescription(columnIdx, matchingSeqId, oldRange, updatedRange, "update only matching sequence part preventing excess length to bottom");
+                            addLog();
                         }
                     }
                 }
@@ -1652,13 +1653,13 @@ public class NonogramColumnLogic extends NonogramLogicParams {
 
         for (int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
             potentiallyColouredField = new Field(rowIdx, columnIdx);
-            if (isFieldColoured(nonogramSolutionBoard, potentiallyColouredField)) {
+            if (isFieldColoured(this.nonogramSolutionBoard, potentiallyColouredField)) {
 
                 colouredSequenceIndexes = new ArrayList<>();
                 colouredSequenceIndexes.add(rowIdx);
 
                 // TODO - do while(?)
-                while(rowIdx < this.getHeight() && isFieldColoured(nonogramSolutionBoard, potentiallyColouredField)) {
+                while(rowIdx < this.getHeight() && isFieldColoured(this.nonogramSolutionBoard, potentiallyColouredField)) {
                     rowIdx++;
                     potentiallyColouredField = new Field(rowIdx, columnIdx);
                 }
@@ -1722,7 +1723,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
         Field potentiallyColouredField;
         for (Integer rowIdx : rowRange) {
             potentiallyColouredField = new Field(rowIdx, columnIdx);
-            if (!isFieldColoured(nonogramSolutionBoard, potentiallyColouredField)) {
+            if (!isFieldColoured(this.nonogramSolutionBoard, potentiallyColouredField)) {
                 return false;
             }
         }
@@ -1737,7 +1738,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
 
         for (; minimumRowIndex >= minimumRowIndexLimit; minimumRowIndex--) {
             fieldToCheck = new Field(minimumRowIndex, columnIdx);
-            if (isFieldWithX(nonogramSolutionBoard, fieldToCheck)) {
+            if (isFieldWithX(this.nonogramSolutionBoard, fieldToCheck)) {
                 break;
             }
         }
@@ -1752,7 +1753,7 @@ public class NonogramColumnLogic extends NonogramLogicParams {
 
         for (; maximumRowIndex <= maximumRowIndexLimit; maximumRowIndex++) {
             fieldToCheck = new Field(maximumRowIndex, columnIdx);
-            if (isFieldWithX(nonogramSolutionBoard, fieldToCheck)) {
+            if (isFieldWithX(this.nonogramSolutionBoard, fieldToCheck)) {
                 break;
             }
         }

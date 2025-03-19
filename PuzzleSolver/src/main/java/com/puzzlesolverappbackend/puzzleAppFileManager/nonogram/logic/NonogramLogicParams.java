@@ -117,7 +117,7 @@ public abstract class NonogramLogicParams {
         for (int rowIndex = 0; rowIndex < this.getHeight(); rowIndex++) {
             for (int columnIndex = 0; columnIndex < this.getWidth(); columnIndex++) {
                 potentiallyColouredField = new Field(rowIndex, columnIndex);
-                if (isFieldColoured(nonogramSolutionBoard, potentiallyColouredField)) {
+                if (isFieldColoured(this.nonogramSolutionBoard, potentiallyColouredField)) {
                     colouredFieldsOnBoard++;
                 }
             }
@@ -451,7 +451,7 @@ public abstract class NonogramLogicParams {
         List<String> solutionBoardColumnWithMarks = new ArrayList<>();
 
         for (int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
-            solutionBoardColumnWithMarks.add(nonogramSolutionBoardWithMarks.get(rowIdx).get(columnIdx));
+            solutionBoardColumnWithMarks.add(this.nonogramSolutionBoardWithMarks.get(rowIdx).get(columnIdx));
         }
 
         return solutionBoardColumnWithMarks;
