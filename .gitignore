@@ -10,7 +10,9 @@ FrontReact/build/resources/Nonograms/
 # BE
 .idea/
 PuzzleSolver/src/main/tools/MySQL/docker-compose.yml
+/PuzzleSolver/src/test/resources/application.yml
 
 # other
 nCopy
 otherFolders
+
