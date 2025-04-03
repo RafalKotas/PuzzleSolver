@@ -1,6 +1,7 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowActions;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,7 +29,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.r
 @Getter
 @Slf4j
 @NoArgsConstructor
-public class NonogramRowLogic extends NonogramLogicParams {
+public class NonogramRowLogic extends NonogramLogicParams implements RowActions {
 
     private final static String CORRECT_ROW_SEQ_RANGE_MARKING_FIELD = "correcting row sequence range when marking field";
 
@@ -58,7 +59,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
         this.actionsToDoList = nonogramLogic.getActionsToDoList();
     }
 
-    // CORRECT_ROW_SEQUENCES_RANGES
+    @Override
     public void correctRowSequencesRanges(int rowIdx) {
         correctSequencesRangesInRowFromLeft(rowIdx);
         correctSequencesRangesInRowFromRight(rowIdx);
@@ -219,6 +220,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
      * corrects row sequences when met coloured field in row (also from left and right)
      * @param rowIdx - row index to correct sequences ranges when coloured field met
      */
+    @Override
     public void correctRowSequencesRangesWhenMetColouredField (int rowIdx) {
         correctRowSequencesRangesWhenMetColouredFieldFromLeft(rowIdx);
         correctRowSequencesRangesWhenMetColouredFieldFromRight(rowIdx);
@@ -343,7 +345,8 @@ public class NonogramRowLogic extends NonogramLogicParams {
      * CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY
      * @param rowIdx - column to correct sequence/s range/s if x on way (sequence won't fit)
      */
-    public void correctRowRangeIndexesIfXOnWay(int rowIdx) {
+    @Override
+    public void correctRowSequencesRangesIfXOnWay(int rowIdx) {
 
         boolean rowSequenceRangesChanged = false;
 
@@ -447,6 +450,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
      * CORRECT_ROW_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES
      * @param rowIdx - row to correct sequence/s range/s when matching fields to corresponding sequences
      */
+    @Override
     public void correctRowSequencesRangesWhenMatchingFieldsToSequences(int rowIdx) {
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
         List<Integer> rowSequencesLengths = this.getRowsSequences().get(rowIdx);
@@ -611,6 +615,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
      *               rowSequencesRanges.get(0).get(3) = [23, 28] -> edge indexes : 23, 28
      *               and field with column index 22 or 29 is coloured -> then sequence which start at idx 23/28 will create too long coloured sequence
      */
+    @Override
     public void correctRowSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence(int rowIdx) {
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
         List<Integer> rowSequenceRange;
@@ -658,6 +663,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
      * @param rowIdx - row in which action should be made
      * fill fields in row where ranges met specific condition (range_length < sequence_length * 2)
      */
+    @Override
     public void colourOverlappingFieldsInRow(int rowIdx) {
         List<Integer> sequencesInRowLengths = this.getRowsSequences().get(rowIdx);
         List<List<Integer>> sequencesInRowRanges = this.getRowsSequencesRanges().get(rowIdx);
@@ -705,6 +711,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
      * @param rowIdx - row in which action should be made
      * coloring the fields in row next to the x to the distance of the shortest possible sequence in a given area
      */
+    @Override
     public void extendColouredFieldsNearXToMaximumPossibleLengthInRow(int rowIdx) {
         extendColouredFieldsToLeftNearXToMaximumPossibleLengthInRow(rowIdx);
         extendColouredFieldsToRightNearXToMaximumPossibleLengthInRow(rowIdx);
@@ -883,6 +890,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
      * @param rowIdx - place an "X" on fields which not belong to any row possible range
      * PLACE_XS_ROW_AT_UNREACHABLE_FIELDS
      */
+    @Override
     public void placeXsRowAtUnreachableFields(int rowIdx) {
 
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
@@ -916,6 +924,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
      * PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES
      * @param rowIdx - the row index where you place an "X" around the longest possible coloured sequences in a given area
      */
+    @Override
     public void placeXsAroundLongestSequencesInRow(int rowIdx) {
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
         List<Integer> rowSequencesLengths = this.getRowsSequences().get(rowIdx);
@@ -1045,6 +1054,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
      * PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES
      * @param rowIdx - place an "X" at too short empty fields sequences in row with this index, when none of row sequences can fit in hole
      */
+    @Override
     public void placeXsRowAtTooShortEmptySequences(int rowIdx) {
 
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
@@ -1149,6 +1159,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
      *                  Else validate only current coloured sequence (when isn't merged with another after placing "O")
      *               6. If sequence is not valid, place "X" at field on which trying to place "O", in other case do nothing
      */
+    @Override
     public void placeXsRowIfOWillMergeNearFieldsToTooLongColouredSequence(int rowIdx) {
         List<Integer> colouredFieldsIndexesInRow = findColouredFieldsIndexesInRow(this.nonogramSolutionBoard, rowIdx);
 
@@ -1232,6 +1243,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
      * PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE
      * @param rowIdx - TODO
      */
+    @Override
     public void placeXsRowIfONearXWillBeginTooLongPossibleColouredSequence(int rowIdx) {
         Field fieldToCheckX;
         Field firstColouredField;
@@ -1447,6 +1459,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
         return rangeInsideAnotherRange(lastRangeBeforeColouredField, emptyFieldsRange);
     }
 
+    @Override
     public void preventExtendingColouredSequenceToExcessLengthInRow(int rowIdx) {
         preventExtendingColouredSequenceToExcessLengthInRowToLeft(rowIdx);
         preventExtendingColouredSequenceToExcessLengthInRowToRight(rowIdx);
@@ -1628,6 +1641,7 @@ public class NonogramRowLogic extends NonogramLogicParams {
      * MARK_AVAILABLE_FIELDS_IN_ROW
      * @param rowIdx - row index on which mark fields with char sequences identifiers
      */
+    @Override
     public void markAvailableFieldsInRow(int rowIdx) {
         Field potentiallyColouredField;
         List<Integer> colouredSequenceIndexes;

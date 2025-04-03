@@ -148,7 +148,7 @@ class NonogramLogicOperationsTest {
         }
         /* 10 */
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
 
         List<List<List<Integer>>> columnsSequencesRangesAfterCorrectingWhenMetColouredFields = o06005_difficulty_1.getColumnsSequencesRanges();
@@ -200,7 +200,7 @@ class NonogramLogicOperationsTest {
         /* 10 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -249,7 +249,7 @@ class NonogramLogicOperationsTest {
         /* 10 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -298,7 +298,7 @@ class NonogramLogicOperationsTest {
         /* 10 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -354,7 +354,7 @@ class NonogramLogicOperationsTest {
         /* 10 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -415,7 +415,7 @@ class NonogramLogicOperationsTest {
         /* 10 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -443,7 +443,7 @@ class NonogramLogicOperationsTest {
         /* 2 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().correctRowRangeIndexesIfXOnWay(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -497,7 +497,7 @@ class NonogramLogicOperationsTest {
         /* 10 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -525,7 +525,7 @@ class NonogramLogicOperationsTest {
         /* 2 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().correctRowRangeIndexesIfXOnWay(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -571,7 +571,7 @@ class NonogramLogicOperationsTest {
         /* 10 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -599,7 +599,7 @@ class NonogramLogicOperationsTest {
         /* 2 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().correctRowRangeIndexesIfXOnWay(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -613,7 +613,7 @@ class NonogramLogicOperationsTest {
         /* 10 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -667,7 +667,7 @@ class NonogramLogicOperationsTest {
         /* 10 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -695,7 +695,7 @@ class NonogramLogicOperationsTest {
         /* 2 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().correctRowRangeIndexesIfXOnWay(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -709,7 +709,7 @@ class NonogramLogicOperationsTest {
         /* 10 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -755,7 +755,7 @@ class NonogramLogicOperationsTest {
         /* 10 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -783,7 +783,7 @@ class NonogramLogicOperationsTest {
         /* 2 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().correctRowRangeIndexesIfXOnWay(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -797,7 +797,7 @@ class NonogramLogicOperationsTest {
         /* 10 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -862,7 +862,7 @@ class NonogramLogicOperationsTest {
         /* 10 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -890,7 +890,7 @@ class NonogramLogicOperationsTest {
         /* 2 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().correctRowRangeIndexesIfXOnWay(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -904,7 +904,7 @@ class NonogramLogicOperationsTest {
         /* 10 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -979,7 +979,7 @@ class NonogramLogicOperationsTest {
         /* 10 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -1007,7 +1007,7 @@ class NonogramLogicOperationsTest {
         /* 2 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().correctRowRangeIndexesIfXOnWay(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -1021,7 +1021,7 @@ class NonogramLogicOperationsTest {
         /* 10 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -1091,7 +1091,7 @@ class NonogramLogicOperationsTest {
         /* 10 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 
@@ -1119,7 +1119,7 @@ class NonogramLogicOperationsTest {
         /* 2 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().correctRowRangeIndexesIfXOnWay(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -1133,7 +1133,7 @@ class NonogramLogicOperationsTest {
         /* 10 */
         o06005_difficulty_1.copyLogicToNonogramColumnLogic();
         for (int columnIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getWidth() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesWhenMetColouredField(columnIdx);
+            o06005_difficulty_1.getNonogramColumnLogic().correctColumnSequencesRangesWhenMetColouredField(columnIdx);
         }
         o06005_difficulty_1.copyLogicFromNonogramColumnLogic();
 

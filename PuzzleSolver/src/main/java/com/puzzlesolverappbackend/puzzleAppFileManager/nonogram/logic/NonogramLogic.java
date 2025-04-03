@@ -1049,7 +1049,7 @@ public class NonogramLogic extends NonogramLogicParams {
                 }
             }
             case CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY -> {
-                this.nonogramRowLogic.correctRowRangeIndexesIfXOnWay(rowIdx);
+                this.nonogramRowLogic.correctRowSequencesRangesIfXOnWay(rowIdx);
                 if (this.guessMode == GuessMode.ENABLED) {
                     invalidateSolutionIfRowSequencesWrong(rowIdx);
                 }
@@ -1082,13 +1082,13 @@ public class NonogramLogic extends NonogramLogicParams {
                 }
             }
             case CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS -> {
-                this.nonogramColumnLogic.correctColumnSequencesWhenMetColouredField(columnIdx);
+                this.nonogramColumnLogic.correctColumnSequencesRangesWhenMetColouredField(columnIdx);
                 if (this.guessMode == GuessMode.ENABLED) {
                     invalidateSolutionIfColumnSequencesWrong(columnIdx);
                 }
             }
             case CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY -> {
-                this.nonogramColumnLogic.correctColumnRangeIndexesIfXOnWay(columnIdx);
+                this.nonogramColumnLogic.correctColumnSequencesRangesIfXOnWay(columnIdx);
                 if (this.guessMode == GuessMode.ENABLED) {
                     invalidateSolutionIfColumnSequencesWrong(columnIdx);
                 }
