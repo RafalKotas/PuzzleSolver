@@ -1533,12 +1533,14 @@ public class NonogramRowLogic extends NonogramLogicParams {
                             List<Integer> oldRange = rowSequencesRanges.get(matchingSeqId);
                             List<Integer> updatedRange = new ArrayList<>(Arrays.asList(colouredSequenceColStartIdx, potentiallyColouredFieldColumn));
 
-                            this.updateRowSequenceRange(rowIdx, matchingSeqId, updatedRange);
-                            this.addRowToAffectedActionsByIdentifiers(rowIdx, NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART);
+                            if (!rangesEqual(oldRange, updatedRange)) {
+                                this.updateRowSequenceRange(rowIdx, matchingSeqId, updatedRange);
+                                this.addRowToAffectedActionsByIdentifiers(rowIdx, NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART);
 
-                            this.nonogramState.increaseMadeSteps();
-                            this.tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, matchingSeqId, oldRange, updatedRange, "update only matching sequence part preventing excess length to left");
-                            addLog();
+                                this.nonogramState.increaseMadeSteps();
+                                this.tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, matchingSeqId, oldRange, updatedRange, "update only matching sequence part preventing excess length to left");
+                                addLog();
+                            }
                         }
                     }
                 }
