@@ -7,6 +7,7 @@ public interface RowActions {
     void correctRowSequencesRangesWhenMatchingFieldsToSequences(int rowIdx);
     void correctRowSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence(int rowIdx);
     void colourOverlappingFieldsInRow(int rowIdx);
+    void colourFieldsIfInRowXWouldForceTooLongColouredFieldsSequence(int rowIdx);
     void extendColouredFieldsNearXToMaximumPossibleLengthInRow(int rowIdx);
     void placeXsRowAtUnreachableFields(int rowIdx);
     void placeXsAroundLongestSequencesInRow(int rowIdx);

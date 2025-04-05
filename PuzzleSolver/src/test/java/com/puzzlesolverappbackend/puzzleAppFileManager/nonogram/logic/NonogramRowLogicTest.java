@@ -234,4 +234,47 @@ class NonogramRowLogicTest {
                 expectedActionDetailsAdded
         ));
     }
+
+    // NEW
+    @Test
+    @DisplayName(value = "Should place X if O will create too long coloured sequence [no changes] - o06479 row 10")
+    void shouldColourFieldBeforeFieldWith12thIndexInRow() {
+        // given
+        int ROW_TO_TEST = 10;
+        int HEIGHT = 30;
+        int WIDTH = 25;
+        nonogramRowLogic = prepareNonogramRowLogic(HEIGHT, WIDTH);
+        nonogramRowLogic.setNonogramState(buildInitialEmptyNonogramState());
+        List<List<Integer>> sequencesRangesBefore = List.of(
+                new ArrayList<>(List.of(0, 6)),
+                new ArrayList<>(List.of(3, 9)),
+                new ArrayList<>(List.of(6, 14)),
+                new ArrayList<>(List.of(11, 21)),
+                new ArrayList<>(List.of(16, 24))
+        );
+        nonogramRowLogic.setRowSequencesRanges(ROW_TO_TEST, new ArrayList<>(sequencesRangesBefore));
+        nonogramRowLogic.setRowSequencesLengths(ROW_TO_TEST, new ArrayList<>(List.of(2, 2, 4, 4, 2)));
+        List<String> rowBeforeActionMade = new ArrayList<>(List.of(
+                "-", "-", "-", "-", "-",
+                "-", "-", "-", "-", "-",
+                "-", "-", "O", "-", "-",
+                "-", "O", "O", "-", "-",
+                "-", "-", "-", "-", "-"
+        ));
+        nonogramRowLogic.setNonogramSolutionBoardRow(ROW_TO_TEST, rowBeforeActionMade);
+
+        // when
+        nonogramRowLogic.colourFieldsIfInRowXWouldForceTooLongColouredFieldsSequence(ROW_TO_TEST);
+
+        // then
+        List<String> expectedRowAfterActionMade = List.of(
+                "-", "-", "-", "-", "-",
+                "-", "-", "-", "-", "-",
+                "-", "O", "O", "-", "-",
+                "-", "O", "O", "-", "-",
+                "-", "-", "-", "-", "-"
+        );
+        // TODO NIE POWINNO BYĆ TAKIE SAME
+        assertThat(nonogramRowLogic.getNonogramSolutionBoard().get(ROW_TO_TEST)).isEqualTo(expectedRowAfterActionMade);
+    }
 }

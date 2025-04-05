@@ -284,6 +284,7 @@ public class ActionDependencyMap {
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE, // base
                 //NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_ROW, // no improvement
                 NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW, // base
+                NonogramSolveAction.COLOUR_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE,
                 //NonogramSolveAction.PLACE_XS_ROW_AT_UNREACHABLE_FIELDS, // no improvement
                 NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES, // base
                 //NonogramSolveAction.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES, // no improvement

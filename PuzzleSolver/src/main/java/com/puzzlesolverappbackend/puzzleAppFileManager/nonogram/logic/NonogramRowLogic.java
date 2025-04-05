@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.EMPTY_FIELD;
@@ -18,8 +15,11 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramC
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramParametersComparatorHelper.rangesEqual;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicService.filterSequencesRangesIncludingAnotherAndReturnCorrespondingLengths;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicService.rangesListIncludingAnotherRange;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowMixedActionsHelper.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.collectColouredSequencesRangesInRow;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.matchColouredSequencesToPossibleSeqIDs;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowPreventExtendingColouredSequenceToExcessLengthHelpers.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramCreatorUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramLogicUtils.colouredSequenceInRowIsValid;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramSequenceReducer.reduceMatches;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeInsideAnotherRange;
@@ -702,6 +702,66 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 if (rangeLength(colouringRange) == this.rowsSequences.get(rowIdx).get(sequenceIdx)) {
                     this.excludeSequenceInRow(rowIdx, sequenceIdx);
                 }
+            }
+        }
+    }
+
+    /**
+     * COLOUR_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE
+     * @param rowIdx - row in which action should be done
+     */
+    @Override
+    public void colourFieldsIfInRowXWouldForceTooLongColouredFieldsSequence(int rowIdx) {
+        List<Integer> rowSequencesLengths = this.getRowsSequences().get(rowIdx);
+
+        List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
+
+        List<List<Integer>> colouredSequencesRanges = collectColouredSequencesRangesInRow(this.getNonogramSolutionBoard(), rowIdx);
+
+        Map<List<Integer>, List<Integer>> possibleColouredSequencesRangesSequencesId = matchColouredSequencesToPossibleSeqIDs(colouredSequencesRanges, rowSequencesRanges);
+
+        int mergedSequenceStartIdx;
+        int mergePointIdx;
+        int mergedSequenceEndIdx;
+        List<Integer> mergedSequenceRange;
+        boolean onePossibleSequencesNotMergeToTooLongColouredFieldsSequence;
+        int seqLen;
+
+        List<Integer> rowSequenceRange;
+        int seqContainingMergedLen;
+
+        for (int colouredSeqPartId = 0; colouredSeqPartId < colouredSequencesRanges.size() - 1; colouredSeqPartId++) {
+            List<Integer> first = colouredSequencesRanges.get(colouredSeqPartId);
+            List<Integer> second = colouredSequencesRanges.get(colouredSeqPartId + 1);
+
+            mergedSequenceStartIdx = first.get(0);
+            mergePointIdx = second.get(0) - 1;
+            mergedSequenceEndIdx = second.get(1);
+
+            List<Integer> possibleSeqIdsMatchedToFirstColouredSequence = possibleColouredSequencesRangesSequencesId.get(first);
+
+            onePossibleSequencesNotMergeToTooLongColouredFieldsSequence = false;
+            for (int seqId : possibleSeqIdsMatchedToFirstColouredSequence) {
+                seqLen = rowSequencesLengths.get(seqId);
+                if (mergedSequenceStartIdx + seqLen - 1 < mergePointIdx) {
+                    onePossibleSequencesNotMergeToTooLongColouredFieldsSequence = true;
+                    break;
+                } else {
+                    mergedSequenceRange = List.of(mergedSequenceStartIdx, mergedSequenceEndIdx);
+                    for (int seqIdToCheckIfCanContainMergedRange : possibleSeqIdsMatchedToFirstColouredSequence) {
+                        rowSequenceRange = rowSequencesRanges.get(seqIdToCheckIfCanContainMergedRange);
+                        seqContainingMergedLen = rowSequencesLengths.get(seqIdToCheckIfCanContainMergedRange);
+                        if (rangeInsideAnotherRange(mergedSequenceRange, rowSequenceRange) && rangeLength(mergedSequenceRange) <= seqContainingMergedLen) {
+                            onePossibleSequencesNotMergeToTooLongColouredFieldsSequence = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!onePossibleSequencesNotMergeToTooLongColouredFieldsSequence) {
+                // colour field before first coloured sequence
+                colourFieldAtGivenPosition(new Field(rowIdx, mergedSequenceStartIdx - 1), "R---");
             }
         }
     }
