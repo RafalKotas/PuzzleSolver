@@ -2,7 +2,6 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramActionDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -10,37 +9,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRowLogic.prepareNonogramRowLogic;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramState.buildInitialEmptyNonogramState;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramCreatorUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 
 class NonogramRowLogicTest {
 
     private NonogramRowLogic nonogramRowLogic;
-
-    @BeforeEach
-    void setUp() {
-        nonogramRowLogic = new NonogramRowLogic();
-        nonogramRowLogic.setNonogramState(buildInitialEmptyNonogramState());
-    }
-
-    void prepareNonogramRowLogic(int HEIGHT, int WIDTH) {
-        nonogramRowLogic.setNonogramSolutionBoard(generateEmptyBoard(HEIGHT, WIDTH));
-        nonogramRowLogic.setNonogramSolutionBoardWithMarks(generateEmptyBoardWithMarks(HEIGHT, WIDTH));
-
-        nonogramRowLogic.setColumnsSequences(generateEmptyColumnSequencesLengths(WIDTH));
-        nonogramRowLogic.setColumnsFieldsNotToInclude(generateEmptyColumnsFieldsNotToInclude(WIDTH));
-        nonogramRowLogic.setColumnsSequencesIdsNotToInclude(generateEmptyColumnsSequencesNotToInclude(WIDTH));
-
-        nonogramRowLogic.setRowsSequences(generateEmptyRowSequencesLengths(HEIGHT));
-        nonogramRowLogic.setRowsFieldsNotToInclude(generateEmptyRowsFieldsNotToInclude(HEIGHT));
-        nonogramRowLogic.setRowsSequencesIdsNotToInclude(generateEmptyRowsSequencesNotToInclude(HEIGHT));
-
-        nonogramRowLogic.setRowsSequencesRanges(
-                generateEmptyRowSequencesRanges(HEIGHT)
-        );
-    }
 
     @Test
     @DisplayName(value = "Should place X too short empty sequences - o05765 row 25")
@@ -49,7 +25,8 @@ class NonogramRowLogicTest {
         int ROW_TO_TEST = 25;
         int HEIGHT = 30;
         int WIDTH = 30;
-        prepareNonogramRowLogic(HEIGHT, WIDTH);
+        nonogramRowLogic = prepareNonogramRowLogic(HEIGHT, WIDTH);
+        nonogramRowLogic.setNonogramState(buildInitialEmptyNonogramState());
 
         nonogramRowLogic.excludeSequenceInRow(ROW_TO_TEST, 0);
 
@@ -80,12 +57,13 @@ class NonogramRowLogicTest {
 
     @Test
     @DisplayName(value = "Should place X if O will create too long coloured sequence [no changes] - o09983 row 10")
-    void shouldPlaceXIfOWillCreateTooLongColumnColouredSequence() {
+    void shouldPlaceXIfOWillCreateTooLongColumnColouredSequenceCase1() {
         // given
         int ROW_TO_TEST = 10;
         int HEIGHT = 35;
         int WIDTH = 25;
-        prepareNonogramRowLogic(HEIGHT, WIDTH);
+        nonogramRowLogic = prepareNonogramRowLogic(HEIGHT, WIDTH);
+        nonogramRowLogic.setNonogramState(buildInitialEmptyNonogramState());
         nonogramRowLogic.setRowSequencesRanges(ROW_TO_TEST, List.of(
                 List.of(0, 6), List.of(3, 8), List.of(10, 19), List.of(13, 21), List.of(15, 24)
         ));
@@ -118,7 +96,8 @@ class NonogramRowLogicTest {
         int ROW_TO_TEST = 8;
         int HEIGHT = 35;
         int WIDTH = 40;
-        prepareNonogramRowLogic(HEIGHT, WIDTH);
+        nonogramRowLogic = prepareNonogramRowLogic(HEIGHT, WIDTH);
+        nonogramRowLogic.setNonogramState(buildInitialEmptyNonogramState());
         nonogramRowLogic.setRowSequencesRanges(8, new ArrayList<>(Arrays.asList(
                 List.of(0, 13), List.of(2, 18), List.of(13, 27), List.of(18, 29), List.of(25, 33), List.of(37, 39)
         )));
@@ -163,7 +142,8 @@ class NonogramRowLogicTest {
         int ROW_TO_TEST = 8;
         int HEIGHT = 35;
         int WIDTH = 40;
-        prepareNonogramRowLogic(HEIGHT, WIDTH);
+        nonogramRowLogic = prepareNonogramRowLogic(HEIGHT, WIDTH);
+        nonogramRowLogic.setNonogramState(buildInitialEmptyNonogramState());
         nonogramRowLogic.setRowSequencesRanges(ROW_TO_TEST, new ArrayList<>(Arrays.asList(
                 List.of(0, 2), List.of(6, 14), List.of(10, 21), List.of(12, 26), List.of(21, 37), List.of(26, 39)
         )));
@@ -208,7 +188,8 @@ class NonogramRowLogicTest {
         int ROW_TO_TEST = 25;
         int HEIGHT = 30;
         int WIDTH = 25;
-        prepareNonogramRowLogic(HEIGHT, WIDTH);
+        nonogramRowLogic = prepareNonogramRowLogic(HEIGHT, WIDTH);
+        nonogramRowLogic.setNonogramState(buildInitialEmptyNonogramState());
         nonogramRowLogic.setRowSequencesRanges(ROW_TO_TEST, new ArrayList<>(Arrays.asList(
                 List.of(0, 1), List.of(4, 6), List.of(6, 10), List.of(13, 14)
         )));

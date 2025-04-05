@@ -130,16 +130,18 @@ public class NonogramsDataInitializer implements CommandLineRunner {
                 nonogram = new Nonogram(nonogramFileNameWithoutExtension, source, year, month, difficulty, height, width);
 
 
-                updateOldNewNonogramsStats();
+                saveNewNonogramsToDatabaseWithNewAndOldPuzzlesCount();
             } catch(Exception e) {
                 System.out.printf("Parse Exception for filename: %s\n", nonogramFileName);
             }
         }
 
+        log.info("Saving nonograms to DB part is done.");
+
         printStatsIfEnabled();
     }
 
-    private void updateOldNewNonogramsStats() {
+    private void saveNewNonogramsToDatabaseWithNewAndOldPuzzlesCount() {
 
         if (nonogramRepository.existsNonogramByGivenParamsFromFile(nonogramFileNameWithoutExtension, source, year, month, difficulty,
                 height, width).isPresent()) {

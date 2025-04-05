@@ -59,6 +59,27 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         this.actionsToDoList = nonogramLogic.getActionsToDoList();
     }
 
+    public static NonogramRowLogic prepareNonogramRowLogic(int HEIGHT, int WIDTH) {
+        NonogramRowLogic nonogramRowLogic = new NonogramRowLogic();
+
+        nonogramRowLogic.setNonogramSolutionBoard(generateEmptyBoard(HEIGHT, WIDTH));
+        nonogramRowLogic.setNonogramSolutionBoardWithMarks(generateEmptyBoardWithMarks(HEIGHT, WIDTH));
+
+        nonogramRowLogic.setColumnsSequences(generateEmptyColumnSequencesLengths(WIDTH));
+        nonogramRowLogic.setColumnsFieldsNotToInclude(generateEmptyColumnsFieldsNotToInclude(WIDTH));
+        nonogramRowLogic.setColumnsSequencesIdsNotToInclude(generateEmptyColumnsSequencesNotToInclude(WIDTH));
+
+        nonogramRowLogic.setRowsSequences(generateEmptyRowSequencesLengths(HEIGHT));
+        nonogramRowLogic.setRowsFieldsNotToInclude(generateEmptyRowsFieldsNotToInclude(HEIGHT));
+        nonogramRowLogic.setRowsSequencesIdsNotToInclude(generateEmptyRowsSequencesNotToInclude(HEIGHT));
+
+        nonogramRowLogic.setRowsSequencesRanges(
+                generateEmptyRowSequencesRanges(HEIGHT)
+        );
+
+        return nonogramRowLogic;
+    }
+
     @Override
     public void correctRowSequencesRanges(int rowIdx) {
         correctSequencesRangesInRowFromLeft(rowIdx);
@@ -660,7 +681,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
     /**
      * COLOUR_OVERLAPPING_FIELDS_IN_ROW
-     * @param rowIdx - row in which action should be made
+     * @param rowIdx - row in which action should be done
      * fill fields in row where ranges met specific condition (range_length < sequence_length * 2)
      */
     @Override
@@ -768,7 +789,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
     /**
      * EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW
-     * @param rowIdx - row in which action should be made
+     * @param rowIdx - row in which action should be done
      * coloring the fields in row next to the x to the distance of the shortest possible sequence in a given area
      */
     @Override
