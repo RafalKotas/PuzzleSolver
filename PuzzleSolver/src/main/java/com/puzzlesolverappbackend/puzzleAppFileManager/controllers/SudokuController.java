@@ -47,11 +47,11 @@ public class SudokuController {
 
         Gson gson = new Gson();
 
-        FileWriter abc;
+        FileWriter sudokuFileWriter;
         try {
-            abc = new FileWriter("../../puzzle-solver-app/public/resources/Sudoku/" + fileName + JSON_EXTENSION);
-            gson.toJson(nfd, abc);
-            abc.close();
+            sudokuFileWriter = new FileWriter("../../puzzle-solver-app/public/resources/Sudoku/" + fileName + JSON_EXTENSION);
+            gson.toJson(nfd, sudokuFileWriter);
+            sudokuFileWriter.close();
             return new ResponseEntity<>("Save success!", HttpStatus.OK);
         } catch (IOException e) {
             throw new IOException("Can't save sudoku to file");
