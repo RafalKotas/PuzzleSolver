@@ -750,6 +750,8 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
         List<Integer> rowSequenceRange;
         int seqContainingMergedLen;
+
+
         List<Integer> possibleSeqIdsMatchedToFirstColouredSequence;
 
         for (int colouredSeqPartId = 0; colouredSeqPartId < colouredSequencesRanges.size() - 1; colouredSeqPartId++) {
@@ -790,6 +792,50 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
                 this.tmpLog = generateColourStepDescription(rowIdx, fieldColumnIdx,
                         "colour field if X would force too long coloured fields sequence (on left) in row");
+                addLog();
+            }
+        }
+
+        List<Integer> possibleSeqIdsMatchedToSecondColouredSequence;
+
+        for (int colouredSeqPartId = colouredSequencesRanges.size() - 1; colouredSeqPartId > 0; colouredSeqPartId--) {
+            List<Integer> second = colouredSequencesRanges.get(colouredSeqPartId);
+            List<Integer> first = colouredSequencesRanges.get(colouredSeqPartId - 1);
+
+            mergedSequenceStartColumnIdx = first.get(0);
+            mergedSequenceEndColumnIdx = second.get(1);
+            mergePointColumnIdx = first.get(1) + 1;
+
+            possibleSeqIdsMatchedToSecondColouredSequence = possibleColouredSequencesRangesSequencesId.get(second);
+
+            onePossibleSequencesNotMergeToTooLongColouredFieldsSequence = false;
+            for (int seqId : possibleSeqIdsMatchedToSecondColouredSequence) {
+                currentSequenceLength = rowSequencesLengths.get(seqId);
+                if (mergedSequenceEndColumnIdx - currentSequenceLength + 1 > mergePointColumnIdx) {
+                    onePossibleSequencesNotMergeToTooLongColouredFieldsSequence = true;
+                    break;
+                } else {
+                    mergedSequenceRange = List.of(mergedSequenceStartColumnIdx, mergedSequenceEndColumnIdx);
+                    for (int seqIdToCheckIfCanContainMergedRange : possibleSeqIdsMatchedToSecondColouredSequence) {
+                        rowSequenceRange = rowSequencesRanges.get(seqIdToCheckIfCanContainMergedRange);
+                        seqContainingMergedLen = rowSequencesLengths.get(seqIdToCheckIfCanContainMergedRange);
+                        if (rangeInsideAnotherRange(mergedSequenceRange, rowSequenceRange) && rangeLength(mergedSequenceRange) <= seqContainingMergedLen) {
+                            onePossibleSequencesNotMergeToTooLongColouredFieldsSequence = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            int fieldColumnIdx = mergedSequenceEndColumnIdx + 1;
+            Field fieldToColour = new Field(rowIdx, fieldColumnIdx);
+            if (!onePossibleSequencesNotMergeToTooLongColouredFieldsSequence && isFieldEmpty(this.getNonogramSolutionBoard(), fieldToColour)) {
+                this.colourFieldAtGivenPosition(fieldToColour, "R---");
+                this.addRowAndColumnToAffectedByIdentifiers(fieldToColour, NonogramSolveAction.COLOUR_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE);
+                this.nonogramState.increaseMadeSteps();
+
+                this.tmpLog = generateColourStepDescription(rowIdx, fieldColumnIdx,
+                        "colour field if X would force too long coloured fields sequence (on right) in row");
                 addLog();
             }
         }
