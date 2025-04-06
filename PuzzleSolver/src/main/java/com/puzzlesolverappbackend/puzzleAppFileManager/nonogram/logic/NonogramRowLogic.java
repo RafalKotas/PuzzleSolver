@@ -741,34 +741,35 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
         Map<List<Integer>, List<Integer>> possibleColouredSequencesRangesSequencesId = matchColouredSequencesToPossibleSeqIDs(colouredSequencesRanges, rowSequencesRanges);
 
-        int mergedSequenceStartIdx;
-        int mergePointIdx;
-        int mergedSequenceEndIdx;
+        int mergedSequenceStartColumnIdx;
+        int mergePointColumnIdx;
+        int mergedSequenceEndColumnIdx;
         List<Integer> mergedSequenceRange;
         boolean onePossibleSequencesNotMergeToTooLongColouredFieldsSequence;
-        int seqLen;
+        int currentSequenceLength;
 
         List<Integer> rowSequenceRange;
         int seqContainingMergedLen;
+        List<Integer> possibleSeqIdsMatchedToFirstColouredSequence;
 
         for (int colouredSeqPartId = 0; colouredSeqPartId < colouredSequencesRanges.size() - 1; colouredSeqPartId++) {
             List<Integer> first = colouredSequencesRanges.get(colouredSeqPartId);
             List<Integer> second = colouredSequencesRanges.get(colouredSeqPartId + 1);
 
-            mergedSequenceStartIdx = first.get(0);
-            mergePointIdx = second.get(0) - 1;
-            mergedSequenceEndIdx = second.get(1);
+            mergedSequenceStartColumnIdx = first.get(0);
+            mergePointColumnIdx = second.get(0) - 1;
+            mergedSequenceEndColumnIdx = second.get(1);
 
-            List<Integer> possibleSeqIdsMatchedToFirstColouredSequence = possibleColouredSequencesRangesSequencesId.get(first);
+            possibleSeqIdsMatchedToFirstColouredSequence = possibleColouredSequencesRangesSequencesId.get(first);
 
             onePossibleSequencesNotMergeToTooLongColouredFieldsSequence = false;
             for (int seqId : possibleSeqIdsMatchedToFirstColouredSequence) {
-                seqLen = rowSequencesLengths.get(seqId);
-                if (mergedSequenceStartIdx + seqLen - 1 < mergePointIdx) {
+                currentSequenceLength = rowSequencesLengths.get(seqId);
+                if (mergedSequenceStartColumnIdx + currentSequenceLength - 1 < mergePointColumnIdx) {
                     onePossibleSequencesNotMergeToTooLongColouredFieldsSequence = true;
                     break;
                 } else {
-                    mergedSequenceRange = List.of(mergedSequenceStartIdx, mergedSequenceEndIdx);
+                    mergedSequenceRange = List.of(mergedSequenceStartColumnIdx, mergedSequenceEndColumnIdx);
                     for (int seqIdToCheckIfCanContainMergedRange : possibleSeqIdsMatchedToFirstColouredSequence) {
                         rowSequenceRange = rowSequencesRanges.get(seqIdToCheckIfCanContainMergedRange);
                         seqContainingMergedLen = rowSequencesLengths.get(seqIdToCheckIfCanContainMergedRange);
@@ -781,7 +782,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             }
 
             if (!onePossibleSequencesNotMergeToTooLongColouredFieldsSequence) {
-                int fieldColumnIdx = mergedSequenceStartIdx - 1;
+                int fieldColumnIdx = mergedSequenceStartColumnIdx - 1;
                 Field fieldToColour = new Field(rowIdx, fieldColumnIdx);
                 this.colourFieldAtGivenPosition(fieldToColour, "R---");
                 this.addRowAndColumnToAffectedByIdentifiers(fieldToColour, NonogramSolveAction.COLOUR_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE);
