@@ -260,6 +260,12 @@ public class ActionDependencyMap {
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN // base
         ));
 
+        actionDependencies.put(COLOUR_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE, List.of(
+                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
+
+                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE
+        ));
+
         // 20 -> 20
         actionDependencies.put(NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_COLUMN, List.of(
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN, // base
