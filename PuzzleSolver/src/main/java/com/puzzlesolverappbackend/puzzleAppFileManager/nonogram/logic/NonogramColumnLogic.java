@@ -770,9 +770,9 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                 }
             }
 
-            if (!onePossibleSequencesNotMergeToTooLongColouredFieldsSequence) {
-                int fieldRowIdx = mergedSequenceStartRowIdx - 1;
-                Field fieldToColour = new Field(fieldRowIdx, columnIdx);
+            int fieldRowIdx = mergedSequenceStartRowIdx - 1;
+            Field fieldToColour = new Field(fieldRowIdx, columnIdx);
+            if (!onePossibleSequencesNotMergeToTooLongColouredFieldsSequence && isFieldEmpty(this.getNonogramSolutionBoard(), fieldToColour)) {
                 this.colourFieldAtGivenPosition(fieldToColour, "--C-");
                 this.addRowAndColumnToAffectedByIdentifiers(fieldToColour, NonogramSolveAction.COLOUR_FIELDS_IN_COLUMN_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE);
                 this.nonogramState.increaseMadeSteps();

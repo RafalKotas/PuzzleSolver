@@ -781,9 +781,9 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 }
             }
 
-            if (!onePossibleSequencesNotMergeToTooLongColouredFieldsSequence) {
-                int fieldColumnIdx = mergedSequenceStartColumnIdx - 1;
-                Field fieldToColour = new Field(rowIdx, fieldColumnIdx);
+            int fieldColumnIdx = mergedSequenceStartColumnIdx - 1;
+            Field fieldToColour = new Field(rowIdx, fieldColumnIdx);
+            if (!onePossibleSequencesNotMergeToTooLongColouredFieldsSequence && isFieldEmpty(this.getNonogramSolutionBoard(), fieldToColour)) {
                 this.colourFieldAtGivenPosition(fieldToColour, "R---");
                 this.addRowAndColumnToAffectedByIdentifiers(fieldToColour, NonogramSolveAction.COLOUR_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE);
                 this.nonogramState.increaseMadeSteps();

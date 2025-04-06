@@ -22,7 +22,7 @@ public interface ColumnColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHel
             field = new Field(rowIdx, columnIdx);
             if (isFieldColoured(solutionBoard, field)) {
                 if (rowStartIdx == -1) {
-                    rowStartIdx = columnIdx; // first coloured field in range
+                    rowStartIdx = rowIdx; // first coloured field in range
                 }
             } else {
                 if (rowStartIdx != -1) { // coloured range started and field is not coloured
