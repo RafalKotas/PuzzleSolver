@@ -39,8 +39,8 @@ class NonogramSolverTest {
     @DisplayName("Should solve logi nonograms heuristically by difficulty")
     void shouldSolveLogiNonogramsByDifficultyHeuristicsOnly(double difficulty) {
         // given
-        List<String> logiNonogramsNamesDifficulty1 = nonogramRepository.findLogiNonogramsNamesByDifficultySortedByArea(difficulty);
-        assertFalse(logiNonogramsNamesDifficulty1.isEmpty(), "Not found any nonograms which met condition");
+        List<String> logiNonogramsNamesByDifficulty = nonogramRepository.findLogiNonogramsNamesByDifficultySortedByArea(difficulty);
+        assertFalse(logiNonogramsNamesByDifficulty.isEmpty(), "Not found any nonograms which met condition");
 
         NonogramFileDetails currentNonogramDetails;
         NonogramCorrectnessIndicator correctnessIndicator;

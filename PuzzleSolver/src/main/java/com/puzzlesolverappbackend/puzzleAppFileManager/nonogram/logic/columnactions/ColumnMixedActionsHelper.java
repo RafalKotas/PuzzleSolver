@@ -98,7 +98,7 @@ public class ColumnMixedActionsHelper {
 
                 currentRowIdx = potentiallyColouredSequenceRowIdx + 1; // field with this rowIdx is not coloured ("X"/"-")
 
-                if (currentRowIdx > height) {
+                if (currentRowIdx > height - 1) {
                     break;
                 }
 

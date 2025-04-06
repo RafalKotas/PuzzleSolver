@@ -48,7 +48,7 @@ public interface RowPreventExtendingColouredSequenceToExcessLengthHelpers {
 
                 currentColumnIdx = potentiallyColouredSequenceColumnIdx - 1; // field with this columnIdx is not coloured ("X"/"-")
 
-                if (potentiallyColouredSequenceColumnIdx < 0) {
+                if (currentColumnIdx < 0) {
                     break;
                 }
 
@@ -82,7 +82,7 @@ public interface RowPreventExtendingColouredSequenceToExcessLengthHelpers {
         int currentColumnIdx = possibleColouredSequencesStartIndexesRange.get(0);
         int potentiallyColouredSequenceColumnIdx;
 
-        while (currentColumnIdx <= possibleColouredSequencesStartIndexesRange.get(1)) {
+        while (currentColumnIdx <= possibleColouredSequencesStartIndexesRange.get(1) && currentColumnIdx < solutionBoard.get(0).size()) {
 
             if (isFieldColoured(solutionBoard, new Field(rowIdx, currentColumnIdx))) {
                 potentiallyColouredSequenceColumnIdx = currentColumnIdx;
