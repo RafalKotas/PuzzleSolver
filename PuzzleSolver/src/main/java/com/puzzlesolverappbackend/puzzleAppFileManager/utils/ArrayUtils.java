@@ -31,4 +31,24 @@ public class ArrayUtils {
     public static int sumListElements(List<Integer> list) {
         return list.stream().mapToInt(Integer::intValue).sum();
     }
+
+    public static List<String> get2dimArrayRow(List<List<String>> array, int rowIdx) {
+        if (rowIdx >= 0 && rowIdx < array.size()) {
+            return array.get(rowIdx);
+        } else {
+            return null;
+        }
+    }
+
+    public static List<String> get2dimArrayColumn(List<List<String>> array, int columnIdx) {
+        return array.stream()
+                .map(row -> {
+                    if (row != null && columnIdx >= 0 && columnIdx < row.size()) {
+                        return row.get(columnIdx);
+                    } else {
+                        return null;
+                    }
+                })
+                .collect(java.util.stream.Collectors.toList());
+    }
 }

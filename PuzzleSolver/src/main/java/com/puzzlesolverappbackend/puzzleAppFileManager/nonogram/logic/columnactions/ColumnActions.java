@@ -7,6 +7,7 @@ public interface ColumnActions {
     void correctColumnSequencesRangesWhenMatchingFieldsToSequences(int columnIdx);
     void correctColumnSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence(int columnIdx);
     void colourOverlappingFieldsInColumn(int columnIdx);
+    void colourFieldsInColumnIfXWouldForceTooLongColouredFieldsSequence(int columnIdx);
     void extendColouredFieldsNearXToMaximumPossibleLengthInColumn(int columnIdx);
     void placeXsColumnAtUnreachableFields(int columnIdx);
     void placeXsAroundLongestSequencesInColumn(int columnIdx);

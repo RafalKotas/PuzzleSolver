@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.EMPTY_FIELD;
@@ -18,6 +15,8 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramC
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramParametersComparatorHelper.rangesEqual;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicService.filterSequencesRangesIncludingAnotherAndReturnCorrespondingLengths;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicService.rangesListIncludingAnotherRange;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.collectColouredSequencesRangesInColumn;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.matchColouredSequencesToPossibleSeqIDs;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnMixedActionsHelper.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramLogicUtils.colouredSequenceInColumnIsValid;
@@ -713,6 +712,74 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                 if (rangeLength(colouringRange) == this.columnsSequences.get(columnIdx).get(sequenceIdx)) {
                     this.excludeSequenceInColumn(columnIdx, sequenceIdx);
                 }
+            }
+        }
+    }
+
+    /**
+     * COLOUR_FIELDS_IN_COLUMN_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE
+     * @param columnIdx - row in which action should be done
+     */
+    @Override
+    public void colourFieldsInColumnIfXWouldForceTooLongColouredFieldsSequence(int columnIdx) {
+        List<Integer> columnSequencesLengths = this.getColumnsSequences().get(columnIdx);
+
+        List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
+
+        List<List<Integer>> colouredSequencesRanges = collectColouredSequencesRangesInColumn(this.getNonogramSolutionBoard(), columnIdx);
+
+        Map<List<Integer>, List<Integer>> possibleColouredSequencesRangesSequencesId = matchColouredSequencesToPossibleSeqIDs(colouredSequencesRanges, columnSequencesRanges);
+
+        int mergedSequenceStartRowIdx;
+        int mergePointRowIdx;
+        int mergedSequenceEndRowIdx;
+        List<Integer> mergedSequenceRange;
+        boolean onePossibleSequencesNotMergeToTooLongColouredFieldsSequence;
+        int currentSequenceLength;
+
+        List<Integer> columnSequenceRange;
+        int seqContainingMergedLen;
+        List<Integer> possibleSeqIdsMatchedToFirstColouredSequence;
+
+        for (int colouredSeqPartId = 0; colouredSeqPartId < colouredSequencesRanges.size() - 1; colouredSeqPartId++) {
+            List<Integer> first = colouredSequencesRanges.get(colouredSeqPartId);
+            List<Integer> second = colouredSequencesRanges.get(colouredSeqPartId + 1);
+
+            mergedSequenceStartRowIdx = first.get(0);
+            mergePointRowIdx = second.get(0) - 1;
+            mergedSequenceEndRowIdx = second.get(1);
+
+            possibleSeqIdsMatchedToFirstColouredSequence = possibleColouredSequencesRangesSequencesId.get(first);
+
+            onePossibleSequencesNotMergeToTooLongColouredFieldsSequence = false;
+            for (int seqId : possibleSeqIdsMatchedToFirstColouredSequence) {
+                currentSequenceLength = columnSequencesLengths.get(seqId);
+                if (mergedSequenceStartRowIdx + currentSequenceLength - 1 < mergePointRowIdx) {
+                    onePossibleSequencesNotMergeToTooLongColouredFieldsSequence = true;
+                    break;
+                } else {
+                    mergedSequenceRange = List.of(mergedSequenceStartRowIdx, mergedSequenceEndRowIdx);
+                    for (int seqIdToCheckIfCanContainMergedRange : possibleSeqIdsMatchedToFirstColouredSequence) {
+                        columnSequenceRange = columnSequencesRanges.get(seqIdToCheckIfCanContainMergedRange);
+                        seqContainingMergedLen = columnSequencesLengths.get(seqIdToCheckIfCanContainMergedRange);
+                        if (rangeInsideAnotherRange(mergedSequenceRange, columnSequenceRange) && rangeLength(mergedSequenceRange) <= seqContainingMergedLen) {
+                            onePossibleSequencesNotMergeToTooLongColouredFieldsSequence = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!onePossibleSequencesNotMergeToTooLongColouredFieldsSequence) {
+                int fieldRowIdx = mergedSequenceStartRowIdx - 1;
+                Field fieldToColour = new Field(fieldRowIdx, columnIdx);
+                this.colourFieldAtGivenPosition(fieldToColour, "--C-");
+                this.addRowAndColumnToAffectedByIdentifiers(fieldToColour, NonogramSolveAction.COLOUR_FIELDS_IN_COLUMN_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE);
+                this.nonogramState.increaseMadeSteps();
+
+                this.tmpLog = generateColourStepDescription(columnIdx, fieldRowIdx,
+                        "colour field if X would force too long coloured fields sequence (on left) in row");
+                addLog();
             }
         }
     }
