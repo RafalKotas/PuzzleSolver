@@ -94,11 +94,11 @@ public interface RowPreventExtendingColouredSequenceToExcessLengthHelpers {
 
                 currentColumnIdx = potentiallyColouredSequenceColumnIdx + 1; // field with this columnIdx is not coloured ("X"/"-")
 
-                if (currentColumnIdx > width) {
+                if (currentColumnIdx > width - 1) {
                     break;
                 }
 
-                if(isFieldWithX(solutionBoard, new Field(rowIdx, currentColumnIdx))) {
+                if (isFieldWithX(solutionBoard, new Field(rowIdx, currentColumnIdx))) {
                     fieldWithXFound = true;
                 }
             } else if (isFieldWithX(solutionBoard, new Field(rowIdx, currentColumnIdx))) {
