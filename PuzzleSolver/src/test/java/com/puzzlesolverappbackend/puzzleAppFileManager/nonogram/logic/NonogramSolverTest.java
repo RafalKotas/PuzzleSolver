@@ -54,7 +54,7 @@ class NonogramSolverTest {
         int orderId = 1;
 
         // when
-        for (String filename : logiNonogramsNamesDifficulty1) {
+        for (String filename : logiNonogramsNamesByDifficulty) {
             Path filePath = Paths.get(projectRootPath, "../FrontReact", "public", "resources", "Nonograms", filename + JSON_EXTENSION);
             currentNonogramDetails = nonogramService.getNonogramDetailsFromFile(filePath.toString());
             correctnessIndicator = nonogramService.checkNonogramCorrectness(currentNonogramDetails);
