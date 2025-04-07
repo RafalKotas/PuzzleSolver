@@ -970,32 +970,6 @@ public class NonogramLogic extends NonogramLogicParams {
                 // empty
             }
 
-            if (this.getNonogramRowLogic().getRowsSequencesRanges().get(10).getClass().getName().startsWith("java.util.Collections$Unmodifiable")) {
-                System.out.println("abc");
-            }
-
-            if (
-                    this.getNonogramSolutionBoard().get(10).equals(List.of("X", "-", "-", "-", "-", "-", "O", "O", "-", "-", "O", "-", "-", "-", "O", "-", "-", "-", "-", "-", "-", "-", "O", "O", "-", "-", "-", "-", "-", "-"))
-                            && this.getRowsSequencesRanges().get(10).get(0).equals(List.of(1, 12))
-                            && this.getRowsSequencesRanges().get(10).get(1).equals(List.of(9, 17))
-                            && this.getRowsSequencesRanges().get(10).get(2).equals(List.of(14, 23))
-                            && this.getRowsSequencesRanges().get(10).get(3).equals(List.of(20, 29))
-            ) {
-                System.out.println("abc");
-            }
-
-//            if (this.getRowsSequencesRanges().get(10).get(0).equals(List.of(1, 12))
-//                    && this.getRowsSequencesRanges().get(10).get(1).equals(List.of(9, 17))
-//                    && this.getRowsSequencesRanges().get(10).get(2).equals(List.of(14, 23))
-//                    && this.getRowsSequencesRanges().get(10).get(3).equals(List.of(20, 29))
-//                    && isFieldColoured(this.getNonogramSolutionBoard(), new Field(10, 6))
-//                    && isFieldColoured(this.getNonogramSolutionBoard(), new Field(10, 7))
-//                    && isFieldColoured(this.getNonogramSolutionBoard(), new Field(10, 9))
-//                    && isFieldColoured(this.getNonogramSolutionBoard(), new Field(10, 10))
-//                    && isFieldColoured(this.getNonogramSolutionBoard(), new Field(10, 14))) {
-//                System.out.println("abc");
-//            }
-
             if (this.guessMode == GuessMode.ENABLED && this.nonogramState.isInvalidSolution()) {
                 break;
             }
@@ -1075,7 +1049,7 @@ public class NonogramLogic extends NonogramLogicParams {
                 }
             }
             case CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY -> {
-                this.nonogramRowLogic.correctRowSequencesRangesIfXOnWay(rowIdx);
+                this.nonogramRowLogic.correctRowSequencesRangesIfXOnWay(rowIdx, true);
                 if (this.guessMode == GuessMode.ENABLED) {
                     invalidateSolutionIfRowSequencesWrong(rowIdx);
                 }

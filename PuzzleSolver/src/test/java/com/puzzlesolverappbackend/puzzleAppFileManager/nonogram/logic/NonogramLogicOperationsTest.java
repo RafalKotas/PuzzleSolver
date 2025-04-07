@@ -443,7 +443,7 @@ class NonogramLogicOperationsTest {
         /* 2 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx, true);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -525,7 +525,7 @@ class NonogramLogicOperationsTest {
         /* 2 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx, true);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -599,7 +599,7 @@ class NonogramLogicOperationsTest {
         /* 2 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx, true);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -695,7 +695,7 @@ class NonogramLogicOperationsTest {
         /* 2 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx, true);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -783,7 +783,7 @@ class NonogramLogicOperationsTest {
         /* 2 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx, true);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -890,7 +890,7 @@ class NonogramLogicOperationsTest {
         /* 2 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx, true);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -1007,7 +1007,7 @@ class NonogramLogicOperationsTest {
         /* 2 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx, true);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 
@@ -1119,7 +1119,7 @@ class NonogramLogicOperationsTest {
         /* 2 */
         o06005_difficulty_1.copyLogicToNonogramRowLogic();
         for (int rowIdx : IntStream.rangeClosed(0, o06005_difficulty_1.getHeight() - 1).boxed().toList()) {
-            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx);
+            o06005_difficulty_1.getNonogramRowLogic().correctRowSequencesRangesIfXOnWay(rowIdx, true);
         }
         o06005_difficulty_1.copyLogicFromNonogramRowLogic();
 

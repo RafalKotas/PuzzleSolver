@@ -3,7 +3,7 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowaction
 public interface RowActions {
     void correctRowSequencesRanges(int rowIdx);
     void correctRowSequencesRangesWhenMetColouredField(int rowIdx);
-    void correctRowSequencesRangesIfXOnWay(int rowIdx);
+    void correctRowSequencesRangesIfXOnWay(int rowIdx, boolean changeLogicDetails);
     void correctRowSequencesRangesWhenMatchingFieldsToSequences(int rowIdx);
     void correctRowSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence(int rowIdx);
     void colourOverlappingFieldsInRow(int rowIdx);

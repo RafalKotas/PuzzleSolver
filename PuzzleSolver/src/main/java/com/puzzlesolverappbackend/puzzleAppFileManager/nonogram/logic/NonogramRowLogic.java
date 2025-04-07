@@ -366,7 +366,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
      * @param rowIdx - column to correct sequence/s range/s if x on way (sequence won't fit)
      */
     @Override
-    public void correctRowSequencesRangesIfXOnWay(int rowIdx) {
+    public void correctRowSequencesRangesIfXOnWay(int rowIdx, boolean changeLogicDetails) {
 
         boolean rowSequenceRangesChanged = false;
 
@@ -395,14 +395,14 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                     this.tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, seqNo, rowSequenceRange, updatedRange, "\"X\" on way");
                     addLog();
                     this.updateRowSequenceRange(rowIdx, seqNo, updatedRange);
-                    if (rangeLength(updatedRange) == rowSequenceLength && isColumnRangeColoured(rowIdx, updatedRange)) {
+                    if (changeLogicDetails && rangeLength(updatedRange) == rowSequenceLength && isColumnRangeColoured(rowIdx, updatedRange)) {
                         this.excludeSequenceInRow(rowIdx, seqNo);
                     }
                 }
             }
         }
 
-        if (rowSequenceRangesChanged) {
+        if (changeLogicDetails && rowSequenceRangesChanged) {
             this.nonogramState.increaseMadeSteps();
             addRowToAffectedActionsByIdentifiers(rowIdx, NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY);
         }
@@ -766,7 +766,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             fieldWithTemporaryX = new Field(rowIdx, mergedSequenceStartColumnIdx - 1);
             if (isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithTemporaryX)) {
                 placeXAtGivenField(fieldWithTemporaryX, false);
-                correctRowSequencesRangesIfXOnWay(rowIdx);
+                correctRowSequencesRangesIfXOnWay(rowIdx, false);
                 clearField(fieldWithTemporaryX);
             }
 
@@ -820,7 +820,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             fieldWithTemporaryX = new Field(rowIdx, mergedSequenceEndColumnIdx + 1);
             if (isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithTemporaryX)) {
                 placeXAtGivenField(fieldWithTemporaryX, false);
-                correctRowSequencesRangesIfXOnWay(rowIdx);
+                correctRowSequencesRangesIfXOnWay(rowIdx, false);
                 clearField(fieldWithTemporaryX);
             }
 

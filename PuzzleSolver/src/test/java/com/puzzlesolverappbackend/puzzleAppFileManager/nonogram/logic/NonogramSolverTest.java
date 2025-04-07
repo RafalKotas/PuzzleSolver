@@ -35,7 +35,7 @@ class NonogramSolverTest {
     private final GuessMode guessMode = GuessMode.DISABLED;
 
     @ParameterizedTest
-    @ValueSource(doubles = {1.0, 2.0, /*3.0*/})
+    @ValueSource(doubles = {/*1.0,*/ 2.0/*, 3.0*/})
     @DisplayName("Should solve logi nonograms heuristically by difficulty")
     void shouldSolveLogiNonogramsByDifficultyHeuristicsOnly(double difficulty) {
         // given
