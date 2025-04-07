@@ -426,9 +426,7 @@ public class NonogramLogicService {
                             firstXFieldToExclude = new Field(rowIdx, firstXColumnIndex);
                             if (firstXColumnIndex >= 0) {
                                 if (isFieldEmpty(nonogramRowLogicDataToChange, firstXFieldToExclude)) {
-                                    nonogramRowLogicDataToChange.placeXAtGivenField(firstXFieldToExclude);
-                                    nonogramRowLogicDataToChange.excludeFieldInRow(firstXFieldToExclude);
-                                    nonogramRowLogicDataToChange.excludeFieldInColumn(firstXFieldToExclude);
+                                    nonogramRowLogicDataToChange.placeXAtGivenField(firstXFieldToExclude, true);
 
                                     nonogramRowLogicDataToChange.getNonogramState().increaseMadeSteps();
 
@@ -470,9 +468,7 @@ public class NonogramLogicService {
                     if (sequenceOnBoardLength == Collections.max(rowSequencesLengthsIncludingSequenceRange)) {
                         firstXFieldToExclude = new Field(rowIdx, firstXColumnIndex);
                         if (isFieldEmpty(nonogramRowLogicDataToChange, firstXFieldToExclude)) {
-                            nonogramRowLogicDataToChange.placeXAtGivenField(firstXFieldToExclude);
-                            nonogramRowLogicDataToChange.excludeFieldInRow(firstXFieldToExclude);
-                            nonogramRowLogicDataToChange.excludeFieldInColumn(firstXFieldToExclude);
+                            nonogramRowLogicDataToChange.placeXAtGivenField(firstXFieldToExclude, true);
 
                             nonogramLogicObject.getNonogramState().increaseMadeSteps();
                         } else if (this.showRepetitions) {
@@ -481,9 +477,7 @@ public class NonogramLogicService {
 
                         lastXFieldToExclude = new Field(rowIdx, lastXColumnIndex);
                         if (isFieldEmpty(nonogramRowLogicDataToChange, lastXFieldToExclude)) {
-                            nonogramRowLogicDataToChange.placeXAtGivenField(lastXFieldToExclude);
-                            nonogramRowLogicDataToChange.excludeFieldInRow(lastXFieldToExclude);
-                            nonogramRowLogicDataToChange.excludeFieldInColumn(lastXFieldToExclude);
+                            nonogramRowLogicDataToChange.placeXAtGivenField(lastXFieldToExclude, true);
                             nonogramLogicObject.copyLogicFromNonogramRowLogic();
                             nonogramLogicObject.getNonogramState().increaseMadeSteps();
                         } else if (this.showRepetitions) {

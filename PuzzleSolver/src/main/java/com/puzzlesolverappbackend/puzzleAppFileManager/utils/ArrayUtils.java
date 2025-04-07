@@ -2,6 +2,8 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.utils;
 
 import lombok.experimental.UtilityClass;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @UtilityClass
@@ -50,5 +52,25 @@ public class ArrayUtils {
                     }
                 })
                 .collect(java.util.stream.Collectors.toList());
+    }
+
+    public static <T> List<List<T>> cloneAndMakeImmutable2DList(List<List<T>> original) {
+        List<List<T>> cloned = new ArrayList<>();
+        for (List<T> innerList : original) {
+            cloned.add(List.copyOf(innerList));
+        }
+        return Collections.unmodifiableList(cloned);
+    }
+
+    public static <T> List<List<T>> mutableClone2DList(List<List<T>> original) {
+        List<List<T>> cloned = new ArrayList<>();
+        for (List<T> innerList : original) {
+            cloned.add(new ArrayList<>(innerList));
+        }
+        return cloned;
+    }
+
+    public static <T> List<T> immutableCloneList(List<T> original) {
+        return List.copyOf(original);
     }
 }

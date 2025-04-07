@@ -22,8 +22,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.Non
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramCreatorUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramLogicUtils.colouredSequenceInRowIsValid;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramSequenceReducer.reduceMatches;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeInsideAnotherRange;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeLength;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.*;
 
 @Setter
 @Getter
@@ -371,9 +370,9 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
         boolean rowSequenceRangesChanged = false;
 
-        List<Integer> rowSequencesLengths = this.getRowsSequences().get(rowIdx);
+        List<Integer> rowSequencesLengths = List.copyOf(this.getRowsSequences().get(rowIdx));
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
-        List<Integer> excludedRowSequences = this.getRowsSequencesIdsNotToInclude().get(rowIdx);
+        List<Integer> excludedRowSequences = List.copyOf(this.getRowsSequencesIdsNotToInclude().get(rowIdx));
         int rowSequenceLength;
         List<Integer> rowSequenceRange;
 
@@ -735,11 +734,11 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
     public void colourFieldsIfInRowXWouldForceTooLongColouredFieldsSequence(int rowIdx) {
         List<Integer> rowSequencesLengths = this.getRowsSequences().get(rowIdx);
 
-        List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
+        List<List<Integer>> oldRowSequencesRanges = cloneAndMakeImmutable2DList(this.getRowsSequencesRanges().get(rowIdx));
 
         List<List<Integer>> colouredSequencesRanges = collectColouredSequencesRangesInRow(this.getNonogramSolutionBoard(), rowIdx);
 
-        Map<List<Integer>, List<Integer>> possibleColouredSequencesRangesSequencesId = matchColouredSequencesToPossibleSeqIDs(colouredSequencesRanges, rowSequencesRanges);
+        Map<List<Integer>, List<Integer>> possibleColouredSequencesRangesSequencesId;
 
         int mergedSequenceStartColumnIdx;
         int mergePointColumnIdx;
@@ -754,6 +753,8 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
         List<Integer> possibleSeqIdsMatchedToFirstColouredSequence;
 
+        Field fieldWithTemporaryX;
+
         for (int colouredSeqPartId = 0; colouredSeqPartId < colouredSequencesRanges.size() - 1; colouredSeqPartId++) {
             List<Integer> first = colouredSequencesRanges.get(colouredSeqPartId);
             List<Integer> second = colouredSequencesRanges.get(colouredSeqPartId + 1);
@@ -761,6 +762,15 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             mergedSequenceStartColumnIdx = first.get(0);
             mergePointColumnIdx = second.get(0) - 1;
             mergedSequenceEndColumnIdx = second.get(1);
+
+            fieldWithTemporaryX = new Field(rowIdx, mergedSequenceStartColumnIdx - 1);
+            if (isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithTemporaryX)) {
+                placeXAtGivenField(fieldWithTemporaryX, false);
+                correctRowSequencesRangesIfXOnWay(rowIdx);
+                clearField(fieldWithTemporaryX);
+            }
+
+            possibleColouredSequencesRangesSequencesId = matchColouredSequencesToPossibleSeqIDs(colouredSequencesRanges, this.getRowsSequencesRanges().get(rowIdx));
 
             possibleSeqIdsMatchedToFirstColouredSequence = possibleColouredSequencesRangesSequencesId.get(first);
 
@@ -773,7 +783,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 } else {
                     mergedSequenceRange = List.of(mergedSequenceStartColumnIdx, mergedSequenceEndColumnIdx);
                     for (int seqIdToCheckIfCanContainMergedRange : possibleSeqIdsMatchedToFirstColouredSequence) {
-                        rowSequenceRange = rowSequencesRanges.get(seqIdToCheckIfCanContainMergedRange);
+                        rowSequenceRange = this.getRowsSequencesRanges().get(rowIdx).get(seqIdToCheckIfCanContainMergedRange);
                         seqContainingMergedLen = rowSequencesLengths.get(seqIdToCheckIfCanContainMergedRange);
                         if (rangeInsideAnotherRange(mergedSequenceRange, rowSequenceRange) && rangeLength(mergedSequenceRange) <= seqContainingMergedLen) {
                             onePossibleSequencesNotMergeToTooLongColouredFieldsSequence = true;
@@ -785,15 +795,16 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
             int fieldColumnIdx = mergedSequenceStartColumnIdx - 1;
             Field fieldToColour = new Field(rowIdx, fieldColumnIdx);
-            if (!onePossibleSequencesNotMergeToTooLongColouredFieldsSequence && isFieldEmpty(this.getNonogramSolutionBoard(), fieldToColour)) {
+            if (!onePossibleSequencesNotMergeToTooLongColouredFieldsSequence) {
                 this.colourFieldAtGivenPosition(fieldToColour, "R---");
                 this.addRowAndColumnToAffectedByIdentifiers(fieldToColour, NonogramSolveAction.COLOUR_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE);
                 this.nonogramState.increaseMadeSteps();
-
                 this.tmpLog = generateColourStepDescription(rowIdx, fieldColumnIdx,
                         "colour field if X would force too long coloured fields sequence (on left) in row");
                 addLog();
             }
+
+            setRowSequencesRanges(rowIdx, mutableClone2DList(oldRowSequencesRanges));
         }
 
         List<Integer> possibleSeqIdsMatchedToSecondColouredSequence;
@@ -806,6 +817,15 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             mergedSequenceEndColumnIdx = second.get(1);
             mergePointColumnIdx = first.get(1) + 1;
 
+            fieldWithTemporaryX = new Field(rowIdx, mergedSequenceEndColumnIdx + 1);
+            if (isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithTemporaryX)) {
+                placeXAtGivenField(fieldWithTemporaryX, false);
+                correctRowSequencesRangesIfXOnWay(rowIdx);
+                clearField(fieldWithTemporaryX);
+            }
+
+            possibleColouredSequencesRangesSequencesId = matchColouredSequencesToPossibleSeqIDs(colouredSequencesRanges, this.getRowsSequencesRanges().get(rowIdx));
+
             possibleSeqIdsMatchedToSecondColouredSequence = possibleColouredSequencesRangesSequencesId.get(second);
 
             onePossibleSequencesNotMergeToTooLongColouredFieldsSequence = false;
@@ -817,7 +837,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 } else {
                     mergedSequenceRange = List.of(mergedSequenceStartColumnIdx, mergedSequenceEndColumnIdx);
                     for (int seqIdToCheckIfCanContainMergedRange : possibleSeqIdsMatchedToSecondColouredSequence) {
-                        rowSequenceRange = rowSequencesRanges.get(seqIdToCheckIfCanContainMergedRange);
+                        rowSequenceRange = this.getRowsSequencesRanges().get(rowIdx).get(seqIdToCheckIfCanContainMergedRange);
                         seqContainingMergedLen = rowSequencesLengths.get(seqIdToCheckIfCanContainMergedRange);
                         if (rangeInsideAnotherRange(mergedSequenceRange, rowSequenceRange) && rangeLength(mergedSequenceRange) <= seqContainingMergedLen) {
                             onePossibleSequencesNotMergeToTooLongColouredFieldsSequence = true;
@@ -829,7 +849,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
             int fieldColumnIdx = mergedSequenceEndColumnIdx + 1;
             Field fieldToColour = new Field(rowIdx, fieldColumnIdx);
-            if (!onePossibleSequencesNotMergeToTooLongColouredFieldsSequence && isFieldEmpty(this.getNonogramSolutionBoard(), fieldToColour)) {
+            if (!onePossibleSequencesNotMergeToTooLongColouredFieldsSequence) {
                 this.colourFieldAtGivenPosition(fieldToColour, "R---");
                 this.addRowAndColumnToAffectedByIdentifiers(fieldToColour, NonogramSolveAction.COLOUR_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE);
                 this.nonogramState.increaseMadeSteps();
@@ -838,6 +858,8 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                         "colour field if X would force too long coloured fields sequence (on right) in row");
                 addLog();
             }
+
+            setRowSequencesRanges(rowIdx, mutableClone2DList(oldRowSequencesRanges));
         }
     }
 
@@ -1041,7 +1063,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             if (!existRangeIncludingColumn) {
                 fieldToExclude = new Field(rowIdx, columnIdx);
                 if (isFieldEmpty(this.nonogramSolutionBoard, fieldToExclude)) {
-                    this.placeXAtGivenField(fieldToExclude);
+                    this.placeXAtGivenField(fieldToExclude, true);
                     this.addRowAndColumnToAffectedByIdentifiers(fieldToExclude, NonogramSolveAction.PLACE_XS_ROW_AT_UNREACHABLE_FIELDS);
 
                     this.tmpLog = generatePlacingXStepDescription(rowIdx, columnIdx, "placing \"X\" at unreachable field");
@@ -1149,7 +1171,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             addLogWhenPlacingXAroundLongestSequence(rowIdx, currentColumnIndex, xAtEdges, logEndPart);
 
             Field fieldToExclude = new Field(rowIdx, currentColumnIndex);
-            this.placeXAtGivenField(fieldToExclude);
+            this.placeXAtGivenField(fieldToExclude, true);
             this.addRowAndColumnToAffectedByIdentifiers(fieldAtEdge, NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES);
 
             this.nonogramState.increaseMadeSteps();
@@ -1254,7 +1276,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                         for (int emptyFieldColumnIdx = emptyFieldsRange.get(0); emptyFieldColumnIdx <= emptyFieldsRange.get(1); emptyFieldColumnIdx++) {
                             fieldToExclude = new Field(rowIdx, emptyFieldColumnIdx);
                             if (isFieldEmpty(this.nonogramSolutionBoard, fieldToExclude)) {
-                                this.placeXAtGivenField(fieldToExclude);
+                                this.placeXAtGivenField(fieldToExclude, true);
                                 this.addColumnToAffectedActionsByIdentifiers(emptyFieldColumnIdx, NonogramSolveAction.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES);
 
                                 this.tmpLog = generatePlacingXStepDescription(rowIdx, emptyFieldColumnIdx, "placing \"X\" inside too short empty fields sequence");
@@ -1335,7 +1357,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             fieldWithPreviousColumnColoured = new Field(rowIdx, previousColumnIndex);
             colouredSequenceValid = colouredSequenceInRowIsValid(mergedSequenceWithFieldAddedBefore, rowIdx, this);
             if (!colouredSequenceValid && isColumnIndexValid(previousColumnIndex) && isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithPreviousColumnColoured)) {
-                this.placeXAtGivenField(fieldWithPreviousColumnColoured);
+                this.placeXAtGivenField(fieldWithPreviousColumnColoured, true);
                 this.addRowAndColumnToAffectedByIdentifiers(fieldWithPreviousColumnColoured, NonogramSolveAction.PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
 
                 this.tmpLog = generatePlacingXStepDescription(rowIdx, previousColumnIndex,
@@ -1360,7 +1382,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 fieldWithNextColumnColoured = new Field(rowIdx, nextColumnIndex);
                 colouredSequenceValid = colouredSequenceInRowIsValid(mergedSequenceWithFieldAddedAfter, rowIdx, this);
                 if (!colouredSequenceValid && isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithNextColumnColoured)) {
-                    this.placeXAtGivenField(fieldWithNextColumnColoured);
+                    this.placeXAtGivenField(fieldWithNextColumnColoured, true);
                     this.addRowAndColumnToAffectedByIdentifiers(fieldWithNextColumnColoured, NonogramSolveAction.PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
 
                     this.tmpLog = generatePlacingXStepDescription(rowIdx, nextColumnIndex,
@@ -1423,7 +1445,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                                 sequencesIdsWhichWillBeginTooLongPossibleColoured.stream().allMatch(seqNo -> mergedSequenceLength > rowSequencesLengths.get(seqNo))) {
                             Field emptyFieldNearX = new Field(rowIdx, emptyFieldsRange.get(1));
                             if (isFieldEmpty(this.getNonogramSolutionBoard(), emptyFieldNearX)) {
-                                this.placeXAtGivenField(emptyFieldNearX);
+                                this.placeXAtGivenField(emptyFieldNearX, true);
                                 this.addColumnToAffectedActionsByIdentifiers(emptyFieldNearX.getColumnIdx(), NonogramSolveAction.PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE);
 
                                 this.tmpLog = generatePlacingXStepDescription(columnIdx, rowIdx, "placing \"X\" when \"O\" near \"X\" will begin too long possible coloured sequence");
@@ -1467,7 +1489,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                                 sequencesIdsWhichWillBeginTooLongPossibleColoured.stream().allMatch(seqNo -> mergedSequenceLength > rowSequencesLengths.get(seqNo))) {
                             Field emptyFieldNearX = new Field(rowIdx, emptyFieldsRange.get(0));
                             if (isFieldEmpty(this.getNonogramSolutionBoard(), emptyFieldNearX)) {
-                                this.placeXAtGivenField(emptyFieldNearX);
+                                this.placeXAtGivenField(emptyFieldNearX, true);
                                 this.addColumnToAffectedActionsByIdentifiers(emptyFieldNearX.getColumnIdx(), NonogramSolveAction.PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE);
 
                                 this.tmpLog = generatePlacingXStepDescription(columnIdx, rowIdx, "placing \"X\" when \"O\" near \"X\" will begin too long possible coloured sequence");
@@ -1672,7 +1694,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                         }
 
                         Field fieldToPlaceX = new Field(rowIdx, colouredSequenceColStartIdx - 1);
-                        this.placeXAtGivenField(fieldToPlaceX);
+                        this.placeXAtGivenField(fieldToPlaceX, true);
                         this.addColumnToAffectedActionsByIdentifiers(fieldToPlaceX.getColumnIdx(), NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART);
 
                         // moreover - only one id is valid -> can correct sequence range
@@ -1751,7 +1773,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                         }
 
                         Field fieldToPlaceX = new Field(rowIdx, colouredSequenceEndColumnIndex + 1);
-                        this.placeXAtGivenField(fieldToPlaceX);
+                        this.placeXAtGivenField(fieldToPlaceX, true);
                         this.addColumnToAffectedActionsByIdentifiers(fieldToPlaceX.getColumnIdx(), NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART);
 
                         if (validSequencesIds.size() == 1) {

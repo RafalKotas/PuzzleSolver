@@ -289,20 +289,36 @@ public abstract class NonogramLogicParams {
 
 
     protected void placeXAtGivenFields(List<Field> x_fields) {
-        x_fields.forEach(this::placeXAtGivenField);
+        x_fields.forEach(field -> {
+            placeXAtGivenField(field, true);
+        });
     }
 
     /**
      * @param x_field - field to place "X"
      */
-    public void placeXAtGivenField(Field x_field) {
+    public void placeXAtGivenField(Field x_field, boolean exclude) {
         int fieldColIdx = x_field.getColumnIdx();
         int fieldRowIdx = x_field.getRowIdx();
-        this.excludeFieldInRow(x_field);
-        this.excludeFieldInColumn(x_field);
+        if (exclude) {
+            this.excludeFieldInRow(x_field);
+            this.excludeFieldInColumn(x_field);
+        }
         if (areFieldIndexesValid(x_field)) {
             this.nonogramSolutionBoard.get(fieldRowIdx).set(fieldColIdx, X_FIELD);
             this.nonogramSolutionBoardWithMarks.get(fieldRowIdx).set(fieldColIdx, X_FIELD.repeat(4));
+        }
+    }
+
+    /**
+     * @param x_field - field to place "X"
+     */
+    public void clearField(Field x_field) {
+        int fieldColIdx = x_field.getColumnIdx();
+        int fieldRowIdx = x_field.getRowIdx();
+        if (areFieldIndexesValid(x_field)) {
+            this.nonogramSolutionBoard.get(fieldRowIdx).set(fieldColIdx, "-");
+            this.nonogramSolutionBoardWithMarks.get(fieldRowIdx).set(fieldColIdx, "-".repeat(4));
         }
     }
 

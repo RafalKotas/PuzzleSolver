@@ -3,7 +3,7 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowaction
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.Field;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +43,8 @@ public interface RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelper
             List<List<Integer>> colouredSequences,
             List<List<Integer>> rowSequencesRanges
     ) {
-        Map<List<Integer>, List<Integer>> mapping = new HashMap<>();
+        // order of added elements is crucial
+        Map<List<Integer>, List<Integer>> mapping = new LinkedHashMap<>();
 
         for (List<Integer> coloured : colouredSequences) {
             int start = coloured.get(0);
