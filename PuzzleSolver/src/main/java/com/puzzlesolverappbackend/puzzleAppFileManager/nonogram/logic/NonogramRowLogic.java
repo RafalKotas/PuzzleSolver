@@ -1358,7 +1358,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             colouredSequenceValid = colouredSequenceInRowIsValid(mergedSequenceWithFieldAddedBefore, rowIdx, this);
             if (!colouredSequenceValid && isColumnIndexValid(previousColumnIndex) && isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithPreviousColumnColoured)) {
                 this.placeXAtGivenField(fieldWithPreviousColumnColoured, true);
-                this.addRowAndColumnToAffectedByIdentifiers(fieldWithPreviousColumnColoured, NonogramSolveAction.PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
+                this.addRowAndColumnToAffectedByIdentifiers(fieldWithPreviousColumnColoured, NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
 
                 this.tmpLog = generatePlacingXStepDescription(rowIdx, previousColumnIndex,
                         "placing \"X\" because \"O\" will create too long sequence");
@@ -1383,7 +1383,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 colouredSequenceValid = colouredSequenceInRowIsValid(mergedSequenceWithFieldAddedAfter, rowIdx, this);
                 if (!colouredSequenceValid && isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithNextColumnColoured)) {
                     this.placeXAtGivenField(fieldWithNextColumnColoured, true);
-                    this.addRowAndColumnToAffectedByIdentifiers(fieldWithNextColumnColoured, NonogramSolveAction.PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
+                    this.addRowAndColumnToAffectedByIdentifiers(fieldWithNextColumnColoured, NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
 
                     this.tmpLog = generatePlacingXStepDescription(rowIdx, nextColumnIndex,
                             "placing \"X\" because \"O\" will create too long sequence");
