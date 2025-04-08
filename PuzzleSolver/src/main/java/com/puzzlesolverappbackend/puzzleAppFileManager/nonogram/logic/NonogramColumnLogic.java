@@ -1648,6 +1648,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
 
         for (int rowIdx = 0; rowIdx < this.getHeight() - 1; rowIdx++) {
             fieldToCheckX = new Field(rowIdx, columnIdx);
+
             if (isFieldWithX(this.getNonogramSolutionBoard(), fieldToCheckX)) {
                 potentiallyColouredFieldRowIndex = fieldToCheckX.getRowIdx() + 1;
                 fieldToCheckColoured = new Field(potentiallyColouredFieldRowIndex, fieldToCheckX.getColumnIdx());
