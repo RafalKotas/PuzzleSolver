@@ -350,7 +350,7 @@ public class ActionDependencyMap {
 //                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES, // no improvement
 //                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS, // no improvement
 //                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY, // no improvement
-//                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES, // no improvement
+                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES,
 //                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE, // no improvement
 //                NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_COLUMN, // no improvement
 //                NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN, // no improvement

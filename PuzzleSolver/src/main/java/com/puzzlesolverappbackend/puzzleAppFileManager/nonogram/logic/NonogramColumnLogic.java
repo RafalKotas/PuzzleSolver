@@ -17,6 +17,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.Non
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicService.rangesListIncludingAnotherRange;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.collectColouredSequencesRangesInColumn;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.matchColouredSequencesToPossibleSeqIDs;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnCorrectSequencesRangesHelper.reduceColouredSequenceMatches;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnMixedActionsHelper.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramLogicUtils.colouredSequenceInColumnIsValid;
@@ -518,6 +519,12 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             }
         }
 
+        List<List<Integer>> reducedMatches = reduceColouredSequenceMatches(
+                columnSequencesLengths,
+                colouredSequencesPartsRanges,
+                colouredSequencesPartsMatches
+        );
+
         List<Integer> matchingSequencesIds;
         int matchingSeqId;
         int matchingSequenceLength;
@@ -532,8 +539,8 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         List<Integer> updatedMatchingSequenceRange;
 
         // if there are uniquely assigned sequences then mark and correct range
-        for (int matchedSeqNo = 0; matchedSeqNo < colouredSequencesPartsMatches.size(); matchedSeqNo++) {
-            matchingSequencesIds = colouredSequencesPartsMatches.get(matchedSeqNo);
+        for (int matchedSeqNo = 0; matchedSeqNo < reducedMatches.size(); matchedSeqNo++) {
+            matchingSequencesIds = reducedMatches.get(matchedSeqNo);
             if (matchingSequencesIds.size() == 1) {
                 matchingSeqId = matchingSequencesIds.get(0);
                 oldMatchingSequenceRange = columnSequencesRanges.get(matchingSeqId);
