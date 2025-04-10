@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -68,5 +69,35 @@ class ColumnCorrectSequencesRangesHelperTest {
         assertEquals(List.of(1), result.get(1));
         assertEquals(List.of(1, 2, 3), result.get(2));
         assertEquals(List.of(3, 4), result.get(3));
+    }
+
+    @Test
+    @DisplayName("Test backward correcting columnSequencesRanges in column 7 o08331")
+    void testReduceColouredSequenceMatches3backward() {
+        // column = [-, -, -, -, -, -, -, -, -, -, O, -, -, O, O, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -]
+        // given
+        List<Integer> columnSequencesLengths = Arrays.asList(9, 3, 1, 1);
+        List<List<Integer>> colouredSequencesRanges = Arrays.asList(
+                Arrays.asList(10, 10),
+                Arrays.asList(13, 14)
+        );
+        List<List<Integer>> colouredSequencesPartsMatches = Arrays.asList(
+                new ArrayList<>(Arrays.asList(0, 1)),
+                new ArrayList<>(Arrays.asList(0, 1))
+        );
+
+        // when
+        List<List<Integer>> actualReducedMatches = ColumnCorrectSequencesRangesHelper.reduceColouredSequenceMatches(
+                columnSequencesLengths,
+                colouredSequencesRanges,
+                colouredSequencesPartsMatches
+        );
+
+        // then
+        List<List<Integer>> expectedReducedMatches = Arrays.asList(
+                Collections.singletonList(0),
+                Arrays.asList(0, 1)
+        );
+        assertEquals(expectedReducedMatches, actualReducedMatches);
     }
 }

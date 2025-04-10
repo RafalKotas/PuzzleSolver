@@ -526,6 +526,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                 colouredSequencesPartsMatches
         );
 
+
         for (int i = 0; i < reducedMatches.size(); i++) {
             List<Integer> matchedSeqs = reducedMatches.get(i);
             int partStart = colouredSequencesPartsRanges.get(i).get(0);

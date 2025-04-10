@@ -29,6 +29,7 @@ public interface ColumnCorrectSequencesRangesHelper {
 
             matchedFragmentIndices.sort(Comparator.comparingInt(i -> colouredSequencesRanges.get(i).get(0)));
 
+            // FORWARD reduction
             for (int i = 0; i < matchedFragmentIndices.size() - 1; i++) {
                 int firstColouredFragment = matchedFragmentIndices.get(i);
                 int secondColouredFragment = matchedFragmentIndices.get(i + 1);
@@ -46,6 +47,27 @@ public interface ColumnCorrectSequencesRangesHelper {
                     if (mergedColouredFieldsLength > columnSequencesLengths.get(seqId)) {
                         secondMatchList.remove((Integer) currentSeqId);
                     }
+                }
+            }
+
+            // BACKWARD reduction
+            for (int i = matchedFragmentIndices.size() - 1; i > 0; i--) {
+                int secondColouredFragment = matchedFragmentIndices.get(i);
+                int firstColouredFragment = matchedFragmentIndices.get(i - 1);
+
+                List<Integer> rangeA = colouredSequencesRanges.get(firstColouredFragment);
+                List<Integer> rangeB = colouredSequencesRanges.get(secondColouredFragment);
+
+                int mergedColouredFieldsLength = rangeB.get(1) - rangeA.get(0) + 1;
+
+                List<Integer> firstMatchList = reducedMatches.get(firstColouredFragment);
+                List<Integer> secondMatchList = reducedMatches.get(secondColouredFragment);
+                int firstMatchListSize = firstMatchList.size();
+                int secondMatchListSize = secondMatchList.size();
+
+                if (firstMatchList.get(firstMatchListSize - 1) == currentSeqId &&  secondMatchList.get(secondMatchListSize - 1) == currentSeqId
+                        && mergedColouredFieldsLength > columnSequencesLengths.get(seqId)) {
+                        firstMatchList.remove((Integer) currentSeqId);
                 }
             }
         }
