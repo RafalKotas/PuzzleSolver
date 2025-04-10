@@ -52,4 +52,14 @@ public interface ColumnCorrectSequencesRangesHelper {
 
         return reducedMatches;
     }
+
+    static boolean sequenceAssignmentAppearsAsFirstLater(List<List<Integer>> reducedMatches, int currentIndex, int seqId) {
+        for (int i = currentIndex + 1; i < reducedMatches.size(); i++) {
+            List<Integer> next = reducedMatches.get(i);
+            if (!next.isEmpty() && next.get(0) == seqId) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

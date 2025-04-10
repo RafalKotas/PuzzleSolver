@@ -18,6 +18,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.Non
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.collectColouredSequencesRangesInColumn;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.matchColouredSequencesToPossibleSeqIDs;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnCorrectSequencesRangesHelper.reduceColouredSequenceMatches;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnCorrectSequencesRangesHelper.sequenceAssignmentAppearsAsFirstLater;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnMixedActionsHelper.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramLogicUtils.colouredSequenceInColumnIsValid;
@@ -525,44 +526,76 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                 colouredSequencesPartsMatches
         );
 
-        List<Integer> matchingSequencesIds;
-        int matchingSeqId;
-        int matchingSequenceLength;
-        List<Integer> oldMatchingSequenceRange;
+        for (int i = 0; i < reducedMatches.size(); i++) {
+            List<Integer> matchedSeqs = reducedMatches.get(i);
+            int partStart = colouredSequencesPartsRanges.get(i).get(0);
+            int partEnd = colouredSequencesPartsRanges.get(i).get(1);
 
-        int firstColouredPossibleRowAccordingToSequenceRanges;
-        int updatedMatchingSequenceRangeStartIndex;
+            if (matchedSeqs.size() == 1) {
+                int seqId = matchedSeqs.get(0);
+                int length = columnSequencesLengths.get(seqId);
+                int newStart = partEnd - length + 1;
+                int newEnd = partStart + length - 1;
 
-        int lastColouredPossibleRowAccordingToSequenceRanges;
-        int updatedMatchingSequenceRangeEndIndex;
+                List<Integer> oldRange = columnSequencesRanges.get(seqId);
+                List<Integer> newRange = Arrays.asList(
+                        Math.max(newStart, oldRange.get(0)),
+                        Math.min(newEnd, oldRange.get(1))
+                );
 
-        List<Integer> updatedMatchingSequenceRange;
-
-        // if there are uniquely assigned sequences then mark and correct range
-        for (int matchedSeqNo = 0; matchedSeqNo < reducedMatches.size(); matchedSeqNo++) {
-            matchingSequencesIds = reducedMatches.get(matchedSeqNo);
-            if (matchingSequencesIds.size() == 1) {
-                matchingSeqId = matchingSequencesIds.get(0);
-                oldMatchingSequenceRange = columnSequencesRanges.get(matchingSeqId);
-                matchingSequenceLength = columnSequencesLengths.get(matchingSeqId);
-
-                firstColouredPossibleRowAccordingToSequenceRanges = colouredSequencesPartsRanges.get(matchedSeqNo).get(1) - matchingSequenceLength + 1;
-                updatedMatchingSequenceRangeStartIndex = Math.max(oldMatchingSequenceRange.get(0), firstColouredPossibleRowAccordingToSequenceRanges);
-
-                lastColouredPossibleRowAccordingToSequenceRanges = colouredSequencesPartsRanges.get(matchedSeqNo).get(0) + matchingSequenceLength - 1;
-                updatedMatchingSequenceRangeEndIndex = Math.min(oldMatchingSequenceRange.get(1), lastColouredPossibleRowAccordingToSequenceRanges);
-
-                updatedMatchingSequenceRange = new ArrayList<>(Arrays.asList(updatedMatchingSequenceRangeStartIndex, updatedMatchingSequenceRangeEndIndex));
-
-                if (!rangesEqual(oldMatchingSequenceRange, updatedMatchingSequenceRange)) {
-                    this.updateColumnSequenceRange(columnIdx, matchingSeqId, updatedMatchingSequenceRange);
+                if (!rangesEqual(oldRange, newRange)) {
+                    this.updateColumnSequenceRange(columnIdx, seqId, newRange);
                     this.addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES);
                     this.nonogramState.increaseMadeSteps();
-                    this.tmpLog = generateCorrectingColumnSequenceRangeStepDescription(columnIdx, matchingSeqId, oldMatchingSequenceRange, updatedMatchingSequenceRange, "correcting sequence when matching fields to only possible coloured sequences");
+                    this.tmpLog = generateCorrectingColumnSequenceRangeStepDescription(columnIdx, seqId, oldRange, newRange, "correcting sequence when matching fields to only possible coloured sequences");
                     addLog();
 
-                    if (rangeLength(updatedMatchingSequenceRange) == columnSequencesLengths.get(matchingSeqId) && isRowRangeColoured(columnIdx, updatedMatchingSequenceRange)) {
-                        this.excludeSequenceInColumn(columnIdx, matchingSeqId);
+                    if (rangeLength(newRange) == columnSequencesLengths.get(seqId) && isRowRangeColoured(columnIdx, newRange)) {
+                        this.excludeSequenceInColumn(columnIdx, seqId);
+                    }
+                }
+            } else {
+                if (matchedSeqs.isEmpty()) continue;
+
+                // We focus only on the first sequence in the match
+                int primarySeqId = matchedSeqs.get(0);
+
+                // Skip updating if this sequence will appear as the first one later
+                if (sequenceAssignmentAppearsAsFirstLater(reducedMatches, i, primarySeqId)) {
+                    continue; // Skip processing this sequence because it will appear as first later
+                }
+
+                // Get the range of the coloured sequence part for this match
+                int length = columnSequencesLengths.get(primarySeqId);
+
+                // Get the old range for the sequence
+                List<Integer> oldRange = columnSequencesRanges.get(primarySeqId);
+
+                // Calculate the new end of the range based on the starting position and the length of the sequence
+                int newEnd = partStart + length - 1;
+
+                // Create the new range by limiting the upper bound
+                List<Integer> newRange = Arrays.asList(oldRange.get(0), Math.min(newEnd, oldRange.get(1)));
+
+                // Check if the range has actually changed
+                if (!rangesEqual(oldRange, newRange)) {
+                    // Update the column sequence range with the new limited range
+                    this.updateColumnSequenceRange(columnIdx, primarySeqId, newRange);
+
+                    // Mark the column as affected and log the action
+                    this.addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES);
+                    this.nonogramState.increaseMadeSteps();
+
+                    // Generate a log description for the change
+                    this.tmpLog = generateCorrectingColumnSequenceRangeStepDescription(
+                            columnIdx, primarySeqId, oldRange, newRange,
+                            "correcting sequence when matching fields to only possible coloured sequences"
+                    );
+                    addLog();
+
+                    // If the new range matches the length of the sequence and is coloured correctly, exclude the sequence
+                    if (rangeLength(newRange) == columnSequencesLengths.get(primarySeqId) && isRowRangeColoured(columnIdx, newRange)) {
+                        this.excludeSequenceInColumn(columnIdx, primarySeqId);
                     }
                 }
             }
