@@ -87,6 +87,7 @@ public class ActionDependencyMap {
                 NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_ROW, // base
                 NonogramSolveAction.COLOUR_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE,
                 //NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW, // check-
+                NonogramSolveAction.COLOUR_FIELDS_IN_ROW_IF_X_CAUSES_ASSIGNMENT_CONFLICT, // TODO - NEW!! check for o08331
                 NonogramSolveAction.PLACE_XS_ROW_AT_UNREACHABLE_FIELDS, // base
                 //NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES, // check-
                 NonogramSolveAction.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES, // improvement o07584
@@ -343,6 +344,12 @@ public class ActionDependencyMap {
                 //NonogramSolveAction.PLACE_XS_COLUMN_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE, // no improvement
                 NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH, // base
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN // base
+        ));
+
+        actionDependencies.put(NonogramSolveAction.COLOUR_FIELDS_IN_ROW_IF_X_CAUSES_ASSIGNMENT_CONFLICT, List.of(
+
+
+                NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN
         ));
 
         // 20 -> 19 o08542

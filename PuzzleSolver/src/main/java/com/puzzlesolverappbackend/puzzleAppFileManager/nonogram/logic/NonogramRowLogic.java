@@ -1043,6 +1043,62 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         return List.of(firstColouredFieldColumnIndexInSubsequence, lastColouredFieldColumnIndexInSubsequence);
     }
 
+    @Override
+    public void colourFieldsInRowIfXCausesAssignmentConflict(int rowIdx) {
+        List<String> boardRow = this.getNonogramSolutionBoard().get(rowIdx);
+        List<List<Integer>> oldRowSequencesRanges = cloneAndMakeImmutable2DList(this.getRowsSequencesRanges().get(rowIdx));
+        List<List<Integer>> colouredFieldsInRowRanges = collectColouredSequencesRangesInRow(this.getNonogramSolutionBoard(), rowIdx);
+
+        // no X fields between ranges to check if placement is wrong
+        if (colouredFieldsInRowRanges.size() < 2) return;
+
+        for (int i = 0; i < colouredFieldsInRowRanges.size() - 1; i++) {
+            int leftEnd = colouredFieldsInRowRanges.get(i).get(1);
+            int rightStart = colouredFieldsInRowRanges.get(i + 1).get(0);
+
+            for (int betweenColumnIdx = leftEnd + 1; betweenColumnIdx < rightStart; betweenColumnIdx++) {
+                if (!Objects.equals(boardRow.get(betweenColumnIdx), EMPTY_FIELD)) continue;
+
+                Field fieldToCheck = new Field(rowIdx, betweenColumnIdx);
+                if (isFieldEmpty(this.getNonogramSolutionBoard(), fieldToCheck)) {
+                    placeXAtGivenField(fieldToCheck, false);
+                    correctRowSequencesRangesIfXOnWay(rowIdx, false);
+                    clearField(fieldToCheck);
+                }
+                List<List<Integer>> updatedRanges = this.getRowsSequencesRanges().get(rowIdx);
+
+                boolean conflict = false;
+
+                // check if any coloured sequence part not matches into any range
+                for (List<Integer> colouredRange : colouredFieldsInRowRanges) {
+                    boolean matchesAny = false;
+                    for (List<Integer> updatedRange : updatedRanges) {
+                        if (rangeInsideAnotherRange(colouredRange, updatedRange)) {
+                            matchesAny = true;
+                            break;
+                        }
+                    }
+                    if (!matchesAny) {
+                        conflict = true;
+                        break;
+                    }
+                }
+
+                // restore old row ranges
+                setRowSequencesRanges(rowIdx, mutableClone2DList(oldRowSequencesRanges));
+
+                if (conflict) {
+                    this.colourFieldAtGivenPosition(fieldToCheck, "R---");
+                    addColumnToAffectedActionsByIdentifiers(fieldToCheck.getColumnIdx(),
+                            NonogramSolveAction.COLOUR_FIELDS_IN_ROW_IF_X_CAUSES_ASSIGNMENT_CONFLICT);
+                    this.nonogramState.increaseMadeSteps();
+                    this.tmpLog = "Field at (" + rowIdx + ", " + betweenColumnIdx + ") must be 'O' because 'X' would cause a conflict in sequences.";
+                    addLog();
+                }
+            }
+        }
+    }
+
     /**
      * @param rowIdx - place an "X" on fields which not belong to any row possible range
      * PLACE_XS_ROW_AT_UNREACHABLE_FIELDS

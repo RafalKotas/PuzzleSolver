@@ -1061,6 +1061,7 @@ public class NonogramLogic extends NonogramLogicParams {
             case COLOUR_OVERLAPPING_FIELDS_IN_ROW -> this.nonogramRowLogic.colourOverlappingFieldsInRow(rowIdx);
             case COLOUR_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE -> this.nonogramRowLogic.colourFieldsIfInRowXWouldForceTooLongColouredFieldsSequence(rowIdx);
             case EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW -> this.nonogramRowLogic.extendColouredFieldsNearXToMaximumPossibleLengthInRow(rowIdx);
+            case COLOUR_FIELDS_IN_ROW_IF_X_CAUSES_ASSIGNMENT_CONFLICT -> this.nonogramRowLogic.colourFieldsInRowIfXCausesAssignmentConflict(rowIdx);
             case PLACE_XS_ROW_AT_UNREACHABLE_FIELDS -> this.nonogramRowLogic.placeXsRowAtUnreachableFields(rowIdx);
             case PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES -> this.nonogramRowLogic.placeXsAroundLongestSequencesInRow(rowIdx);
             case PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES -> this.nonogramRowLogic.placeXsRowAtTooShortEmptySequences(rowIdx);
