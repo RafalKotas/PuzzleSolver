@@ -503,8 +503,19 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         List<Boolean> differentSequencesId = new ArrayList<>();
         int minSeqNo = 0; // if X between coloured sequences parts -> increase (sequences that can't be merged)
         List<Integer> currentColouredSeqPart;
+        List<Integer> currentSeqRange;
+        int currentSeqLength;
         int partMaxLength;
 
+        /*
+             TODO - TEST for o10936 row 19
+             this.getNonogramSolutionBoard().get(rowIdx): [-, -, -, -, -, -, -, -, -, -, -, -, O, O, -, O, O, -, -, -, -, -, -, -, -, -, -, -, -, -]
+             colouredSequencesPartsMatches: [[2, 3], [2, 3]]
+             colouredSequencesPartsRanges: [[12, 13], [15, 16]]
+             rowSequencesLengths: [1, 1, 2, 3, 1, 1]
+             partsMaxRanges: [[0, 29], [0, 29]]
+             rowSequencesRanges: [[0, 13], [2, 18], [4, 21], [7, 25], [11, 27], [18, 29]] -> [[0, 13], [2, 18], [11, 14], [14, 17], [11, 27], [18, 29]]
+        */
         // match coloured sequences parts to possible sequences that may include them
         for (int seqPartNo = 0; seqPartNo < partsMaxRanges.size(); seqPartNo++) {
             currentColouredSeqPart = colouredSequencesPartsRanges.get(seqPartNo);
@@ -512,14 +523,16 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
             colouredSequencePartMatches = new ArrayList<>();
             for (int seqNo = minSeqNo; seqNo < rowSequencesRanges.size(); seqNo++) {
-                if (rangeInsideAnotherRange(currentColouredSeqPart, rowSequencesRanges.get(seqNo)) &&
-                        rowSequencesLengths.get(seqNo) <= partMaxLength) {
+                currentSeqRange = rowSequencesRanges.get(seqNo);
+                currentSeqLength = rowSequencesLengths.get(seqNo);
+                if (rangeInsideAnotherRange(currentColouredSeqPart, currentSeqRange) &&
+                        rowSequencesLengths.get(seqNo) <= partMaxLength && rangeLength(currentColouredSeqPart) <= currentSeqLength) {
                     colouredSequencePartMatches.add(seqNo);
                 }
             }
             colouredSequencesPartsMatches.add(colouredSequencePartMatches);
             if (seqPartNo < partsMaxRanges.size() - 1 &&
-                    areXsBetweenColouredRangesInRow(rowIdx, currentColouredSeqPart, colouredSequencesPartsRanges.get(seqPartNo + 1))) {
+                    areXsBetweenColouredRangesInRow(rowIdx, currentColouredSeqPart, colouredSequencesPartsRanges.get(seqPartNo + 1)) ) {
                 minSeqNo++;
                 differentSequencesId.add(true);
             } else {
