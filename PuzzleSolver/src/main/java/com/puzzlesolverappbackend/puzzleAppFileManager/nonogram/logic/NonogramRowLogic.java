@@ -475,28 +475,11 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
         List<Integer> rowSequencesLengths = this.getRowsSequences().get(rowIdx);
 
-        Field fieldToCheckIfIsColoured;
-        List<List<Integer>> colouredSequencesPartsRanges = new ArrayList<>();
-        List<Integer> colouredSequencePartRange;
+        // coloured fields ranges
+        List<List<Integer>> colouredSequencesPartsRanges = collectColouredSequencesRangesInRow(this.getNonogramSolutionBoard(), rowIdx);
 
-        // extract coloured sequences ranges from board
-        for (int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
-            fieldToCheckIfIsColoured = new Field(rowIdx, columnIdx);
-            if (isFieldColoured(this.nonogramSolutionBoard, fieldToCheckIfIsColoured)) {
-                colouredSequencePartRange = getColouredRangeInRowNearField(fieldToCheckIfIsColoured);
-                colouredSequencesPartsRanges.add(colouredSequencePartRange);
-                columnIdx = colouredSequencePartRange.get(1);
-            }
-        }
-
-        List<List<Integer>> partsMaxRanges = new ArrayList<>();
-        List<Integer> partMaxRange;
-
-        // calculate max possible ranges for corresponding coloured sequences
-        for (List<Integer> colouredSequencesPartsRange : colouredSequencesPartsRanges) {
-            partMaxRange = getRowSequenceMaxPossibleRange(rowIdx, colouredSequencesPartsRange);
-            partsMaxRanges.add(partMaxRange);
-        }
+        // coloured fields max ranges (limited by X/begin/end of row)
+        List<List<Integer>> colouredSequencesPartsMaxRanges = getColouredSequencesPartsMaxRanges(rowIdx, colouredSequencesPartsRanges);
 
         List<List<Integer>> colouredSequencesPartsMatches = new ArrayList<>();
         List<Integer> colouredSequencePartMatches;
@@ -517,9 +500,9 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
              rowSequencesRanges: [[0, 13], [2, 18], [4, 21], [7, 25], [11, 27], [18, 29]] -> [[0, 13], [2, 18], [11, 14], [14, 17], [11, 27], [18, 29]]
         */
         // match coloured sequences parts to possible sequences that may include them
-        for (int seqPartNo = 0; seqPartNo < partsMaxRanges.size(); seqPartNo++) {
+        for (int seqPartNo = 0; seqPartNo < colouredSequencesPartsMaxRanges.size(); seqPartNo++) {
             currentColouredSeqPart = colouredSequencesPartsRanges.get(seqPartNo);
-            partMaxLength = rangeLength(partsMaxRanges.get(seqPartNo));
+            partMaxLength = rangeLength(colouredSequencesPartsMaxRanges.get(seqPartNo));
 
             colouredSequencePartMatches = new ArrayList<>();
             for (int seqNo = minSeqNo; seqNo < rowSequencesRanges.size(); seqNo++) {
@@ -531,7 +514,8 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 }
             }
             colouredSequencesPartsMatches.add(colouredSequencePartMatches);
-            if (seqPartNo < partsMaxRanges.size() - 1 &&
+
+            if (seqPartNo < colouredSequencesPartsMaxRanges.size() - 1 &&
                     areXsBetweenColouredRangesInRow(rowIdx, currentColouredSeqPart, colouredSequencesPartsRanges.get(seqPartNo + 1)) ) {
                 minSeqNo++;
                 differentSequencesId.add(true);
