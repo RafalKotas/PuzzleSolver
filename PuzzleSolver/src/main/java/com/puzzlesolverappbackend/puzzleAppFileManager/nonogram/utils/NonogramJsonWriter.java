@@ -2,9 +2,12 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils;
 
 import com.google.gson.*;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramFileDetails;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramSolution;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogic;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 public class NonogramJsonWriter {
     public static void writeToFile(NonogramFileDetails details, String filePath) throws IOException {
@@ -25,6 +28,45 @@ public class NonogramJsonWriter {
 
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(formattedJson);
+        }
+    }
+
+    public static void saveSolutionBoard(NonogramLogic nonogramSolutionLogic, String filePath) throws IOException {
+        NonogramSolution solution = new NonogramSolution();
+        solution.setNonogramBoard(nonogramSolutionLogic.getNonogramSolutionBoard());
+
+        StringBuilder jsonBuilder = new StringBuilder();
+        jsonBuilder.append("{\n");
+        jsonBuilder.append("\t\"nonogramBoard\" : [\n");
+
+        List<List<String>> nonogramBoard = solution.getNonogramBoard();
+        for (int i = 0; i < nonogramBoard.size(); i++) {
+            List<String> row = nonogramBoard.get(i);
+
+            jsonBuilder.append("\t\t[");
+
+            for (int j = 0; j < row.size(); j++) {
+                jsonBuilder.append("\"").append(row.get(j)).append("\"");
+                if (j < row.size() - 1) {
+                    jsonBuilder.append(", ");
+                }
+            }
+
+            // Zakończenie wiersza
+            jsonBuilder.append("]");
+
+            if (i < nonogramBoard.size() - 1) {
+                jsonBuilder.append(",");
+            }
+
+            jsonBuilder.append("\n");
+        }
+
+        jsonBuilder.append("\t]\n");
+        jsonBuilder.append("}\n");
+
+        try (FileWriter writer = new FileWriter(filePath)) {
+            writer.write(jsonBuilder.toString());
         }
     }
 }

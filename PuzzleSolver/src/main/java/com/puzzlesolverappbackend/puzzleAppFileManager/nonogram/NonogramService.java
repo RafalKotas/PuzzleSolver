@@ -11,8 +11,8 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION_LENGTH;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramJsonWriter.saveSolutionBoard;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.sumListElements;
 
 @Service
@@ -191,14 +192,11 @@ public class NonogramService {
     }
 
     public void saveSolutionToFile(String filename, NonogramLogic nonogramSolutionLogic) {
-        FileWriter fileWriter;
         try {
-            fileWriter = new FileWriter(FileHelper.generateSavePathForFilename(filename));
-            Gson gson = new Gson();
-            NonogramBoardTemplate nonogramBoardTemplate = new NonogramBoardTemplate(nonogramSolutionLogic);
-            nonogramBoardTemplate.setBoard(nonogramSolutionLogic.getNonogramSolutionBoard());
-            gson.toJson(nonogramBoardTemplate, fileWriter);
-            fileWriter.close();
+            File filePath = new File(FileHelper.generateSavePathForFilename(filename));
+            filePath.getParentFile().mkdirs();
+
+            saveSolutionBoard(nonogramSolutionLogic, filePath.getPath());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

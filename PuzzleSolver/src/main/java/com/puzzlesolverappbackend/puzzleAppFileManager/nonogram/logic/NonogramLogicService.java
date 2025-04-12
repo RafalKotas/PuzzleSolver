@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
 
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramService;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,12 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.r
 @Service
 @Slf4j
 public class NonogramLogicService {
+
+    NonogramService nonogramService;
+
+    public NonogramLogicService(NonogramService nonogramService) {
+        this.nonogramService = nonogramService;
+    }
 
     private final boolean showRepetitions = false;
 
@@ -1302,6 +1309,10 @@ public class NonogramLogicService {
         log.info("INITIALIZED nonogramSolver {}!", nonogramSolver);
         NonogramSolutionNode nonogramSolutionNode = new NonogramSolutionNode(nonogramLogicObject);
         log.info("INITIALIZED nonogramSolutionNode (DEC SIZE : {})! GO TO nonogramSolver.runSolutionAtNode()", nonogramSolutionNode.getNonogramGuessDecisions().size());
-        return nonogramSolver.runSolutionAtNode(nonogramSolutionNode);
+        NonogramLogic heuristicSolvedPart = nonogramSolver.runSolutionAtNode(nonogramSolutionNode);
+
+        nonogramService.saveSolutionToFile(solutionFileName, heuristicSolvedPart);
+
+        return heuristicSolvedPart;
     }
 }
