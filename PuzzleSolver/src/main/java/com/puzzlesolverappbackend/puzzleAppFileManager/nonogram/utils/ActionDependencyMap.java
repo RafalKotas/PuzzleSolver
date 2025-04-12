@@ -380,7 +380,7 @@ public class ActionDependencyMap {
                 NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES, // base
                 //NonogramSolveAction.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES, // no improvement
                 NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE, // base
-                //NonogramSolveAction.PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE, // o08542
+                NonogramSolveAction.PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE, // o08542
                 NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH, // base
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW // base
         ));
@@ -413,6 +413,7 @@ public class ActionDependencyMap {
                 //NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE, // no improvement
                 NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_COLUMN, // // improvement o11684
                 NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN, // base
+                NonogramSolveAction.COLOUR_FIELDS_IN_COLUMN_IF_X_CAUSES_ASSIGNMENT_CONFLICT, // TODO - NEW!!! columnIdx == 4 check o11612
                 //NonogramSolveAction.PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS, // no improvement
                 //NonogramSolveAction.PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES, // no improvement
                 NonogramSolveAction.PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES, // base
