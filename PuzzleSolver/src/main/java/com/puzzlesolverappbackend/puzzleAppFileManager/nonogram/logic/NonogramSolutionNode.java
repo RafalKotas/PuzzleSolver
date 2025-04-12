@@ -2,6 +2,7 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
 
 
 import com.google.gson.Gson;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramSolution;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class NonogramSolutionNode {
 
     private NonogramLogic nonogramLogic;
     private NonogramLogic nonogramSolution;
+    private NonogramSolution fullSolutionBoard;
     private List<NonogramSolutionDecision> nonogramGuessDecisions;
     private List<NonogramSolutionDecision> nonogramRecursionDecisions;
 
@@ -62,7 +64,7 @@ public class NonogramSolutionNode {
     }
 
     public void makeBasicSolverActions() {
-        this.getNonogramLogic().basicSolve();
+        this.getNonogramLogic().basicSolve(this.fullSolutionBoard);
 
         NonogramLogic logicAfterActionsMade = copyNonogramLogic();
         this.nodeLogs = logicAfterActionsMade.getLogs();

@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.helpers.FileHelper.generateSavePathForFilename;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.helpers.FileHelper.nonogramSolutionSavePathForFilename;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -122,7 +122,7 @@ public class NonogramLogicController {
 
         FileWriter nonogramSolutionWriter;
         try {
-            nonogramSolutionWriter = new FileWriter(generateSavePathForFilename(fileName));
+            nonogramSolutionWriter = new FileWriter(nonogramSolutionSavePathForFilename(fileName));
             gson.toJson(solution, nonogramSolutionWriter);
             nonogramSolutionWriter.close();
             return new ResponseEntity<>("Save success!", HttpStatus.OK);
@@ -135,7 +135,7 @@ public class NonogramLogicController {
     public ResponseEntity<NonogramLogic> compareWithSolution(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String fileName) {
         Gson gson = new Gson();
 
-        try (Reader reader = new FileReader(generateSavePathForFilename(fileName))) {
+        try (Reader reader = new FileReader(nonogramSolutionSavePathForFilename(fileName))) {
 
             // Convert JSON File to Java Object
             NonogramLogic solution = gson.fromJson(reader, NonogramLogic.class);

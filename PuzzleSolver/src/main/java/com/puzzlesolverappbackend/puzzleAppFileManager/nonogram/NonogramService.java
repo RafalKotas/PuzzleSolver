@@ -193,7 +193,7 @@ public class NonogramService {
 
     public void saveSolutionToFile(String filename, NonogramLogic nonogramSolutionLogic) {
         try {
-            File filePath = new File(FileHelper.generateSavePathForFilename(filename));
+            File filePath = new File(FileHelper.nonogramSolutionSavePathForFilename(filename));
             filePath.getParentFile().mkdirs();
 
             saveSolutionBoard(nonogramSolutionLogic, filePath.getPath());

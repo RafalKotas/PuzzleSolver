@@ -3,6 +3,7 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
 import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramGuessActionsLog;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramNodeLog;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramSolution;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -35,6 +36,7 @@ public class NonogramSolver {
     private NonogramLogic finalSolutionLogic;
     @ToString.Include
     private String solutionFileName;
+    private NonogramSolution nonogramSolution;
     private NonogramLogic solutionLogic;
     private Gson gson;
 
@@ -63,7 +65,7 @@ public class NonogramSolver {
         if (LOG_STEPS_SOLVER) {
             solvingAtNodeInitialLogs(nonogramStartNode);
         }
-        this.runHeuristicSolver(nonogramStartNode,  0, maxTreeHeight);
+        this.runHeuristicSolver(nonogramStartNode, solutionFileName,  0, maxTreeHeight);
         return this.getSolutionNode().getNonogramLogic();
     }
 
@@ -73,11 +75,13 @@ public class NonogramSolver {
         log.info("COLUMN SEQUENCES RANGES: \n{}", nonogramStartNode.getNonogramLogic().getColumnsSequencesRanges());
     }
 
-    public void runHeuristicSolver(NonogramSolutionNode nonogramStartNode,
+    public void runHeuristicSolver(NonogramSolutionNode nonogramStartNode, String solutionFileName,
                                    int currentTreeHeight, int maxTreeHeight) {
         NonogramSolutionNode nonogramSubsolutionNode = gson.fromJson(gson.toJson(nonogramStartNode), NonogramSolutionNode.class);
         NonogramSolutionNode leftNodeO;
         NonogramSolutionNode rightNodeX;
+
+        nonogramSubsolutionNode.setFullSolutionBoard(NonogramSolution.loadSolutionFromFile(solutionFileName));
 
         if (nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage() == 100) {
             if (LOG_STEPS_SOLVER) {
@@ -94,7 +98,6 @@ public class NonogramSolver {
         nonogramSubsolutionNode.makeBasicSolverActions();
 
         if (LOG_STEPS_SOLVER) {
-
             nonogramSubsolutionNode.getNonogramLogic().printSolutionBoard();
             nonogramSubsolutionNode.getNonogramLogic().printSolutionBoardWithMarks();
             System.out.println(nonogramSubsolutionNode.getNonogramLogic().getActionsToDoList().size());
@@ -243,8 +246,8 @@ public class NonogramSolver {
                         rightNodeRecursive.colourOrPlaceX();
                         rightNodeRecursive.makeBasicSolverActions();
 
-                        runHeuristicSolver(leftNodeRecursive, currentTreeHeight + 1, maxTreeHeight);
-                        runHeuristicSolver(rightNodeRecursive, currentTreeHeight + 1, maxTreeHeight);
+                        runHeuristicSolver(leftNodeRecursive, solutionFileName, currentTreeHeight + 1, maxTreeHeight);
+                        runHeuristicSolver(rightNodeRecursive, solutionFileName, currentTreeHeight + 1, maxTreeHeight);
                     } else {
                         if (LOG_STEPS_SOLVER) {
                             log.info("Don't need to use recursion. Nonogram solved at ");
@@ -279,8 +282,8 @@ public class NonogramSolver {
                         NonogramSolutionNode leftNodeRecursive = copyNodeAndAddDecision(decisionCoefficientsMax, COLOURED_FIELD, nonogramSubsolutionNode);
                         NonogramSolutionNode rightNodeRecursive = copyNodeAndAddDecision(decisionCoefficientsMax, X_FIELD, nonogramSubsolutionNode);
 
-                        runHeuristicSolver(leftNodeRecursive,currentTreeHeight + 1, maxTreeHeight);
-                        runHeuristicSolver(rightNodeRecursive, currentTreeHeight + 1, maxTreeHeight);
+                        runHeuristicSolver(leftNodeRecursive, solutionFileName,currentTreeHeight + 1, maxTreeHeight);
+                        runHeuristicSolver(rightNodeRecursive, solutionFileName, currentTreeHeight + 1, maxTreeHeight);
                     }
                 }
             } else if (wrongDecisionsCount == 2) {

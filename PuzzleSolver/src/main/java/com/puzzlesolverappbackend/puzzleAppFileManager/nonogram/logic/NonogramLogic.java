@@ -924,7 +924,7 @@ public class NonogramLogic extends NonogramLogicParams {
                 PLACE_X_FIELD_GUESS_OR_RECURSIVE, false));
     }
 
-    public void basicSolve() {
+    public void basicSolve(NonogramSolution nonogramSolution) {
 
         int actionListIndex = 0;
         int currentActionRCIndex; // row or column index

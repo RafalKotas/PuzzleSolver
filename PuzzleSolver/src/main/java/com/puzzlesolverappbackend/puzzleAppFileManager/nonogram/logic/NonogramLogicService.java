@@ -1311,7 +1311,9 @@ public class NonogramLogicService {
         log.info("INITIALIZED nonogramSolutionNode (DEC SIZE : {})! GO TO nonogramSolver.runSolutionAtNode()", nonogramSolutionNode.getNonogramGuessDecisions().size());
         NonogramLogic heuristicSolvedPart = nonogramSolver.runSolutionAtNode(nonogramSolutionNode);
 
-        nonogramService.saveSolutionToFile(solutionFileName, heuristicSolvedPart);
+        if (heuristicSolvedPart.nonogramIsFullyAndCorrectSolved()) {
+            nonogramService.saveSolutionToFile(solutionFileName, heuristicSolvedPart);
+        }
 
         return heuristicSolvedPart;
     }
