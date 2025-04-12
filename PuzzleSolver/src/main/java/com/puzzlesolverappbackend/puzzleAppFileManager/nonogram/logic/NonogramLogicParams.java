@@ -16,6 +16,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramC
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.X_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramParametersComparatorHelper.sequencesRangesEqual;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.isFieldColoured;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.isFieldWithX;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeLength;
 
 @Setter
@@ -505,6 +506,60 @@ public abstract class NonogramLogicParams {
         }
         System.out.println(");");
     }
+
+    protected List<Integer> getRowSequenceMaxPossibleRange(int rowIdx, List<Integer> colouredSequencePartRange) {
+        Field fieldToCheckX;
+
+        int columnLeft = colouredSequencePartRange.get(0) - 1;
+        fieldToCheckX = new Field(rowIdx, columnLeft);
+        while (areFieldIndexesValid(fieldToCheckX) && !isFieldWithX(this.getNonogramSolutionBoard(), fieldToCheckX)) {
+            fieldToCheckX = new Field(rowIdx, --columnLeft);
+        }
+        columnLeft++;
+
+        int columnRight = colouredSequencePartRange.get(1) + 1;
+        fieldToCheckX = new Field(rowIdx, columnRight);
+        while (areFieldIndexesValid(fieldToCheckX) && !isFieldWithX(this.getNonogramSolutionBoard(), fieldToCheckX)) {
+            fieldToCheckX = new Field(rowIdx, ++columnRight);
+        }
+        columnRight--;
+
+        return new ArrayList<>(List.of(columnLeft, columnRight));
+    }
+
+    protected List<Integer> getColumnSequenceMaxPossibleRange(int columnIdx, List<Integer> colouredSequencePartRange) {
+        Field fieldToCheckX;
+
+        int rowTop = colouredSequencePartRange.get(0) - 1;
+        fieldToCheckX = new Field(rowTop, columnIdx);
+        while (areFieldIndexesValid(fieldToCheckX) && !isFieldWithX(this.getNonogramSolutionBoard(), fieldToCheckX)) {
+            fieldToCheckX = new Field(--rowTop, columnIdx);
+        }
+        rowTop++;
+
+        int rowBottom = colouredSequencePartRange.get(1) + 1;
+        fieldToCheckX = new Field(rowBottom, columnIdx);
+        while (areFieldIndexesValid(fieldToCheckX) && !isFieldWithX(this.getNonogramSolutionBoard(), fieldToCheckX)) {
+            fieldToCheckX = new Field(++rowBottom, columnIdx);
+        }
+        rowBottom--;
+
+        return new ArrayList<>(List.of(rowTop, rowBottom));
+    }
+
+    protected List<List<Integer>> getColouredSequencesPartsMaxRanges(int rowIdx, List<List<Integer>> colouredSequencesPartsRanges) {
+        List<List<Integer>> colouredSequencesPartsMaxRanges = new ArrayList<>();
+        List<Integer> colouredSequencePartMaxRange;
+
+        // calculate max possible ranges for corresponding coloured sequences
+        for (List<Integer> colouredSequencesPartsRange : colouredSequencesPartsRanges) {
+            colouredSequencePartMaxRange = getRowSequenceMaxPossibleRange(rowIdx, colouredSequencesPartsRange);
+            colouredSequencesPartsMaxRanges.add(colouredSequencePartMaxRange);
+        }
+
+        return colouredSequencesPartsMaxRanges;
+    }
+
 
     protected void printSolutionBoard() {
         for (List<String> solutionBoardRow : this.getNonogramSolutionBoard()) {

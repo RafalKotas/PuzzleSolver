@@ -620,26 +620,6 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         return colouredSequenceRangeNearField;
     }
 
-    private List<Integer> getColumnSequenceMaxPossibleRange(int columnIdx, List<Integer> colouredSequencePartRange) {
-        Field fieldToCheckX;
-
-        int rowTop = colouredSequencePartRange.get(0) - 1;
-        fieldToCheckX = new Field(rowTop, columnIdx);
-        while (areFieldIndexesValid(fieldToCheckX) && !isFieldWithX(this.getNonogramSolutionBoard(), fieldToCheckX)) {
-            fieldToCheckX = new Field(--rowTop, columnIdx);
-        }
-        rowTop++;
-
-        int rowBottom = colouredSequencePartRange.get(1) + 1;
-        fieldToCheckX = new Field(rowBottom, columnIdx);
-        while (areFieldIndexesValid(fieldToCheckX) && !isFieldWithX(this.getNonogramSolutionBoard(), fieldToCheckX)) {
-            fieldToCheckX = new Field(++rowBottom, columnIdx);
-        }
-        rowBottom--;
-
-        return new ArrayList<>(List.of(rowTop, rowBottom));
-    }
-
     private boolean areXsBetweenColouredRangesInColumn(int columnIdx, List<Integer> firstRange, List<Integer> secondRange) {
         if (firstRange.size() != 2 || secondRange.size() != 2 || firstRange.get(1) >= secondRange.get(0)) {
             return false;

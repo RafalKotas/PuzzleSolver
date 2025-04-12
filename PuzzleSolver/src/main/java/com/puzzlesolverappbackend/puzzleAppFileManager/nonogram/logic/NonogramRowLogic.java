@@ -602,26 +602,6 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         return colouredSequenceRangeNearField;
     }
 
-    private List<Integer> getRowSequenceMaxPossibleRange(int rowIdx, List<Integer> colouredSequencePartRange) {
-        Field fieldToCheckX;
-
-        int columnLeft = colouredSequencePartRange.get(0) - 1;
-        fieldToCheckX = new Field(rowIdx, columnLeft);
-        while (areFieldIndexesValid(fieldToCheckX) && !isFieldWithX(this.getNonogramSolutionBoard(), fieldToCheckX)) {
-            fieldToCheckX = new Field(rowIdx, --columnLeft);
-        }
-        columnLeft++;
-
-        int columnRight = colouredSequencePartRange.get(1) + 1;
-        fieldToCheckX = new Field(rowIdx, columnRight);
-        while (areFieldIndexesValid(fieldToCheckX) && !isFieldWithX(this.getNonogramSolutionBoard(), fieldToCheckX)) {
-            fieldToCheckX = new Field(rowIdx, ++columnRight);
-        }
-        columnRight--;
-
-        return new ArrayList<>(List.of(columnLeft, columnRight));
-    }
-
     private boolean areXsBetweenColouredRangesInRow(int rowIdx, List<Integer> firstRange, List<Integer> secondRange) {
         if (firstRange.size() != 2 || secondRange.size() != 2 || firstRange.get(1) >= secondRange.get(0)) {
             return false;
