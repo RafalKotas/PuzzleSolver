@@ -363,7 +363,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
      * @param columnIdx - column to correct sequence/s range/s if x on way (sequence won't fit)
      */
     @Override
-    public void correctColumnSequencesRangesIfXOnWay(int columnIdx) {
+    public void correctColumnSequencesRangesIfXOnWay(int columnIdx, boolean changeLogicDetails) {
 
         boolean columnSequencesRangesChanged = false;
 
@@ -392,14 +392,14 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                     this.tmpLog = generateCorrectingColumnSequenceRangeStepDescription(columnIdx, seqNo, columnSequenceRange, updatedRange, "\"X\" on way");
                     addLog();
                     this.changeColumnSequenceRange(columnIdx, seqNo, updatedRange);
-                    if (rangeLength(updatedRange) == this.getColumnsSequences().get(columnIdx).get(seqNo) && isRowRangeColoured(columnIdx, updatedRange)) {
+                    if (changeLogicDetails && rangeLength(updatedRange) == this.getColumnsSequences().get(columnIdx).get(seqNo) && isRowRangeColoured(columnIdx, updatedRange)) {
                         this.excludeSequenceInColumn(columnIdx, seqNo);
                     }
                 }
             }
         }
 
-        if (columnSequencesRangesChanged) {
+        if (changeLogicDetails && columnSequencesRangesChanged) {
             this.nonogramState.increaseMadeSteps();
             this.addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY);
         }
@@ -1003,6 +1003,11 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         int lastColouredFieldRowIndexInSubsequence = --rowIdx;
 
         return List.of(firstColouredFieldRowIndexInSubsequence, lastColouredFieldRowIndexInSubsequence);
+    }
+
+    @Override
+    public void colourFieldsInColumnIfXCausesAssignmentConflict(int columnIdx) {
+
     }
 
     /**

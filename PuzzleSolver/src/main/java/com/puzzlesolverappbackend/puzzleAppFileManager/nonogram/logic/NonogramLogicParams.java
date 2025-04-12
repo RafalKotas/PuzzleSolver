@@ -135,7 +135,7 @@ public abstract class NonogramLogicParams {
     /**
      * @return total area of nonogram (fields to fill)
      */
-    public int area() {
+    public int nonogramAreaInFieldsCount() {
         return this.getWidth() * this.getHeight();
     }
 
@@ -180,14 +180,14 @@ public abstract class NonogramLogicParams {
         int xPlaced = this.fieldsWithXPlaced();
         int coloured = this.fieldsColoured();
 
-        return getPercent(xPlaced + coloured, this.area());
+        return getPercent(xPlaced + coloured, this.nonogramAreaInFieldsCount());
     }
 
     /**
      * @return fields to proper place "X" to solve nonogram
      */
     public int fieldsToPlaceXTotal() {
-        return this.area() - fieldsToColourTotal();
+        return this.nonogramAreaInFieldsCount() - fieldsToColourTotal();
     }
 
     /**
@@ -198,7 +198,7 @@ public abstract class NonogramLogicParams {
     }
 
     public boolean isSolved() {
-        return this.fieldsFilled() == this.area();
+        return this.fieldsFilled() == this.nonogramAreaInFieldsCount();
     }
 
     protected void addRowAndColumnToAffectedByIdentifiers(Field field, NonogramSolveAction actionTriggered) {

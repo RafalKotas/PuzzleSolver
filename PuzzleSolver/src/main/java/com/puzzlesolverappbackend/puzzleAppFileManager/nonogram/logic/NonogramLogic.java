@@ -22,6 +22,8 @@ import java.util.stream.Stream;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramState.buildInitialEmptyNonogramState;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.collectColouredSequencesRangesInColumn;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.collectColouredSequencesRangesInRow;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.getSolutionBoardColumn;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.isFieldEmpty;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeInsideAnotherRange;
@@ -1090,7 +1092,7 @@ public class NonogramLogic extends NonogramLogicParams {
                 }
             }
             case CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY -> {
-                this.nonogramColumnLogic.correctColumnSequencesRangesIfXOnWay(columnIdx);
+                this.nonogramColumnLogic.correctColumnSequencesRangesIfXOnWay(columnIdx, true);
                 if (this.guessMode == GuessMode.ENABLED) {
                     invalidateSolutionIfColumnSequencesWrong(columnIdx);
                 }
@@ -1102,6 +1104,7 @@ public class NonogramLogic extends NonogramLogicParams {
             case COLOUR_OVERLAPPING_FIELDS_IN_COLUMN -> this.nonogramColumnLogic.colourOverlappingFieldsInColumn(columnIdx);
             case COLOUR_FIELDS_IN_COLUMN_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE -> this.nonogramColumnLogic.colourFieldsInColumnIfXWouldForceTooLongColouredFieldsSequence(columnIdx);
             case EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN -> this.nonogramColumnLogic.extendColouredFieldsNearXToMaximumPossibleLengthInColumn(columnIdx);
+            //case COLOUR_FIELDS_IN_COLUMN_IF_X_CAUSES_ASSIGNMENT_CONFLICT -> this.nonogramColumnLogic.colourFieldsInColumnIfXCausesAssignmentConflict(columnIdx);
             case PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS -> this.nonogramColumnLogic.placeXsColumnAtUnreachableFields(columnIdx);
             case PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES -> this.nonogramColumnLogic.placeXsAroundLongestSequencesInColumn(columnIdx);
             case PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES -> this.nonogramColumnLogic.placeXsColumnAtTooShortEmptySequences(columnIdx);
@@ -1369,6 +1372,54 @@ public class NonogramLogic extends NonogramLogicParams {
 
             if (!rowSequences.equals(columnSequences)) {
                 return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean nonogramIsFullyAndCorrectSolved() {
+        if (fieldsFilled() != nonogramAreaInFieldsCount()) {
+            return false;
+        }
+
+        for (int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
+            List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
+            List<Integer> rowSequencesLengths = this.getRowsSequences().get(rowIdx);
+
+            List<List<Integer>> colouredSequencesInRow = collectColouredSequencesRangesInRow(this.getNonogramSolutionBoard(), rowIdx);
+            List<Integer> currentColouredSequence;
+
+            if (colouredSequencesInRow.size() != rowSequencesLengths.size()) {
+                return false;
+            } else {
+                for (int colouredSeqNo = 0; colouredSeqNo < colouredSequencesInRow.size(); colouredSeqNo++) {
+                    currentColouredSequence = colouredSequencesInRow.get(colouredSeqNo);
+                    if (!currentColouredSequence.equals(rowSequencesRanges.get(colouredSeqNo))
+                        || rangeLength(rowSequencesRanges.get(colouredSeqNo)) != (rowSequencesLengths.get(colouredSeqNo))) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        for (int columnIdx = 0; columnIdx < this.getWidth(); columnIdx++) {
+            List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
+            List<Integer> columnSequencesLengths = this.getColumnsSequences().get(columnIdx);
+
+            List<List<Integer>> colouredSequencesInColumn = collectColouredSequencesRangesInColumn(this.getNonogramSolutionBoard(), columnIdx);
+            List<Integer> currentColouredSequence;
+
+            if (colouredSequencesInColumn.size() != columnSequencesLengths.size()) {
+                return false;
+            } else {
+                for (int colouredSeqNo = 0; colouredSeqNo < colouredSequencesInColumn.size(); colouredSeqNo++) {
+                    currentColouredSequence = colouredSequencesInColumn.get(colouredSeqNo);
+                    if (!currentColouredSequence.equals(columnSequencesRanges.get(colouredSeqNo))
+                            || rangeLength(columnSequencesRanges.get(colouredSeqNo)) != columnSequencesLengths.get(colouredSeqNo)) {
+                        return false;
+                    }
+                }
             }
         }
 
