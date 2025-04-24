@@ -1,6 +1,5 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.repository;
+package com.puzzlesolverappbackend.puzzleAppFileManager.architect;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.model.Architect;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -13,14 +12,14 @@ import java.util.Optional;
 public interface ArchitectRepository extends JpaRepository<Architect, Integer>, JpaSpecificationExecutor {
 
     @Query(value = "SELECT *" +
-            " FROM architect_puzzles_data apd" +
-            " WHERE (apd.filename LIKE %:filename%" +
-            " AND apd.source LIKE %:source%" +
-            " AND apd.year LIKE %:year%" +
-            " AND apd.month LIKE %:month%" +
-            " AND apd.height = :height" +
-            " AND apd.width = :width" +
-            " AND apd.difficulty = :difficulty)",
+            " FROM architect a" +
+            " WHERE (a.filename LIKE %:filename%" +
+            " AND a.source LIKE %:source%" +
+            " AND a.year LIKE %:year%" +
+            " AND a.month LIKE %:month%" +
+            " AND a.height = :height" +
+            " AND a.width = :width" +
+            " AND a.difficulty = :difficulty)",
             nativeQuery = true)
     Optional<Architect> existsArchitectByGivenParamsFromFile(@Param("filename") String filename,
                                                             @Param("source") String source,

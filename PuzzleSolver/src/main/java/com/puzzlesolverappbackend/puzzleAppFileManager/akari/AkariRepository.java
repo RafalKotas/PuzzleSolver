@@ -1,6 +1,5 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.repository;
+package com.puzzlesolverappbackend.puzzleAppFileManager.akari;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.model.Akari;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -13,12 +12,12 @@ import java.util.Optional;
 public interface AkariRepository extends JpaRepository<Akari, Integer>, JpaSpecificationExecutor {
 
     @Query(value = "SELECT *" +
-            " FROM akari_puzzles_data apd" +
-            " WHERE (apd.filename LIKE %:filename%" +
-            " AND apd.source LIKE %:source%" +
-            " AND apd.height = :height" +
-            " AND apd.width = :width" +
-            " AND apd.difficulty = :difficulty)",
+            " FROM akari a" +
+            " WHERE (a.filename LIKE %:filename%" +
+            " AND a.source LIKE %:source%" +
+            " AND a.height = :height" +
+            " AND a.width = :width" +
+            " AND a.difficulty = :difficulty)",
             nativeQuery = true)
     Optional<Akari> existsAkariByGivenParamsFromFile(@Param("filename") String filename,
                                                             @Param("source") String source,

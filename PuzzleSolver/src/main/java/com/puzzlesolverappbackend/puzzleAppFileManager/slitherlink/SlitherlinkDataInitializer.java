@@ -1,18 +1,18 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.runners;
+package com.puzzlesolverappbackend.puzzleAppFileManager.slitherlink;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.puzzlesolverappbackend.puzzleAppFileManager.model.Slitherlink;
-import com.puzzlesolverappbackend.puzzleAppFileManager.payload.SlitherlinkFileDetails;
-import com.puzzlesolverappbackend.puzzleAppFileManager.repository.SlitherlinkRepository;
-import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
+import com.puzzlesolverappbackend.puzzleAppFileManager.common.CommonService;
+import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Set;
 
-//@Component
-//@Order(5)
+@Component
+@Order(5)
 public class SlitherlinkDataInitializer implements CommandLineRunner {
 
     private final SlitherlinkRepository SlitherlinkRepository;

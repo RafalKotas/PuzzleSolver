@@ -1,8 +1,7 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.controllers;
+package com.puzzlesolverappbackend.puzzleAppFileManager.sudoku;
 
 import com.google.gson.Gson;
-import com.puzzlesolverappbackend.puzzleAppFileManager.payload.SudokuFileDetails;
-import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
+import com.puzzlesolverappbackend.puzzleAppFileManager.common.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

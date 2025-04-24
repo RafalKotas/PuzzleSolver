@@ -1,10 +1,8 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.runners;
+package com.puzzlesolverappbackend.puzzleAppFileManager.sudoku;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.puzzlesolverappbackend.puzzleAppFileManager.model.Sudoku;
-import com.puzzlesolverappbackend.puzzleAppFileManager.payload.SudokuFileDetails;
-import com.puzzlesolverappbackend.puzzleAppFileManager.repository.SudokuRepository;
-import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
+import com.puzzlesolverappbackend.puzzleAppFileManager.common.CommonService;
+import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
 import jdk.security.jarsigner.JarSignerException;
 import org.springframework.boot.CommandLineRunner;
 

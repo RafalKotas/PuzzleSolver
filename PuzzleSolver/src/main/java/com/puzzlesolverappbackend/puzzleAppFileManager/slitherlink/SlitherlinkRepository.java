@@ -1,6 +1,5 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.repository;
+package com.puzzlesolverappbackend.puzzleAppFileManager.slitherlink;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.model.Slitherlink;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -13,14 +12,14 @@ import java.util.Optional;
 public interface SlitherlinkRepository extends JpaRepository<Slitherlink, Integer>, JpaSpecificationExecutor {
 
     @Query(value = "SELECT *" +
-            " FROM slitherlink_puzzles_data spd" +
+            " FROM slitherlink sli" +
             " WHERE (spd.filename LIKE %:filename%" +
-            " AND spd.source LIKE %:source%" +
-            " AND spd.year LIKE %:year%" +
-            " AND spd.month LIKE %:month%" +
-            " AND spd.height = :height" +
-            " AND spd.width = :width" +
-            " AND spd.difficulty = :difficulty)",
+            " AND sli.source LIKE %:source%" +
+            " AND sli.year LIKE %:year%" +
+            " AND sli.month LIKE %:month%" +
+            " AND sli.height = :height" +
+            " AND sli.width = :width" +
+            " AND sli.difficulty = :difficulty)",
             nativeQuery = true)
     Optional<Slitherlink> existsSlitherlinkByGivenParamsFromFile(@Param("filename") String filename,
                                                            @Param("source") String source,

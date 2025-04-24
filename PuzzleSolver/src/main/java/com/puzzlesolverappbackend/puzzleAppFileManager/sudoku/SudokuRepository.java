@@ -1,6 +1,5 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.repository;
+package com.puzzlesolverappbackend.puzzleAppFileManager.sudoku;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.model.Sudoku;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,13 +11,13 @@ import java.util.Optional;
 public interface SudokuRepository extends JpaRepository<Sudoku, Integer> {
 
     @Query(value = "SELECT *" +
-            " FROM sudoku_puzzles_data spd" +
-            " WHERE (spd.filename LIKE %:filename%" +
-            " AND spd.source LIKE %:source%" +
-            " AND spd.year LIKE %:year%" +
-            " AND spd.month LIKE %:month%" +
-            " AND spd.filled = :filled" +
-            " AND spd.difficulty = :difficulty)",
+            " FROM sudoku sud" +
+            " WHERE (sud.filename LIKE %:filename%" +
+            " AND sud.source LIKE %:source%" +
+            " AND sud.year LIKE %:year%" +
+            " AND sud.month LIKE %:month%" +
+            " AND sud.filled = :filled" +
+            " AND sud.difficulty = :difficulty)",
             nativeQuery = true)
     Optional<Sudoku> existsSudokuByGivenParamsFromFile(@Param("filename") String filename,
                                                               @Param("source") String source,

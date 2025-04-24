@@ -1,6 +1,5 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.repository;
+package com.puzzlesolverappbackend.puzzleAppFileManager.hitori;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.model.Hitori;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,12 +11,12 @@ import java.util.Optional;
 public interface HitoriRepository extends JpaRepository<Hitori, Integer> {
 
     @Query(value = "SELECT *" +
-            " FROM hitori_puzzles_data hpd" +
-            " WHERE (hpd.filename LIKE %:filename%" +
-            " AND hpd.source LIKE %:source%" +
-            " AND hpd.height = :height" +
-            " AND hpd.width = :width" +
-            " AND hpd.difficulty = :difficulty)",
+            " FROM hitori h" +
+            " WHERE (h.filename LIKE %:filename%" +
+            " AND h.source LIKE %:source%" +
+            " AND h.height = :height" +
+            " AND h.width = :width" +
+            " AND h.difficulty = :difficulty)",
             nativeQuery = true)
     Optional<Hitori> existsHitoriByGivenParamsFromFile(@Param("filename") String filename,
                                                      @Param("source") String source,

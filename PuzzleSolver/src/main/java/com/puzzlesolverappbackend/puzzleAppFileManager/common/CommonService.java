@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.services;
+package com.puzzlesolverappbackend.puzzleAppFileManager.common;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

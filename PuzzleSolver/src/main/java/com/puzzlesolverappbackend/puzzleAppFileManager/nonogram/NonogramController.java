@@ -1,6 +1,6 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
+import com.puzzlesolverappbackend.puzzleAppFileManager.common.CommonService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

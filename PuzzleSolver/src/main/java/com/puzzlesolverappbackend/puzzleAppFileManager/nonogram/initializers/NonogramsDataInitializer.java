@@ -1,11 +1,11 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.initializers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.common.CommonService;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.Nonogram;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramFileDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramRepository;
 import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
-import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;

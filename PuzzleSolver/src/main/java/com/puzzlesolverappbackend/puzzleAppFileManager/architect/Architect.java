@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.model;
+package com.puzzlesolverappbackend.puzzleAppFileManager.architect;
 
 import jakarta.persistence.*;
 import jakarta.persistence.metamodel.StaticMetamodel;

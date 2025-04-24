@@ -1,18 +1,20 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.model;
+package com.puzzlesolverappbackend.puzzleAppFileManager.sudoku;
 
 import jakarta.persistence.*;
 import jakarta.persistence.metamodel.StaticMetamodel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "slitherlink")
-@StaticMetamodel(Slitherlink.class)
+@Table(name = "sudoku")
+@StaticMetamodel(Sudoku.class)
 @ToString
 @NoArgsConstructor
 @Setter
-public class Slitherlink {
+@Getter
+public class Sudoku {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,19 +35,15 @@ public class Slitherlink {
     @Column(name = "difficulty")
     private Double difficulty;
 
-    @Column(name = "height")
-    private Integer height;
+    @Column(name = "filled")
+    private Integer filled;
 
-    @Column(name = "width")
-    private Integer width;
-
-    public Slitherlink(String slitherlinkFileNameWithoutExtension, String source, String year, String month, Double difficulty, Integer height, Integer width) {
-        this.filename = slitherlinkFileNameWithoutExtension;
+    public Sudoku(String architectFileName, String source, String year, String month, Double difficulty, Integer filled) {
+        this.filename = architectFileName;
         this.source = source;
         this.year = year;
         this.month = month;
         this.difficulty = difficulty;
-        this.height = height;
-        this.width = width;
+        this.filled = filled;
     }
 }

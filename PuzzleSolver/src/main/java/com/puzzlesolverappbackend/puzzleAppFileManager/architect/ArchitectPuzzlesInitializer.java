@@ -1,11 +1,10 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.runners;
+package com.puzzlesolverappbackend.puzzleAppFileManager.architect;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.puzzlesolverappbackend.puzzleAppFileManager.model.Architect;
+import com.puzzlesolverappbackend.puzzleAppFileManager.common.CommonService;
 import com.puzzlesolverappbackend.puzzleAppFileManager.payload.ArchitectFileDetails;
-import com.puzzlesolverappbackend.puzzleAppFileManager.repository.ArchitectRepository;
-import com.puzzlesolverappbackend.puzzleAppFileManager.services.CommonService;
+import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 

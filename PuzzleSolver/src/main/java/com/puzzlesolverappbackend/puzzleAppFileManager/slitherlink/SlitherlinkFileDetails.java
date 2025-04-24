@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.payload;
+package com.puzzlesolverappbackend.puzzleAppFileManager.slitherlink;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -13,13 +13,16 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HitoriFileDetails {
+public class SlitherlinkFileDetails {
+
     private String source;
+    private String year;
+    private String month;
 
     private double difficulty;
 
+    private List<List<Integer>> board;
+
     private int height;
     private int width;
-
-    private List<List<String>> board;
 }
