@@ -3,8 +3,12 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.slitherlink;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.common.CommonService;
-import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
+import com.puzzlesolverappbackend.puzzleAppFileManager.constants.InitializerConstants;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +16,11 @@ import java.io.File;
 import java.util.Set;
 
 @Component
+@Getter
+@Setter
+@Profile("!test")
 @Order(5)
+@Slf4j
 public class SlitherlinkDataInitializer implements CommandLineRunner {
 
     private final SlitherlinkRepository SlitherlinkRepository;
@@ -89,6 +97,8 @@ public class SlitherlinkDataInitializer implements CommandLineRunner {
                 System.out.println(jsonParseException);
             }
         }
+
+        log.info("Saving slitherlinks to DB part is done.");
 
         if (InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
             System.out.println("SlitherlinksSaved count: " + SlitherlinksSaved);

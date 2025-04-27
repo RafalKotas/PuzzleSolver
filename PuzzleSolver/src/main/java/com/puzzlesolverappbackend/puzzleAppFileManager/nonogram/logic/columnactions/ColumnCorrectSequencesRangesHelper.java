@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.mutableClone2DList;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.mutableClone2DList;
 
 public interface ColumnCorrectSequencesRangesHelper {
 

@@ -3,17 +3,30 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.architect;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.common.CommonService;
-import com.puzzlesolverappbackend.puzzleAppFileManager.payload.ArchitectFileDetails;
-import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
+import com.puzzlesolverappbackend.puzzleAppFileManager.constants.InitializerConstants;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Set;
 
-//@Component
-//@Order(2)
+@Component
+@Getter
+@Setter
+@Profile("!test")
+@Order(2)
+@Slf4j
 public class ArchitectPuzzlesInitializer implements CommandLineRunner {
+
+    protected final static Logger logger = LoggerFactory.getLogger(ArchitectPuzzlesInitializer.class);
 
     @Autowired
     private ArchitectRepository architectRepository;
@@ -75,7 +88,6 @@ public class ArchitectPuzzlesInitializer implements CommandLineRunner {
                 if (architectRepository.existsArchitectByGivenParamsFromFile(architectFileNameWithoutExtension, source, year, month, difficulty, height, width).isPresent()) {
                     architectsRepeated++;
                 } else {
-                    System.out.println(architect);
                     architectsSaved++;
                     architectRepository.save(architect);
                 }
@@ -89,5 +101,8 @@ public class ArchitectPuzzlesInitializer implements CommandLineRunner {
             System.out.println("architectsSaved count: " + architectsSaved);
             System.out.println("architectsRepeated count: " + architectsRepeated);
         }
+
+        log.info("Saving architects to DB part is done.");
     }
+
 }

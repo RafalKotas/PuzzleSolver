@@ -1,10 +1,10 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.constants.InitializerConstants;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramGenetic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
 import org.springframework.boot.CommandLineRunner;
 
 import java.io.File;

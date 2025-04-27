@@ -38,6 +38,7 @@ const options = ["row", "column"]
 const SequencesModifier: React.FC<SequencesModifierProps> = ({ maxRowModifyIndex, maxColumnModifyIndex, modifyRow, modifyColumn }) => {
 
   const [selectedOption, setSelectedOption] = useState<string>("row")
+  // TODO - verify ability to change modify index (f.e. rows) just after adding new rows
   const [modifyIndex, setModifyIndex] = useState<number>(0)
   const [maxModifyIndex, setMaxModifyIndex] = useState<number>(maxRowModifyIndex)
   const [sequences, setSequences] = useState<string>("")

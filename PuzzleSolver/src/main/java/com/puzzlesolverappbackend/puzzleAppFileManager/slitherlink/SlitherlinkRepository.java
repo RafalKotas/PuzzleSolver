@@ -13,7 +13,7 @@ public interface SlitherlinkRepository extends JpaRepository<Slitherlink, Intege
 
     @Query(value = "SELECT *" +
             " FROM slitherlink sli" +
-            " WHERE (spd.filename LIKE %:filename%" +
+            " WHERE (sli.filename LIKE %:filename%" +
             " AND sli.source LIKE %:source%" +
             " AND sli.year LIKE %:year%" +
             " AND sli.month LIKE %:month%" +

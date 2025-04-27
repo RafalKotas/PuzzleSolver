@@ -1,8 +1,8 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.runners;
+package com.puzzlesolverappbackend.puzzleAppFileManager.constants;
 
 public final class InitializerConstants {
     public static final String PUZZLE_RELATIVE_PATH = "./FrontReact/public/resources/";
-    public static final boolean PRINT_PUZZLE_STATUS_INFO = false;
+    public static final boolean PRINT_PUZZLE_STATUS_INFO = true;
 
     public static final String NONOGRAM_SOLUTIONS_PATH = "./src/main/resources/solutions/Nonograms/";
 

@@ -1,13 +1,13 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram;
 
 import com.google.gson.Gson;
+import com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils;
 import com.puzzlesolverappbackend.puzzleAppFileManager.common.CommonService;
-import com.puzzlesolverappbackend.puzzleAppFileManager.helpers.FileHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.common.FileHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.constants.InitializerConstants;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramCorrectnessIndicator;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramJsonWriter;
-import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
-import com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +20,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.sumListElements;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION_LENGTH;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramJsonWriter.saveSolutionBoard;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.sumListElements;
 
 @Service
 @Slf4j

@@ -2,15 +2,23 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.sudoku;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.common.CommonService;
-import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
+import com.puzzlesolverappbackend.puzzleAppFileManager.constants.InitializerConstants;
 import jdk.security.jarsigner.JarSignerException;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Set;
 
-//@Component
-//@Order(6)
+@Component
+@Getter
+@Setter
+@Profile("!test")
+@Order(6)
 public class SudokuDataInitializer implements CommandLineRunner {
 
     private final SudokuRepository sudokuRepository;

@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.logicOperators;
+package com.puzzlesolverappbackend.puzzleAppFileManager.common;
 
 public class LogicFunctions {
 

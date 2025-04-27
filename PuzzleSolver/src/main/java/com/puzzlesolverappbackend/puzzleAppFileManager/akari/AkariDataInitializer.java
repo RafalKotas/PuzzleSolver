@@ -3,16 +3,23 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.akari;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.common.CommonService;
-import com.puzzlesolverappbackend.puzzleAppFileManager.payload.AkariFileDetails;
-import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
+import com.puzzlesolverappbackend.puzzleAppFileManager.constants.InitializerConstants;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Set;
 
-//@Component
-//@Order(1)
+@Component
+@Getter
+@Setter
+@Profile("!test")
+@Order(1)
 public class AkariDataInitializer implements CommandLineRunner {
 
     @Autowired

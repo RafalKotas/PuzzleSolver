@@ -1,7 +1,7 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
 
 import com.google.gson.Gson;
-import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
+import com.puzzlesolverappbackend.puzzleAppFileManager.constants.InitializerConstants;
 import lombok.Getter;
 import lombok.Setter;
 

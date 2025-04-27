@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.rangeLength;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.COLOURED_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.X_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramParametersComparatorHelper.sequencesRangesEqual;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.isFieldColoured;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.isFieldWithX;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeLength;
 
 @Setter
 @Getter
@@ -290,9 +290,7 @@ public abstract class NonogramLogicParams {
 
 
     protected void placeXAtGivenFields(List<Field> x_fields) {
-        x_fields.forEach(field -> {
-            placeXAtGivenField(field, true);
-        });
+        x_fields.forEach(field -> placeXAtGivenField(field, true));
     }
 
     /**

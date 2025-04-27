@@ -2,6 +2,7 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.initializers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.common.CommonService;
+import com.puzzlesolverappbackend.puzzleAppFileManager.constants.InitializerConstants;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.Nonogram;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramFileDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramRepository;
@@ -9,7 +10,6 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramService;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicService;
-import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 

@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.*;
 import java.util.stream.IntStream;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.EMPTY_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.MARKED_ROW_INDICATOR;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramParametersComparatorHelper.rangesEqual;
@@ -22,7 +23,6 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.Non
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramCreatorUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramLogicUtils.colouredSequenceInRowIsValid;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramSequenceReducer.reduceMatches;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.*;
 
 @Setter
 @Getter
@@ -519,6 +519,8 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                     areXsBetweenColouredRangesInRow(rowIdx, currentColouredSeqPart, colouredSequencesPartsRanges.get(seqPartNo + 1)) ) {
                 minSeqNo++;
                 differentSequencesId.add(true);
+            } else if (colouredSequencePartMatches.size() == 1) {
+              minSeqNo = colouredSequencePartMatches.get(0);
             } else {
                 differentSequencesId.add(false);
             }
@@ -561,8 +563,17 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                     this.tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, matchingSeqId, oldMatchingSequenceRange, updatedMatchingSequenceRange, "correcting sequence when matching fields to only possible coloured sequences");
                     addLog();
 
-                    if (rangeLength(updatedMatchingSequenceRange) == rowSequencesLengths.get(matchingSeqId) && isColumnRangeColoured(rowIdx, updatedMatchingSequenceRange)) {
-                        this.excludeSequenceInRow(rowIdx, matchingSeqId);
+//                    if (  rangeLength(updatedMatchingSequenceRange) == rowSequencesLengths.get(matchingSeqId) && isColumnRangeColoured(rowIdx, updatedMatchingSequenceRange)) {
+//                        if (matchingSeqId == 0 || matchingSeqId == rowSequencesLengths.size() - 1) {
+//                            this.excludeSequenceInRow(rowIdx, matchingSeqId);
+//                        } else if (updatedMatchingSequenceRange.get(0) > rowSequencesRanges.get(matchingSeqId - 1).get(1)
+//                          && updatedMatchingSequenceRange.get(1) < rowSequencesRanges.get(matchingSeqId + 1).get(0)) {
+//                            this.excludeSequenceInRow(rowIdx, matchingSeqId);
+//                        }
+//                    }
+                    
+                    if (  rangeLength(updatedMatchingSequenceRange) == rowSequencesLengths.get(matchingSeqId) && isColumnRangeColoured(rowIdx, updatedMatchingSequenceRange)) {
+                        this.excludeSequenceInRow(rowIdx, matchingSeqId); //THIS IS... WRONG!!!
                     }
                 }
             }

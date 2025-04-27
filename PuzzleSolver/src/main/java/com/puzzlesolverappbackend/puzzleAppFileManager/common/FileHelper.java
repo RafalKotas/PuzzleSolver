@@ -1,6 +1,6 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.helpers;
+package com.puzzlesolverappbackend.puzzleAppFileManager.common;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.runners.InitializerConstants;
+import com.puzzlesolverappbackend.puzzleAppFileManager.constants.InitializerConstants;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
 

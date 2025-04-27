@@ -1,8 +1,9 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.logicOperators.LogicFunctions;
+import com.puzzlesolverappbackend.puzzleAppFileManager.common.LogicFunctions;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramActionDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramBoardTemplate;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramSolution;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.rangeInsideAnotherRange;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.rangeLength;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramState.buildInitialEmptyNonogramState;
@@ -26,8 +29,6 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.col
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.collectColouredSequencesRangesInRow;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.getSolutionBoardColumn;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.isFieldEmpty;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeInsideAnotherRange;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.rangeLength;
 
 
 
@@ -1389,6 +1390,10 @@ public class NonogramLogic extends NonogramLogicParams {
 
             List<List<Integer>> colouredSequencesInRow = collectColouredSequencesRangesInRow(this.getNonogramSolutionBoard(), rowIdx);
             List<Integer> currentColouredSequence;
+
+            if (rowSequencesLengths.equals(List.of(0)) && colouredSequencesInRow.isEmpty()) {
+                continue;
+            }
 
             if (colouredSequencesInRow.size() != rowSequencesLengths.size()) {
                 return false;

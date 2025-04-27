@@ -35,7 +35,7 @@ class NonogramSolverTest {
     private final GuessMode guessMode = GuessMode.DISABLED;
 
     @ParameterizedTest
-    @ValueSource(doubles = {/*1.0,*/ 2.0/*, 3.0*/})
+    @ValueSource(doubles = {/*1.0, 2.0,*/ 3.0})
     @DisplayName("Should solve logi nonograms heuristically by difficulty")
     void shouldSolveLogiNonogramsByDifficultyHeuristicsOnly(double difficulty) {
         // given
@@ -66,11 +66,11 @@ class NonogramSolverTest {
                 nonogramSolver = new NonogramSolver(currentNonogramLogic, guessMode);
                 nonogramSolutionLogic = nonogramSolver.runSolutionAtNode(nonogramSolutionNode);
 
-                if (!nonogramSolutionLogic.isSolved()) {
+                if (nonogramSolutionLogic.nonogramIsFullyAndCorrectSolved()) {
+                    System.out.println(orderId + " " + filename + " " + difficulty + " TAK");
+                } else {
                     System.out.println(orderId + " " + filename + " " + difficulty + " niepełne");
                     notSolvedNonograms.add(filename);
-                } else {
-                    System.out.println(orderId + " " + filename + " " + difficulty + " TAK");
                 }
             }
             // TODO - write test/s for checking invalid nonograms existing

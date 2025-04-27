@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.get2dimArrayColumn;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.isFieldColoured;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.utils.ArrayUtils.get2dimArrayColumn;
 
 public interface ColumnColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers {
 

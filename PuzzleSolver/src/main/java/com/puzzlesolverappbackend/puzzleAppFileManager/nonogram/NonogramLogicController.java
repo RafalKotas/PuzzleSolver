@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.helpers.FileHelper.nonogramSolutionSavePathForFilename;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.common.FileHelper.nonogramSolutionSavePathForFilename;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController

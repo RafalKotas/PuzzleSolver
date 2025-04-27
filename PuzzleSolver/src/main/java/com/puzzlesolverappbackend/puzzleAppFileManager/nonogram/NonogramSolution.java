@@ -3,7 +3,7 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.puzzlesolverappbackend.puzzleAppFileManager.helpers.FileHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.common.FileHelper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogic;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +11,9 @@ import lombok.Setter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.COLOURED_FIELD;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.X_FIELD;
 
 @Setter
 @Getter
@@ -25,7 +28,7 @@ public class NonogramSolution {
             JsonElement jsonElement = JsonParser.parseReader(reader);
             return gson.fromJson(jsonElement, NonogramSolution.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return null;
         }
     }
@@ -49,12 +52,12 @@ public class NonogramSolution {
                 String subCell = subRow.get(j);
                 String fullCell = fullRow.get(j);
 
-                if (subCell.equals("X")) {
-                    if (!fullCell.equals("X")) {
+                if (subCell.equals(X_FIELD)) {
+                    if (!fullCell.equals(X_FIELD)) {
                         return false;
                     }
-                } else if (subCell.equals("O")) {
-                    if (!fullCell.equals("O")) {
+                } else if (subCell.equals(COLOURED_FIELD)) {
+                    if (!fullCell.equals(COLOURED_FIELD)) {
                         return false;
                     }
                 }

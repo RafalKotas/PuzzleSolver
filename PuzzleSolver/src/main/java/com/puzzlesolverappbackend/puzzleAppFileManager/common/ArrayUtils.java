@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.utils;
+package com.puzzlesolverappbackend.puzzleAppFileManager.common;
 
 import lombok.experimental.UtilityClass;
 
