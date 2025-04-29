@@ -20,7 +20,7 @@ import { findNextNonogramName, findPreviousNonogramName, selectedNonogramDetails
 import { SetNonogramRelatedLogicData } from "../../../../../store/puzzleLogic/nonogram"
 
 // services
-import NonogramService from "../../../../../services/nonogram/nonogram.service"
+import NonogramLogicService from "../../../../../services/nonogram/nonogram.logic.service"
 
 // styles
 import "./NonogramSolverView.css"
@@ -82,7 +82,7 @@ const NonogramSolverView : React.FC<NonogramSolverViewProps> = ({ selectedNonogr
                     width: nonogramFromResponse.width
                 }
 
-                NonogramService.initializeNonogramLogic(initData)
+                NonogramLogicService.initializeNonogramLogic(initData)
                 .then((initResponse) => {
                     const nonogramRelatedData = initResponse.data;
                     setNonogramRelatedLogicData(nonogramRelatedData);
