@@ -4,7 +4,7 @@ import { COLOUR_FIELDS_IN_COLUMNS_RANGE,
     PLACE_X_BOARD_SQUARE, 
     RESET_NONOGRAM_BOARD, 
     SET_CURRENT_NONOGRAM_MARK, 
-    SET_NONOGRAM_LOGIC_DATA,
+    SET_NONOGRAM_RELATED_LOGIC_DATA,
     nonogramBoardMarks, 
     nonogramRelatedLogicData } from "./types"
 
@@ -18,11 +18,11 @@ export const InitializeSolverData = (rowsSequences: Array<Array<number>>, column
     }
 }
 
-export const SetNonogramLogicData = (nonogramLogicData: nonogramRelatedLogicData) => {
+export const SetNonogramRelatedLogicData  = (nonogramRelatedLogicData: nonogramRelatedLogicData) => {
     return {
-        type: SET_NONOGRAM_LOGIC_DATA,
+        type: SET_NONOGRAM_RELATED_LOGIC_DATA,
         payload: {
-            nonogramLogicData
+            nonogramRelatedLogicData
         }
     }
 }

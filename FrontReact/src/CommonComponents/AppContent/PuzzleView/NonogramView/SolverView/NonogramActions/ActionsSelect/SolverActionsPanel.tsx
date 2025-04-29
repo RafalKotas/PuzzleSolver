@@ -20,7 +20,7 @@ import { makeStyles } from "@material-ui/core"
 // others
 import { actionsProps, nonogramActionsNames } from "./solverActions"
 import NonogramLogicService from "../../../../../../../services/nonogram/nonogram.logic.service"
-import { nonogramRelatedLogicData, SetNonogramLogicData } from "../../../../../../../store/puzzleLogic/nonogram"
+import { nonogramRelatedLogicData, SetNonogramRelatedLogicData } from "../../../../../../../store/puzzleLogic/nonogram"
 
 // css
 import "./SolverActionsPanel.css"
@@ -60,8 +60,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
         dispatch(SetCorrectness(correct)),
     setCurrentNonogramMark: (mark : nonogramBoardMarks) =>
         dispatch(SetCurrentNonogramMark(mark)),
-    setNonogramLogicData: (nonogramLogicData: nonogramRelatedLogicData) =>
-            dispatch(SetNonogramLogicData(nonogramLogicData)),
+    setNonogramRelatedLogicData: (nonogramRelatedLogicData: nonogramRelatedLogicData) =>
+            dispatch(SetNonogramRelatedLogicData(nonogramRelatedLogicData)),
     initializeSolverData: (rowsSequences: number[][], columnsSequences: number[][]) => dispatch(InitializeSolverData(rowsSequences, columnsSequences))
 })
 
@@ -72,7 +72,7 @@ type SolverActionsPanelPropsFromRedux = ConnectedProps<typeof connector>
 type SolverActionsPanelProps = SolverActionsPanelPropsFromRedux//& OwnSolverActionsPanelProps
 
 const SolverActionsPanel: React.FC<SolverActionsPanelProps> = ({selectedNonogramName, correctIndicator, nonogramRelatedLogicData,
-    setCurrentNonogramMark, setNonogramLogicData}) => {
+    setCurrentNonogramMark, setNonogramRelatedLogicData}) => {
 
     const classes = useStyles()
 
@@ -97,13 +97,13 @@ const SolverActionsPanel: React.FC<SolverActionsPanelProps> = ({selectedNonogram
         setOrder(updatedOrder)
     }
 
-    const updateRows = (rowsRange: Array<number>) => {
-        setRowsRange(rowsRange)
-    }
+    // const updateRows = (rowsRange: Array<number>) => {
+    //     setRowsRange(rowsRange)
+    // }
 
-    const updateColumns = (columnsRange: Array<number>) => {
-        setColumnsRange(columnsRange)
-    }
+    // const updateColumns = (columnsRange: Array<number>) => {
+    //     setColumnsRange(columnsRange)
+    // }
 
     const dispatchSelectedAction = (name: nonogramActionsNames) => {
         switch (name) {
@@ -112,7 +112,7 @@ const SolverActionsPanel: React.FC<SolverActionsPanelProps> = ({selectedNonogram
                     case "ROW":
                         NonogramLogicService.colourFieldsInRowsRange(nonogramRelatedLogicData, rowsRange[0], rowsRange[1])
                             .then((response) => {
-                                setNonogramLogicData(response.data)
+                                setNonogramRelatedLogicData(response.data)
                             }).catch(() => {
 
                             })
@@ -120,7 +120,7 @@ const SolverActionsPanel: React.FC<SolverActionsPanelProps> = ({selectedNonogram
                     case "COLUMN":
                         NonogramLogicService.colourFieldsInColumnsRange(nonogramRelatedLogicData, columnsRange[0], columnsRange[1])
                             .then((response) => {
-                                setNonogramLogicData(response.data)
+                                setNonogramRelatedLogicData(response.data)
                             }).catch(() => {
 
                             })
@@ -132,7 +132,7 @@ const SolverActionsPanel: React.FC<SolverActionsPanelProps> = ({selectedNonogram
                     case "ROW":
                         NonogramLogicService.placeXinRowsRange(nonogramRelatedLogicData, rowsRange[0], rowsRange[1])
                             .then((response) => {
-                                setNonogramLogicData(response.data)
+                                setNonogramRelatedLogicData(response.data)
                             }).catch(() => {
 
                             })
@@ -140,7 +140,7 @@ const SolverActionsPanel: React.FC<SolverActionsPanelProps> = ({selectedNonogram
                     case "COLUMN":
                         NonogramLogicService.placeXinColumnsRange(nonogramRelatedLogicData, columnsRange[0], columnsRange[1])
                             .then((response) => {
-                                setNonogramLogicData(response.data)
+                                setNonogramRelatedLogicData(response.data)
                             }).catch(() => {
 
                             })
@@ -154,7 +154,7 @@ const SolverActionsPanel: React.FC<SolverActionsPanelProps> = ({selectedNonogram
                     case "ROW":
                         NonogramLogicService.markFieldsInRowsRange(nonogramRelatedLogicData, rowsRange[0], rowsRange[1])
                             .then((response) => {
-                                setNonogramLogicData(response.data)
+                                setNonogramRelatedLogicData(response.data)
                             }).catch(() => {
 
                             })
@@ -162,7 +162,7 @@ const SolverActionsPanel: React.FC<SolverActionsPanelProps> = ({selectedNonogram
                     case "COLUMN":
                         NonogramLogicService.markFieldsInColumnsRange(nonogramRelatedLogicData, columnsRange[0], columnsRange[1])
                             .then((response) => {
-                                setNonogramLogicData(response.data)
+                                setNonogramRelatedLogicData(response.data)
                             }).catch(() => {
 
                             })
@@ -172,7 +172,7 @@ const SolverActionsPanel: React.FC<SolverActionsPanelProps> = ({selectedNonogram
             case "CUSTOM SOLVER":
                 NonogramLogicService.testCustomSolution(nonogramRelatedLogicData, selectedNonogramName)
                 .then((response) => {
-                    setNonogramLogicData(response.data)
+                    setNonogramRelatedLogicData(response.data)
                 }).catch(() => {
 
                 })
@@ -188,7 +188,7 @@ const SolverActionsPanel: React.FC<SolverActionsPanelProps> = ({selectedNonogram
             case "COMPARE WITH SOLUTION":
                 NonogramLogicService.compareWithSolution(nonogramRelatedLogicData, selectedNonogramName)
                 .then((response) => {
-                    setNonogramLogicData(response.data)
+                    setNonogramRelatedLogicData(response.data)
                 }).catch(() => {
 
                 })
@@ -198,7 +198,7 @@ const SolverActionsPanel: React.FC<SolverActionsPanelProps> = ({selectedNonogram
                     case "ROW":
                         NonogramLogicService.correctRowsRanges(nonogramRelatedLogicData, rowsRange[0], rowsRange[1])
                             .then((response) => {
-                                setNonogramLogicData(response.data)
+                                setNonogramRelatedLogicData(response.data)
                             }).catch(() => {
 
                             })
@@ -206,7 +206,7 @@ const SolverActionsPanel: React.FC<SolverActionsPanelProps> = ({selectedNonogram
                     case "COLUMN":
                         NonogramLogicService.correctColumnsRanges(nonogramRelatedLogicData, columnsRange[0], columnsRange[1])
                             .then((response) => {
-                                setNonogramLogicData(response.data)
+                                setNonogramRelatedLogicData(response.data)
                             }).catch(() => {
 
                             })

@@ -17,7 +17,10 @@ import { Dispatch } from "redux"
 // redux - store
 import { AppState } from "../../../../../store"
 import { findNextNonogramName, findPreviousNonogramName, selectedNonogramDetails, SetSelectedNonogram } from "../../../../../store/data/nonogram"
-import { InitializeSolverData } from "../../../../../store/puzzleLogic/nonogram"
+import { SetNonogramRelatedLogicData } from "../../../../../store/puzzleLogic/nonogram"
+
+// services
+import NonogramService from "../../../../../services/nonogram/nonogram.service"
 
 // styles
 import "./NonogramSolverView.css"
@@ -34,7 +37,7 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     setSelectedNonogram: (nonogram: selectedNonogramDetails | null) => dispatch(SetSelectedNonogram(nonogram)),
-    initializeSolverData: (rowsSequences: number[][], columnsSequences: number[][]) => dispatch(InitializeSolverData(rowsSequences, columnsSequences)),
+    setNonogramRelatedLogicData: (nonogramRelatedLogicData: any) => dispatch(SetNonogramRelatedLogicData(nonogramRelatedLogicData))
 })
 
 const connector = connect(mapStateToProps, mapDispatchToProps)
@@ -44,7 +47,7 @@ type NonogramSolverViewPropsFromRedux = ConnectedProps<typeof connector>
 type NonogramSolverViewProps = NonogramSolverViewPropsFromRedux & OwnNonogramSolverViewProps
 
 const NonogramSolverView : React.FC<NonogramSolverViewProps> = ({ selectedNonogram, previousNonogramFilename, nextNonogramFilename, 
-    setSelectedNonogram, initializeSolverData
+    setSelectedNonogram, setNonogramRelatedLogicData
      }) => {
 
         useEffect(() => {
@@ -62,17 +65,35 @@ const NonogramSolverView : React.FC<NonogramSolverViewProps> = ({ selectedNonogr
     useEffect(() => {
 
         axios.get(nonogramPath).then((response: { data: selectedNonogramDetails }) => {
-            let nonogramFromResponse = response.data
+            const nonogramFromResponse = response.data
+
             if (nonogramFromResponse) {
-                if (params.filename) {
-                    nonogramFromResponse.filename = params.filename
+                if (params.filename && params.filename !== nonogramFromResponse.filename) {
+                    nonogramFromResponse.filename = params.filename;
                 }
+
                 setSelectedNonogram(nonogramFromResponse)
-                initializeSolverData(nonogramFromResponse.rowSequences, nonogramFromResponse.columnSequences)
+
+                const initData = {
+                    filename: nonogramFromResponse.filename,
+                    rowSequences: nonogramFromResponse.rowSequences,
+                    columnSequences: nonogramFromResponse.columnSequences,
+                    height: nonogramFromResponse.height,
+                    width: nonogramFromResponse.width
+                }
+
+                NonogramService.initializeNonogramLogic(initData)
+                .then((initResponse) => {
+                    const nonogramRelatedData = initResponse.data;
+                    setNonogramRelatedLogicData(nonogramRelatedData);
+                })
+                .catch((error) => {
+                    console.error("Error initializing nonogram logic:", error);
+                })
             }
         })
 
-    }, [nonogramPath, setSelectedNonogram, params.filename])
+    }, [nonogramPath, params.filename, setSelectedNonogram, setNonogramRelatedLogicData])
 
     const renderCondition = () => selectedNonogram && params.filename && selectedNonogram.filename === params.filename
 

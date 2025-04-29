@@ -21,7 +21,6 @@ import { faList, faGrip} from "@fortawesome/free-solid-svg-icons"
 
 //styles
 import "./NonogramSelectSection.css"
-import { createObjectToInitSolverData, SetNonogramLogicData } from "../../../store/puzzleLogic/nonogram"
 
 const mapStateToProps = (state: AppState) => ({
     displayMode: state.displayReducer.displayMode,
@@ -45,8 +44,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     setDisplayMode: (displayMode: displayModes) =>
         dispatch(SetDisplayMode(displayMode)),
     setCurrentPage: (updatedPage: number) =>
-        dispatch(SetCurrentPage(updatedPage)),
-    resetNonogramLogicData: () => dispatch(SetNonogramLogicData(createObjectToInitSolverData([],[])))
+        dispatch(SetCurrentPage(updatedPage))
 })
 
 const connector = connect(mapStateToProps, mapDispatchToProps)

@@ -99,7 +99,7 @@ export const emptyColumnsSequencesIdsNotToInclude = (width: number) => {
 }
 
 export const INIT_SOLVER_DATA = "INIT_SOLVER_DATA"
-export const SET_NONOGRAM_LOGIC_DATA = "SET_NONOGRAM_LOGIC_DATA"
+export const SET_NONOGRAM_RELATED_LOGIC_DATA = "SET_NONOGRAM_RELATED_LOGIC_DATA"
 export const RESET_NONOGRAM_BOARD = "RESET_NONOGRAM_BOARD"
 
 interface InitializeSolverData {
@@ -110,10 +110,10 @@ interface InitializeSolverData {
     }
 }
 
-interface SetNonogramLogicData {
-    type: typeof SET_NONOGRAM_LOGIC_DATA,
+interface SetNonogramRelatedLogicData {
+    type: typeof SET_NONOGRAM_RELATED_LOGIC_DATA,
     payload: {
-        nonogramLogicData: nonogramRelatedLogicData
+        nonogramRelatedLogicData: nonogramRelatedLogicData
     }
 }
 
@@ -163,7 +163,7 @@ interface ColourColumnFieldsInColumnsRange {
     }
 }
 
-type LocalLogicActions = InitializeSolverData | SetNonogramLogicData | ResetNonogramBoard |
+type LocalLogicActions = InitializeSolverData | SetNonogramRelatedLogicData | ResetNonogramBoard |
      FillBoardSquare | PlaceXBoardSquare | SetCurrentMark
 
 type NonogramSolverActionTypes = ColourColumnFieldsInColumnsRange

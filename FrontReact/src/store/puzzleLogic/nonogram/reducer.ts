@@ -14,7 +14,7 @@ import { createEmptyNonogramBoard,
     NonogramLogicActionTypes, 
     NonogramLogicState, 
     COLOUR_FIELDS_IN_COLUMNS_RANGE, 
-    SET_NONOGRAM_LOGIC_DATA,
+    SET_NONOGRAM_RELATED_LOGIC_DATA,
     RESET_NONOGRAM_BOARD,
     FILL_BOARD_SQUARE, 
     INIT_SOLVER_DATA, 
@@ -68,10 +68,10 @@ export const nonogramLogicReducer: Reducer<NonogramLogicState, NonogramLogicActi
                     columnsSequencesIdsNotToInclude: emptyColumnsSequencesIdsNotToInclude(width)
                 }
             }
-        case SET_NONOGRAM_LOGIC_DATA:
-            return {
-                ...state,
-                nonogramRelatedData: action.payload.nonogramLogicData
+        case SET_NONOGRAM_RELATED_LOGIC_DATA:
+                return {
+                    ...state,
+                    nonogramRelatedData: action.payload.nonogramRelatedLogicData
             }
         case RESET_NONOGRAM_BOARD:
             if (state.nonogramRelatedData.nonogramSolutionBoard && state.nonogramRelatedData.nonogramSolutionBoard.length > 0) {

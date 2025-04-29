@@ -1,5 +1,5 @@
 // react
-import React, { useState } from "react"
+import React from "react"
 
 // redux
 import { connect, ConnectedProps } from "react-redux"
@@ -9,13 +9,13 @@ import { Dispatch } from "redux"
 import { AppState } from "../../../../../../../../store"
 
 // material-ui
-import { Button, Tab, Tabs } from "@mui/material"
+import { Tab, Tabs } from "@mui/material"
 /*import { makeStyles } from "@material-ui/core"*/
 
 // others
 import { nonogramSolverActionsNames, nonogramActionsNames } from "../solverActions"
 import CustomMUISlider from "../../../../../../PuzzleFiltersPanel/CustomMUISlider/CustomMUISlider"
-import { ColourFieldsInColumnsRange, nonogramRelatedLogicData, SetNonogramLogicData } from "../../../../../../../../store/puzzleLogic/nonogram"
+import { ColourFieldsInColumnsRange, nonogramRelatedLogicData, SetNonogramRelatedLogicData } from "../../../../../../../../store/puzzleLogic/nonogram"
 
 interface OwnNonogramActionVariantsProps {
     selectedActionName: nonogramActionsNames,
@@ -35,8 +35,8 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     colourFieldsInColumnsRange: (columnBegin: number, columnEnd: number) =>
         dispatch(ColourFieldsInColumnsRange(columnBegin, columnEnd)),
-    setNonogramLogicData: (nonogramLogicData: nonogramRelatedLogicData) =>
-        dispatch(SetNonogramLogicData(nonogramLogicData))
+    setNonogramRelatedLogicData: (nonogramRelatedLogicData: nonogramRelatedLogicData) =>
+        dispatch(SetNonogramRelatedLogicData(nonogramRelatedLogicData))
 })
 
 const connector = connect(mapStateToProps, mapDispatchToProps)
