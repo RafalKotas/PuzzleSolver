@@ -10,9 +10,6 @@ export interface nonogramRelatedLogicData {
     // data need for init state to solve
     rowsSequences:                    Array<       Array<number>      >,
     columnsSequences:                 Array<       Array<number>      >,
-    
-    affectedRowsIndexes:              Array<       number             >,
-    affectedColumnsIndexes:           Array<       number             >,
 
     // data inferred from upper properties 
     nonogramSolutionBoardWithMarks:  Array<       Array<string>      >,
@@ -33,8 +30,6 @@ export const createObjectToInitSolverData = (rowsSequences : number[][], columns
         rowsSequences: rowsSequences,
         columnsSequences: columnsSequences,
         nonogramSolutionBoardWithMarks: [] as string[][],
-        affectedRowsIndexes: [] as number[],
-        affectedColumnsIndexes: [] as number[],
         nonogramSolutionBoard: [] as string[][],
         rowsSequencesRanges: [] as number[][][],
         columnsSequencesRanges: [] as number[][][],

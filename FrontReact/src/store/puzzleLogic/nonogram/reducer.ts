@@ -26,8 +26,6 @@ export const initialState: NonogramLogicState = {
     nonogramRelatedData: {
         rowsSequences: [],
         columnsSequences: [],
-        affectedRowsIndexes: [],
-        affectedColumnsIndexes: [],
         nonogramSolutionBoardWithMarks: [],
         nonogramSolutionBoard: [],
         rowsSequencesRanges: [],
@@ -58,8 +56,6 @@ export const nonogramLogicReducer: Reducer<NonogramLogicState, NonogramLogicActi
                     columnsSequences: columnsSequences,
                     nonogramSolutionBoardWithMarks: emptyNonogramBoardWithMarks,
                     nonogramSolutionBoard: emptyNonogramBoard,
-                    affectedRowsIndexes: Array.from({length: height}, (_, rowIdx) => rowIdx),
-                    affectedColumnsIndexes: Array.from({length: width}, (_, columnIdx) => columnIdx),
                     rowsSequencesRanges: inferInitialRowsSequencesRanges(rowsSequences, emptyNonogramBoard),
                     columnsSequencesRanges: inferInitialColumnsSequencesRanges(columnsSequences, emptyNonogramBoard),
                     rowsFieldsNotToInclude: emptyRowsFieldsNotToInclude(height),
