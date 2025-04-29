@@ -3,25 +3,23 @@ import { nonogramRelatedLogicData } from "../../store/puzzleLogic/nonogram"
 
 const API_URL = "http://localhost:5000/api/nonogram/logic"
 
-const initializeSolverData = (nonogramRelatedData: nonogramRelatedLogicData) => {
-      
-    var data = JSON.stringify({
-        ...nonogramRelatedData
-    })
-
-    var initConfig = {
+const initializeNonogramLogic = (initData: {
+    filename: string,
+    rowSequences: number[][],
+    columnSequences: number[][],
+    height: number,
+    width: number
+}) => {
+    const initConfig = {
         method: "post",
-        url: API_URL + "/init",
-        headers: { 
-          "Content-Type": "application/json"
+        url: API_URL + "/initializeNonogram",
+        headers: {
+            "Content-Type": "application/json"
         },
-        params: {
+        data: initData
+    };
 
-        },
-        data: data
-    }
-
-    return axios(initConfig)
+    return axios(initConfig);
 }
 
 const colourFieldsInColumnsRange = (nonogramRelatedData: nonogramRelatedLogicData, columnBegin: number, columnEnd: number) => {
@@ -270,7 +268,7 @@ const correctRowsRanges  = (nonogramRelatedData: nonogramRelatedLogicData, rowBe
 }
 
 const NonogramLogicService = {
-    initializeSolverData,
+    initializeNonogramLogic,
     colourFieldsInColumnsRange,
     colourFieldsInRowsRange,
     markFieldsInRowsRange,

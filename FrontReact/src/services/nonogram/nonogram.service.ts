@@ -3,25 +3,6 @@ import { selectedNonogramDetails } from "../../store/data/nonogram"
 
 const API_URL = "http://localhost:5000/api/nonogram"
 
-const initializeNonogramLogic = (initData: {
-    filename: string,
-    rowSequences: number[][],
-    columnSequences: number[][],
-    height: number,
-    width: number
-}) => {
-    const initConfig = {
-        method: "post",
-        url: API_URL + "/initializeNonogram",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        data: initData
-    };
-
-    return axios(initConfig);
-}
-
 const saveNonogramToFile = (fileName : string, snd : selectedNonogramDetails) => {
     
     var data = JSON.stringify({
@@ -49,7 +30,7 @@ const getNonogramDetailsFromFilePath = (fileName : string) => {
     
     var getNonogramsConfig = {
         method: "get",
-        url: "../../resources/Nonograms/" + fileName + ".json?nocache=${Date.now()}",
+        url: `../../resources/Nonograms/${fileName}.json?nocache=${Date.now()}`,
         headers: { 
           "Content-Type": "application/json"
         }
@@ -114,7 +95,6 @@ const getNonogramsList = () => {
 }
 
 const NonogramService = {
-    initializeNonogramLogic,
     getNonogramDetailsFromFilePath,
     saveNonogramToFile,
     getNonogramsUsingFilters,
