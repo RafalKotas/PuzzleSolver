@@ -8,8 +8,6 @@ const saveNonogramToFile = (fileName : string, snd : selectedNonogramDetails) =>
     var data = JSON.stringify({
         ...snd
     });
-
-    console.log(API_URL + "/save")
       
     var saveConfig = {
         method: "post",

@@ -59,9 +59,9 @@ type NonogramActionsProps = NonogramActionsPropsFromRedux & OwnNonogramActionsPr
 const NonogramActions : React.FC<NonogramActionsProps> = ({marksVisible, xsVisible, cellSize, setCellSize,
     selectedNonogram, setCorrectness, correctIndicator, turnOffEditMode, toggleMarksVisibility, toggleXsVisibility}) => {
 
-    type nonogramsActionsTabs = "layout" | "solver"
+    type nonogramsActionsTabs = "LAYOUT" | "SOLVER"
 
-    const [currentTab, setCurrentTab] = useState<nonogramsActionsTabs>("layout")
+    const [currentTab, setCurrentTab] = useState<nonogramsActionsTabs>("LAYOUT")
 
     useEffect(() => {
         turnOffEditMode()
@@ -70,7 +70,7 @@ const NonogramActions : React.FC<NonogramActionsProps> = ({marksVisible, xsVisib
 
     useEffect(() => {
         setCorrectness(0)
-        setCurrentTab("layout")
+        setCurrentTab("LAYOUT")
 
         //eslint-disable-next-line
     }, [selectedNonogram])
@@ -114,16 +114,16 @@ const NonogramActions : React.FC<NonogramActionsProps> = ({marksVisible, xsVisib
             }}
         >
             <Tab 
-                label={"layout"}
-                value={"layout"}
+                label={"LAYOUT"}
+                value={"LAYOUT"}
             />
             <Tab 
-                label={"solver"}
-                value={"solver"}
+                label={"SOLVER"}
+                value={"SOLVER"}
                 disabled={correctIndicator !== 1}
             />
         </Tabs>
-        {currentTab === "layout" && 
+        {currentTab === "LAYOUT" && 
             <React.Fragment>
                 <TextField
                     type="number"
@@ -174,7 +174,7 @@ const NonogramActions : React.FC<NonogramActionsProps> = ({marksVisible, xsVisib
             </React.Fragment>
         }
         {
-            currentTab === "solver" && <SolverActionsPanel/>
+            currentTab === "SOLVER" && <SolverActionsPanel/>
         }
     </div>)
 }

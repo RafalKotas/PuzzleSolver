@@ -1,19 +1,51 @@
+import { nonogramActionsNames } from "../../../CommonComponents/AppContent/PuzzleView/NonogramView/SolverView/NonogramActions/ActionsSelect/solverActions"
+
 export type nonogramBoardMarks = "X" | "O" | "-"
 
-export interface NonogramLogicState {
 
+export type nonogramSolverRowActions = "CORRECT_ROW_SEQUENCES_RANGES" | "CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS" | "CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY" 
+| "CORRECT_ROW_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES" | "CORRECT_ROW_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE" | "COLOUR_OVERLAPPING_FIELDS_IN_ROW" 
+| "COLOUR_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE" | "EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW" | "COLOUR_FIELDS_IN_ROW_IF_X_CAUSES_ASSIGNMENT_CONFLICT" | "PLACE_XS_ROW_AT_UNREACHABLE_FIELDS" 
+| "PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES" | "PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES" | "PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE" 
+| "PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE" | "ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH" | "MARK_AVAILABLE_FIELDS_IN_ROW"
+
+export type nonogramSolverColumnAction = "CORRECT_COLUMN_SEQUENCES_RANGES" | "CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS" | "CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY"
+| "CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES" | "CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE" | "COLOUR_OVERLAPPING_FIELDS_IN_COLUMN"
+| "COLOUR_FIELDS_IN_COLUMN_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE" | "EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN" | "COLOUR_FIELDS_IN_COLUMN_IF_X_CAUSES_ASSIGNMENT_CONFLICT"
+| "PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS" | "PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES" | "PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES" | "PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE"
+| "PLACE_XS_COLUMN_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE" | "COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH" | "MARK_AVAILABLE_FIELDS_IN_COLUMN"
+
+export type nonogramSolverActions = nonogramSolverRowActions | nonogramSolverColumnAction
+
+export interface NonogramLogicState {
     nonogramRelatedData: nonogramRelatedLogicData,
     currentMark: nonogramBoardMarks
 }
 
+export interface rules {
+    rowsSequencesLengths:                    Array<       Array<number>      >,
+    columnsSequencesLengths:                 Array<       Array<number>      >,
+    height: number,
+    width: number
+}
+
+export interface nonogramState {
+    newStepsMade: number,
+    invalidSolution: boolean
+}
+
+export interface nonogramActionDetails {
+    index: number, 
+    actionName: nonogramSolverActions,
+}
+
 export interface nonogramRelatedLogicData {
-    // data need for init state to solve
-    rowsSequences:                    Array<       Array<number>      >,
-    columnsSequences:                 Array<       Array<number>      >,
+
+    nonogramRules: rules,
 
     // data inferred from upper properties 
-    nonogramSolutionBoardWithMarks:  Array<       Array<string>      >,
     nonogramSolutionBoard:           Array<       Array<string>      >,
+    nonogramSolutionBoardWithMarks:  Array<       Array<string>      >,
 
     rowsSequencesRanges:             Array< Array< Array< number > > >,
     columnsSequencesRanges:          Array< Array< Array< number > > >,

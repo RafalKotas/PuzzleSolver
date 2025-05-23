@@ -170,6 +170,7 @@ const SolverActionsPanel: React.FC<SolverActionsPanelProps> = ({selectedNonogram
                 }
                 break
             case "CUSTOM SOLVER":
+                console.log(nonogramRelatedLogicData)
                 NonogramLogicService.testCustomSolution(nonogramRelatedLogicData, selectedNonogramName)
                 .then((response) => {
                     setNonogramRelatedLogicData(response.data)

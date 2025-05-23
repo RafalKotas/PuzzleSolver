@@ -59,9 +59,6 @@ const NonogramSolverView : React.FC<NonogramSolverViewProps> = ({ selectedNonogr
 
     const nonogramPath = "../../resources/Nonograms/" + params.filename + ".json"
 
-    console.log("selected nonogram: ")
-    console.log(selectedNonogram)
-
     useEffect(() => {
 
         axios.get(nonogramPath).then((response: { data: selectedNonogramDetails }) => {

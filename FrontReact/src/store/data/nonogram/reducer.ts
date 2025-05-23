@@ -66,7 +66,6 @@ export const nonogramDataReducer: Reducer<NonogramDataState, NonogramDataActionT
                 nonogramsList: action.payload.nonogramsList
             }
         case SET_SELECTED_NONOGRAM:
-            console.log("set selected nonogram action triggered")
             return {...state,
                 selectedNonogram: action.payload.updatedNonogram
             }
@@ -410,9 +409,6 @@ export const sortedNonogramsWhichMetSelectedFilters = (displayState: DisplayStat
 
 export const selectNonogramsWhichMetSelectedFilters = (displayState: DisplayState, dataState : NonogramDataState, filtersState : NonogramFiltersState) => {
     let initialNonogramsList = displayState.mode === "READ" ? dataState.nonogramsList : dataState.createdNonogramsList
-    
-    console.log("mode: " + displayState.mode)
-    console.log(initialNonogramsList)
 
     if(displayState.mode === "READ") {
         let selectionFilters = extractSelectionFilters(filtersState)

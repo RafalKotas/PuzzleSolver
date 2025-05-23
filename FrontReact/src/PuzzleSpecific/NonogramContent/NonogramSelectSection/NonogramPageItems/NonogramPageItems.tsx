@@ -46,8 +46,6 @@ type NonogramPageItemsProps = NonogramPageItemsPropsFromRedux
 const NonogramPageItems : React.FC<NonogramPageItemsProps> = ({ 
     mode, sortedAndFilteredNonograms, currentPage, itemsPerPage, setSelectedNonogram}) => {
 
-    console.log(sortedAndFilteredNonograms)
-
     useEffect(() => {
         setSelectedNonogram(null)
     }, [setSelectedNonogram])

@@ -50,7 +50,6 @@ const NonogramEditView : React.FC<NonogramEditViewProps> = ({selectedNonogram, c
     useEffect(() => {
         createdNonogramsList.forEach((nonogram) => {
             if(nonogram.filename === params.filename) {
-                console.log(nonogram)
                 setSelectedNonogram( transformNonogramInformationIntoNonogramDetails(nonogram) )
             }
         })

@@ -73,12 +73,11 @@ const SequencesModifier: React.FC<SequencesModifierProps> = ({ maxRowModifyIndex
   }, [sequences])
 
   useEffect(() => {
-    console.log("modify index: " + modifyIndex)
+
   }, [modifyIndex])
 
   const changeIndexHandler = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     let updatedIndex = Math.min(maxModifyIndex, parseInt(event.target.value))
-    console.log("index handler!")
     if (updatedIndex < 0 || updatedIndex > maxModifyIndex) {
       event.preventDefault()
     } else {

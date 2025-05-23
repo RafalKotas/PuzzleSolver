@@ -27,8 +27,8 @@ interface OwnNonogramActionVariantsProps {
 }
 
 const mapStateToProps = (state: AppState) => ({
-    maxRow: state.nonogramLogicReducer.nonogramRelatedData.rowsSequences.length,
-    maxColumn: state.nonogramLogicReducer.nonogramRelatedData.columnsSequences.length,
+    maxRow: state.nonogramLogicReducer.nonogramRelatedData.nonogramRules.height,
+    maxColumn: state.nonogramLogicReducer.nonogramRelatedData.nonogramRules.width,
     nonogramRelatedLogicData: state.nonogramLogicReducer.nonogramRelatedData
 })
 

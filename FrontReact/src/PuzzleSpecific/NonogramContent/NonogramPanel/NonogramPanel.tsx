@@ -62,8 +62,6 @@ const NonogramPanel : React.FC<NonogramPanelProps> = ({nonogramsList, selectedDi
 
     // 
     useEffect(() => {
-
-        console.log(selectedDiffs)
         
         fetchAllFiles()
 
