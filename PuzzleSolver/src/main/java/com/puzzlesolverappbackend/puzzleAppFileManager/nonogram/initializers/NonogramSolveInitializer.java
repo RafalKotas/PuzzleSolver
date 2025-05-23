@@ -10,6 +10,7 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramService;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicService;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRules;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRules.mapNonogramFileDetailsToNonogramRules;
 
 //@Component
 //@Order(7)
@@ -625,6 +627,7 @@ public class NonogramSolveInitializer implements CommandLineRunner {
         System.out.println("Selected nonograms count: " + selectedCount);
 
         NonogramFileDetails nonogramFileDetails;
+        NonogramRules nonogramRules;
         NonogramLogic nonogramLogicToSolve;
         NonogramLogic nonogramLogicSolved;
 
@@ -647,7 +650,8 @@ public class NonogramSolveInitializer implements CommandLineRunner {
                     new File(puzzlePath + filename + JSON_EXTENSION), NonogramFileDetails.class
             );
 
-            nonogramLogicToSolve = new NonogramLogic(nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences(), GuessMode.DISABLED);
+            nonogramRules = mapNonogramFileDetailsToNonogramRules(nonogramFileDetails);
+            nonogramLogicToSolve = new NonogramLogic(nonogramRules, GuessMode.DISABLED);
 
             if (!filesTooLongSolving.contains(filename)) {
                 long start = System.currentTimeMillis();

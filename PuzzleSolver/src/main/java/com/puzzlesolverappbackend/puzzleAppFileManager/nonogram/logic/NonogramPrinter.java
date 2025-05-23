@@ -14,9 +14,6 @@ public class NonogramPrinter extends NonogramLogicParams implements NonogramLogi
     protected NonogramColumnLogic nonogramColumnLogic;
     protected NonogramRowLogic nonogramRowLogic;
 
-    /**
-     * prints nonogramSolutionBoard(only "X"/"O"/"-") in readable format
-     */
     public void printNonogramBoard() {
         List<String> rowsWithIndexes = IntStream.range(0, this.getNonogramSolutionBoard().size())
                 .mapToObj(rowIndex -> this.getNonogramSolutionBoard().get(rowIndex) + " " + rowIndex)
@@ -27,59 +24,39 @@ public class NonogramPrinter extends NonogramLogicParams implements NonogramLogi
     }
 
     public NonogramPrinter(NonogramLogic nonogramLogic) {
-        this.showRepetitions = nonogramLogic.showRepetitions;
+        this.SHOW_REPETITIONS = nonogramLogic.SHOW_REPETITIONS;
         this.logs = nonogramLogic.getLogs();
         this.tmpLog = nonogramLogic.getTmpLog();
+        this.nonogramRowLogic = nonogramLogic.getNonogramRowLogic();
         this.nonogramColumnLogic = nonogramLogic.getNonogramColumnLogic();
-        this.rowsSequences = nonogramLogic.getRowsSequences();
-        this.columnsSequences = nonogramLogic.getColumnsSequences();
         this.nonogramSolutionBoardWithMarks = nonogramLogic.getNonogramSolutionBoardWithMarks();
         this.nonogramSolutionBoard = nonogramLogic.getNonogramSolutionBoard();
-        this.rowsSequencesRanges = nonogramLogic.getRowsSequencesRanges();
-        this.columnsSequencesRanges = nonogramLogic.getColumnsSequencesRanges();
-
-        this.rowsFieldsNotToInclude = nonogramLogic.getRowsFieldsNotToInclude();
-        this.columnsFieldsNotToInclude = nonogramLogic.getColumnsFieldsNotToInclude();
-        this.rowsSequencesIdsNotToInclude = nonogramLogic.getRowsSequencesIdsNotToInclude();
-        this.columnsSequencesIdsNotToInclude = nonogramLogic.getColumnsSequencesIdsNotToInclude();
 
         this.availableChoices = nonogramLogic.getAvailableChoices();
     }
 
-    /**
-     * prints nonogramSolutionBoardWithMarks(fields like "RxCy"/"Rx--"/"--Cx"/"----") in readable format
-     */
     public void printNonogramBoardWithMarks() {
         for (List<String> boardRow : this.getNonogramSolutionBoardWithMarks()) {
             System.out.println(boardRow);
         }
     }
 
-    /**
-     * prints current rows sequences ranges line by line
-     */
     public void printRowsSequencesRanges() {
         int rowIdx = 0;
-        for (List<List<Integer>> rowSequencesRanges : this.getRowsSequencesRanges()) {
+        for (List<List<Integer>> rowSequencesRanges : this.getNonogramRowLogic().getRowsSequencesRanges()) {
             System.out.println(rowIdx + " " + rowSequencesRanges);
             rowIdx++;
         }
     }
 
-    /**
-     * prints current columns sequences ranges line by line
-     */
     public void printColumnsSequencesRanges() {
         int colIdx = 0;
-        for (List<List<Integer>> colSequencesRanges : this.getColumnsSequencesRanges()) {
+        for (List<List<Integer>> colSequencesRanges : this.getNonogramColumnLogic().getColumnsSequencesRanges()) {
             System.out.println(colIdx + " " + colSequencesRanges);
             colIdx++;
         }
     }
 
-    /**
-     * print solver logs line by line
-     */
     public void printLogs() {
         int logIndex = 0;
         if (!this.getLogs().isEmpty()) {
@@ -90,9 +67,6 @@ public class NonogramPrinter extends NonogramLogicParams implements NonogramLogi
         }
     }
 
-    /**
-     * function meant to print stats after using only heuristics + trial and error method to solve nonogram
-     */
     public void printStats() {
         int fieldsXPlaced = this.fieldsWithXPlaced();
         int fieldsColoured = this.fieldsColoured();

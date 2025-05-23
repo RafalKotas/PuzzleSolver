@@ -6,6 +6,7 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.constants.InitializerCons
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramFileDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRules;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 
@@ -13,6 +14,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRules.mapNonogramFileDetailsToNonogramRules;
 
 //@Component
 //@Order(9)
@@ -42,7 +45,8 @@ public class SymmetricNonogramLoggerInitializer implements CommandLineRunner {
 
             try {
                 NonogramFileDetails nonogramFileDetails = objectMapper.readValue(new File(puzzlePath + nonogramFileName), NonogramFileDetails.class);
-                NonogramLogic nonogramLogic = new NonogramLogic(nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences(), GuessMode.DISABLED);
+                NonogramRules nonogramRules = mapNonogramFileDetailsToNonogramRules(nonogramFileDetails);
+                NonogramLogic nonogramLogic = new NonogramLogic(nonogramRules, GuessMode.DISABLED);
 
                 switch(nonogramLogic.nonogramSymmetricalGrade()) {
                     case "4 axis":

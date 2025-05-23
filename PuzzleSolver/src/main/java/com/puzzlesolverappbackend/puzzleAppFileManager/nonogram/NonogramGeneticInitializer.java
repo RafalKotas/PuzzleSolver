@@ -5,11 +5,13 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.constants.InitializerCons
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramGenetic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRules;
 import org.springframework.boot.CommandLineRunner;
 
 import java.io.File;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRules.mapNonogramFileDetailsToNonogramRules;
 
 //@Component
 //@Order(8)
@@ -20,6 +22,7 @@ public class NonogramGeneticInitializer implements CommandLineRunner {
     ObjectMapper objectMapper;
 
     NonogramFileDetails nonogramFileDetails;
+    NonogramRules nonogramRules;
 
     NonogramLogic nonogramLogicToSolve;
     NonogramGenetic nonogramGenetic;
@@ -33,7 +36,8 @@ public class NonogramGeneticInitializer implements CommandLineRunner {
         nonogramFileDetails = objectMapper.readValue(
                 new File(puzzlePath + InitializerConstants.PUZZLE_NAME + JSON_EXTENSION), NonogramFileDetails.class
         );
-        nonogramLogicToSolve = new NonogramLogic(nonogramFileDetails.getRowSequences(), nonogramFileDetails.getColumnSequences(), GuessMode.DISABLED);
+        nonogramRules = mapNonogramFileDetailsToNonogramRules(nonogramFileDetails);
+        nonogramLogicToSolve = new NonogramLogic(nonogramRules, GuessMode.DISABLED);
         nonogramGenetic = new NonogramGenetic(nonogramLogicToSolve);
         nonogramGenetic.solve();
     }

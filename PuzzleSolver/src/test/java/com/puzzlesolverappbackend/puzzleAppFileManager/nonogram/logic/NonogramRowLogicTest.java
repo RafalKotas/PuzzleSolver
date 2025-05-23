@@ -101,7 +101,7 @@ class NonogramRowLogicTest {
         nonogramRowLogic.setRowSequencesRanges(8, new ArrayList<>(Arrays.asList(
                 List.of(0, 13), List.of(2, 18), List.of(13, 27), List.of(18, 29), List.of(25, 33), List.of(37, 39)
         )));
-        nonogramRowLogic.getRowsSequences().set(8, new ArrayList<>(Arrays.asList(1, 4, 3, 1, 3, 3)));
+        nonogramRowLogic.setRowSequencesLengths(8, new ArrayList<>(Arrays.asList(1, 4, 3, 1, 3, 3)));
         List<String> rowBeforeActionMade = new ArrayList<>(Arrays.asList(
                 "-", "-", "-", "-", "-",
                 "-", "-", "-", "-", "-",
@@ -147,7 +147,7 @@ class NonogramRowLogicTest {
         nonogramRowLogic.setRowSequencesRanges(ROW_TO_TEST, new ArrayList<>(Arrays.asList(
                 List.of(0, 2), List.of(6, 14), List.of(10, 21), List.of(12, 26), List.of(21, 37), List.of(26, 39)
         )));
-        nonogramRowLogic.getRowsSequences().set(ROW_TO_TEST, new ArrayList<>(Arrays.asList(3, 3, 1, 3, 4, 1)));
+        nonogramRowLogic.setRowSequencesLengths(ROW_TO_TEST, new ArrayList<>(Arrays.asList(3, 3, 1, 3, 4, 1)));
         List<String> rowBeforeActionMade = new ArrayList<>(Arrays.asList(
                 "O", "O", "O", "X", "X",
                 "X", "-", "-", "-", "-",
@@ -193,7 +193,7 @@ class NonogramRowLogicTest {
         nonogramRowLogic.setRowSequencesRanges(ROW_TO_TEST, new ArrayList<>(Arrays.asList(
                 List.of(0, 1), List.of(4, 6), List.of(6, 10), List.of(13, 14)
         )));
-        nonogramRowLogic.getRowsSequences().set(ROW_TO_TEST, new ArrayList<>(Arrays.asList(2, 2, 2, 2)));
+        nonogramRowLogic.setRowSequencesLengths(ROW_TO_TEST, new ArrayList<>(Arrays.asList(2, 2, 2, 2)));
         List<String> rowBeforeActionMade = new ArrayList<>(Arrays.asList("O", "O", "X", "X", "-", "O", "-", "X", "X", "-", "-", "X", "X", "O", "O", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X"));
         nonogramRowLogic.setNonogramSolutionBoardRow(ROW_TO_TEST, rowBeforeActionMade);
 

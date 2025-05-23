@@ -9,12 +9,6 @@ import java.util.List;
 @UtilityClass
 public class ArrayUtils {
 
-    /**
-     * Return true if one range is inside range of another
-     * @param rangeToCheckIfIsInsideAnother range to check if is inside another (externalRange)
-     * @param externalRange potential external range for rangeToCheckIfIsInsideAnother
-     * @return true if rangeToCheckIfIsInsideAnother is inside externalRange, false otherwise
-     */
     public static boolean rangeInsideAnotherRange(List<Integer> rangeToCheckIfIsInsideAnother, List<Integer> externalRange) {
         if (!rangeToCheckIfIsInsideAnother.isEmpty() && externalRange.size() >= 2) {
             return (externalRange.get(0) <= rangeToCheckIfIsInsideAnother.get(0)

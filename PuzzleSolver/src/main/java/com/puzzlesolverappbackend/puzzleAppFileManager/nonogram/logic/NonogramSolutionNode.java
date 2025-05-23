@@ -64,7 +64,7 @@ public class NonogramSolutionNode {
     }
 
     public void makeBasicSolverActions() {
-        this.getNonogramLogic().basicSolve(this.fullSolutionBoard);
+        this.getNonogramLogic().basicSolve();
 
         NonogramLogic logicAfterActionsMade = copyNonogramLogic();
         this.nodeLogs = logicAfterActionsMade.getLogs();

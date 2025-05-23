@@ -13,19 +13,6 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramC
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.X_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.getSolutionBoardColumn;
 
-/*TODO 26.05
-For every population member:
-1.(+) Generate arrays (top and bottom) of maximumPossibleCorrect fields
-2.(+) Find minimum from top and bottom arrays (point no 1)
-----------------------------------------------------------------DONE UP
-3. (+) Iterate through every pair of nonograms and shuffle selected row (rows in both nonograms have same index):
-a) from top: random from [0, maximumPossibleCorrect - 1]
-b) from bottom: random from [height - 1, height - 1 - maximumPossibleCorrect]
-----------------------------------------------------------------DONE UP
-TODO 27/28.05 - generate new population
-4. Choose those nonograms from population which have the best score (sum of maximumPossibleCorrectFields bottom and top)
-*/
-
 @Getter
 @Setter
 public class NonogramGenetic {
@@ -85,7 +72,7 @@ public class NonogramGenetic {
         for (int index = 0; index < populationCount; index++) {
             populationMember = gson.fromJson(gson.toJson(nonogramObject), NonogramLogic.class);
 
-            for (int rowIdx = 0; rowIdx < nonogramObject.getHeight(); rowIdx++) {
+            for (int rowIdx = 0; rowIdx < nonogramObject.getNonogramRules().getHeight(); rowIdx++) {
                 nonogramBoardRow =  generateRandomRowArray(populationMember, rowIdx);
 
                 populationMember = populationMember.setNonogramBoardRow(rowIdx, nonogramBoardRow);
@@ -187,8 +174,8 @@ public class NonogramGenetic {
                         chosenRowIndex = randomIntGenerator.nextInt(topMinimum + 1);
                     } else {
                         //chosenRowIndex = ThreadLocalRandom.current().nextInt(nonogramObject.getHeight() - 1 - bottomMinimum, nonogramObject.getHeight() - 1);
-                        int minimumBottomIndex = nonogramObject.getHeight() - 1 - bottomMinimum;
-                        int maximimumBottomIndex = nonogramObject.getHeight() - 1;
+                        int minimumBottomIndex = nonogramObject.getNonogramRules().getHeight() - 1 - bottomMinimum;
+                        int maximimumBottomIndex = nonogramObject.getNonogramRules().getHeight() - 1;
                         chosenRowIndex = randomIntGenerator.nextInt(maximimumBottomIndex - minimumBottomIndex + 1) + minimumBottomIndex;
                     }
 
@@ -302,10 +289,6 @@ public class NonogramGenetic {
         }
     }
 
-    /***
-     * @param populationMember - nonogramLogic object - nonogram representation
-     * @return list of maximum possible correct filled (or not) fields in each nonogram column
-     */
     public List<Integer> generateColumnsMaximumCorrectIndexesFromTop(NonogramLogic populationMember) {
 
         List<Integer> columnsMaximumCorrectIndexFromTop = new ArrayList<>();
@@ -320,9 +303,9 @@ public class NonogramGenetic {
         int fieldsNeeded;
         int maxProbablyCorrect;
 
-        for (int columnIdx = 0; columnIdx < populationMember.getWidth(); columnIdx++) {
-            boardColumn = getSolutionBoardColumn(populationMember.nonogramSolutionBoard, columnIdx);
-            columnSequencesLengths = populationMember.getColumnsSequences().get(columnIdx);
+        for (int columnIdx = 0; columnIdx < populationMember.getNonogramRules().getWidth(); columnIdx++) {
+            boardColumn = getSolutionBoardColumn(populationMember.getNonogramSolutionBoard(), columnIdx);
+            columnSequencesLengths = populationMember.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
 
             // from top
             currentSequenceNo = 0;
@@ -330,8 +313,8 @@ public class NonogramGenetic {
             colouredInRow = 0;
             maxProbablyCorrect = 0;
 
-            for (int rowIdx = 0;  rowIdx < populationMember.getHeight(); rowIdx++) {
-                if (boardColumn.get(rowIdx).equals("X")) {
+            for (int rowIdx = 0;  rowIdx < populationMember.getNonogramRules().getHeight(); rowIdx++) {
+                if (boardColumn.get(rowIdx).equals(X_FIELD)) {
                     if (colouredInRow == currentSequenceLength) {
                         currentSequenceNo++;
                         if (currentSequenceNo < columnSequencesLengths.size()) {
@@ -342,7 +325,7 @@ public class NonogramGenetic {
                         break;
                     }
                     colouredInRow = 0;
-                    fieldsLeft = nonogramObject.getHeight() - 1 - rowIdx;
+                    fieldsLeft = nonogramObject.getNonogramRules().getHeight() - 1 - rowIdx;
                     fieldsNeeded = calculateFieldsNeeded(currentSequenceNo, columnSequencesLengths, "fromTop");
                     if (fieldsLeft < fieldsNeeded && rowIdx > 0) {
                         maxProbablyCorrect = rowIdx - 1;
@@ -355,7 +338,7 @@ public class NonogramGenetic {
                     if (colouredInRow > currentSequenceLength || currentSequenceNo >= columnSequencesLengths.size()) {
                         maxProbablyCorrect = rowIdx - 1;
                         break;
-                    } else if (rowIdx == populationMember.getHeight() - 1) {
+                    } else if (rowIdx == populationMember.getNonogramRules().getHeight() - 1) {
                         maxProbablyCorrect = rowIdx;
                     }
                 }
@@ -380,9 +363,9 @@ public class NonogramGenetic {
         int fieldsNeeded;
         int maxProbablyCorrect;
 
-        for (int columnIdx = 0; columnIdx < populationMember.getWidth(); columnIdx++) {
-            boardColumn = getSolutionBoardColumn(populationMember.nonogramSolutionBoard, columnIdx);
-            columnSequencesLengths = populationMember.getColumnsSequences().get(columnIdx);
+        for (int columnIdx = 0; columnIdx < populationMember.getNonogramRules().getWidth(); columnIdx++) {
+            boardColumn = getSolutionBoardColumn(populationMember.getNonogramSolutionBoard(), columnIdx);
+            columnSequencesLengths = populationMember.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
 
             //from bottom - analogous
             currentSequenceNo = columnSequencesLengths.size() - 1;
@@ -390,7 +373,7 @@ public class NonogramGenetic {
             colouredInRow = 0;
             maxProbablyCorrect = 0;
 
-            for (int rowIdx = populationMember.getHeight() - 1;  rowIdx >= 0; rowIdx--) {
+            for (int rowIdx = populationMember.getNonogramRules().getHeight() - 1;  rowIdx >= 0; rowIdx--) {
                 if (boardColumn.get(rowIdx).equals("X")) {
                     if (colouredInRow == currentSequenceLength) {
                         currentSequenceNo--;
@@ -398,25 +381,25 @@ public class NonogramGenetic {
                             currentSequenceLength = columnSequencesLengths.get(currentSequenceNo);
                         }
                     } else if (colouredInRow > 0 && colouredInRow < currentSequenceLength) {
-                        maxProbablyCorrect = nonogramObject.getHeight() - (rowIdx + 1);
+                        maxProbablyCorrect = nonogramObject.getNonogramRules().getHeight() - (rowIdx + 1);
                         break;
                     }
                     colouredInRow = 0;
                     fieldsLeft = rowIdx;
                     fieldsNeeded = calculateFieldsNeeded(currentSequenceNo, columnSequencesLengths, "fromBottom");
                     if (fieldsLeft < fieldsNeeded && rowIdx > 0) {
-                        maxProbablyCorrect = nonogramObject.getHeight() - (rowIdx + 1);
+                        maxProbablyCorrect = nonogramObject.getNonogramRules().getHeight() - (rowIdx + 1);
                         break;
                     } else {
-                        maxProbablyCorrect = (nonogramObject.getHeight() - 1 - rowIdx);
+                        maxProbablyCorrect = (nonogramObject.getNonogramRules().getHeight() - 1 - rowIdx);
                     }
                 } else {
                     colouredInRow++;
                     if (colouredInRow > currentSequenceLength) {
-                        maxProbablyCorrect = nonogramObject.getHeight() - (rowIdx + 1);
+                        maxProbablyCorrect = nonogramObject.getNonogramRules().getHeight() - (rowIdx + 1);
                         break;
                     }  else if (rowIdx == 0) {
-                        maxProbablyCorrect = nonogramObject.getHeight() - (rowIdx + 1);
+                        maxProbablyCorrect = nonogramObject.getNonogramRules().getHeight() - (rowIdx + 1);
                     }
                 }
             }
@@ -453,7 +436,7 @@ public class NonogramGenetic {
 
         NonogramLogic nonogramLogicTmp = gson.fromJson(gson.toJson(populationMember), NonogramLogic.class);
         List<List<Integer>> rowSequencesRanges = nonogramLogicTmp.getRowsSequencesRanges().get(rowIdx);
-        List<Integer> rowSequencesLengths = nonogramLogicTmp.getRowsSequences().get(rowIdx);
+        List<Integer> rowSequencesLengths = nonogramLogicTmp.getNonogramRules().getRowSequencesLengths().get(rowIdx);
 
         List<Integer> sequenceRange;
         Integer sequenceLength;
@@ -498,7 +481,7 @@ public class NonogramGenetic {
 
         List<Integer> indexesToColour = flattenArray(indexesToFillRanges);
 
-        for (int j = 0; j < this.getNonogramObject().getWidth(); j++) {
+        for (int j = 0; j < this.getNonogramObject().getNonogramRules().getWidth(); j++) {
             if (indexesToColour.contains(j)) {
                 rowArray.add(COLOURED_FIELD);
             } else {
@@ -545,11 +528,6 @@ public class NonogramGenetic {
         return IntegersInRange;
     }
 
-    /***
-     * @param boardToCheck - new board to add to population
-     * @param population - population of nonogramLogic with different solutionBoards
-     * @return true if boardIsUnique, false in other case
-     */
     public boolean boardInPopulationUnique(List<List<String>> boardToCheck, List<NonogramLogic> population) {
         List<List<String>> populationBoard;
 

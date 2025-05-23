@@ -10,23 +10,28 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class NonogramLogicTest {
 
     private NonogramLogic nonogramLogic_o10355;
+    private NonogramRules o10355_rules;
 
     @BeforeEach
     void initNonogram10355() {
         //given
-        List<List<Integer>> rowsSequences = List.of(
+        List<List<Integer>> rowsSequencesLengths = List.of(
                 List.of(6), List.of(7, 2), List.of(7, 1), List.of(2, 1, 4, 1), List.of(2, 1, 1, 2, 1),
                 List.of(3, 3, 1, 2, 1), List.of(7, 1, 1, 2, 2), List.of(7, 8), List.of(17), List.of(3, 2, 1),
                 List.of(4, 1, 1, 1, 1, 5), List.of(18), List.of(2, 9, 4), List.of(1, 2, 1, 2), List.of(2, 2)
         );
-        List<List<Integer>> columnsSequences = List.of(
+        List<List<Integer>> columnsSequencesLengths = List.of(
                 List.of(4), List.of(1, 9), List.of(10, 1), List.of(7, 2, 2), List.of(1, 3, 3),
                 List.of(1, 4, 3), List.of(1, 4, 2), List.of(8, 3), List.of(1, 1, 2), List.of(1, 6, 3),
                 List.of(1, 1, 2, 2), List.of(1, 1, 3, 3), List.of(1, 2, 2, 3), List.of(2, 2, 2, 2, 1), List.of(1, 7, 2),
                 List.of(1, 8), List.of(1, 2, 3), List.of(1, 5), List.of(2, 1, 1), List.of(6)
         );
 
-        nonogramLogic_o10355 = new NonogramLogic(rowsSequences, columnsSequences, GuessMode.DISABLED);
+        o10355_rules = new NonogramRules(rowsSequencesLengths,
+                columnsSequencesLengths,
+                rowsSequencesLengths.size(),
+                columnsSequencesLengths.size());
+        nonogramLogic_o10355 = new NonogramLogic(o10355_rules, GuessMode.DISABLED);
     }
 
     @Test

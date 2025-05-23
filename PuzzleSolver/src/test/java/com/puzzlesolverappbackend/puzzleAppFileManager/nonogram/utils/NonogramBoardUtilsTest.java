@@ -1,6 +1,7 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRowLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRules;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -65,7 +66,8 @@ class NonogramBoardUtilsTest {
 
     NonogramRowLogic generate_nonogram_o07940_logic() {
         NonogramRowLogic nonogramRowLogic = new NonogramRowLogic();
-        nonogramRowLogic.setColumnsSequences(
+        NonogramRules nonogramRules = new NonogramRules();
+        nonogramRules.setRowSequencesLengths(
                 List.of(
                         List.of(3, 2, 1, 2),
                         List.of(6, 9),

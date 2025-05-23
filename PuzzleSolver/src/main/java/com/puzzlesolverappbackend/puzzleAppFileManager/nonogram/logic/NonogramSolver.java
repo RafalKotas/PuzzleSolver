@@ -45,17 +45,19 @@ public class NonogramSolver {
 
     public NonogramSolver(NonogramLogic nonogramLogic, GuessMode guessMode) {
         this.solutionNode = new NonogramSolutionNode(nonogramLogic);
-        this.solutionLogic = new NonogramLogic(nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences(), guessMode);
+        this.solutionLogic = new NonogramLogic(nonogramLogic.getNonogramRules(), guessMode);
         this.nonogramNodes = new ArrayList<>();
         this.gson = new Gson();
     }
 
     public NonogramSolver(NonogramLogic nonogramLogic, String fileName) {
-        this.solutionNode = new NonogramSolutionNode(nonogramLogic);
-        this.rootNode = this.solutionNode;
-        this.solutionLogic = new NonogramLogic(nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences(), guessMode);
-        this.finalSolutionLogic = new NonogramLogic(nonogramLogic.getRowsSequences(),
-                nonogramLogic.getColumnsSequences(), guessMode);
+        this.rootNode = new NonogramSolutionNode(nonogramLogic);
+        this.solutionNode = this.rootNode;
+
+        NonogramRules rules = nonogramLogic.getNonogramRules();
+        this.solutionLogic = new NonogramLogic(rules, guessMode);
+        this.finalSolutionLogic = new NonogramLogic(rules, guessMode);
+
         this.solutionFileName = "r" + fileName;
         this.gson = new Gson();
         this.nonogramNodes = new ArrayList<>();
@@ -85,7 +87,7 @@ public class NonogramSolver {
 
         if (nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage() == 100) {
             if (LOG_STEPS_SOLVER) {
-                log.info("Solution found, recursion depth: ", currentTreeHeight);
+                log.info("Solution found, recursion depth: {}", currentTreeHeight);
             }
             replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
         }
@@ -211,7 +213,7 @@ public class NonogramSolver {
 
                     if (!nonogramSubsolutionNode.getNonogramLogic().isSolved()) {
                         if (LOG_STEPS_SOLVER) {
-                            log.info("Need to use recursion, completion percentage at start: " + nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage());
+                            log.info("Need to use recursion, completion percentage at start: {}", nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage());
                         }
 
                         this.replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
@@ -332,7 +334,7 @@ public class NonogramSolver {
             }
 
             this.solutionNode = gson.fromJson(gson.toJson(nodeToCheck), NonogramSolutionNode.class);
-            this.solutionLogic = new NonogramLogic(nodeToCheck.getNonogramLogic());// gson.fromJson(gson.toJson(nodeToCheck.getNonogramLogic()), NonogramLogic.class);
+            this.solutionLogic = new NonogramLogic(nodeToCheck.getNonogramLogic().getNonogramRules(), guessMode);// gson.fromJson(gson.toJson(nodeToCheck.getNonogramLogic()), NonogramLogic.class);
         } else {
             this.solutionNode = gson.fromJson(gson.toJson(this.solutionNode), NonogramSolutionNode.class);
         }

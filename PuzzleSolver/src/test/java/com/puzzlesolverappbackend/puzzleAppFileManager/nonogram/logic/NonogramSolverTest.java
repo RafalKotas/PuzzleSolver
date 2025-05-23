@@ -42,7 +42,8 @@ class NonogramSolverTest {
         List<String> logiNonogramsNamesByDifficulty = nonogramRepository.findLogiNonogramsNamesByDifficultySortedByArea(difficulty);
         assertFalse(logiNonogramsNamesByDifficulty.isEmpty(), "Not found any nonograms which met condition");
 
-        NonogramFileDetails currentNonogramDetails;
+        NonogramFileDetails currentNonogramFileDetails;
+        NonogramRules nonogramRules;
         NonogramCorrectnessIndicator correctnessIndicator;
         NonogramLogic currentNonogramLogic;
         NonogramLogic nonogramSolutionLogic;
@@ -56,12 +57,12 @@ class NonogramSolverTest {
         // when
         for (String filename : logiNonogramsNamesByDifficulty) {
             Path filePath = Paths.get(projectRootPath, "../FrontReact", "public", "resources", "Nonograms", filename + JSON_EXTENSION);
-            currentNonogramDetails = nonogramService.getNonogramDetailsFromFile(filePath.toString());
-            correctnessIndicator = nonogramService.checkNonogramCorrectness(currentNonogramDetails);
+            currentNonogramFileDetails = nonogramService.getNonogramDetailsFromFile(filePath.toString());
+            correctnessIndicator = nonogramService.checkNonogramCorrectness(currentNonogramFileDetails);
 
             if (correctnessIndicator == NonogramCorrectnessIndicator.VALID) {
-                currentNonogramLogic = new NonogramLogic(
-                        currentNonogramDetails.getRowSequences(), currentNonogramDetails.getColumnSequences(), guessMode);
+                nonogramRules = NonogramRules.mapNonogramFileDetailsToNonogramRules(currentNonogramFileDetails);
+                currentNonogramLogic = new NonogramLogic(nonogramRules, guessMode);
                 nonogramSolutionNode = new NonogramSolutionNode(currentNonogramLogic);
                 nonogramSolver = new NonogramSolver(currentNonogramLogic, guessMode);
                 nonogramSolutionLogic = nonogramSolver.runSolutionAtNode(nonogramSolutionNode);

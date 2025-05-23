@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRules.buildInitialEmptyNonogramRules;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramState.buildInitialEmptyNonogramState;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramCreatorUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,18 +20,16 @@ public class NonogramColumnLogicTest {
     void setUp() {
         nonogramColumnLogic = new NonogramColumnLogic();
         nonogramColumnLogic.setNonogramState(buildInitialEmptyNonogramState());
+        nonogramColumnLogic.setNonogramRules(buildInitialEmptyNonogramRules());
     }
 
     void prepareNonogramColumnLogic(int HEIGHT, int WIDTH) {
         nonogramColumnLogic.setNonogramSolutionBoard(generateEmptyBoard(HEIGHT, WIDTH));
         nonogramColumnLogic.setNonogramSolutionBoardWithMarks(generateEmptyBoardWithMarks(HEIGHT, WIDTH));
 
-        nonogramColumnLogic.setColumnsSequences(generateEmptyColumnSequencesLengths(WIDTH));
+        nonogramColumnLogic.getNonogramRules().setColumnSequencesLengths(generateEmptyColumnSequencesLengths(WIDTH));
         nonogramColumnLogic.setColumnsFieldsNotToInclude(generateEmptyColumnsFieldsNotToInclude(WIDTH));
         nonogramColumnLogic.setColumnsSequencesIdsNotToInclude(generateEmptyColumnsSequencesNotToInclude(WIDTH));
-
-        nonogramColumnLogic.setRowsSequences(generateEmptyRowSequencesLengths(HEIGHT));
-        nonogramColumnLogic.setRowsFieldsNotToInclude(generateEmptyRowsFieldsNotToInclude(HEIGHT));
 
         nonogramColumnLogic.setColumnsSequencesRanges(
                 generateEmptyColumnSequencesRanges(WIDTH)
@@ -54,10 +53,10 @@ public class NonogramColumnLogicTest {
         nonogramColumnLogic.excludeSequenceInColumn(COLUMN_TO_TEST, 5);
         nonogramColumnLogic.excludeSequenceInColumn(COLUMN_TO_TEST, 6);
 
-        nonogramColumnLogic.setColumnSequencesRanges(COLUMN_TO_TEST, List.of(
+        nonogramColumnLogic.getColumnsSequencesRanges().set(COLUMN_TO_TEST, List.of(
                 List.of(0, 1), List.of(3, 15), List.of(17, 21), List.of(23, 23), List.of(25, 25), List.of(26, 27), List.of(29, 34)
         ));
-        nonogramColumnLogic.setColumnSequencesLengths(COLUMN_TO_TEST, List.of(1, 13, 5, 1, 1, 1, 6));
+        nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().set(COLUMN_TO_TEST, List.of(1, 13, 5, 1, 1, 1, 6));
         List<String> columnBeforeActionMade = List.of("-", "-", "X", "O", "O",
                 "O", "O", "O", "O", "O",
                 "O", "O", "O", "O", "O",

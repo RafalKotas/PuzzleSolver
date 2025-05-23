@@ -1,7 +1,7 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram;
 
 import com.google.gson.Gson;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.dto.NonogramInitializationRequest;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,11 +31,10 @@ public class NonogramLogicController {
         this.nonogramLogicService = nonogramLogicService;
     }
 
-    @PostMapping("/init")
-    public ResponseEntity<NonogramLogic> initNonogramLogicObject(@Valid @RequestBody NonogramLogic nonogramLogic) {
-        NonogramLogic initialNonogramLogicObject = new NonogramLogic(nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences(), GuessMode.DISABLED);
-
-        return new ResponseEntity<>(initialNonogramLogicObject, HttpStatus.OK);
+    @PostMapping("/initializeNonogram")
+    public ResponseEntity<NonogramLogic> initializeNonogram(@RequestBody NonogramInitializationRequest request) {
+        NonogramLogic logic = nonogramLogicService.initializeLogicFromRequest(request);
+        return ResponseEntity.ok(logic);
     }
 
     @PostMapping("/fillOverlappingColumnSequences/{columnID}")
@@ -98,12 +97,12 @@ public class NonogramLogicController {
         return new ResponseEntity<>(solutionPart, HttpStatus.OK);
     }
 
+    // TODO CUSTOM SOLVER starts from here
     @PostMapping("/customSolutionPart")
     public ResponseEntity<NonogramLogic> customSolutionPart(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String solutionFileName) {
         log.info("Custom solving endpoint triggered (heuristics)!");
-        NonogramLogic logicWithAffectedRowsAndColumns = new NonogramLogic(nonogramLogic.getRowsSequences(), nonogramLogic.getColumnsSequences(), GuessMode.DISABLED);
 
-        NonogramLogic customSolution = nonogramLogicService.runSolverWithCorrectnessCheck(logicWithAffectedRowsAndColumns, solutionFileName);
+        NonogramLogic customSolution = nonogramLogicService.runSolverWithCorrectnessCheck(nonogramLogic, solutionFileName);
 
         return new ResponseEntity<>(
                 customSolution,
@@ -112,11 +111,11 @@ public class NonogramLogicController {
 
     @PostMapping("/saveSolution")
     public ResponseEntity<String> saveSolution(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String fileName) {
-        List<List<Integer>> rowsSequences = nonogramLogic.getRowsSequences();
-        List<List<Integer>> columnsSequences = nonogramLogic.getColumnsSequences();
+        List<List<Integer>> rowSequencesLengths = nonogramLogic.getNonogramRules().getRowSequencesLengths();
+        List<List<Integer>> columnsSequencesLengths = nonogramLogic.getNonogramRules().getColumnSequencesLengths();
         List<List<String>> nonogramSolutionBoard = nonogramLogic.getNonogramSolutionBoard();
 
-        NonogramLogic solution = new NonogramLogic(rowsSequences, columnsSequences, nonogramSolutionBoard);
+        NonogramLogic solution = new NonogramLogic(rowSequencesLengths, columnsSequencesLengths, nonogramSolutionBoard);
 
         Gson gson = new Gson();
 
@@ -151,8 +150,8 @@ public class NonogramLogicController {
     @PostMapping("/correctRanges")
     public ResponseEntity<NonogramLogic> correctRangesSequences(@Valid @RequestBody NonogramLogic nonogramLogic) {
 
-        NonogramLogic logicObjectModified = nonogramLogicService.correctRowsSequencesRanges(nonogramLogic, 0, nonogramLogic.getHeight());
-        logicObjectModified = nonogramLogicService.correctColumnsSequencesRanges(logicObjectModified, 0, nonogramLogic.getWidth());
+        NonogramLogic logicObjectModified = nonogramLogicService.correctRowsSequencesRanges(nonogramLogic, 0, nonogramLogic.getNonogramRules().getHeight());
+        logicObjectModified = nonogramLogicService.correctColumnsSequencesRanges(logicObjectModified, 0, nonogramLogic.getNonogramRules().getWidth());
 
         return new ResponseEntity<>(
                 logicObjectModified,
