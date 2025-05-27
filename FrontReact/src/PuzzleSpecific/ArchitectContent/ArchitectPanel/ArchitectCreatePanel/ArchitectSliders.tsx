@@ -42,7 +42,7 @@ type ArchitectSlidersProps = ArchitectSlidersPropsFromRedux & OwnArchitectSlider
 const ArchitectSliders : React.FC<ArchitectSlidersProps> = ({addArchitectDetail, changeArchitectDetail, detailsSet}) => {
 
     const handleNumberProperty = (property: string, value: number | Array<number>) => {
-        if(!detailsSet.includes(property)) {
+        if (!detailsSet.includes(property)) {
             addArchitectDetail(property as keyof architectInformation)
         }
         changeArchitectDetail(property as keyof architectInformation, value)

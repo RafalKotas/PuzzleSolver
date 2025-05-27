@@ -62,7 +62,7 @@ const numbersSumArrayOfArrays = (arr : Array<Array<number>>) => {
 const checkNonogramCorrectness = (nonogram : selectedNonogramDetails) => {
         
     // data compliance
-    if(nonogram.height !== nonogram.rowSequences.length || nonogram.width !== nonogram.columnSequences.length) {
+    if (nonogram.height !== nonogram.rowSequences.length || nonogram.width !== nonogram.columnSequences.length) {
         return -1
     }
 
@@ -70,7 +70,7 @@ const checkNonogramCorrectness = (nonogram : selectedNonogramDetails) => {
     let tooLongColumnSequences = commonFunctions.filterTooLongSequences(nonogram.columnSequences, nonogram.height)
 
     //any of row/col sequences + gaps are longer than width/height
-    if(tooLongColumnSequences.length || tooLongRowSequences.length) {
+    if (tooLongColumnSequences.length || tooLongRowSequences.length) {
         return -1
     }
 
@@ -78,7 +78,7 @@ const checkNonogramCorrectness = (nonogram : selectedNonogramDetails) => {
     let sumInRows = commonFunctions.numbersSumArrayOfArrays(nonogram.rowSequences)
     let sumInColumns = commonFunctions.numbersSumArrayOfArrays(nonogram.columnSequences)
         
-    if(sumInRows !== sumInColumns) {
+    if (sumInRows !== sumInColumns) {
         return -1
     }
 

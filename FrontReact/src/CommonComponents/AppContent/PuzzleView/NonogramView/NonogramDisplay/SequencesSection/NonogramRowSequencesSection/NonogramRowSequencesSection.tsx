@@ -46,7 +46,7 @@ const NonogramRowSequencesSection : React.FC<NonogramRowSequencesSectionProps> =
      sectionHeight, sectionWidth, cellSize, cellBorder, bigSquareAdditionalBorder}) => {
 
     //at least 3 cells to make difficulty stars visible
-    if(selectedNonogram) {
+    if (selectedNonogram) {
     let maxLength = Math.max(commonFunctions.maximumArrayLengthArrayOfArrays(selectedNonogram.rowSequences), 3)
     let { rowSequences } = selectedNonogram
 

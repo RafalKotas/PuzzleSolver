@@ -42,7 +42,7 @@ type NonogramColumnSequencesSectionProps = NonogramColumnSequencesSectionPropsFr
 const NonogramColumnSequencesSection : React.FC<NonogramColumnSequencesSectionProps> = ({selectedNonogram, 
     sectionHeight, sectionWidth, cellSize, cellBorder, bigSquareAdditionalBorder}) => {
 
-    if(selectedNonogram) {
+    if (selectedNonogram) {
         let { columnSequences } = selectedNonogram
         let maxLength = Math.max(commonFunctions.maximumArrayLengthArrayOfArrays(selectedNonogram.columnSequences), 3)
     

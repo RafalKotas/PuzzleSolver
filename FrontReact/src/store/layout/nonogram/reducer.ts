@@ -40,7 +40,7 @@ export const calculateBoardDimensionInPx = (layoutState: NonogramLayoutState, no
 
     let dimensionUnits = 0
 
-    if(currentNonogram) {
+    if (currentNonogram) {
         dimensionUnits = dimension === "height" ? currentNonogram.height : currentNonogram.width
     }
 
@@ -56,7 +56,7 @@ export const calculateBoardDimensionInPx = (layoutState: NonogramLayoutState, no
 
 export const calculateSequencesSectionDimensionInPx = (layoutState: NonogramLayoutState, nonogramState: NonogramDataState, section: string) => {
 
-    if(nonogramState.selectedNonogram) {
+    if (nonogramState.selectedNonogram) {
         let { rowSequences , columnSequences } = nonogramState.selectedNonogram
 
         let seqMaxLen = section === "row" ? commonFunctions.minimumLengthOfNumber(rowSequences, 3) : commonFunctions.minimumLengthOfNumber(columnSequences, 3) 

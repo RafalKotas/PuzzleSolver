@@ -37,7 +37,7 @@ const SudokuPreviewButton : React.FC<SudokuPreviewButtonProps> = ({sudokuBoardFo
     const [mode, setMode] = useState<"PREVIEW" | "EDIT">("EDIT")
 
     const toggleMode = () => {
-        if(mode === "EDIT") {
+        if (mode === "EDIT") {
             setMode("PREVIEW")
             saveSudokuBoard()
         } else {

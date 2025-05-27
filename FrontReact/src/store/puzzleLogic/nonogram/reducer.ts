@@ -137,7 +137,7 @@ export const nonogramLogicReducer: Reducer<NonogramLogicState, NonogramLogicActi
 }
 
 export const selectBoardSquare = (state: NonogramLogicState, rowIdx : number, columnIdx : number) =>  {
-    if(state && state.nonogramRelatedData && state.nonogramRelatedData.nonogramSolutionBoard 
+    if (state && state.nonogramRelatedData && state.nonogramRelatedData.nonogramSolutionBoard
             && state.nonogramRelatedData.nonogramSolutionBoard[rowIdx] && state.nonogramRelatedData.nonogramSolutionBoard[rowIdx][columnIdx]) {
         return state.nonogramRelatedData.nonogramSolutionBoard[rowIdx][columnIdx]
     } else {
@@ -146,7 +146,7 @@ export const selectBoardSquare = (state: NonogramLogicState, rowIdx : number, co
 }
 
 export const selectBoardSquareMark = (state: NonogramLogicState, rowIdx : number, columnIdx : number) =>  {
-    if(state && state.nonogramRelatedData && state.nonogramRelatedData.nonogramSolutionBoard 
+    if (state && state.nonogramRelatedData && state.nonogramRelatedData.nonogramSolutionBoard
             && state.nonogramRelatedData.nonogramSolutionBoardWithMarks[rowIdx] && 
             state.nonogramRelatedData.nonogramSolutionBoardWithMarks[rowIdx][columnIdx]) {
         return state.nonogramRelatedData.nonogramSolutionBoardWithMarks[rowIdx][columnIdx]
@@ -168,7 +168,7 @@ const selectSequenceInColumnFulfiledConditionMet = (logicState: NonogramLogicSta
 }
 
 export const selectSequenceFulFilledConditionMet = (logicState: NonogramLogicState, sequenceNo: number, idx: number, sectionName: string) => {
-    if(sectionName === "rowSequences") {
+    if (sectionName === "rowSequences") {
         return selectSequenceInRowFulfiledConditionMet(logicState, sequenceNo, idx)
     } else {
         return selectSequenceInColumnFulfiledConditionMet(logicState, sequenceNo, idx)

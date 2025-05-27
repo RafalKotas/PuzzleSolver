@@ -136,14 +136,14 @@ export const nonogramDataReducer: Reducer<NonogramDataState, NonogramDataActionT
 
             let updatedSequences
 
-            if(state.selectedNonogram) {
+            if (state.selectedNonogram) {
 
                 updatedSequences = state.selectedNonogram[ section ][index]
 
                 //if changing last sequence in row/column
-                if(seqNo === state.selectedNonogram[ section ][index].length - 1) {
+                if (seqNo === state.selectedNonogram[ section ][index].length - 1) {
                     let elementsBeforeSeq = state.selectedNonogram[ section ][index].slice(0, -1)
-                    if(value !== 0) {
+                    if (value !== 0) {
                         updatedSequences = [...elementsBeforeSeq, value, 0]
                     } else {
                         updatedSequences = [...elementsBeforeSeq, 0]
@@ -153,7 +153,7 @@ export const nonogramDataReducer: Reducer<NonogramDataState, NonogramDataActionT
                 else {
                     let elementsBeforeSeq = state.selectedNonogram[ section ][ index ].slice(0, seqNo)
                     let elementsAfterSeq = state.selectedNonogram[ section ][ index ].slice(seqNo + 1)
-                    if(value !== 0) {
+                    if (value !== 0) {
                         updatedSequences = [...elementsBeforeSeq, value, ...elementsAfterSeq]
                     } else {
                         updatedSequences = [...elementsBeforeSeq, ...elementsAfterSeq]
@@ -180,7 +180,7 @@ export const nonogramDataReducer: Reducer<NonogramDataState, NonogramDataActionT
                 return state
             }
         case PREVIEW_NONOGRAM:
-            if(state.selectedNonogram) {
+            if (state.selectedNonogram) {
                 let updatedColumnsSequencesPreview = state.selectedNonogram.columnSequences.map((sequences) => {
                     return sequences.length !== 1 ? sequences.filter((sequence, index) => {
                         return sequence !== 0
@@ -206,7 +206,7 @@ export const nonogramDataReducer: Reducer<NonogramDataState, NonogramDataActionT
                 }
             }
         case CLOSE_PREVIEW_NONOGRAM:
-            if(state.selectedNonogram) {
+            if (state.selectedNonogram) {
                 let updatedColumnsSequences = state.selectedNonogram.columnSequences.map((sequences) => {
                     return sequences[sequences.length - 1] === 0 ? sequences : [...sequences, 0]
                 })
@@ -244,7 +244,7 @@ export const nonogramDataReducer: Reducer<NonogramDataState, NonogramDataActionT
                 nonogramCorrect: action.payload.correct
             }
         case ADD_ROWS:
-            if(state.selectedNonogram) {
+            if (state.selectedNonogram) {
                 let { startRowAddIdx, endRowAddIdx } = action.payload
                 let rowsToAddNumber = endRowAddIdx - startRowAddIdx + 1
                 let rowsToAdd = Array.from({length: rowsToAddNumber}, () => [0])
@@ -268,8 +268,8 @@ export const nonogramDataReducer: Reducer<NonogramDataState, NonogramDataActionT
             }
         case REMOVE_ROWS:
             let { startRowRemoveIdx, endRowRemoveIdx } = action.payload
-            if(state.selectedNonogram) {
-                if((endRowRemoveIdx - startRowRemoveIdx + 1) >= state.selectedNonogram.height) {
+            if (state.selectedNonogram) {
+                if ((endRowRemoveIdx - startRowRemoveIdx + 1) >= state.selectedNonogram.height) {
                     return {
                         ...state
                     }
@@ -292,7 +292,7 @@ export const nonogramDataReducer: Reducer<NonogramDataState, NonogramDataActionT
                 }
             }
         case ADD_COLUMNS:
-            if(state.selectedNonogram) {
+            if (state.selectedNonogram) {
                 let { startColumnAddIdx, endColumnAddIdx } = action.payload
                 let columnsToAddNumber = endColumnAddIdx - startColumnAddIdx + 1
                 let columnsToAdd = Array.from({length: columnsToAddNumber}, () => [0])
@@ -316,8 +316,8 @@ export const nonogramDataReducer: Reducer<NonogramDataState, NonogramDataActionT
             }
         case REMOVE_COLUMNS:
             let { startColumnRemoveIdx, endColumnRemoveIdx } = action.payload
-            if(state.selectedNonogram) {
-                if((endColumnRemoveIdx - startColumnRemoveIdx + 1) >= state.selectedNonogram.width) {
+            if (state.selectedNonogram) {
+                if ((endColumnRemoveIdx - startColumnRemoveIdx + 1) >= state.selectedNonogram.width) {
                     return {
                         ...state
                     }
@@ -366,13 +366,13 @@ const includeMatchString = (selectedValues : string[] , optionValue: string) => 
 
 export const findSelectedNonogramListIndex = (displayState : DisplayState, dataState : NonogramDataState, filterState: NonogramFiltersState) => {
     let nonogram : selectedNonogramDetails | null = null
-    if(dataState.mode === "READ") {
+    if (dataState.mode === "READ") {
         nonogram = dataState.selectedNonogram
     } else {
         nonogram = dataState.createdNonogram
     }
 
-    if(nonogram) {
+    if (nonogram) {
         let list = sortedNonogramsWhichMetSelectedFilters(displayState, dataState, filterState)
         return list.reduce((previousIndex, currentValue, currentIndex) => {
             return (nonogram && currentValue.filename === nonogram.filename) ? currentIndex : previousIndex
@@ -385,7 +385,7 @@ export const findSelectedNonogramListIndex = (displayState : DisplayState, dataS
 export const findPreviousNonogramName = (displayState : DisplayState, dataState : NonogramDataState, filterState: NonogramFiltersState) => {
     let list = sortedNonogramsWhichMetSelectedFilters(displayState, dataState, filterState)
     let nonogramListIndex = findSelectedNonogramListIndex(displayState, dataState, filterState)
-    if(nonogramListIndex > list.length - 1 || nonogramListIndex <= 0) {
+    if (nonogramListIndex > list.length - 1 || nonogramListIndex <= 0) {
         return null
     } else {
         return list[nonogramListIndex - 1].filename
@@ -395,7 +395,7 @@ export const findPreviousNonogramName = (displayState : DisplayState, dataState 
 export const findNextNonogramName = (displayState: DisplayState, dataState : NonogramDataState, filterState: NonogramFiltersState) => {
     let list = sortedNonogramsWhichMetSelectedFilters(displayState, dataState, filterState)
     let nonogramListIndex = findSelectedNonogramListIndex(displayState, dataState, filterState)
-    if(nonogramListIndex >= list.length - 1 || nonogramListIndex < 0) {
+    if (nonogramListIndex >= list.length - 1 || nonogramListIndex < 0) {
         return null
     } else {
         return list[nonogramListIndex + 1].filename
@@ -410,7 +410,7 @@ export const sortedNonogramsWhichMetSelectedFilters = (displayState: DisplayStat
 export const selectNonogramsWhichMetSelectedFilters = (displayState: DisplayState, dataState : NonogramDataState, filtersState : NonogramFiltersState) => {
     let initialNonogramsList = displayState.mode === "READ" ? dataState.nonogramsList : dataState.createdNonogramsList
 
-    if(displayState.mode === "READ") {
+    if (displayState.mode === "READ") {
         let selectionFilters = extractSelectionFilters(filtersState)
 
         return initialNonogramsList.filter((nonogramInfo : nonogramInformation) => {
@@ -449,12 +449,12 @@ const otherSortFilters : Record<string, numberSortFilter | stringSortFilter> = {
 const nonogramDetailsSortFunction = (filterKey : string, direction: string) => {
         
     return function(nonogramA : nonogramInformation, nonogramB : nonogramInformation) {
-            if(filterKey in nonogramA) {
+            if (filterKey in nonogramA) {
                 let key = filterKey as keyof nonogramInformation
-                if(typeof(nonogramA[key]) === "string" && typeof(nonogramB[key]) === "string") {
+                if (typeof(nonogramA[key]) === "string" && typeof(nonogramB[key]) === "string") {
                     let [nAstr, nBstr] = [nonogramA[key] as string, nonogramB[key] as string]
                     return direction === "ascending" ? nAstr.localeCompare(nBstr) : nBstr.localeCompare(nAstr) 
-                } else if(typeof(nonogramA[key]) === "number" && typeof(nonogramB[key]) === "number") {
+                } else if (typeof(nonogramA[key]) === "number" && typeof(nonogramB[key]) === "number") {
                     let [nA, nB] = [nonogramA[key] as number, nonogramB[key] as number]
                     let ascendingValue = nA - nB
                     let descendingValue = nB - nA
@@ -462,10 +462,10 @@ const nonogramDetailsSortFunction = (filterKey : string, direction: string) => {
                 }
             } else if (Object.keys(otherSortFilters).includes(filterKey)) {
                 let filterDetails = otherSortFilters[filterKey]
-                if(filterDetails.type === "number") {
+                if (filterDetails.type === "number") {
                     let ascending = filterDetails.sortFunctionNumber(nonogramA) - filterDetails.sortFunctionNumber(nonogramB)
                     return direction === "ascending" ? ascending : -1 * ascending
-                } else if(filterDetails.type === "string") {
+                } else if (filterDetails.type === "string") {
                     let ascending = filterDetails.sortFunctionString(nonogramA).localeCompare(filterDetails.sortFunctionString(nonogramB))
                     return direction === "ascending" ? ascending : -1 * ascending
                 }

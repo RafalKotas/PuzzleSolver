@@ -84,8 +84,8 @@ export const selectFilterAction = (state : SudokuFiltersState, choosenSortFilter
     })
 
     // if entry exists
-    if(possibleEntryWithFilter.length === 1) {
-        if(possibleEntryWithFilter[0].sortDirection === choosenSortFilter.sortDirection) {
+    if (possibleEntryWithFilter.length === 1) {
+        if (possibleEntryWithFilter[0].sortDirection === choosenSortFilter.sortDirection) {
             return RemoveSudokuSortFilter(choosenSortFilter)
         } else {
             return ChangeSudokuSortFilter(choosenSortFilter)

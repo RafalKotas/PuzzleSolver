@@ -53,7 +53,7 @@ const BoardBigRow : React.FC<BoardBigRowProps> = ({rowNo,
         >
             {
                 selectedNonogram && Array.from(Array(selectedNonogram.width).keys()).map((colNo : number) => {
-                    if(colNo % 5 === 0) {
+                    if (colNo % 5 === 0) {
                         return <BigSquare
                             key={"big-square-rowNo-" + rowNo + "-colNo-" + colNo}
                             firstRowNoInBigSquare={rowNo} 

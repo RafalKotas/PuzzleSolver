@@ -54,7 +54,7 @@ const StringPropTextField : React.FC<StringPropTextFieldProps> = ({prop, passVal
     }
 
     const onCheckChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-        if(checked) {
+        if (checked) {
             setValue(notProvidedValue)
         } else {
             setValue(defaultValue)

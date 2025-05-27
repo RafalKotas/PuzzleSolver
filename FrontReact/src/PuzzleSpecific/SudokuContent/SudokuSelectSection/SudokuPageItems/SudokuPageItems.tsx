@@ -75,13 +75,13 @@ const SudokuPageItems : React.FC<SudokuPageItemsProps> = ({
     const puzzleDetailsSortFunction = (filterKey : string, direction: string) => {
         
         return function(puzzleA : sudokuInformation, puzzleB : sudokuInformation) {
-                if(filterKey in puzzleA) {
+                if (filterKey in puzzleA) {
                     let key = filterKey as keyof sudokuInformation
-                    if(typeof(puzzleA[key]) === "string" && typeof(puzzleB[key]) === "string") {
+                    if (typeof(puzzleA[key]) === "string" && typeof(puzzleB[key]) === "string") {
                         let [puzzleAstrProp, puzzleBstrProp] = [puzzleA[key] as string, puzzleB[key] as string]
                         return direction === "ascending" ? puzzleAstrProp.localeCompare(puzzleBstrProp) : 
                             puzzleBstrProp.localeCompare(puzzleAstrProp) 
-                    } else if(typeof(puzzleA[key]) === "number" && typeof(puzzleB[key]) === "number") {
+                    } else if (typeof(puzzleA[key]) === "number" && typeof(puzzleB[key]) === "number") {
                         let [puzzleAnumbProp, puzzleBnumbProp] = [puzzleA[key] as number, puzzleB[key] as number]
                         let ascendingValue = puzzleAnumbProp - puzzleBnumbProp
                         let descendingValue = puzzleBnumbProp - puzzleAnumbProp
@@ -89,10 +89,10 @@ const SudokuPageItems : React.FC<SudokuPageItemsProps> = ({
                     }
                 } else if (Object.keys(otherSortFilters).includes(filterKey)) {
                     let filterDetails = otherSortFilters[filterKey]
-                    if(filterDetails.type === "number") {
+                    if (filterDetails.type === "number") {
                         let ascending = filterDetails.sortFunctionNumber(puzzleA) - filterDetails.sortFunctionNumber(puzzleB)
                         return direction === "ascending" ? ascending : -1 * ascending
-                    } else if(filterDetails.type === "string") {
+                    } else if (filterDetails.type === "string") {
                         let ascending = filterDetails.sortFunctionString(puzzleA).localeCompare(filterDetails.sortFunctionString(puzzleB))
                         return direction === "ascending" ? ascending : -1 * ascending
                     }

@@ -69,19 +69,19 @@ const NonogramCreatePanel : React.FC<NonogramCreatePanelProps> = ({detailsSet, a
     }, [])
 
     const handleNumberProperty = (property: string, value: number | Array<number>) => {
-            if(!detailsSet.includes(property)) {
+            if (!detailsSet.includes(property)) {
                 addNonogramDetail(property as keyof nonogramInformation)
             }
             changeNonogramDetail(property as keyof nonogramInformation, value)
     }
 
     const handleStringProperty = (property: string, value: string, valid: boolean) => {
-        if(!valid) {
-            if(detailsSet.includes(property)) {
+        if (!valid) {
+            if (detailsSet.includes(property)) {
                 removeNonogramDetail(property as keyof nonogramInformation)
             }
-        } else if(valid) {
-            if(!detailsSet.includes(property)) {
+        } else if (valid) {
+            if (!detailsSet.includes(property)) {
                 addNonogramDetail(property as keyof nonogramInformation)
             }
             changeNonogramDetail(property as keyof nonogramInformation, value)

@@ -52,7 +52,7 @@ const NotEditableSquare : React.FC<NotEditableSquareProps> = ({section, index, c
         }
 
         //!editing - no other square choosen before, editMode - edit+ preview-,  mode === "CREATE" - only when creating
-        if(!editing && editMode && mode === "CREATE") {
+        if (!editing && editMode && mode === "CREATE") {
             setEditedSquare(newSquareToEdit)
         }
     }

@@ -65,19 +65,19 @@ const SudokuCreatePanel : React.FC<SudokuCreatePanelProps> = ({addSudokuDetail, 
     }, [])
 
     const handleNumberProperty = (property: string, value: number | Array<number>) => {
-            if(!detailsSet.includes(property)) {
+            if (!detailsSet.includes(property)) {
                 addSudokuDetail(property as keyof sudokuInformation)
             }
             changeSudokuDetail(property as keyof sudokuInformation, value)
     }
 
     const handleStringProperty = (property: string, value: string, valid: boolean) => {
-        if(!valid) {
-            if(detailsSet.includes(property)) {
+        if (!valid) {
+            if (detailsSet.includes(property)) {
                 removeSudokuDetail(property as keyof sudokuInformation)
             }
-        } else if(valid) {
-            if(!detailsSet.includes(property)) {
+        } else if (valid) {
+            if (!detailsSet.includes(property)) {
                 addSudokuDetail(property as keyof sudokuInformation)
             }
             changeSudokuDetail(property as keyof sudokuInformation, value)

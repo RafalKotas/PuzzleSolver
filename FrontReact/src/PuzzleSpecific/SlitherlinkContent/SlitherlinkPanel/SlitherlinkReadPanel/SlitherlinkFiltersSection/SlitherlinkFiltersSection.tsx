@@ -81,7 +81,7 @@ const SlitherlinkFiltersSection : React.FC<SlitherlinkFiltersSectionProps> = ({s
             let optionValues = slitherlinksList.map(slitherlinkInfo => {return slitherlinkInfo[optionNameCasted]})
     
 
-            if(true) {
+            if (true) {
                 //sorted unique options values
                 let uniqueValues = commonFunctions.removeDuplicatesFromArray(optionValues).sort()
         

@@ -71,13 +71,13 @@ const CopySection : React.FC<CopySectionProps> = ({mode, copySudokuToCreatedList
                 setCopySuccess(true)
             }
         }
-        if(copySuccess !== undefined) {
+        if (copySuccess !== undefined) {
             setOpen(true)
         }
     }
 
     useEffect(() => {
-        if(copySuccess !== undefined) {
+        if (copySuccess !== undefined) {
             setOpen(true)
         }
     }, [copySuccess])

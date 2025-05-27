@@ -81,13 +81,13 @@ const NonogramActions : React.FC<NonogramActionsProps> = ({marksVisible, xsVisib
 
     const changeCellSize = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         let newCellSize = parseInt(event.target.value)
-        if(commonFunctions.isValueInRange(newCellSize, [minCellSize, maxCellSize])) {
+        if (commonFunctions.isValueInRange(newCellSize, [minCellSize, maxCellSize])) {
             setCellSize(newCellSize)
         }
     }
 
     const handleMarksVisibiltyChange = (event: React.MouseEvent<HTMLElement>, visibility: string) => {
-        if(visibility === "VISIBLE") {
+        if (visibility === "VISIBLE") {
             toggleMarksVisibility(true)
         } else {
             toggleMarksVisibility(false)
@@ -95,7 +95,7 @@ const NonogramActions : React.FC<NonogramActionsProps> = ({marksVisible, xsVisib
     }
 
     const handleXsVisibiltyChange = (event: React.MouseEvent<HTMLElement>, visibility: string) => {
-        if(visibility === "VISIBLE") {
+        if (visibility === "VISIBLE") {
             toggleXsVisibility(true)
         } else {
             toggleXsVisibility(false)

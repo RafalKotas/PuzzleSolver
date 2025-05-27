@@ -42,7 +42,7 @@ type SlitherlinkSlidersProps = SlitherlinkSlidersPropsFromRedux & OwnSlitherlink
 const SlitherlinkSliders : React.FC<SlitherlinkSlidersProps> = ({addSlitherlinkDetail, changeSlitherlinkDetail, detailsSet}) => {
 
     const handleNumberProperty = (property: string, value: number | Array<number>) => {
-        if(!detailsSet.includes(property)) {
+        if (!detailsSet.includes(property)) {
             addSlitherlinkDetail(property as keyof slitherlinkInformation)
         }
         changeSlitherlinkDetail(property as keyof slitherlinkInformation, value)

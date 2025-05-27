@@ -75,7 +75,7 @@ const AkariFiltersSection : React.FC<AkariFiltersSectionProps> = ({akarisList, s
             let optionValues = akarisList.map(akariInfo => {return akariInfo[optionNameCasted]})
     
 
-            if(true) {
+            if (true) {
                 //sorted unique options values
                 let uniqueValues = commonFunctions.removeDuplicatesFromArray(optionValues).sort()
         

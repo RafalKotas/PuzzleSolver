@@ -43,7 +43,7 @@ type HitoriSlidersProps = HitoriSlidersPropsFromRedux & OwnHitoriSlidersProps
 const HitoriSliders : React.FC<HitoriSlidersProps> = ({addHitoriDetail, changeHitoriDetail, detailsSet}) => {
 
     const handleNumberProperty = (property: string, value: number | Array<number>) => {
-        if(!detailsSet.includes(property)) {
+        if (!detailsSet.includes(property)) {
             addHitoriDetail(property as keyof hitoriInformation)
         }
         changeHitoriDetail(property as keyof hitoriInformation, value)

@@ -81,7 +81,7 @@ const ArchitectFiltersSection : React.FC<ArchitectFiltersSectionProps> = ({archi
             let optionValues = architectsList.map(architectInfo => {return architectInfo[optionNameCasted]})
     
 
-            if(true) {
+            if (true) {
                 //sorted unique options values
                 let uniqueValues = commonFunctions.removeDuplicatesFromArray(optionValues).sort()
         

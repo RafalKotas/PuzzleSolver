@@ -63,12 +63,12 @@ const HitoriCreatePanel : React.FC<HitoriCreatePanelProps> = ({addHitoriDetail, 
     }, [])
 
     const handleStringProperty = (property: string, value: string, valid: boolean) => {
-        if(!valid) {
-            if(detailsSet.includes(property)) {
+        if (!valid) {
+            if (detailsSet.includes(property)) {
                 removeHitoriDetail(property as keyof hitoriInformation)
             }
-        } else if(valid) {
-            if(!detailsSet.includes(property)) {
+        } else if (valid) {
+            if (!detailsSet.includes(property)) {
                 addHitoriDetail(property as keyof hitoriInformation)
             }
             changeHitoriDetail(property as keyof hitoriInformation, value)

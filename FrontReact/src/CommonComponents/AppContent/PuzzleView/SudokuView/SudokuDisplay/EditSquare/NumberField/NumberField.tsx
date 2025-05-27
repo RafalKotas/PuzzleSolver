@@ -52,7 +52,7 @@ const NumberField : React.FC<NumberFieldProps> = ({mode, availableInCell, sudoku
 
     useEffect(() => {
         //only for "READ" - solver mode
-        if(matchesSelection()) {
+        if (matchesSelection()) {
             addMarkedCell()
         }
     })
@@ -60,11 +60,11 @@ const NumberField : React.FC<NumberFieldProps> = ({mode, availableInCell, sudoku
     let { rowIdx, columnIdx } = coords
 
     const numberFieldClickHandler = () => {
-        if(digit !== 0) {
-            if(mode === "READ") {
+        if (digit !== 0) {
+            if (mode === "READ") {
                 insertDigitIntoCell()
             } else {
-                if(sudokuBoardEditMode[rowIdx][columnIdx] === digit && availableInCell.length === 1) {
+                if (sudokuBoardEditMode[rowIdx][columnIdx] === digit && availableInCell.length === 1) {
                     removeDigitFromCellEditMode()
                 } else {
                     insertDigitIntoCellEditMode()
@@ -74,7 +74,7 @@ const NumberField : React.FC<NumberFieldProps> = ({mode, availableInCell, sudoku
     }
 
     const matchesSelection = () => {
-        if(mode === "CREATE" || !matchesCoords()) {
+        if (mode === "CREATE" || !matchesCoords()) {
             return false
         }
         switch(markOption) {

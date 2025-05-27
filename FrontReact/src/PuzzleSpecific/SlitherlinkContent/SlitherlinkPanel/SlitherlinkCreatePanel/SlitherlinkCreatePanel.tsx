@@ -59,12 +59,12 @@ const SlitherlinkCreatePanel : React.FC<SlitherlinkCreatePanelProps> = ({addSlit
     }, [])
 
     const handleStringProperty = (property: string, value: string, valid: boolean) => {
-        if(!valid) {
-            if(detailsSet.includes(property)) {
+        if (!valid) {
+            if (detailsSet.includes(property)) {
                 removeSlitherlinkDetail(property as keyof slitherlinkInformation)
             }
-        } else if(valid) {
-            if(!detailsSet.includes(property)) {
+        } else if (valid) {
+            if (!detailsSet.includes(property)) {
                 addSlitherlinkDetail(property as keyof slitherlinkInformation)
             }
             changeSlitherlinkDetail(property as keyof slitherlinkInformation, value)

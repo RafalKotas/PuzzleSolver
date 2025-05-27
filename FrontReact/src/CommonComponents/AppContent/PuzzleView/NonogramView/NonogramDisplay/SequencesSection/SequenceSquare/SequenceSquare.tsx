@@ -49,7 +49,7 @@ const SequenceSquare : React.FC<SequenceSquareProps> = ({section, index, cellNo,
     }
 
     useEffect(() => {
-        if(editableConditionMet()) {
+        if (editableConditionMet()) {
             setEditable(true)
         } else {
             setEditable(false)

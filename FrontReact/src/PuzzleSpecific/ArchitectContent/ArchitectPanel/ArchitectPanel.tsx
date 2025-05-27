@@ -43,7 +43,7 @@ const ArchitectPanel : React.FC<ArchitectPanelProps> = ({architectsList, setArch
     const [dataFetched, setDataFetched] = useState<boolean>(false)
 
     useEffect(() => {
-        if(architectsList.length > 0) {
+        if (architectsList.length > 0) {
             setDataFetched(true)
         }
     }, [architectsList])

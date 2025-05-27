@@ -38,7 +38,7 @@ type NonogramBoardProps = NonogramBoardPropsFromRedux & OwnNonogramBoardProps
 
 const NonogramBoard : React.FC<NonogramBoardProps> = ({selectedNonogram, sectionWidth, sectionHeight}) => {
 
-    if(selectedNonogram) {
+    if (selectedNonogram) {
         return (
             <div
                 id="nonogram-board" 
@@ -50,7 +50,7 @@ const NonogramBoard : React.FC<NonogramBoardProps> = ({selectedNonogram, section
                 {
                     //draw board step 5-rows
                     Array.from(Array(selectedNonogram.height).keys()).reduce((prevValue, curValue) => {
-                        if(curValue % 5 === 0) {
+                        if (curValue % 5 === 0) {
                             return [...prevValue, curValue]
                         } else {
                             return prevValue

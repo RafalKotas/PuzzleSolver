@@ -41,9 +41,9 @@ const NonogramItemCard : React.FC<NonogramItemCardProps> = ({nonogramDetails, di
   const {filename, source, difficulty, height, width, year, month} = nonogramDetails
 
   const difficultyColor = (difficulty : number) => {
-      if( difficulty <= 2.0) {
+      if ( difficulty <= 2.0) {
           return "#00bb00"
-      } else if(difficulty > 2.0 && difficulty <= 3.5) {
+      } else if (difficulty > 2.0 && difficulty <= 3.5) {
           return "yellow"
       } else {
           return "red"
@@ -55,7 +55,7 @@ const NonogramItemCard : React.FC<NonogramItemCardProps> = ({nonogramDetails, di
   return (
     <Card
         onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-          if(mode === "READ") {
+          if (mode === "READ") {
             navigate("../view/nonogram-solver/" + filename)
           } else {
             navigate("../view/nonogram-editor/" + filename)

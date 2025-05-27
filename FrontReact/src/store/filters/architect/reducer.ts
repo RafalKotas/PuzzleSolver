@@ -89,8 +89,8 @@ export const selectFilterAction = (state : ArchitectFiltersState, choosenSortFil
     })
 
     // if entry exists
-    if(possibleEntryWithFilter.length === 1) {
-        if(possibleEntryWithFilter[0].sortDirection === choosenSortFilter.sortDirection) {
+    if (possibleEntryWithFilter.length === 1) {
+        if (possibleEntryWithFilter[0].sortDirection === choosenSortFilter.sortDirection) {
             return RemoveArchitectSortFilter(choosenSortFilter)
         } else {
             return ChangeArchitectSortFilter(choosenSortFilter)

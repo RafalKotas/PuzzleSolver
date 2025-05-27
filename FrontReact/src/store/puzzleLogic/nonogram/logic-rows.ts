@@ -20,7 +20,7 @@ const createRowArrayFromSequencesAndChars = (rowIdx : number, sequencesParam: nu
     let sequences = sequencesParam
     let charsNeeded =  generateArrayOfSequenceMarks(sequences.length)
 
-    if(reverse) {
+    if (reverse) {
         sequences = arrayReversedNumber(sequences)
         charsNeeded = arrayReversedString(charsNeeded)
     }
@@ -38,19 +38,19 @@ const createRowArrayFromSequencesAndChars = (rowIdx : number, sequencesParam: nu
     
     for(let fieldIdx = 0; fieldIdx < width; fieldIdx++ ) {
         
-        if(!writeSequenceMode && currentSequenceIdx < charsNeeded.length && breakX) {
+        if (!writeSequenceMode && currentSequenceIdx < charsNeeded.length && breakX) {
             canStartSequenceFromIndex = checkIfCanStartSequenceFromRowIndex(rowIdx, fieldIdx, sequenceLength, board)
-            if(canStartSequenceFromIndex) {
+            if (canStartSequenceFromIndex) {
                 writeSequenceMode = true // start fill fields with sequence char mark
             }
         }
-        if(writeSequenceMode) {
+        if (writeSequenceMode) {
             
             arrayFilledFromStart[ fieldIdx ] = "R" + charToWrite + board[ rowIdx ][ fieldIdx ].substring(2, 4)
             
             sequencesFieldsFilled++
             
-            if(sequencesFieldsFilled === sequenceLength) {
+            if (sequencesFieldsFilled === sequenceLength) {
                 sequencesFieldsFilled = 0
                 currentSequenceIdx++
                 charToWrite = charsNeeded[ currentSequenceIdx ]
@@ -82,7 +82,7 @@ const inferRowSequencesRangesFromArrays = (arrayFilledFromStart : string[], arra
 
     arrayFilledFromStart.forEach((field, index) => {
         let fieldSequenceChar = field.charAt(1)
-        if(field.startsWith("R") && !collectedSequences.includes(fieldSequenceChar)) {
+        if (field.startsWith("R") && !collectedSequences.includes(fieldSequenceChar)) {
             collectedSequences.push(fieldSequenceChar)
             rangeStartIndex = index
             rangeLastIndex = findLastIndexContaining(arrayFilledFromEnd, "R" + fieldSequenceChar)

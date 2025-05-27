@@ -43,7 +43,7 @@ type AkariSlidersProps = AkariSlidersPropsFromRedux & OwnAkariSlidersProps
 const AkariSliders : React.FC<AkariSlidersProps> = ({addAkariDetail, changeAkariDetail, detailsSet}) => {
 
     const handleNumberProperty = (property: string, value: number | Array<number>) => {
-        if(!detailsSet.includes(property)) {
+        if (!detailsSet.includes(property)) {
             addAkariDetail(property as keyof akariInformation)
         }
         changeAkariDetail(property as keyof akariInformation, value)

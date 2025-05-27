@@ -78,7 +78,7 @@ const SudokuFiltersSection : React.FC<SudokuFiltersSectionProps> = ({ sudokusLis
             let optionValues = sudokusList.map(sudokuInfo => {return sudokuInfo[optionNameCasted]})
     
 
-            if(true) {
+            if (true) {
                 //sorted unique options values
                 let uniqueValues = commonFunctions.removeDuplicatesFromArray(optionValues).sort()
         

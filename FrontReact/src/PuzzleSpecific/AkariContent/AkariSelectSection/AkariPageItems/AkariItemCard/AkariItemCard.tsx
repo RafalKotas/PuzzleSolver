@@ -40,9 +40,9 @@ const AkariItemCard : React.FC<AkariItemCardProps> = ({akariDetails, displayMode
   const { label, source, difficulty, height, width } = akariDetails
 
   const difficultyColor = (difficulty : number) => {
-      if( difficulty <= 2.0) {
+      if ( difficulty <= 2.0) {
           return "#00bb00"
-      } else if(difficulty > 2.0 && difficulty <= 3.5) {
+      } else if (difficulty > 2.0 && difficulty <= 3.5) {
           return "yellow"
       } else {
           return "red"

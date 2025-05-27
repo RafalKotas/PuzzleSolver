@@ -51,7 +51,7 @@ const NonogramPanel : React.FC<NonogramPanelProps> = ({nonogramsList, selectedDi
     const [dataFetched, setDataFetched] = useState<boolean>(false)
 
     useEffect(() => {
-        if(nonogramsList.length > 0) {
+        if (nonogramsList.length > 0) {
             setDataFetched(true)
         }
     }, [nonogramsList])

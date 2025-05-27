@@ -43,7 +43,7 @@ const HitoriPanel : React.FC<HitoriPanelProps> = ({hitorisList, setHitorisList})
     const [dataFetched, setDataFetched] = useState<boolean>(false)
 
     useEffect(() => {
-        if(hitorisList.length > 0) {
+        if (hitorisList.length > 0) {
             setDataFetched(true)
         }
     }, [hitorisList])

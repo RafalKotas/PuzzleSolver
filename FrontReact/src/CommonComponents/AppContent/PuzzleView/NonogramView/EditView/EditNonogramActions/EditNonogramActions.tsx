@@ -77,18 +77,18 @@ const EditNonogramActions : React.FC<EditNonogramActionsProps> = ({maxRowAddInde
     useEffect(() => {
         switch(action) {
             case "remove row(s)":
-                if(rowEndIndex > maxRowRemoveIndex) {
+                if (rowEndIndex > maxRowRemoveIndex) {
                     setRowEndIndex(maxRowRemoveIndex)
                 }
-                if(rowStartIndex > maxRowRemoveIndex) {
+                if (rowStartIndex > maxRowRemoveIndex) {
                     setRowStartIndex(0)
                 }
                 break
             case "remove column(s)":
-                if(rowEndIndex > maxColumnRemoveIndex) {
+                if (rowEndIndex > maxColumnRemoveIndex) {
                     setColumnEndIndex(maxColumnRemoveIndex)
                 }
-                if(columnStartIndex > maxColumnRemoveIndex) {
+                if (columnStartIndex > maxColumnRemoveIndex) {
                     setColumnStartIndex(0)
                 }
                 break
@@ -129,7 +129,7 @@ const EditNonogramActions : React.FC<EditNonogramActionsProps> = ({maxRowAddInde
 
     const changeStartIndex = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         let updatedIndex = parseInt(event.target.value)
-        if(rowsActions.includes(action) && updatedIndex <= rowEndIndex && commonFunctions.isValueInRange(updatedIndex, [0, maxRowAddIndex])) {
+        if (rowsActions.includes(action) && updatedIndex <= rowEndIndex && commonFunctions.isValueInRange(updatedIndex, [0, maxRowAddIndex])) {
             setRowStartIndex(updatedIndex)
         } else if (updatedIndex <= columnEndIndex && commonFunctions.isValueInRange(updatedIndex, [0, maxColumnAddIndex])) {
             setColumnStartIndex(updatedIndex)
@@ -138,14 +138,14 @@ const EditNonogramActions : React.FC<EditNonogramActionsProps> = ({maxRowAddInde
 
     const changeEndIndex = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         let updatedIndex = parseInt(event.target.value)
-        if(rowsActions.includes(action) && updatedIndex >= rowStartIndex) {
-            if(addActions.includes(action) && commonFunctions.isValueInRange(updatedIndex, [0, maxRowAddIndex])) {
+        if (rowsActions.includes(action) && updatedIndex >= rowStartIndex) {
+            if (addActions.includes(action) && commonFunctions.isValueInRange(updatedIndex, [0, maxRowAddIndex])) {
                 setRowEndIndex(updatedIndex)
             } else if (commonFunctions.isValueInRange(updatedIndex, [0, maxRowRemoveIndex])) {
                 setRowEndIndex(updatedIndex)
             }
         } else if (updatedIndex >= columnStartIndex) {
-            if(addActions.includes(action) && commonFunctions.isValueInRange(updatedIndex, [0, maxColumnAddIndex])) {
+            if (addActions.includes(action) && commonFunctions.isValueInRange(updatedIndex, [0, maxColumnAddIndex])) {
                 setColumnEndIndex(updatedIndex)
             } else if (commonFunctions.isValueInRange(updatedIndex, [0, maxColumnRemoveIndex])) {
                 setColumnEndIndex(updatedIndex)

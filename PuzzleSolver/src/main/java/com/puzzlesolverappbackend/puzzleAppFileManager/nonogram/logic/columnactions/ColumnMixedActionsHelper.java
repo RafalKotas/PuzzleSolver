@@ -102,7 +102,7 @@ public class ColumnMixedActionsHelper {
                     break;
                 }
 
-                if(isFieldWithX(solutionBoard, new Field(currentRowIdx, columnIdx))) {
+                if (isFieldWithX(solutionBoard, new Field(currentRowIdx, columnIdx))) {
                     fieldWithXFound = true;
                 }
             } else if (isFieldWithX(solutionBoard, new Field(currentRowIdx, columnIdx))) {

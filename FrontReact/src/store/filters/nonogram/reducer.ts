@@ -98,8 +98,8 @@ export const selectFilterAction = (state : NonogramFiltersState, choosenSortFilt
     })
 
     // if entry exists
-    if(possibleEntryWithFilter.length === 1) {
-        if(possibleEntryWithFilter[0].sortDirection === choosenSortFilter.sortDirection) {
+    if (possibleEntryWithFilter.length === 1) {
+        if (possibleEntryWithFilter[0].sortDirection === choosenSortFilter.sortDirection) {
             return RemoveNonogramSortFilter(choosenSortFilter)
         } else {
             return ChangeNonogramSortFilter(choosenSortFilter)

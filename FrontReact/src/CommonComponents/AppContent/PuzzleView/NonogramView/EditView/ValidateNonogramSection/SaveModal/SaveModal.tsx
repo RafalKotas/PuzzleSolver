@@ -56,7 +56,7 @@ const SaveModal : React.FC<SaveModalProps> = ({puzzleName, showSaveAlert, passSh
     }, [showSaveAlert])
 
     useEffect(() => {
-        if(checkSaveSuccess(responseText)) {
+        if (checkSaveSuccess(responseText)) {
             passShowSaveAlert(false)
             passSavedFileName(fileName)
         }
@@ -64,14 +64,14 @@ const SaveModal : React.FC<SaveModalProps> = ({puzzleName, showSaveAlert, passSh
     }, [responseText])
 
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if(responseText.length > 0) {
+        if (responseText.length > 0) {
             setResponseText("")
         }
         setFileName( event.target.value )
     }
 
     const keyHandler = (event: React.KeyboardEvent<HTMLDivElement>) => {
-        if(showSaveAlert && event.key === "Enter" && fileName.length >= 3) {
+        if (showSaveAlert && event.key === "Enter" && fileName.length >= 3) {
             sendPuzzleToSave()
         }
     }
@@ -109,9 +109,9 @@ const SaveModal : React.FC<SaveModalProps> = ({puzzleName, showSaveAlert, passSh
     const sendPuzzleToSave = () => {
         switch(puzzleName) {
             case "nonogram":
-                if(selectedNonogram) {
+                if (selectedNonogram) {
                     NonogramService.saveNonogramToFile(fileName, selectedNonogram).then((response) => {
-                        if(typeof(response.data) === "string") {
+                        if (typeof(response.data) === "string") {
                             setResponseText(response.data)
                         }
                     }).catch((error) => {
@@ -123,13 +123,13 @@ const SaveModal : React.FC<SaveModalProps> = ({puzzleName, showSaveAlert, passSh
                 let sudokuToSave = mode === "READ" ? selectedSudoku : createdSudoku
                 sudokuToSave.filled = calculateFilledFields(sudokuToSave.board)
                 SudokuService.saveSudokuToFile(fileName, sudokuToSave).then((response) => {
-                    if(typeof(response.data) === "string") {
+                    if (typeof(response.data) === "string") {
                         setResponseText(response.data)
                     }
                 }).catch()
                 break
         }
-        if(selectedNonogram) {
+        if (selectedNonogram) {
             
         }
     }

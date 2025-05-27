@@ -43,7 +43,7 @@ const SlitherlinkPanel : React.FC<SlitherlinkPanelProps> = ({slitherlinksList, s
     const [dataFetched, setDataFetched] = useState<boolean>(false)
 
     useEffect(() => {
-        if(slitherlinksList.length > 0) {
+        if (slitherlinksList.length > 0) {
             setDataFetched(true)
         }
     }, [slitherlinksList])

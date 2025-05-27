@@ -65,12 +65,12 @@ const AkariCreatePanel : React.FC<AkariCreatePanelProps> = ({addAkariDetail, rem
     }, [])
 
     const handleStringProperty = (property: string, value: string, valid: boolean) => {
-        if(!valid) {
-            if(detailsSet.includes(property)) {
+        if (!valid) {
+            if (detailsSet.includes(property)) {
                 removeAkariDetail(property as keyof akariInformation)
             }
-        } else if(valid) {
-            if(!detailsSet.includes(property)) {
+        } else if (valid) {
+            if (!detailsSet.includes(property)) {
                 addAkariDetail(property as keyof akariInformation)
             }
             changeAkariDetail(property as keyof akariInformation, value)

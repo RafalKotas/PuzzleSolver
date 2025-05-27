@@ -45,7 +45,7 @@ const SelectNonogramArrow : React.FC<SelectNonogramArrowProps> = ({arrowIcon, fi
                 className={"change-puzzle-arrow"}
                 icon={arrowIcon} 
                 onClick={() => {
-                    if(fileName) {
+                    if (fileName) {
                         navigate("../nonogram-solver/" + fileName)
                     }
                 }}

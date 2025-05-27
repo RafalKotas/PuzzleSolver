@@ -44,7 +44,7 @@ const AkariPanel : React.FC<AkariPanelProps> = ({akarisList, setAkarisList}) => 
     const [dataFetched, setDataFetched] = useState<boolean>(false)
 
     useEffect(() => {
-        if(akarisList.length > 0) {
+        if (akarisList.length > 0) {
             setDataFetched(true)
         }
     }, [akarisList])

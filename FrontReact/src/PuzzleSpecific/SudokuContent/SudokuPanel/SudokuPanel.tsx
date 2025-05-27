@@ -43,7 +43,7 @@ const SudokuPanel : React.FC<SudokuPanelProps> = ({sudokusList, setSudokusList})
     const [dataFetched, setDataFetched] = useState<boolean>(false)
 
     useEffect(() => {
-        if(sudokusList.length > 0) {
+        if (sudokusList.length > 0) {
             setDataFetched(true)
         }
     }, [sudokusList])

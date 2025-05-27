@@ -230,7 +230,7 @@ const SudokuActions: React.FC<SudokuActionsProps> = ({ consideredColumns, consid
                                             style={{ width: "60px" }} 
                                         />
                                         <Button onClick={() => {
-                                            if(step === "mark") {
+                                            if (step === "mark") {
                                                 selectedOption.onMark(consideredRows, consideredColumns)
                                                 setStep("fill")
                                             } else {

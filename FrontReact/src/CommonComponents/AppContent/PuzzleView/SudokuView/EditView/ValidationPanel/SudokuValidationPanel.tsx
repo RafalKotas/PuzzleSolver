@@ -33,7 +33,7 @@ type SudokuValidationPanelProps = SudokuValidationPanelPropsFromRedux
 const SudokuValidationPanel: React.FC<SudokuValidationPanelProps> = ({ isSudokuCorrect }) => {
 
     useEffect(() => {
-        if(isSudokuCorrect === 1) {
+        if (isSudokuCorrect === 1) {
             
         }
     }, [isSudokuCorrect])

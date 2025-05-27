@@ -62,12 +62,12 @@ const ArchitectCreatePanel : React.FC<ArchitectCreatePanelProps> = ({addArchitec
     }, [])
 
     const handleStringProperty = (property: string, value: string, valid: boolean) => {
-        if(!valid) {
-            if(detailsSet.includes(property)) {
+        if (!valid) {
+            if (detailsSet.includes(property)) {
                 removeArchitectDetail(property as keyof architectInformation)
             }
-        } else if(valid) {
-            if(!detailsSet.includes(property)) {
+        } else if (valid) {
+            if (!detailsSet.includes(property)) {
                 addArchitectDetail(property as keyof architectInformation)
             }
             changeArchitectDetail(property as keyof architectInformation, value)

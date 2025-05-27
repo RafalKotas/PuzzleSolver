@@ -74,7 +74,7 @@ const HitoriFiltersSection : React.FC<HitoriFiltersSectionProps> = ({hitorisList
             let optionValues = hitorisList.map(hitoriInfo => {return hitoriInfo[optionNameCasted]})
     
 
-            if(true) {
+            if (true) {
                 //sorted unique options values
                 let uniqueValues = commonFunctions.removeDuplicatesFromArray(optionValues).sort()
         

@@ -53,22 +53,22 @@ const EditableSquare : React.FC<EditableSquareProps> = ({section, index, cellNo,
 
     //1?
     const enterNewValue = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if(!allowedKeys.includes(event.key)) {
+        if (!allowedKeys.includes(event.key)) {
             event.preventDefault()
         } else {
-            if(digits.includes(event.key)) {
-                if(event.currentTarget.value.length === 2) {
+            if (digits.includes(event.key)) {
+                if (event.currentTarget.value.length === 2) {
                     event.preventDefault()
                 }
-            } else if(event.key === "Enter") {
-                if(isNaN(value)) {
+            } else if (event.key === "Enter") {
+                if (isNaN(value)) {
                     modifySequence( 0, section, index, cellNo)
                 } else {
                     modifySequence( value, section, index, cellNo)
                 }
-            } else if(event.key === "Backspace") {
+            } else if (event.key === "Backspace") {
 
-            } else if(event.key === "Escape") {
+            } else if (event.key === "Escape") {
                 setValue(0)
                 resetEditedSquare()
             }

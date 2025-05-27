@@ -117,7 +117,7 @@ const SequencesModifier: React.FC<SequencesModifierProps> = ({ maxRowModifyIndex
     } else {
       modifyColumn(modifyIndex, sequencesArrOfIntegers)
     }
-    if(modifyIndex < maxModifyIndex) {
+    if (modifyIndex < maxModifyIndex) {
       setModifyIndex(modifyIndex + 1)
     }
   }
