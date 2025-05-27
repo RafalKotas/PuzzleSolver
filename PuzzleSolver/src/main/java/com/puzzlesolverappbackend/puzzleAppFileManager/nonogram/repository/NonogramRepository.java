@@ -1,5 +1,6 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.repository;
 
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.Nonogram;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

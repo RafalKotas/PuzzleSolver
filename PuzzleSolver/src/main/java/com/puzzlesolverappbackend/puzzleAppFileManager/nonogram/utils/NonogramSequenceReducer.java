@@ -6,6 +6,7 @@ import java.util.*;
 
 @UtilityClass
 public class NonogramSequenceReducer {
+
     public static List<List<Integer>> reduceMatches(List<List<Integer>> colouredMatches, List<Boolean> differentSequencesId) {
         boolean changed;
 
@@ -18,11 +19,13 @@ public class NonogramSequenceReducer {
 
                 if (i < colouredMatches.size() - 1 && differentSequencesId.get(i)) {
                     List<Integer> next = colouredMatches.get(i + 1);
-
                     Set<Integer> union = new HashSet<>(current);
                     union.addAll(next);
 
-                    if ((current.size() > 1 || next.size() > 1) && union.size() == current.size() + next.size() - countOverlap(current, next)) {
+                    int overlap = countOverlap(current, next);
+                    int expectedSize = current.size() + next.size() - overlap;
+
+                    if ((current.size() > 1 || next.size() > 1) && union.size() == expectedSize) {
                         if (union.size() == 2) {
                             Iterator<Integer> it = union.iterator();
                             newMatches.add(List.of(it.next()));
@@ -45,11 +48,7 @@ public class NonogramSequenceReducer {
 
     private static int countOverlap(List<Integer> a, List<Integer> b) {
         Set<Integer> setA = new HashSet<>(a);
-        int count = 0;
-        for (Integer val : b) {
-            if (setA.contains(val)) count++;
-        }
-        return count;
+        return (int) b.stream().filter(setA::contains).count();
     }
 
 }

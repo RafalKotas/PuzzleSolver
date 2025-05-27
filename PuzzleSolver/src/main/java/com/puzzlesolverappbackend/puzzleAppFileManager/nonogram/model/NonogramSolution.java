@@ -1,10 +1,10 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.puzzlesolverappbackend.puzzleAppFileManager.common.FileHelper;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,8 +12,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.COLOURED_FIELD;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.X_FIELD;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.COLOURED_FIELD;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.X_FIELD;
 
 @Setter
 @Getter

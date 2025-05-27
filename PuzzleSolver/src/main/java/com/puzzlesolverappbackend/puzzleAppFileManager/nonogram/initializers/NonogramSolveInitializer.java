@@ -3,14 +3,14 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.initializers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.common.CommonService;
 import com.puzzlesolverappbackend.puzzleAppFileManager.constants.InitializerConstants;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.Nonogram;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramFileDetails;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramRepository;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramService;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicService;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRules;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramRules;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.Nonogram;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramFileDetails;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.repository.NonogramRepository;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.NonogramService;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.logic.NonogramLogicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRules.mapNonogramFileDetailsToNonogramRules;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramRules.mapNonogramFileDetailsToNonogramRules;
 
 //@Component
 //@Order(7)

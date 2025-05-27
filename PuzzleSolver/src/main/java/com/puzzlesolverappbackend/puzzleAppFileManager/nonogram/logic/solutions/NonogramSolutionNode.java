@@ -1,8 +1,9 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions;
 
 
 import com.google.gson.Gson;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramSolution;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramSolution;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.X_FIELD;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.X_FIELD;
 
 @Getter
 @Setter

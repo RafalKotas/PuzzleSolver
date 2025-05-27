@@ -1,7 +1,7 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRowLogic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRules;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramRules;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.NonogramRowLogic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

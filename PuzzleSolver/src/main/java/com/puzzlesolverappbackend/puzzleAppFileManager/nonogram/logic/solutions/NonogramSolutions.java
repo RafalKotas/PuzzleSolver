@@ -1,13 +1,13 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRowLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.NonogramRowLogic;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
 import java.util.Objects;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.EMPTY_FIELD;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.EMPTY_FIELD;
 
 
 @UtilityClass

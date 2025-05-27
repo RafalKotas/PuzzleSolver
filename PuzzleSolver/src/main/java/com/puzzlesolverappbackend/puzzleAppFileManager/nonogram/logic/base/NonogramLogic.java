@@ -1,9 +1,16 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.common.LogicFunctions;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramActionDetails;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramBoardTemplate;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.Field;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicParams;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramSequenceRangeInferer;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.NonogramColumnLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.NonogramRowLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionDecision;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramActionDetails;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramBoardTemplate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,16 +27,16 @@ import java.util.stream.Stream;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.rangeInsideAnotherRange;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.rangeLength;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.*;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramHelper.indexToSequenceCharMark;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramParametersComparatorHelper.sequencesRangesEqual;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction.*;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramState.buildInitialEmptyNonogramState;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramStructureFactory.generateEmptyColumns;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramStructureFactory.generateEmptyRows;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramState.buildInitialEmptyNonogramState;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.collectColouredSequencesRangesInColumn;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.collectColouredSequencesRangesInRow;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.isFieldEmpty;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramHelper.indexToSequenceCharMark;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramParametersComparatorHelper.sequencesRangesEqual;
 
 
 @Data

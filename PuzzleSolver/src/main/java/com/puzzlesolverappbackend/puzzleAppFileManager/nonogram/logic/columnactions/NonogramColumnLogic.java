@@ -1,8 +1,10 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramHelper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnActions;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.Field;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicParams;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramHelper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,18 +15,18 @@ import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.rangeInsideAnotherRange;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.rangeLength;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.EMPTY_FIELD;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.MARKED_COLUMN_INDICATOR;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramParametersComparatorHelper.rangesEqual;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicService.filterSequencesRangesIncludingAnotherAndReturnCorrespondingLengths;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicService.rangesListIncludingAnotherRange;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.collectColouredSequencesRangesInColumn;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.matchColouredSequencesToPossibleSeqIDs;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnCorrectSequencesRangesHelper.reduceColouredSequenceMatches;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnCorrectSequencesRangesHelper.sequenceAssignmentAppearsAsFirstLater;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnMixedActionsHelper.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.EMPTY_FIELD;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.MARKED_COLUMN_INDICATOR;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.logic.NonogramLogicService.filterSequencesRangesIncludingAnotherAndReturnCorrespondingLengths;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.logic.NonogramLogicService.rangesListIncludingAnotherRange;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramLogicUtils.colouredSequenceInColumnIsValid;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramParametersComparatorHelper.rangesEqual;
 
 @Getter
 @Setter
@@ -307,7 +309,11 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         for (int rowIdx = this.getNonogramRules().getHeight() - 1; rowIdx >= 0 ; rowIdx--) {
             potentiallyColouredField = new Field(rowIdx, columnIdx);
             if (isFieldColoured(this.nonogramSolutionBoard, potentiallyColouredField)) {
+
                 oldSequenceRange = columnSequencesRanges.get(sequenceId);
+                if (columnIdx == 13 && sequenceId == 2 && oldSequenceRange.equals(List.of(7, 14))) {
+                    System.out.println("tu źle bottom");
+                }
                 columnSequenceRangeStart = oldSequenceRange.get(0);
                 columnSequenceRangeEnd = oldSequenceRange.get(1);
                 minimumPossibleSequenceRangeStart = rowIdx - sequenceLength + 1;
@@ -1121,7 +1127,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
 
                 firstXIndex = rowIdx;
                 fieldAfterXToCheck = new Field(++rowIdx, columnIdx);
-                while(rowIdx < this.getNonogramRules().getHeight()) {
+                while (rowIdx < this.getNonogramRules().getHeight()) {
                     if (isFieldEmpty(this.nonogramSolutionBoard, fieldAfterXToCheck)) {
                         fieldAfterXToCheck = new Field(++rowIdx, columnIdx);
                     } else {
@@ -1752,7 +1758,10 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         this.excludeFieldInColumn(field);
     }
 
-    protected void excludeSequenceInColumn(int columnIdx, int seqIdx) {
+    public void excludeSequenceInColumn(int columnIdx, int seqIdx) {
+        if (columnIdx == 13 && seqIdx == 2) {
+            System.out.println("abc");
+        }
         if (!this.columnsSequencesIdsNotToInclude.get(columnIdx).contains(seqIdx)) {
             this.tmpLog = generateAddingColumnSequenceToNotToIncludeDescription(columnIdx, seqIdx);
             addLog();

@@ -1,17 +1,18 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.initializers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.constants.InitializerConstants;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramGenetic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRules;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramRules;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramFileDetails;
 import org.springframework.boot.CommandLineRunner;
 
 import java.io.File;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRules.mapNonogramFileDetailsToNonogramRules;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramRules.mapNonogramFileDetailsToNonogramRules;
 
 //@Component
 //@Order(8)

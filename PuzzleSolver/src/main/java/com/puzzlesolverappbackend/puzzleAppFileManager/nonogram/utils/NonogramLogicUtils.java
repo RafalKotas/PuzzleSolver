@@ -1,7 +1,7 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramColumnLogic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRowLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.NonogramColumnLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.NonogramRowLogic;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;

@@ -1,9 +1,13 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramFileDetails;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramRepository;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramService;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramCorrectnessIndicator;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramRules;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramSolver;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionNode;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramFileDetails;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.repository.NonogramRepository;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.NonogramService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,7 +39,7 @@ class NonogramSolverTest {
     private final GuessMode guessMode = GuessMode.DISABLED;
 
     @ParameterizedTest
-    @ValueSource(doubles = {/*1.0, 2.0,*/ 3.0})
+    @ValueSource(doubles = {1.0/*, 2.0, 3.0*/})
     @DisplayName("Should solve logi nonograms heuristically by difficulty")
     void shouldSolveLogiNonogramsByDifficultyHeuristicsOnly(double difficulty) {
         // given

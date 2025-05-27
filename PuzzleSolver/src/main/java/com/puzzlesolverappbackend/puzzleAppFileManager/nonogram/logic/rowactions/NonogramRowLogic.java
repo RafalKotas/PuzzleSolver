@@ -1,8 +1,10 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramHelper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowActions;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.Field;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicParams;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramHelper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,17 +14,17 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.*;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.EMPTY_FIELD;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.MARKED_ROW_INDICATOR;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramParametersComparatorHelper.rangesEqual;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicService.filterSequencesRangesIncludingAnotherAndReturnCorrespondingLengths;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicService.rangesListIncludingAnotherRange;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.collectColouredSequencesRangesInRow;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.matchColouredSequencesToPossibleSeqIDs;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowPreventExtendingColouredSequenceToExcessLengthHelpers.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.EMPTY_FIELD;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.MARKED_ROW_INDICATOR;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.logic.NonogramLogicService.filterSequencesRangesIncludingAnotherAndReturnCorrespondingLengths;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.logic.NonogramLogicService.rangesListIncludingAnotherRange;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramCreatorUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramLogicUtils.colouredSequenceInRowIsValid;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramParametersComparatorHelper.rangesEqual;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramSequenceReducer.reduceMatches;
 
 @Setter
@@ -1922,7 +1924,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         this.excludeFieldInRow(field);
     }
 
-    protected void excludeSequenceInRow(int rowIdx, int seqIdx) {
+    public void excludeSequenceInRow(int rowIdx, int seqIdx) {
         boolean rowValid = isRowIndexValid(rowIdx);
         if (rowValid && !this.rowsSequencesIdsNotToInclude.get(rowIdx).contains(seqIdx)) {
             this.tmpLog = generateAddingRowSequenceToNotToIncludeDescription(rowIdx, seqIdx);
@@ -1932,7 +1934,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         }
     }
 
-    protected void excludeFieldsInRow(List<Field> fieldsToExclude) {
+    public void excludeFieldsInRow(List<Field> fieldsToExclude) {
         fieldsToExclude.forEach(this::excludeFieldInRow);
     }
 
@@ -1945,7 +1947,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         }
     }
 
-    protected void updateRowSequenceRange(int rowIdx, int sequenceIdx, List<Integer> updatedRange) {
+    public void updateRowSequenceRange(int rowIdx, int sequenceIdx, List<Integer> updatedRange) {
         this.rowsSequencesRanges.get(rowIdx).set(sequenceIdx, updatedRange);
     }
 

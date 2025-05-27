@@ -1,6 +1,8 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramLogicPrinter;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.NonogramColumnLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.NonogramRowLogic;
 import lombok.Getter;
 import lombok.Setter;
 

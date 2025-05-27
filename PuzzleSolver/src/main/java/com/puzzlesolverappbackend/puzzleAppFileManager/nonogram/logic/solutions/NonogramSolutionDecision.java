@@ -1,5 +1,6 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions;
 
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.Field;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

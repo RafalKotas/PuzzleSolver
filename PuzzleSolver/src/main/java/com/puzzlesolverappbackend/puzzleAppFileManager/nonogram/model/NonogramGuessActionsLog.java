@@ -1,6 +1,6 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramSolutionDecision;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionDecision;
 import lombok.AllArgsConstructor;
 
 import java.util.List;

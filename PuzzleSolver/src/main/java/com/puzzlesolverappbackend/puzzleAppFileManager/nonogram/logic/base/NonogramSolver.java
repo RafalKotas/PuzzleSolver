@@ -1,9 +1,12 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base;
 
 import com.google.gson.Gson;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramGuessActionsLog;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramNodeLog;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramSolution;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionDecision;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionNode;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramGuessActionsLog;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramNodeLog;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramSolution;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.COLOURED_FIELD;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.X_FIELD;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.COLOURED_FIELD;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.X_FIELD;
 
 @Getter
 @Setter
@@ -27,7 +30,7 @@ public class NonogramSolver {
     private final boolean recursionModeEnabled = false;
     private boolean solved = false;
 
-    private boolean LOG_STEPS_SOLVER = false;
+    private boolean LOG_STEPS_SOLVER = true;
     private boolean printNodeCompletionPercentage = true;
 
     private boolean oneOfTwoDecisionsWrong;
@@ -109,7 +112,9 @@ public class NonogramSolver {
             log.info("COMPLETION PERCENTAGE: {}, DECISIONS SIZE: {}", nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage(), nonogramSubsolutionNode.getNonogramGuessDecisions().size());
             log.info("SOLUTION STEPS: ");
             for (String nonogramNodeLog : nonogramSubsolutionNode.getNodeLogs()) {
-                log.info("nodeLog: {}", nonogramNodeLog);
+                if (!nonogramNodeLog.contains("correcting")) {
+                    log.info("nodeLog: {}", nonogramNodeLog);
+                }
             }
         }
 

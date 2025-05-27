@@ -1,16 +1,15 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRowLogic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramState;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramState;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.COLOURED_FIELD;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramRowLogic.prepareNonogramRowLogic;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.NonogramRowLogic.prepareNonogramRowLogic;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.collectColouredSequencesRangesInRow;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.COLOURED_FIELD;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpersTest {

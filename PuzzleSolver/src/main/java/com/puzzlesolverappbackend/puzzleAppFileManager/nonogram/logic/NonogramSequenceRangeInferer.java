@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
 
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramRules;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.*;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramHelper.createArrayOfEmptyFields;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramHelper.generateArrayOfSequenceMarks;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.CollectionUtils.reverseList;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramHelper.createArrayOfEmptyFields;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramHelper.generateArrayOfSequenceMarks;
 
 @Getter
 @Setter

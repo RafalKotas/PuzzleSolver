@@ -1,7 +1,11 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramActionDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramRules;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramState;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionDecision;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramActionDetails;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.ActionDependencyMap;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramConstants.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.isFieldColoured;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.isFieldWithX;
 
@@ -163,7 +167,7 @@ public abstract class NonogramLogicParams {
         }
     }
 
-    protected void placeXAtGivenFields(List<Field> x_fields) {
+    public void placeXAtGivenFields(List<Field> x_fields) {
         x_fields.forEach(field -> placeXAtGivenField(field, true));
     }
 
@@ -202,7 +206,7 @@ public abstract class NonogramLogicParams {
         }
     }
 
-    protected void addRowToAffectedActionsByIdentifiers(int rowIdx, NonogramSolveAction actionTriggered) {
+    public void addRowToAffectedActionsByIdentifiers(int rowIdx, NonogramSolveAction actionTriggered) {
         List<NonogramSolveAction> actionsToDo = ActionDependencyMap.actionDependencies.get(actionTriggered);
         for (NonogramSolveAction actionToDo : actionsToDo) {
             if (isRowIndexValid(rowIdx)) {
@@ -249,7 +253,7 @@ public abstract class NonogramLogicParams {
     public List<String> getNonogramBoardColumn(int columnIdx) {
         List<String> solutionBoardColumn = new ArrayList<>();
 
-        for (int rowIdx = 0; rowIdx < this.getNonogramRules().getWidth(); rowIdx++) {
+        for (int rowIdx = 0; rowIdx < this.getNonogramRules().getHeight(); rowIdx++) {
             solutionBoardColumn.add(this.nonogramSolutionBoard.get(rowIdx).get(columnIdx));
         }
 
@@ -274,7 +278,7 @@ public abstract class NonogramLogicParams {
         }
     }
 
-    protected void printSolutionBoardAsCode() {
+    public void printSolutionBoardAsCode() {
         int rowIdx = 0;
         int columnIdx;
         System.out.println("List.of(");
@@ -353,13 +357,13 @@ public abstract class NonogramLogicParams {
     }
 
 
-    protected void printSolutionBoard() {
+    public void printSolutionBoard() {
         for (List<String> solutionBoardRow : this.getNonogramSolutionBoard()) {
             System.out.println(solutionBoardRow);
         }
     }
 
-    protected void printSolutionBoardWithMarks() {
+    public void printSolutionBoardWithMarks() {
         for (List<String> solutionBoardRowWithMarks : this.getNonogramSolutionBoardWithMarks()) {
             System.out.println(solutionBoardRowWithMarks);
         }

@@ -1,9 +1,9 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils;
 
 import com.google.gson.*;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramFileDetails;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.NonogramSolution;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramFileDetails;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramSolution;
 
 import java.io.FileWriter;
 import java.io.IOException;
