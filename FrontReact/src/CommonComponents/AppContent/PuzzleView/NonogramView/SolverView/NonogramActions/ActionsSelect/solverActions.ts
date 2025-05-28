@@ -1,9 +1,5 @@
 import { faCalculator, faCircleCheck, faFloppyDisk, faSquare, faTag, faWandSparkles, faXmark, IconDefinition } from "@fortawesome/free-solid-svg-icons"
-import { nonogramBoardMarks } from "../../../../../../../store/puzzleLogic/nonogram"
-
-export const nonogramSolverActionsNames : string[] = ["COLOUR", "PLACE_X", "MARK", "CORRECT RANGES"]
-
-export type nonogramActionsNames = "COLOUR" | "PLACE_X" | "MARK" | "CORRECT RANGES" | "CUSTOM SOLVER" | "SAVE SOLUTION" | "COMPARE WITH SOLUTION"
+import { nonogramActionsNames, nonogramBoardMarks } from "../../../../../../../store/puzzleLogic/nonogram"
 
 export interface actionProp {
     name: nonogramActionsNames,

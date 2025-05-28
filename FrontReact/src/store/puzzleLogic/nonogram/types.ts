@@ -1,4 +1,6 @@
-import { nonogramActionsNames } from "../../../CommonComponents/AppContent/PuzzleView/NonogramView/SolverView/NonogramActions/ActionsSelect/solverActions"
+export const nonogramSolverActionsNames : string[] = ["COLOUR", "PLACE_X", "MARK", "CORRECT RANGES"]
+
+export type nonogramActionsNames = "COLOUR" | "PLACE_X" | "MARK" | "CORRECT RANGES" | "CUSTOM SOLVER" | "SAVE SOLUTION" | "COMPARE WITH SOLUTION"
 
 export type nonogramBoardMarks = "X" | "O" | "-"
 

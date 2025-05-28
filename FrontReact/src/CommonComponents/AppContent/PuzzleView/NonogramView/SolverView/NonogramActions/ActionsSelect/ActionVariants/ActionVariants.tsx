@@ -1,5 +1,5 @@
 // react
-import React from "react"
+import * as React from "react"
 
 // redux
 import { connect, ConnectedProps } from "react-redux"
@@ -8,14 +8,14 @@ import { Dispatch } from "redux"
 // redux - store
 import { AppState } from "../../../../../../../../store"
 
-// material-ui
+// mui/material
 import { Tab, Tabs } from "@mui/material"
-/*import { makeStyles } from "@material-ui/core"*/
+/*import { makeStyles } from "@mui/material/core"*/
 
 // others
-import { nonogramSolverActionsNames, nonogramActionsNames } from "../solverActions"
 import CustomMUISlider from "../../../../../../PuzzleFiltersPanel/CustomMUISlider/CustomMUISlider"
-import { ColourFieldsInColumnsRange, nonogramRelatedLogicData, SetNonogramRelatedLogicData } from "../../../../../../../../store/puzzleLogic/nonogram"
+import { nonogramSolverActionsNames, nonogramActionsNames, nonogramRelatedLogicData,
+    ColourFieldsInColumnsRange, SetNonogramRelatedLogicData } from "../../../../../../../../store/puzzleLogic/nonogram"
 
 interface OwnNonogramActionVariantsProps {
     selectedActionName: nonogramActionsNames,
@@ -26,11 +26,15 @@ interface OwnNonogramActionVariantsProps {
     passOrderToParent: (value: string) => void
 }
 
-const mapStateToProps = (state: AppState) => ({
-    maxRow: state.nonogramLogicReducer.nonogramRelatedData.nonogramRules.height,
-    maxColumn: state.nonogramLogicReducer.nonogramRelatedData.nonogramRules.width,
-    nonogramRelatedLogicData: state.nonogramLogicReducer.nonogramRelatedData
-})
+const mapStateToProps = (state: AppState) => {
+    const rules = state.nonogramLogicReducer.nonogramRelatedData?.nonogramRules;
+    return {
+        maxRow: rules?.height ?? 0,
+        maxColumn: rules?.width ?? 0,
+        nonogramRelatedLogicData: state.nonogramLogicReducer.nonogramRelatedData
+    };
+};
+
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     colourFieldsInColumnsRange: (columnBegin: number, columnEnd: number) =>
@@ -66,8 +70,25 @@ const ActionVariants: React.FC<NonogramActionVariantsProps> = ({selectedActionNa
                                 disabled={false}
                             />
                         </Tabs>
-                        {order === "ROW" && <CustomMUISlider minValue={0} maxValue={maxRow} step={1} filterLabel={"Row"} onHandleChange={passRangeToParent} />}
-                        {order === "COLUMN" && <CustomMUISlider minValue={0} maxValue={maxColumn} step={1} filterLabel={"Column"} onHandleChange={passRangeToParent} />}
+                        {order === "ROW" && maxRow > 0 && (
+                            <CustomMUISlider
+                                minValue={0}
+                                maxValue={maxRow}
+                                step={1}
+                                filterLabel={"Row"}
+                                onHandleChange={passRangeToParent}
+                            />
+                        )}
+
+                        {order === "COLUMN" && maxColumn > 0 && (
+                            <CustomMUISlider
+                                minValue={0}
+                                maxValue={maxColumn}
+                                step={1}
+                                filterLabel={"Column"}
+                                onHandleChange={passRangeToParent}
+                            />
+                        )}
                     </section>
                 </React.Fragment>
             }

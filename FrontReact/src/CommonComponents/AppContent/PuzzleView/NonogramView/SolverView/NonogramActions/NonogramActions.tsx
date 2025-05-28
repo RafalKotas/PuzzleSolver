@@ -13,7 +13,7 @@ import { correctnessIndicator } from "../../../../../../store/data/nonogram/type
 import { SetCorrectness, SetEditMode, ToggleMarksVisibility, ToggleXsVisibility } from "../../../../../../store/data/nonogram"
 
 // libraries-components
-import TextField from "@material-ui/core/TextField"
+import TextField from "@mui/material/TextField"
 import { Tab, Tabs, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material"
 import CheckCorrectButton from "./CheckCorrectButton/CheckCorrectButton"
 

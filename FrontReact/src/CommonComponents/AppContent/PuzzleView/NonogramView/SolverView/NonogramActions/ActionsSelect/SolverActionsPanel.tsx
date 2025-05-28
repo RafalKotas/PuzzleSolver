@@ -14,13 +14,13 @@ import { SetCorrectness } from "../../../../../../../store/data/nonogram"
 import ActionVariants from "./ActionVariants/ActionVariants"
 
 // material-ui
-import { Button, Tab, Tabs, Tooltip } from "@mui/material"
-import { makeStyles } from "@material-ui/core"
+import { Button, Tab, Tabs, Theme, Tooltip } from "@mui/material"
+import { makeStyles } from "@mui/styles"
 
 // others
-import { actionsProps, nonogramActionsNames } from "./solverActions"
+import { actionsProps } from "./solverActions"
 import NonogramLogicService from "../../../../../../../services/nonogram/nonogram.logic.service"
-import { nonogramRelatedLogicData, SetNonogramRelatedLogicData } from "../../../../../../../store/puzzleLogic/nonogram"
+import { nonogramRelatedLogicData, SetNonogramRelatedLogicData, nonogramActionsNames } from "../../../../../../../store/puzzleLogic/nonogram"
 
 // css
 import "./SolverActionsPanel.css"
@@ -29,20 +29,20 @@ import "./SolverActionsPanel.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { InitializeSolverData, nonogramBoardMarks, SetCurrentNonogramMark } from "../../../../../../../store/puzzleLogic/nonogram"
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
     listItemRoot: {
-      "&.Mui-selected": {
-          backgroundColor: "#721717",
-          color: "#7EEAEC",
-          borderRadius: "5px"
-      }
+        "&.Mui-selected": {
+            backgroundColor: "#721717",
+            color: "#7EEAEC",
+            borderRadius: "5px"
+        }
     },
     tabsContainer: {
         "&.MuiTabs-flexContainer": {
             flexWrap: "wrap"
         }
     }
-  }))
+}))
 
 // interface OwnSolverActionsPanelProps {
 

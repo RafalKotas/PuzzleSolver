@@ -60,39 +60,48 @@ const NonogramSolverView : React.FC<NonogramSolverViewProps> = ({ selectedNonogr
     const nonogramPath = "../../resources/Nonograms/" + params.filename + ".json"
 
     useEffect(() => {
+        axios.get(nonogramPath)
+            .then((response: { data: selectedNonogramDetails }) => {
+                const nonogramFromResponse = response.data;
 
-        axios.get(nonogramPath).then((response: { data: selectedNonogramDetails }) => {
-            const nonogramFromResponse = response.data
-
-            if (nonogramFromResponse) {
                 if (params.filename && params.filename !== nonogramFromResponse.filename) {
                     nonogramFromResponse.filename = params.filename;
                 }
 
-                setSelectedNonogram(nonogramFromResponse)
+                setSelectedNonogram(nonogramFromResponse);
+            })
+            .catch((error) => {
+                console.error("Error fetching nonogram file:", error);
+            });
+    }, [nonogramPath, params.filename, setSelectedNonogram]);
 
-                const initData = {
-                    filename: nonogramFromResponse.filename,
-                    rowSequences: nonogramFromResponse.rowSequences,
-                    columnSequences: nonogramFromResponse.columnSequences,
-                    height: nonogramFromResponse.height,
-                    width: nonogramFromResponse.width
-                }
+    useEffect(() => {
+        if (!selectedNonogram) return;
 
-                NonogramLogicService.initializeNonogramLogic(initData)
-                .then((initResponse) => {
-                    const nonogramRelatedData = initResponse.data;
-                    setNonogramRelatedLogicData(nonogramRelatedData);
-                })
-                .catch((error) => {
-                    console.error("Error initializing nonogram logic:", error);
-                })
-            }
-        })
+        const initData = {
+            filename: selectedNonogram.filename,
+            rowSequences: selectedNonogram.rowSequences,
+            columnSequences: selectedNonogram.columnSequences,
+            height: selectedNonogram.height,
+            width: selectedNonogram.width
+        };
 
-    }, [nonogramPath, params.filename, setSelectedNonogram, setNonogramRelatedLogicData])
+        NonogramLogicService.initializeNonogramLogic(initData)
+            .then((initResponse) => {
+                setNonogramRelatedLogicData(initResponse.data);
+            })
+            .catch((error) => {
+                console.error("Error initializing nonogram logic:", error);
+            });
 
-    const renderCondition = () => selectedNonogram && params.filename && selectedNonogram.filename === params.filename
+    }, [selectedNonogram, setNonogramRelatedLogicData]);
+
+    const renderCondition = () => {
+        return !!selectedNonogram &&
+            !!selectedNonogram.rowSequences &&
+            !!selectedNonogram.columnSequences &&
+            selectedNonogram.filename === params.filename
+    }
 
     return (
         <div id="selected-nonogram-view">

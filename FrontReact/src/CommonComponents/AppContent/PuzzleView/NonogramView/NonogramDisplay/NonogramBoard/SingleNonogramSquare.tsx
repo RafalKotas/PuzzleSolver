@@ -1,7 +1,7 @@
 // react
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Tooltip } from "@material-ui/core"
+import { Tooltip } from "@mui/material"
 import React from "react"
 
 // redux
