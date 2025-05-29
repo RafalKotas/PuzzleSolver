@@ -178,7 +178,7 @@ const saveSolution = (nonogramRelatedData: nonogramRelatedLogicData, fileName: s
     }
 
     const payload = {
-        fileName: fileName,
+        fileName: "r" + fileName,
         board: nonogramRelatedData.nonogramSolutionBoard,
         rowSequences: nonogramRelatedData.nonogramRules.rowSequencesLengths,
         columnSequences: nonogramRelatedData.nonogramRules.columnSequencesLengths
