@@ -24,7 +24,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedCo
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-@SpringBootTest
+@SpringBootTest(properties = "spring.profiles.active=test")
 @Slf4j
 class NonogramSolverTest {
 
@@ -39,7 +39,7 @@ class NonogramSolverTest {
     private final GuessMode guessMode = GuessMode.DISABLED;
 
     @ParameterizedTest
-    @ValueSource(doubles = {1.0/*, 2.0, 3.0*/})
+    @ValueSource(doubles = {1.0, 2.0/*, 3.0*/})
     @DisplayName("Should solve logi nonograms heuristically by difficulty")
     void shouldSolveLogiNonogramsByDifficultyHeuristicsOnly(double difficulty) {
         // given
@@ -78,11 +78,13 @@ class NonogramSolverTest {
                     notSolvedNonograms.add(filename);
                 }
             }
+
             // TODO - write test/s for checking invalid nonograms existing
             /*else {
                 log.error("Nonogram {} data not correct ({})", filename, correctnessIndicator);
                 invalidNonograms++;
             }*/
+
             orderId++;
         }
 
