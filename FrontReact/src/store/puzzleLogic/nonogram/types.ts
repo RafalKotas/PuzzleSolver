@@ -25,8 +25,8 @@ export interface NonogramLogicState {
 }
 
 export interface rules {
-    rowsSequencesLengths:                    Array<       Array<number>      >,
-    columnsSequencesLengths:                 Array<       Array<number>      >,
+    rowSequencesLengths:                    Array<       Array<number>      >,
+    columnSequencesLengths:                 Array<       Array<number>      >,
     height: number,
     width: number
 }

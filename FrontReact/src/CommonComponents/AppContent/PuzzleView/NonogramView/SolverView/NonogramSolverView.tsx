@@ -50,30 +50,30 @@ const NonogramSolverView : React.FC<NonogramSolverViewProps> = ({ selectedNonogr
     setSelectedNonogram, setNonogramRelatedLogicData
      }) => {
 
-        useEffect(() => {
+    useEffect(() => {
 
-            //eslint-disable-next-line
-        }, [selectedNonogram?.filename])
+        //eslint-disable-next-line
+    }, [selectedNonogram?.filename])
 
     const params = useParams()
 
-    const nonogramPath = "../../resources/Nonograms/" + params.filename + ".json"
+    const nonogramPath = "/resources/Nonograms/" + params.filename + ".json"
 
     useEffect(() => {
         axios.get(nonogramPath)
             .then((response: { data: selectedNonogramDetails }) => {
-                const nonogramFromResponse = response.data;
+                const nonogramFromResponse = response.data
 
                 if (params.filename && params.filename !== nonogramFromResponse.filename) {
-                    nonogramFromResponse.filename = params.filename;
+                    nonogramFromResponse.filename = params.filename
                 }
 
-                setSelectedNonogram(nonogramFromResponse);
+                setSelectedNonogram(nonogramFromResponse)
             })
             .catch((error) => {
-                console.error("Error fetching nonogram file:", error);
+                console.error("Error fetching nonogram file (NonogramSolverView):", error)
             });
-    }, [nonogramPath, params.filename, setSelectedNonogram]);
+    }, [nonogramPath, params.filename, setSelectedNonogram])
 
     useEffect(() => {
         if (!selectedNonogram) return;
@@ -88,10 +88,10 @@ const NonogramSolverView : React.FC<NonogramSolverViewProps> = ({ selectedNonogr
 
         NonogramLogicService.initializeNonogramLogic(initData)
             .then((initResponse) => {
-                setNonogramRelatedLogicData(initResponse.data);
+                setNonogramRelatedLogicData(initResponse.data)
             })
             .catch((error) => {
-                console.error("Error initializing nonogram logic:", error);
+                console.error("Error initializing nonogram logic:", error)
             });
 
     }, [selectedNonogram, setNonogramRelatedLogicData]);

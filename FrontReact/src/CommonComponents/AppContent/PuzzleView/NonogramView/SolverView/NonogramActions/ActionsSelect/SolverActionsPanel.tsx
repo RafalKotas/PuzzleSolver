@@ -1,31 +1,21 @@
-//react
 import React, { useState } from "react"
-
-// redux
 import { connect, ConnectedProps } from "react-redux"
 import { Dispatch } from "redux"
 
-// redux - store
 import { AppState } from "../../../../../../../store"
 import { correctnessIndicator } from "../../../../../../../store/data/nonogram/types"
 import { SetCorrectness } from "../../../../../../../store/data/nonogram"
 
-// (sub)components
 import ActionVariants from "./ActionVariants/ActionVariants"
 
-// material-ui
 import { Button, Tab, Tabs, Theme, Tooltip } from "@mui/material"
 import { makeStyles } from "@mui/styles"
 
-// others
 import { actionsProps } from "./solverActions"
 import NonogramLogicService from "../../../../../../../services/nonogram/nonogram.logic.service"
 import { nonogramRelatedLogicData, SetNonogramRelatedLogicData, nonogramActionsNames } from "../../../../../../../store/puzzleLogic/nonogram"
 
-// css
 import "./SolverActionsPanel.css"
-
-// fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { InitializeSolverData, nonogramBoardMarks, SetCurrentNonogramMark } from "../../../../../../../store/puzzleLogic/nonogram"
 
@@ -44,12 +34,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }))
 
-// interface OwnSolverActionsPanelProps {
-
-// }
-
 const mapStateToProps = (state: AppState) => ({
-    selectedNonogramName: state.nonogramDataReducer.selectedNonogram ? state.nonogramDataReducer.selectedNonogram.filename : "" ,
+    selectedNonogramName: state.nonogramDataReducer.selectedNonogram?.filename ?? "",
     selectedNonogram: state.nonogramDataReducer.selectedNonogram,
     correctIndicator: state.nonogramDataReducer.nonogramCorrect,
     nonogramRelatedLogicData: state.nonogramLogicReducer.nonogramRelatedData
@@ -58,201 +44,141 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     setCorrectness: (correct: correctnessIndicator) =>
         dispatch(SetCorrectness(correct)),
-    setCurrentNonogramMark: (mark : nonogramBoardMarks) =>
+    setCurrentNonogramMark: (mark: nonogramBoardMarks) =>
         dispatch(SetCurrentNonogramMark(mark)),
-    setNonogramRelatedLogicData: (nonogramRelatedLogicData: nonogramRelatedLogicData) =>
-            dispatch(SetNonogramRelatedLogicData(nonogramRelatedLogicData)),
-    initializeSolverData: (rowsSequences: number[][], columnsSequences: number[][]) => dispatch(InitializeSolverData(rowsSequences, columnsSequences))
+    setNonogramRelatedLogicData: (data: nonogramRelatedLogicData) =>
+        dispatch(SetNonogramRelatedLogicData(data)),
+    initializeSolverData: (rows: number[][], cols: number[][]) =>
+        dispatch(InitializeSolverData(rows, cols))
 })
 
 const connector = connect(mapStateToProps, mapDispatchToProps)
+type Props = ConnectedProps<typeof connector>
 
-type SolverActionsPanelPropsFromRedux = ConnectedProps<typeof connector>
-
-type SolverActionsPanelProps = SolverActionsPanelPropsFromRedux//& OwnSolverActionsPanelProps
-
-const SolverActionsPanel: React.FC<SolverActionsPanelProps> = ({selectedNonogramName, correctIndicator, nonogramRelatedLogicData,
-    setCurrentNonogramMark, setNonogramRelatedLogicData}) => {
+const SolverActionsPanel: React.FC<Props> = ({
+    selectedNonogramName, correctIndicator, nonogramRelatedLogicData,
+    setCurrentNonogramMark, setNonogramRelatedLogicData
+}) => {
 
     const classes = useStyles()
 
     const [selectedActionTypeIdx, setSelectedActionTypeIdx] = useState<number>(0)
-    const [order, setOrder] = useState<string>("ROW")
+    const [order, setOrder] = useState<"ROW" | "COLUMN">("ROW")
     const [rowsRange, setRowsRange] = useState<number[]>([0, 0])
     const [columnsRange, setColumnsRange] = useState<number[]>([0, 0])
 
-    const onActionTabChange = (_event: React.SyntheticEvent<Element, Event>, value: number) => {
+    const onActionTabChange = (_event: React.SyntheticEvent, value: number) => {
         setSelectedActionTypeIdx(value)
     }
 
-    const handleRangeChange = (updatedRange: Array<number>) => {
-        if (order === "ROW") {
-            setRowsRange(updatedRange)
-        } else {
-            setColumnsRange(updatedRange)
+    const handleRangeChange = (updated: number[]) => {
+        order === "ROW" ? setRowsRange(updated) : setColumnsRange(updated)
+    }
+
+    const handleOrderChange = (updated: string) => {
+        if (updated === "ROW" || updated === "COLUMN") {
+            setOrder(updated)
         }
     }
 
-    const handleOrderChange = (updatedOrder: string) => {
-        setOrder(updatedOrder)
+    const isLogicDataValid = (): boolean => {
+        const { rowSequencesLengths, columnSequencesLengths } = nonogramRelatedLogicData?.nonogramRules || {}
+        const board = nonogramRelatedLogicData?.nonogramSolutionBoard
+
+        return (
+            Array.isArray(rowSequencesLengths) &&
+            rowSequencesLengths.length > 0 &&
+            Array.isArray(columnSequencesLengths) &&
+            columnSequencesLengths.length > 0 &&
+            Array.isArray(board) &&
+            board.length > 0
+        )
     }
-
-    // const updateRows = (rowsRange: Array<number>) => {
-    //     setRowsRange(rowsRange)
-    // }
-
-    // const updateColumns = (columnsRange: Array<number>) => {
-    //     setColumnsRange(columnsRange)
-    // }
 
     const dispatchSelectedAction = (name: nonogramActionsNames) => {
+        const data = nonogramRelatedLogicData
+        if (!data) return
+
+        const update = (promise: Promise<any>) =>
+            promise.then((res) => setNonogramRelatedLogicData(res.data)).catch(console.error)
+
+        const withOrder = (rowFn: Function, colFn: Function) =>
+            order === "ROW"
+                ? update(rowFn(data, rowsRange[0], rowsRange[1]))
+                : update(colFn(data, columnsRange[0], columnsRange[1]))
+
         switch (name) {
             case "COLOUR":
-                switch (order) {
-                    case "ROW":
-                        NonogramLogicService.colourFieldsInRowsRange(nonogramRelatedLogicData, rowsRange[0], rowsRange[1])
-                            .then((response) => {
-                                setNonogramRelatedLogicData(response.data)
-                            }).catch(() => {
-
-                            })
-                        break
-                    case "COLUMN":
-                        NonogramLogicService.colourFieldsInColumnsRange(nonogramRelatedLogicData, columnsRange[0], columnsRange[1])
-                            .then((response) => {
-                                setNonogramRelatedLogicData(response.data)
-                            }).catch(() => {
-
-                            })
-                        break
-                }
-                break
+                return withOrder(NonogramLogicService.colourFieldsInRowsRange, NonogramLogicService.colourFieldsInColumnsRange)
             case "PLACE_X":
-                switch (order) {
-                    case "ROW":
-                        NonogramLogicService.placeXinRowsRange(nonogramRelatedLogicData, rowsRange[0], rowsRange[1])
-                            .then((response) => {
-                                setNonogramRelatedLogicData(response.data)
-                            }).catch(() => {
-
-                            })
-                        break
-                    case "COLUMN":
-                        NonogramLogicService.placeXinColumnsRange(nonogramRelatedLogicData, columnsRange[0], columnsRange[1])
-                            .then((response) => {
-                                setNonogramRelatedLogicData(response.data)
-                            }).catch(() => {
-
-                            })
-                        break
-                    default:
-                        break
-                }
-                break
+                return withOrder(NonogramLogicService.placeXinRowsRange, NonogramLogicService.placeXinColumnsRange)
             case "MARK":
-                switch (order) {
-                    case "ROW":
-                        NonogramLogicService.markFieldsInRowsRange(nonogramRelatedLogicData, rowsRange[0], rowsRange[1])
-                            .then((response) => {
-                                setNonogramRelatedLogicData(response.data)
-                            }).catch(() => {
-
-                            })
-                        break
-                    case "COLUMN":
-                        NonogramLogicService.markFieldsInColumnsRange(nonogramRelatedLogicData, columnsRange[0], columnsRange[1])
-                            .then((response) => {
-                                setNonogramRelatedLogicData(response.data)
-                            }).catch(() => {
-
-                            })
-                        break
-                }
-                break
-            case "CUSTOM SOLVER":
-                console.log(nonogramRelatedLogicData)
-                NonogramLogicService.testCustomSolution(nonogramRelatedLogicData, selectedNonogramName)
-                .then((response) => {
-                    setNonogramRelatedLogicData(response.data)
-                }).catch(() => {
-
-                })
-                break
-            case "SAVE SOLUTION":
-                NonogramLogicService.saveSolution(nonogramRelatedLogicData, selectedNonogramName)
-                .then((response) => {
-
-                }).catch(() => {
-
-                })
-                break
-            case "COMPARE WITH SOLUTION":
-                NonogramLogicService.compareWithSolution(nonogramRelatedLogicData, selectedNonogramName)
-                .then((response) => {
-                    setNonogramRelatedLogicData(response.data)
-                }).catch(() => {
-
-                })
-                break
+                return withOrder(NonogramLogicService.markFieldsInRowsRange, NonogramLogicService.markFieldsInColumnsRange)
             case "CORRECT RANGES":
-                switch (order) {
-                    case "ROW":
-                        NonogramLogicService.correctRowsRanges(nonogramRelatedLogicData, rowsRange[0], rowsRange[1])
-                            .then((response) => {
-                                setNonogramRelatedLogicData(response.data)
-                            }).catch(() => {
-
-                            })
-                        break
-                    case "COLUMN":
-                        NonogramLogicService.correctColumnsRanges(nonogramRelatedLogicData, columnsRange[0], columnsRange[1])
-                            .then((response) => {
-                                setNonogramRelatedLogicData(response.data)
-                            }).catch(() => {
-
-                            })
-                        break
-                }
-                break
+                return withOrder(NonogramLogicService.correctRowsRanges, NonogramLogicService.correctColumnsRanges)
+            case "CUSTOM SOLVER":
+                return update(NonogramLogicService.testCustomSolution(data, selectedNonogramName))
+            case "COMPARE WITH SOLUTION":
+                return update(NonogramLogicService.compareWithSolution(data, selectedNonogramName))
+            case "SAVE SOLUTION":
+                return NonogramLogicService.saveSolution(data, selectedNonogramName)
+                    .then((res) => {
+                        const result = res.data;
+                        if (result.verifiedAgainstOriginal === "PASS") {
+                            console.log("Zapisano poprawne rozwiązanie.");
+                        } else {
+                            console.warn("Rozwiązanie niepoprawne.");
+                        }
+                    })
+                    .catch((err) => {
+                        console.error("Błąd podczas zapisu:", err);
+                    });
             default:
-                break
-        }
+                return
+            }
     }
-    
+
+
     return (
         <div id="nonogram-actions-select">
             <div id="nonogram-actions-icons">
-                <Tabs value={selectedActionTypeIdx}
-                    classes={{flexContainer: classes.tabsContainer}}
-                    onChange={(event: React.SyntheticEvent<Element, Event>, value: number) => onActionTabChange(event, value)}
+                <Tabs
+                    value={selectedActionTypeIdx}
+                    classes={{ flexContainer: classes.tabsContainer }}
+                    onChange={onActionTabChange}
                     centered
-                    sx={{maxWidth: "300px", padding: "5px"}}
-                    TabIndicatorProps={{style: {backgroundColor: "transparent"}}}
+                    sx={{ maxWidth: "300px", padding: "5px" }}
+                    TabIndicatorProps={{ style: { backgroundColor: "transparent" } }}
                 >
-                    {
-                        actionsProps.map((actionProps) => {
-                            let {icon, name, mark} = actionProps
-                            return  <Tooltip key={"nonogram-action-" + name} title={name.toUpperCase()} placement="top">
-                                        <Tab
-                                                classes={{root: classes.listItemRoot}}
-                                                label={<FontAwesomeIcon icon={icon}/>}
-                                                onClick={() => setCurrentNonogramMark(mark)}
-                                                disabled={!correctIndicator}
-                                                sx={{display: "flex", width: "100px", flexDirection: "column", flexWrap: "wrap"}}
-                                        />
-                                    </Tooltip>
-                            })
-                        }
+                    {actionsProps.map(({ icon, name, mark }) => (
+                        <Tooltip key={name} title={name.toUpperCase()} placement="top">
+                            <Tab
+                                classes={{ root: classes.listItemRoot }}
+                                label={<FontAwesomeIcon icon={icon} />}
+                                onClick={() => setCurrentNonogramMark(mark)}
+                                disabled={!correctIndicator}
+                                sx={{
+                                    display: "flex", width: "100px",
+                                    flexDirection: "column", flexWrap: "wrap"
+                                }}
+                            />
+                        </Tooltip>
+                    ))}
                 </Tabs>
-                {
-                    <Button  variant="contained" onClick={() => dispatchSelectedAction(actionsProps[selectedActionTypeIdx].name)}>
-                        {actionsProps[selectedActionTypeIdx].name}
-                    </Button>
-                }
-                <br></br>
+
+                <Button
+                    variant="contained"
+                    onClick={() => dispatchSelectedAction(actionsProps[selectedActionTypeIdx].name)}
+                    disabled={!isLogicDataValid()}
+                >
+                    {actionsProps[selectedActionTypeIdx].name}
+                </Button>
+                <br />
             </div>
+
             <section id="nonogram-actions-choose-section">
-                <ActionVariants selectedActionName={actionsProps[selectedActionTypeIdx].name}
+                <ActionVariants
+                    selectedActionName={actionsProps[selectedActionTypeIdx].name}
                     order={order}
                     rowsRange={rowsRange}
                     columnsRange={columnsRange}
@@ -260,7 +186,6 @@ const SolverActionsPanel: React.FC<SolverActionsPanelProps> = ({selectedNonogram
                     passOrderToParent={handleOrderChange}
                 />
             </section>
-
         </div>
     )
 }

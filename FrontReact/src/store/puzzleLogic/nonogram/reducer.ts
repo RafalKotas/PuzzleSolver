@@ -25,8 +25,8 @@ import { createEmptyNonogramBoard,
 export const initialState: NonogramLogicState = {
     nonogramRelatedData: {
         nonogramRules: {
-            rowsSequencesLengths: [],
-            columnsSequencesLengths: [],
+            rowSequencesLengths: [],
+            columnSequencesLengths: [],
             height: 0,
             width: 0
         },
@@ -57,8 +57,8 @@ export const nonogramLogicReducer: Reducer<NonogramLogicState, NonogramLogicActi
                 ...state,
                 nonogramRelatedData : {
                     nonogramRules: {
-                        rowsSequencesLengths: rowsSequences,
-                        columnsSequencesLengths: columnsSequences,
+                        rowSequencesLengths: rowsSequences,
+                        columnSequencesLengths: columnsSequences,
                         height: height,
                         width: width
                     },

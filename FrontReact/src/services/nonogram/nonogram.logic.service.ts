@@ -169,23 +169,28 @@ const testCustomSolution = (nonogramRelatedData: nonogramRelatedLogicData, solut
 }
 
 const saveSolution = (nonogramRelatedData: nonogramRelatedLogicData, fileName: string) => {
-    var data = JSON.stringify({
-        ...nonogramRelatedData
-    })
-
-    var config = {
-        method: "post",
-        url: API_URL + `/saveSolution`,
-        headers: { 
-          "Content-Type": "application/json"
-        },
-        params: {
-            fileName
-        },
-        data: data
+    if (
+        !nonogramRelatedData?.nonogramRules?.rowSequencesLengths ||
+        !nonogramRelatedData?.nonogramRules?.columnSequencesLengths ||
+        !nonogramRelatedData?.nonogramSolutionBoard
+    ) {
+        return Promise.reject("Incomplete data")
     }
 
-    return axios(config) 
+    const payload = {
+        fileName: fileName,
+        board: nonogramRelatedData.nonogramSolutionBoard,
+        rowSequences: nonogramRelatedData.nonogramRules.rowSequencesLengths,
+        columnSequences: nonogramRelatedData.nonogramRules.columnSequencesLengths
+    }
+
+    console.log("Saving payload:", payload)
+
+    return axios.post(`${API_URL}/saveIfCorrect`, payload, {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
 }
 
 const compareWithSolution = (nonogramRelatedData: nonogramRelatedLogicData, fileName: string) => {
