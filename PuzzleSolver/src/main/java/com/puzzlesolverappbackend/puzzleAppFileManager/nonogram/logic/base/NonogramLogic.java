@@ -1,11 +1,9 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.puzzlesolverappbackend.puzzleAppFileManager.common.LogicFunctions;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.Field;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicParams;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramSequenceRangeInferer;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.*;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.NonogramColumnLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.NonogramRowLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionDecision;
@@ -46,6 +44,10 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.Non
 @Slf4j
 public class NonogramLogic extends NonogramLogicParams {
 
+    private List<List<String>> correctSolutionBoard;
+    private List<List<List<Integer>>> correctRowRanges;
+    private List<List<List<Integer>>> correctColumnRanges;
+
     private GuessMode guessMode;
 
     private List<List<Integer>> rowsFieldsNotToInclude;
@@ -61,6 +63,9 @@ public class NonogramLogic extends NonogramLogicParams {
     private NonogramColumnLogic nonogramColumnLogic;
 
     private boolean LOG_CHANGES = false;
+
+    @JsonIgnore
+    private NonogramPrinter printer;
 
     public NonogramLogic(NonogramRules rules, GuessMode guessMode) {
         this.nonogramRules = rules;
@@ -97,12 +102,14 @@ public class NonogramLogic extends NonogramLogicParams {
         if (LOG_CHANGES) {
             log.info("CREATED NonogramLogic object from rules and guessMode");
         }
+
+        this.printer = new NonogramPrinter(this);
     }
 
     public NonogramLogic(List<List<Integer>> rowSequencesLengths,
                          List<List<Integer>> columnsSequencesLengths,
                          List<List<String>> nonogramSolutionBoard) {
-
+        this.printer = new NonogramPrinter(this);
     }
 
     private List<NonogramActionDetails> generateInitialActionsToDo() {
@@ -567,12 +574,75 @@ public class NonogramLogic extends NonogramLogicParams {
                 // empty
             }
 
+            if (!validateAgainstCorrectSolution(actionListIndex, currentActionDetails)) {
+                break;
+            }
+
             if (this.guessMode == GuessMode.ENABLED && this.nonogramState.isInvalidSolution()) {
                 break;
             }
 
             actionListIndex++;
+
+//            if (isFieldWithX(this.getNonogramSolutionBoard(), new Field(0, 9)) &&
+//                    isFieldColoured(this.getNonogramSolutionBoard(), new Field(1, 9)) &&
+//                    isFieldColoured(this.getNonogramSolutionBoard(), new Field(2, 9)) &&
+//                    isFieldColoured(this.getNonogramSolutionBoard(), new Field(3, 9)) &&
+//                    isFieldColoured(this.getNonogramSolutionBoard(), new Field(4, 9)) &&
+//                    isFieldWithX(this.getNonogramSolutionBoard(), new Field(5, 9)) &&
+//                    isFieldColoured(this.getNonogramSolutionBoard(), new Field(6, 9)) &&
+//                    isFieldColoured(this.getNonogramSolutionBoard(), new Field(7, 9)) &&
+//                    isFieldWithX(this.getNonogramSolutionBoard(), new Field(8, 9)) &&
+//                    isFieldColoured(this.getNonogramSolutionBoard(), new Field(12, 9)) &&
+//                    isFieldColoured(this.getNonogramSolutionBoard(), new Field(14, 9)) &&
+//                    !rangeInsideAnotherRange(List.of(12, 14), this.getColumnsSequencesRanges().get(9).get(2)) &&
+//                    rangeInsideAnotherRange(List.of(12, 14), this.getColumnsSequencesRanges().get(9).get(3)) &&
+//                    !rangeInsideAnotherRange(List.of(12, 14), this.getColumnsSequencesRanges().get(9).get(4))
+//            ) {
+//                System.out.println("abc");
+//            }
         }
+    }
+
+    public boolean validateAgainstCorrectSolution(int actionIndex, NonogramActionDetails currentActionDetails) {
+        if (correctSolutionBoard == null || correctRowRanges == null || correctColumnRanges == null) {
+            return true;
+        }
+
+        boolean boardCorrect = NonogramSolverUtils.partialBoardMatchesSolution(
+                getNonogramSolutionBoard(), correctSolutionBoard
+        );
+        boolean rowRangesCorrect = NonogramSolverUtils.rangesContainCorrectRanges(
+                correctRowRanges, getRowsSequencesRanges()
+        );
+        boolean columnRangesCorrect = NonogramSolverUtils.rangesContainCorrectRanges(
+                correctColumnRanges, getColumnsSequencesRanges()
+        );
+
+        List<String> errors = new ArrayList<>();
+
+        if (!boardCorrect) {
+            errors.add("Board not correct after action %d: %s"
+                    .formatted(actionIndex, currentActionDetails));
+        }
+
+        if (!rowRangesCorrect) {
+            errors.add("Correct row ranges are not contained in current row ranges");
+        }
+
+        if (!columnRangesCorrect) {
+            errors.add("Correct column ranges are not contained in current column ranges");
+        }
+
+        if (!errors.isEmpty()) {
+            log.error("Validation failed at action {}: {}", actionIndex, currentActionDetails);
+            errors.forEach(log::error);
+
+            getNonogramState().setInvalidSolution(true);
+            return false;
+        }
+
+        return true;
     }
 
     private void logRowStateBefore(NonogramActionDetails actionDetails, int nextActionRowIndex) {

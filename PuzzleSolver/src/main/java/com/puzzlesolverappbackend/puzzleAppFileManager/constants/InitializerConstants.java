@@ -4,7 +4,7 @@ public final class InitializerConstants {
     public static final String PUZZLE_RELATIVE_PATH = "./FrontReact/public/resources/";
     public static final boolean PRINT_PUZZLE_STATUS_INFO = true;
 
-    public static final String NONOGRAM_SOLUTIONS_PATH = "./src/main/resources/solutions/Nonograms/";
+    public static final String NONOGRAM_SOLUTIONS_PATH = "data/solutions/Nonograms/";
 
     public static final String PUZZLE_NAME = "sword";
 

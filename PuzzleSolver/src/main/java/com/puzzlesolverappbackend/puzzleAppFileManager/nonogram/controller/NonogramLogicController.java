@@ -1,7 +1,9 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.controller;
 
 import com.google.gson.Gson;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.dto.FinalNonogramSolutionDTO;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.dto.NonogramInitializationRequest;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.dto.NonogramSolutionSaveRequest;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.logic.NonogramLogicService;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.common.FileHelper.nonogramSolutionSavePathForFilename;
 
@@ -24,7 +24,6 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.common.FileHelper.
 @RequestMapping("/api/nonogram/logic")
 public class NonogramLogicController {
 
-    final
     NonogramLogicService nonogramLogicService;
 
     public NonogramLogicController(NonogramLogicService nonogramLogicService) {
@@ -97,36 +96,31 @@ public class NonogramLogicController {
         return new ResponseEntity<>(solutionPart, HttpStatus.OK);
     }
 
-    // TODO CUSTOM SOLVER starts from here
     @PostMapping("/customSolutionPart")
-    public ResponseEntity<NonogramLogic> customSolutionPart(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String solutionFileName) {
+    public ResponseEntity<NonogramLogic> customSolutionPart(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String fileName) {
         log.info("Custom solving endpoint triggered (heuristics)!");
 
-        NonogramLogic customSolution = nonogramLogicService.runSolverWithCorrectnessCheck(nonogramLogic, solutionFileName);
+        NonogramLogic customSolution = nonogramLogicService.runSolverWithCorrectnessCheck(nonogramLogic, fileName);
 
         return new ResponseEntity<>(
                 customSolution,
                 HttpStatus.OK);
     }
 
-    @PostMapping("/saveSolution")
-    public ResponseEntity<String> saveSolution(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String fileName) {
-        List<List<Integer>> rowSequencesLengths = nonogramLogic.getNonogramRules().getRowSequencesLengths();
-        List<List<Integer>> columnsSequencesLengths = nonogramLogic.getNonogramRules().getColumnSequencesLengths();
-        List<List<String>> nonogramSolutionBoard = nonogramLogic.getNonogramSolutionBoard();
-
-        NonogramLogic solution = new NonogramLogic(rowSequencesLengths, columnsSequencesLengths, nonogramSolutionBoard);
-
-        Gson gson = new Gson();
-
-        FileWriter nonogramSolutionWriter;
+    @PostMapping("/saveIfCorrect")
+    public ResponseEntity<FinalNonogramSolutionDTO> saveSolution(@RequestBody NonogramSolutionSaveRequest request) {
         try {
-            nonogramSolutionWriter = new FileWriter(nonogramSolutionSavePathForFilename(fileName));
-            gson.toJson(solution, nonogramSolutionWriter);
-            nonogramSolutionWriter.close();
-            return new ResponseEntity<>("Save success!", HttpStatus.OK);
+            FinalNonogramSolutionDTO result = nonogramLogicService.saveIfCorrect(request);
+            if ("PASS".equals(result.getVerifiedAgainstOriginal())) {
+                log.info("Correct nonogram solution saved: {}", request.getFileName());
+                return ResponseEntity.ok(result);
+            } else {
+                log.warn("Incorrect nonogram solution for saving: {}", request.getFileName());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+            }
         } catch (IOException e) {
-            return new ResponseEntity<>("Exception external problem.", HttpStatus.OK);
+            log.error("Error saving solution for file: {}", request.getFileName(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

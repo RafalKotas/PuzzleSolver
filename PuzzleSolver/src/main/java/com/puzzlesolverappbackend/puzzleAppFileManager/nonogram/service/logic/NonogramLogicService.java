@@ -1,6 +1,8 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.logic;
 
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.dto.FinalNonogramSolutionDTO;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.dto.NonogramInitializationRequest;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.dto.NonogramSolutionSaveRequest;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.Field;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
@@ -8,10 +10,13 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.Nonog
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramSolver;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.NonogramRowLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionNode;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.mapper.NonogramMapper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.NonogramService;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.NonogramSolutionSaver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,13 +31,16 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.Non
 @Slf4j
 public class NonogramLogicService {
 
-    NonogramService nonogramService;
+    private final NonogramService nonogramService;
 
-    public NonogramLogicService(NonogramService nonogramService) {
-        this.nonogramService = nonogramService;
-    }
+    private final NonogramSolutionSaver nonogramSolutionSaver;
 
     private final boolean showRepetitions = false;
+
+    public NonogramLogicService(NonogramService nonogramService, NonogramSolutionSaver nonogramSolutionSaver) {
+        this.nonogramService = nonogramService;
+        this.nonogramSolutionSaver = nonogramSolutionSaver;
+    }
 
     public NonogramLogic initializeLogicFromRequest(NonogramInitializationRequest request) {
         NonogramRules rules = new NonogramRules(request.getRowSequences(), request.getColumnSequences(), request.getHeight(), request.getWidth());
@@ -1315,18 +1323,28 @@ public class NonogramLogicService {
         return filteredLengths;
     }
 
-    public NonogramLogic runSolverWithCorrectnessCheck(NonogramLogic nonogramLogicObject, String solutionFileName) {
+    public NonogramLogic runSolverWithCorrectnessCheck(NonogramLogic nonogramLogicObject, String fileName) {
         log.info("RUN SOLVER WITH CORRECTNESS CHECK");
-        NonogramSolver nonogramSolver = new NonogramSolver(nonogramLogicObject, solutionFileName);
+        NonogramSolver nonogramSolver = new NonogramSolver(nonogramLogicObject, fileName);
         log.info("INITIALIZED nonogramSolver {}!", nonogramSolver);
         NonogramSolutionNode nonogramSolutionNode = new NonogramSolutionNode(nonogramLogicObject);
         log.info("INITIALIZED nonogramSolutionNode (DEC SIZE : {})! GO TO nonogramSolver.runSolutionAtNode()", nonogramSolutionNode.getNonogramGuessDecisions().size());
         NonogramLogic heuristicSolvedPart = nonogramSolver.runSolutionAtNode(nonogramSolutionNode);
 
-        if (heuristicSolvedPart.nonogramIsFullyAndCorrectSolved()) {
-            nonogramService.saveSolutionToFile(solutionFileName, heuristicSolvedPart);
+        if (heuristicSolvedPart.isSolved()) {
+            try {
+                String solutionFileName = fileName;
+                NonogramSolutionSaveRequest request = NonogramMapper.toSaveRequest(heuristicSolvedPart, solutionFileName);
+                this.saveIfCorrect(request);
+            } catch (IOException e) {
+                log.error("Failed to save solved nonogram: {}", e.getMessage());
+            }
         }
 
         return heuristicSolvedPart;
+    }
+
+    public FinalNonogramSolutionDTO saveIfCorrect(NonogramSolutionSaveRequest request) throws IOException {
+        return nonogramSolutionSaver.saveIfCorrect(request);
     }
 }

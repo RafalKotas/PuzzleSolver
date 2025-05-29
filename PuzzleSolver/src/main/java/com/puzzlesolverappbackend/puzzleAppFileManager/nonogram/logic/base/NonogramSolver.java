@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionDecision;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionNode;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramFullSolutionData;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramGuessActionsLog;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramNodeLog;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramSolution;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.COLOURED_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.X_FIELD;
 
@@ -61,7 +63,7 @@ public class NonogramSolver {
         this.solutionLogic = new NonogramLogic(rules, guessMode);
         this.finalSolutionLogic = new NonogramLogic(rules, guessMode);
 
-        this.solutionFileName = "r" + fileName;
+        this.solutionFileName = "r" + fileName + JSON_EXTENSION;
         this.gson = new Gson();
         this.nonogramNodes = new ArrayList<>();
     }
@@ -86,7 +88,13 @@ public class NonogramSolver {
         NonogramSolutionNode leftNodeO;
         NonogramSolutionNode rightNodeX;
 
-        nonogramSubsolutionNode.setFullSolutionBoard(NonogramSolution.loadSolutionFromFile(solutionFileName));
+        NonogramFullSolutionData solutionData = NonogramSolverUtils.loadFullSolutionData(solutionFileName);
+        if (solutionData != null) {
+            NonogramLogic logic = nonogramSubsolutionNode.getNonogramLogic();
+            logic.setCorrectSolutionBoard(solutionData.getFinalBoard());
+            logic.setCorrectRowRanges(solutionData.getDerivedRowRanges());
+            logic.setCorrectColumnRanges(solutionData.getDerivedColumnRanges());
+        }
 
         if (nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage() == 100) {
             if (LOG_STEPS_SOLVER) {
