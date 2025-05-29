@@ -303,6 +303,7 @@ public class ActionDependencyMap {
 
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE,
+                NonogramSolveAction.PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES,
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN
         ));
 
@@ -311,6 +312,7 @@ public class ActionDependencyMap {
 
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE,
+                NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES,
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW
         ));
 
