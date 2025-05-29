@@ -1,6 +1,7 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.puzzlesolverappbackend.puzzleAppFileManager.common.LogicFunctions;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.*;
@@ -42,6 +43,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.Non
 @AllArgsConstructor
 @NoArgsConstructor
 @Slf4j
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NonogramLogic extends NonogramLogicParams {
 
     private List<List<String>> correctSolutionBoard;
@@ -583,24 +585,6 @@ public class NonogramLogic extends NonogramLogicParams {
             }
 
             actionListIndex++;
-
-//            if (isFieldWithX(this.getNonogramSolutionBoard(), new Field(0, 9)) &&
-//                    isFieldColoured(this.getNonogramSolutionBoard(), new Field(1, 9)) &&
-//                    isFieldColoured(this.getNonogramSolutionBoard(), new Field(2, 9)) &&
-//                    isFieldColoured(this.getNonogramSolutionBoard(), new Field(3, 9)) &&
-//                    isFieldColoured(this.getNonogramSolutionBoard(), new Field(4, 9)) &&
-//                    isFieldWithX(this.getNonogramSolutionBoard(), new Field(5, 9)) &&
-//                    isFieldColoured(this.getNonogramSolutionBoard(), new Field(6, 9)) &&
-//                    isFieldColoured(this.getNonogramSolutionBoard(), new Field(7, 9)) &&
-//                    isFieldWithX(this.getNonogramSolutionBoard(), new Field(8, 9)) &&
-//                    isFieldColoured(this.getNonogramSolutionBoard(), new Field(12, 9)) &&
-//                    isFieldColoured(this.getNonogramSolutionBoard(), new Field(14, 9)) &&
-//                    !rangeInsideAnotherRange(List.of(12, 14), this.getColumnsSequencesRanges().get(9).get(2)) &&
-//                    rangeInsideAnotherRange(List.of(12, 14), this.getColumnsSequencesRanges().get(9).get(3)) &&
-//                    !rangeInsideAnotherRange(List.of(12, 14), this.getColumnsSequencesRanges().get(9).get(4))
-//            ) {
-//                System.out.println("abc");
-//            }
         }
     }
 
@@ -773,7 +757,7 @@ public class NonogramLogic extends NonogramLogicParams {
             case PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS -> this.nonogramColumnLogic.placeXsColumnAtUnreachableFields(columnIdx);
             case PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES -> this.nonogramColumnLogic.placeXsAroundLongestSequencesInColumn(columnIdx);
             case PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES -> this.nonogramColumnLogic.placeXsColumnAtTooShortEmptySequences(columnIdx);
-            // case PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE -> this.nonogramColumnLogic.placeXsColumnIfOWillMergeNearFieldsToTooLongColouredSequence(columnIdx);
+            case PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE -> this.nonogramColumnLogic.placeXsColumnIfOWillMergeNearFieldsToTooLongColouredSequence(columnIdx);
             // case PLACE_XS_COLUMN_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE -> this.nonogramColumnLogic.placeXsColumnIfONearXWillBeginTooLongPossibleColouredSequence(columnIdx);
             //case COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH -> this.nonogramColumnLogic.preventExtendingColouredSequenceToExcessLengthInColumn(columnIdx);
             case MARK_AVAILABLE_FIELDS_IN_COLUMN -> this.nonogramColumnLogic.markAvailableFieldsInColumn(columnIdx);

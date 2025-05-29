@@ -1,6 +1,8 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramSolution;
@@ -28,9 +30,13 @@ public class NonogramSolutionNode {
     private List<String> nodeLogs;
 
     public NonogramSolutionNode(NonogramLogic nonogramLogic) {
-        Gson gson = new Gson();
-        this.nonogramLogic = gson.fromJson(gson.toJson(nonogramLogic), NonogramLogic.class);
-        this.nonogramSolution = gson.fromJson(gson.toJson(nonogramLogic), NonogramLogic.class);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            this.nonogramLogic = mapper.readValue(mapper.writeValueAsString(nonogramLogic), NonogramLogic.class);
+            this.nonogramSolution = mapper.readValue(mapper.writeValueAsString(nonogramLogic), NonogramLogic.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to deep copy NonogramLogic", e);
+        }
         this.nonogramGuessDecisions = new ArrayList<>();
         this.nonogramRecursionDecisions = new ArrayList<>();
         this.nodeLogs = new ArrayList<>();

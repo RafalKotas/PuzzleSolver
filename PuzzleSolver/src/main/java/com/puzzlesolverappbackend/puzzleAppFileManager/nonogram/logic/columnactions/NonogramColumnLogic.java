@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.Field;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicParams;
@@ -32,6 +33,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.Non
 @Setter
 @Slf4j
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NonogramColumnLogic extends NonogramLogicParams implements ColumnActions {
 
     private final static String CORRECT_COLUMN_SEQ_RANGE_MARKING_FIELD = "correcting column sequence range when marking field";
