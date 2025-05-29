@@ -148,7 +148,7 @@ const placeXinColumnsRange  = (nonogramRelatedData: nonogramRelatedLogicData, co
     return axios(config) 
 }
 
-const testCustomSolution = (nonogramRelatedData: nonogramRelatedLogicData, solutionFileName: string) => {
+const testCustomSolution = (nonogramRelatedData: nonogramRelatedLogicData, fileName: string) => {
     var data = JSON.stringify({
         ...nonogramRelatedData
     })
@@ -160,7 +160,7 @@ const testCustomSolution = (nonogramRelatedData: nonogramRelatedLogicData, solut
           "Content-Type": "application/json"
         },
         params: {
-            solutionFileName
+            fileName
         },
         data: data
     }
@@ -178,7 +178,7 @@ const saveSolution = (nonogramRelatedData: nonogramRelatedLogicData, fileName: s
     }
 
     const payload = {
-        fileName: "r" + fileName,
+        fileName: "r" + fileName + ".json",
         board: nonogramRelatedData.nonogramSolutionBoard,
         rowSequences: nonogramRelatedData.nonogramRules.rowSequencesLengths,
         columnSequences: nonogramRelatedData.nonogramRules.columnSequencesLengths
