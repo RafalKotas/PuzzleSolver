@@ -1,8 +1,6 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.NonogramColumnLogic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.NonogramRowLogic;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,78 +9,61 @@ import java.util.stream.IntStream;
 
 @Getter
 @Setter
-public class NonogramPrinter extends NonogramLogicParams implements NonogramLogicPrinter {
+public class NonogramPrinter implements NonogramLogicPrinter {
 
-    protected NonogramColumnLogic nonogramColumnLogic;
-    protected NonogramRowLogic nonogramRowLogic;
+    private final NonogramLogic logic;
 
+    public NonogramPrinter(NonogramLogic logic) {
+        this.logic = logic;
+    }
+
+    @Override
     public void printNonogramBoard() {
-        List<String> rowsWithIndexes = IntStream.range(0, this.getNonogramSolutionBoard().size())
-                .mapToObj(rowIndex -> this.getNonogramSolutionBoard().get(rowIndex) + " " + rowIndex)
-                .toList();
-        for (String boardRow : rowsWithIndexes) {
-            System.out.println(boardRow);
-        }
+        IntStream.range(0, logic.getNonogramSolutionBoard().size())
+                .mapToObj(rowIndex -> logic.getNonogramSolutionBoard().get(rowIndex) + " " + rowIndex)
+                .forEach(System.out::println);
     }
 
-    public NonogramPrinter(NonogramLogic nonogramLogic) {
-        this.SHOW_REPETITIONS = nonogramLogic.SHOW_REPETITIONS;
-        this.logs = nonogramLogic.getLogs();
-        this.tmpLog = nonogramLogic.getTmpLog();
-        this.nonogramRowLogic = nonogramLogic.getNonogramRowLogic();
-        this.nonogramColumnLogic = nonogramLogic.getNonogramColumnLogic();
-        this.nonogramSolutionBoardWithMarks = nonogramLogic.getNonogramSolutionBoardWithMarks();
-        this.nonogramSolutionBoard = nonogramLogic.getNonogramSolutionBoard();
-
-        this.availableChoices = nonogramLogic.getAvailableChoices();
-    }
-
+    @Override
     public void printNonogramBoardWithMarks() {
-        for (List<String> boardRow : this.getNonogramSolutionBoardWithMarks()) {
-            System.out.println(boardRow);
-        }
+        logic.getNonogramSolutionBoardWithMarks().forEach(System.out::println);
     }
 
+    @Override
     public void printRowsSequencesRanges() {
-        int rowIdx = 0;
-        for (List<List<Integer>> rowSequencesRanges : this.getNonogramRowLogic().getRowsSequencesRanges()) {
-            System.out.println(rowIdx + " " + rowSequencesRanges);
-            rowIdx++;
-        }
+        IntStream.range(0, logic.getNonogramRowLogic().getRowsSequencesRanges().size())
+                .forEach(i -> System.out.println(i + " " + logic.getNonogramRowLogic().getRowsSequencesRanges().get(i)));
     }
 
+    @Override
     public void printColumnsSequencesRanges() {
-        int colIdx = 0;
-        for (List<List<Integer>> colSequencesRanges : this.getNonogramColumnLogic().getColumnsSequencesRanges()) {
-            System.out.println(colIdx + " " + colSequencesRanges);
-            colIdx++;
-        }
+        IntStream.range(0, logic.getNonogramColumnLogic().getColumnsSequencesRanges().size())
+                .forEach(i -> System.out.println(i + " " + logic.getNonogramColumnLogic().getColumnsSequencesRanges().get(i)));
     }
 
+    @Override
     public void printLogs() {
-        int logIndex = 0;
-        if (!this.getLogs().isEmpty()) {
-            for (String log : this.getLogs()) {
-                System.out.println(logIndex + " : "  + log);
-                logIndex++;
-            }
-        }
+        List<String> logs = logic.getLogs();
+        IntStream.range(0, logs.size())
+                .forEach(i -> System.out.println(i + " : " + logs.get(i)));
     }
 
+    @Override
     public void printStats() {
-        int fieldsXPlaced = this.fieldsWithXPlaced();
-        int fieldsColoured = this.fieldsColoured();
-        int fieldsXTotal  = this.fieldsToPlaceXTotal();
-        this.printNonogramBoard();
+        System.out.println("Nonogram board:");
+        printNonogramBoard();
+
         System.out.printf("%-12s %-12s %-12s | %-12s %-12s %-12s%n",
                 "'X' placed", "'X' total", "'X' percent",
                 "'O' placed", "'O' total", "'O' percent");
+
         System.out.printf("%-12s %-12s %-12s | %-12s %-12s %-12s%n",
-                fieldsXPlaced, fieldsXTotal, this.fieldsWithXPlacedPercent(),
-                fieldsColoured, this.fieldsToColourTotal(), this.fieldsColouredPercent());
-        System.out.println("Overall completion percentage: " + this.getCompletionPercentage() + "%");
-        //System.out.println("newStepsMade: " + this.getNewStepsMade());
-        System.out.println("possible fields to make decision: " + this.getAvailableChoices());
-        this.printLogs();
+                logic.fieldsWithXPlaced(), logic.fieldsToPlaceXTotal(), logic.fieldsWithXPlacedPercent(),
+                logic.fieldsColoured(), logic.fieldsToColourTotal(), logic.fieldsColouredPercent());
+
+        System.out.println("Overall completion percentage: " + logic.getCompletionPercentage() + "%");
+        System.out.println("possible fields to make decision: " + logic.getAvailableChoices());
+        printLogs();
     }
 }
+
