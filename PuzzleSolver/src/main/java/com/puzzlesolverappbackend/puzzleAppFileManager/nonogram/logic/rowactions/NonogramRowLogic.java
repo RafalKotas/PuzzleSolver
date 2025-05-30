@@ -5,6 +5,7 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSo
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.Field;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicParams;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.RangeCorrectionHelper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramHelper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -98,158 +99,93 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
     }
 
     private void correctSequencesRangesInRowFromLeft(int rowIdx) {
-        List<Integer> rowSequencesLengths = this.getNonogramRules().getRowSequencesLengths().get(rowIdx);
-        List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
-        List<Integer> rowFieldsNotToInclude = this.getRowsFieldsNotToInclude().get(rowIdx);
+        List<Integer> rowSequencesLengths = getNonogramRules().getRowSequencesLengths().get(rowIdx);
+        List<List<Integer>> rowSequencesRanges = getRowsSequencesRanges().get(rowIdx);
+        List<Integer> rowFieldsNotToInclude = getRowsFieldsNotToInclude().get(rowIdx);
+        List<Integer> rowSequencesIdsNotToInclude = getRowsSequencesIdsNotToInclude().get(rowIdx);
 
-        List<Integer> fullSequenceRange;
-        List<Integer> currentSequenceRange;
-        List<Integer> nextSequenceRange;
-        int updatedNextSequenceBeginRangeColumnIndex;
-        int updatedStartIndex;
-        int nextSequenceOldBeginRangeColumnIndex;
-        int nextSequenceId;
-        List<Integer> updatedNextSequenceRange;
+        for (int seqIdx = 0; seqIdx < rowSequencesRanges.size() - 1; seqIdx++) {
+            int nextSeqIdx = seqIdx + 1;
+            if (rowSequencesIdsNotToInclude.contains(nextSeqIdx)) continue;
 
-        List<Integer> rowSequencesIdsNotToInclude = this.getRowsSequencesIdsNotToInclude().get(rowIdx);
+            List<Integer> updatedNextRange = rowSequencesIdsNotToInclude.contains(seqIdx)
+                    ? RangeCorrectionHelper.calculateUpdatedNextSequenceRangeAfterExcludedSequence(rowSequencesRanges, rowFieldsNotToInclude, seqIdx, nextSeqIdx)
+                    : RangeCorrectionHelper.calculateUpdatedNextSequenceRangeAfterIncludedSequence(rowSequencesRanges, rowSequencesLengths, seqIdx, nextSeqIdx);
 
-        for (int sequenceIdx = 0; sequenceIdx < rowSequencesRanges.size() - 1; sequenceIdx++) {
-            nextSequenceId = sequenceIdx + 1;
-            if (!rowSequencesIdsNotToInclude.contains(nextSequenceId)) {
-                if (rowSequencesIdsNotToInclude.contains(sequenceIdx)) {
-                    fullSequenceRange = rowSequencesRanges.get(sequenceIdx);
-
-                    nextSequenceRange = rowSequencesRanges.get(nextSequenceId);
-                    updatedNextSequenceBeginRangeColumnIndex = fullSequenceRange.get(1) + 2;
-
-                    while(rowFieldsNotToInclude.contains(updatedNextSequenceBeginRangeColumnIndex)) {
-                        updatedNextSequenceBeginRangeColumnIndex++;
-                    }
-
-                    nextSequenceOldBeginRangeColumnIndex = nextSequenceRange.get(0);
-
-                    updatedNextSequenceRange = new ArrayList<>();
-
-                    updatedStartIndex = Math.max(nextSequenceOldBeginRangeColumnIndex, updatedNextSequenceBeginRangeColumnIndex);
-                    updatedNextSequenceRange.add(updatedStartIndex);
-                    updatedNextSequenceRange.add(nextSequenceRange.get(1));
-
-                    correctRowRangeFromLeft(rowIdx, rowSequencesLengths, nextSequenceRange, updatedStartIndex, nextSequenceOldBeginRangeColumnIndex, nextSequenceId, updatedNextSequenceRange);
-                } else {
-                    currentSequenceRange = rowSequencesRanges.get(sequenceIdx);
-                    nextSequenceRange = rowSequencesRanges.get(nextSequenceId);
-
-                    updatedNextSequenceBeginRangeColumnIndex = currentSequenceRange.get(0) + rowSequencesLengths.get(sequenceIdx) + 1;
-
-                    nextSequenceOldBeginRangeColumnIndex = nextSequenceRange.get(0);
-
-                    updatedStartIndex = Math.max(nextSequenceOldBeginRangeColumnIndex, updatedNextSequenceBeginRangeColumnIndex);
-                    updatedNextSequenceRange = new ArrayList<>(Arrays.asList(updatedStartIndex, nextSequenceRange.get(1)));
-
-                    correctRowRangeFromLeft(rowIdx, rowSequencesLengths, nextSequenceRange, updatedStartIndex, nextSequenceOldBeginRangeColumnIndex, nextSequenceId, updatedNextSequenceRange);
-                }
-            }
+            tryToCorrectRowRangeFromLeft(rowIdx, rowSequencesLengths, rowSequencesRanges.get(nextSeqIdx), updatedNextRange, nextSeqIdx);
         }
     }
 
-    private void correctRowRangeFromLeft(int rowIdx,
-                                         List<Integer> rowSequencesLengths,
-                                         List<Integer> nextSequenceRange,
-                                         int updatedStartIndex,
-                                         int nextSequenceOldBeginRangeColumnIndex,
-                                         int nextSequenceId,
-                                         List<Integer> updatedNextSequenceRange) {
-        if (updatedStartIndex != nextSequenceOldBeginRangeColumnIndex) {
-            this.updateRowSequenceRange(rowIdx, nextSequenceId, updatedNextSequenceRange);
-            this.addRowToAffectedActionsByIdentifiers(rowIdx, NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES);
-            this.nonogramState.increaseMadeSteps();
-            this.tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, nextSequenceId, nextSequenceRange, updatedNextSequenceRange, "correcting from left");
-            addLog();
+    private void tryToCorrectRowRangeFromLeft(int rowIdx,
+                                              List<Integer> rowSequencesLengths,
+                                              List<Integer> oldNextRange,
+                                              List<Integer> updatedNextRange,
+                                              int nextSeqIdx) {
+        if (!oldNextRange.get(0).equals(updatedNextRange.get(0))) {
+            updateRowSequenceRange(rowIdx, nextSeqIdx, updatedNextRange);
+            logRowSequenceCorrection(rowIdx, nextSeqIdx, oldNextRange, updatedNextRange, "correcting from left");
+            markRowAsChanged(rowIdx);
 
-            if (rangeLength(updatedNextSequenceRange) == rowSequencesLengths.get(nextSequenceId) && isColumnRangeColoured(rowIdx, updatedNextSequenceRange)) {
-                this.excludeSequenceInRow(rowIdx, nextSequenceId);
+            if (rangeLength(updatedNextRange) == rowSequencesLengths.get(nextSeqIdx)
+                    && isColumnRangeColoured(rowIdx, updatedNextRange)) {
+                excludeSequenceInRow(rowIdx, nextSeqIdx);
             }
         }
     }
 
     public void correctSequencesRangesInRowFromRight(int rowIdx) {
-        List<Integer> rowSequencesLengths = this.getNonogramRules().getRowSequencesLengths().get(rowIdx);
-        List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
-        List<Integer> rowFieldsNotToInclude = this.getRowsFieldsNotToInclude().get(rowIdx);
-        List<Integer> rowSequencesIdsNotToInclude = this.getRowsSequencesIdsNotToInclude().get(rowIdx);
+        List<Integer> rowSequencesLengths = getNonogramRules().getRowSequencesLengths().get(rowIdx);
+        List<List<Integer>> rowSequencesRanges = getRowsSequencesRanges().get(rowIdx);
+        List<Integer> rowFieldsNotToInclude = getRowsFieldsNotToInclude().get(rowIdx);
+        List<Integer> rowSequencesIdsNotToInclude = getRowsSequencesIdsNotToInclude().get(rowIdx);
 
-        for (int sequenceIdx = rowSequencesRanges.size() - 1; sequenceIdx > 0; sequenceIdx--) {
-            int previousSequenceId = sequenceIdx - 1;
+        for (int seqIdx = rowSequencesRanges.size() - 1; seqIdx > 0; seqIdx--) {
+            int prevSeqIdx = seqIdx - 1;
+            if (rowSequencesIdsNotToInclude.contains(prevSeqIdx)) continue;
 
-            if (!rowSequencesIdsNotToInclude.contains(previousSequenceId)) {
-                List<Integer> oldPreviousSequenceRange = rowSequencesRanges.get(previousSequenceId);
-                int previousSequenceUpdatedRangeEndColumnIndex;
+            List<Integer> updatedPrevRange = rowSequencesIdsNotToInclude.contains(seqIdx)
+                    ? RangeCorrectionHelper.calculateUpdatedPreviousSequenceRangeAfterExcludedSequence(rowSequencesRanges, rowFieldsNotToInclude, seqIdx, prevSeqIdx)
+                    : RangeCorrectionHelper.calculateUpdatedPreviousSequenceRangeAfterIncludedSequence(rowSequencesRanges, rowSequencesLengths, seqIdx, prevSeqIdx);
 
-                if (rowSequencesIdsNotToInclude.contains(sequenceIdx)) {
-                    List<Integer> fullSequenceRange = rowSequencesRanges.get(sequenceIdx);
-                    previousSequenceUpdatedRangeEndColumnIndex = fullSequenceRange.get(0) - 2;
+            tryToCorrectRowRangeFromRight(rowIdx, rowSequencesLengths, rowSequencesRanges.get(prevSeqIdx), updatedPrevRange, prevSeqIdx);
+        }
+    }
 
-                    while(rowFieldsNotToInclude.contains(previousSequenceUpdatedRangeEndColumnIndex)) {
-                        previousSequenceUpdatedRangeEndColumnIndex--;
-                    }
-                } else {
-                    int currentSequenceLength = rowSequencesLengths.get(sequenceIdx);
-                    List<Integer> currentSequenceRange = rowSequencesRanges.get(sequenceIdx);
-                    previousSequenceUpdatedRangeEndColumnIndex = currentSequenceRange.get(1) - currentSequenceLength - 1;
+    private void tryToCorrectRowRangeFromRight(int rowIdx,
+                                               List<Integer> rowSequencesLengths,
+                                               List<Integer> oldPrevRange,
+                                               List<Integer> updatedPrevRange,
+                                               int prevSeqIdx) {
+        if (!oldPrevRange.get(1).equals(updatedPrevRange.get(1))) {
+            updateRowSequenceRange(rowIdx, prevSeqIdx, updatedPrevRange);
+            logRowSequenceCorrection(rowIdx, prevSeqIdx, oldPrevRange, updatedPrevRange, "correcting from right");
+            markRowAsChanged(rowIdx);
 
-                }
-                int previousSequenceOldRangeEndColumnIndex = oldPreviousSequenceRange.get(1);
-                int updatedEndIndex = Math.min(previousSequenceOldRangeEndColumnIndex, previousSequenceUpdatedRangeEndColumnIndex);
-
-                List<Integer> updatedPreviousSequenceRange = new ArrayList<>(Arrays.asList(oldPreviousSequenceRange.get(0), updatedEndIndex));
-
-                correctRowRangeFromRight(rowIdx,
-                        rowSequencesLengths,
-                        oldPreviousSequenceRange,
-                        updatedEndIndex,
-                        previousSequenceOldRangeEndColumnIndex,
-                        previousSequenceId,
-                        updatedPreviousSequenceRange);
+            if (rangeLength(updatedPrevRange) == rowSequencesLengths.get(prevSeqIdx)
+                    && isColumnRangeColoured(rowIdx, updatedPrevRange)) {
+                excludeSequenceInRow(rowIdx, prevSeqIdx);
             }
         }
     }
 
-    private void correctRowRangeFromRight(int rowIdx,
-                                          List<Integer> rowSequencesLengths,
-                                          List<Integer> oldPreviousSequenceRange,
-                                          int updatedEndIndex,
-                                          int previousSequenceOldRangeEndColumnIndex,
-                                          int previousSequenceId,
-                                          List<Integer> updatedPreviousSequenceRange) {
-        if (updatedEndIndex != previousSequenceOldRangeEndColumnIndex) {
-            this.getRowsSequencesRanges().get(rowIdx).set(previousSequenceId, updatedPreviousSequenceRange);
-            this.addRowToAffectedActionsByIdentifiers(rowIdx, NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES);
-
-            if (rangeLength(updatedPreviousSequenceRange) == rowSequencesLengths.get(previousSequenceId) && isColumnRangeColoured(rowIdx, updatedPreviousSequenceRange)) {
-                this.excludeSequenceInRow(rowIdx, previousSequenceId);
-            }
-
-            this.nonogramState.increaseMadeSteps();
-            this.tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, previousSequenceId, oldPreviousSequenceRange, updatedPreviousSequenceRange, "correcting from right");
-            addLog();
-        }
+    private void logRowSequenceCorrection(int rowIdx, int sequenceId,
+                                             List<Integer> oldRange, List<Integer> newRange, String action) {
+        this.tmpLog = generateCorrectingRowSequenceRangeStepDescription(
+                rowIdx, sequenceId, oldRange, newRange, action);
+        addLog();
     }
 
-    /**
-     * CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS
-     * corrects row sequences when met coloured field in row (also from left and right)
-     * @param rowIdx - row index to correct sequences ranges when coloured field met
-     */
+    private void markRowAsChanged(int rowIdx) {
+        this.addRowToAffectedActionsByIdentifiers(rowIdx, NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES);
+        this.nonogramState.increaseMadeSteps();
+    }
+
     @Override
     public void correctRowSequencesRangesWhenMetColouredField (int rowIdx) {
         correctRowSequencesRangesWhenMetColouredFieldFromLeft(rowIdx);
         correctRowSequencesRangesWhenMetColouredFieldFromRight(rowIdx);
     }
 
-    /**
-     * corrects row sequences when met coloured field in row (from left)
-     * @param rowIdx - row index to correct sequences ranges when coloured field met (from left)
-     */
     public void correctRowSequencesRangesWhenMetColouredFieldFromLeft (int rowIdx) {
         boolean rowSequenceRangesChanged = false;
 
