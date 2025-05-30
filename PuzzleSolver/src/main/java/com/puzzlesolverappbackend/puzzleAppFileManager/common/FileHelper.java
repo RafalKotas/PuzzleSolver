@@ -11,6 +11,6 @@ public class FileHelper {
     }
 
     public static String nonogramSolutionLoadPathForFilename(String solutionFileName) {
-        return InitializerConstants.NONOGRAM_SOLUTIONS_PATH + solutionFileName;
+        return "../" + InitializerConstants.NONOGRAM_SOLUTIONS_PATH + solutionFileName;
     }
 }

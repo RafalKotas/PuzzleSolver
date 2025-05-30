@@ -377,93 +377,6 @@ public class NonogramLogic extends NonogramLogicParams {
         return this;
     }
 
-//    /**
-//     * @return row sequences ranges from nonogram board filled fields
-//     */
-//    private List<List<List<Integer>>> inferRowsSequencesRangesFromSolutionBoard() {
-//        List<List<List<Integer>>> inferredRowsSequencesRanges = new ArrayList<>();
-//
-//        for (int rowIdx = 0; rowIdx < this.getNonogramRules().getHeight(); rowIdx++) {
-//            inferredRowsSequencesRanges.add(inferRowSequencesRangesFromSolutionBoardRow(rowIdx));
-//        }
-//
-//        return inferredRowsSequencesRanges;
-//    }
-
-
-//    /**
-//     * @param rowIdx - row to infer sequences ranges
-//     * @return row sequences ranges inferred from nonogram solution board
-//     */
-//    private List<List<Integer>> inferRowSequencesRangesFromSolutionBoardRow(int rowIdx) {
-//        List<String> boardRow = this.getNonogramSolutionBoard().get(rowIdx);
-//        List<List<Integer>> boardRowSequencesRanges = new ArrayList<>();
-//        List<Integer> boardRowSequencesLengths = this.getNonogramRules().getRowSequencesLengths().get(rowIdx);
-//        List<Integer> boardRowSequenceRange;
-//        int sequenceNo = 0;
-//
-//        for (int columnIdx = 0; columnIdx < this.getNonogramRules().getWidth(); columnIdx++) {
-//            if (boardRow.get(columnIdx).equals(COLOURED_FIELD)) {
-//                boardRowSequenceRange = new ArrayList<>();
-//                boardRowSequenceRange.add(columnIdx);
-//                while(columnIdx < this.getNonogramRules().getWidth() && boardRow.get(columnIdx).equals(COLOURED_FIELD)) {
-//                    columnIdx++;
-//                }
-//                boardRowSequenceRange.add(columnIdx - 1);
-//                boardRowSequencesRanges.add(boardRowSequenceRange);
-//                sequenceNo++;
-//            }
-//            if (sequenceNo == boardRowSequencesLengths.size()) {
-//                break;
-//            }
-//        }
-//
-//        return boardRowSequencesRanges;
-//    }
-
-//    /**
-//     * @return column sequences ranges from nonogram board filled fields
-//     */
-//    private List<List<List<Integer>>> inferColumnsSequencesRangesFromSolutionBoard() {
-//        List<List<List<Integer>>> inferredColumnsSequencesRanges = new ArrayList<>();
-//
-//        for (int columnIdx = 0; columnIdx < this.getNonogramRules().getWidth(); columnIdx++) {
-//            inferredColumnsSequencesRanges.add(inferColumnSequencesRangesFromSolutionBoardColumn(columnIdx));
-//        }
-//
-//        return inferredColumnsSequencesRanges;
-//    }
-
-//    /**
-//     * @param columnIdx - column to infer sequences ranges
-//     * @return column sequences ranges inferred from nonogram solution board
-//     */
-//    private List<List<Integer>> inferColumnSequencesRangesFromSolutionBoardColumn(int columnIdx) {
-//        List<String> boardColumn = getSolutionBoardColumn(this.nonogramSolutionBoard, columnIdx);
-//        List<List<Integer>> boardColumnSequencesRanges = new ArrayList<>();
-//        List<Integer> boardColumnSequencesLengths = this.getColumnsSequences().get(columnIdx);
-//        List<Integer> boardColumnSequenceRange;
-//        int sequenceNo = 0;
-//
-//        for (int rowIdx = 0; rowIdx < this.getHeight(); rowIdx++) {
-//            if (boardColumn.get(rowIdx).equals(COLOURED_FIELD)) {
-//                boardColumnSequenceRange = new ArrayList<>();
-//                boardColumnSequenceRange.add(rowIdx);
-//                while(rowIdx < this.getHeight() && boardColumn.get(rowIdx).equals(COLOURED_FIELD)) {
-//                    rowIdx++;
-//                }
-//                boardColumnSequenceRange.add(rowIdx - 1);
-//                boardColumnSequencesRanges.add(boardColumnSequenceRange);
-//                sequenceNo++;
-//            }
-//            if (sequenceNo == boardColumnSequencesLengths.size()) {
-//                break;
-//            }
-//        }
-//
-//        return boardColumnSequencesRanges;
-//    }
-
     public void updateCurrentAvailableChoices() {
         List<Integer> rowFieldsNotToInclude;
         this.availableChoices = new ArrayList<>();
@@ -716,8 +629,8 @@ public class NonogramLogic extends NonogramLogicParams {
             case PLACE_XS_ROW_AT_UNREACHABLE_FIELDS -> this.nonogramRowLogic.placeXsRowAtUnreachableFields(rowIdx);
             case PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES -> this.nonogramRowLogic.placeXsAroundLongestSequencesInRow(rowIdx);
             case PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES -> this.nonogramRowLogic.placeXsRowAtTooShortEmptySequences(rowIdx);
-            // case PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE -> this.nonogramRowLogic.placeXsRowIfOWillMergeNearFieldsToTooLongColouredSequence(rowIdx);
-            // case PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE -> this.nonogramRowLogic.placeXsRowIfONearXWillBeginTooLongPossibleColouredSequence(rowIdx);
+            case PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE -> this.nonogramRowLogic.placeXsRowIfOWillMergeNearFieldsToTooLongColouredSequence(rowIdx);
+            //case PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE -> this.nonogramRowLogic.placeXsRowIfONearXWillBeginTooLongPossibleColouredSequence(rowIdx);
             //case ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH -> this.nonogramRowLogic.preventExtendingColouredSequenceToExcessLengthInRow(rowIdx);
             case MARK_AVAILABLE_FIELDS_IN_ROW -> this.nonogramRowLogic.markAvailableFieldsInRow(rowIdx);
             default -> {

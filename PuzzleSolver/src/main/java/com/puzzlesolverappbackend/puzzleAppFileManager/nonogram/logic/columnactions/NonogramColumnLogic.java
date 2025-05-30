@@ -313,9 +313,6 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             if (isFieldColoured(this.nonogramSolutionBoard, potentiallyColouredField)) {
 
                 oldSequenceRange = columnSequencesRanges.get(sequenceId);
-                if (columnIdx == 13 && sequenceId == 2 && oldSequenceRange.equals(List.of(7, 14))) {
-                    System.out.println("tu źle bottom");
-                }
                 columnSequenceRangeStart = oldSequenceRange.get(0);
                 columnSequenceRangeEnd = oldSequenceRange.get(1);
                 minimumPossibleSequenceRangeStart = rowIdx - sequenceLength + 1;
@@ -1761,9 +1758,6 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
     }
 
     public void excludeSequenceInColumn(int columnIdx, int seqIdx) {
-        if (columnIdx == 13 && seqIdx == 2) {
-            System.out.println("abc");
-        }
         if (!this.columnsSequencesIdsNotToInclude.get(columnIdx).contains(seqIdx)) {
             this.tmpLog = generateAddingColumnSequenceToNotToIncludeDescription(columnIdx, seqIdx);
             addLog();

@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
 
-// TODO difficulty 2 : o10381 o10375 - not full solved (Expecting empty but was: ["o10381", "o04065", "o10375"])
+// TODO difficulty 2 : o10375 - not full solved (Expecting empty but was: [ "o10375"])
 // TODO difficulty 2 : o09839 - incorrect
 
 @Service

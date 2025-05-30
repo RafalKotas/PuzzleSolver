@@ -52,7 +52,6 @@ public class NonogramJsonWriter {
                 }
             }
 
-            // Zakończenie wiersza
             jsonBuilder.append("]");
 
             if (i < nonogramBoard.size() - 1) {

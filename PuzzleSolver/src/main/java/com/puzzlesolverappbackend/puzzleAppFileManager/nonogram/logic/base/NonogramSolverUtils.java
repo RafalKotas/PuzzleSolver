@@ -15,6 +15,13 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.Non
 @UtilityClass
 public class NonogramSolverUtils {
 
+    public static boolean isBoardConsistentWithSequences(List<List<String>> board, List<List<Integer>> rowSeq, List<List<Integer>> colSeq) {
+        List<List<List<Integer>>> rowRanges = inferSequenceRangesFromBoard(board);
+        List<List<List<Integer>>> colRanges = inferSequenceRangesFromColumns(board);
+
+        return sequencesMatch(rowRanges, rowSeq) && sequencesMatch(colRanges, colSeq);
+    }
+
     public static List<List<List<Integer>>> inferSequenceRangesFromBoard(List<List<String>> board) {
         List<List<List<Integer>>> allRowRanges = new ArrayList<>();
 
@@ -33,6 +40,10 @@ public class NonogramSolverUtils {
 
             if (start != -1) {
                 rowRanges.add(List.of(start, row.size() - 1));
+            }
+
+            if (rowRanges.isEmpty()) {
+                rowRanges.add(List.of(-1, -1));
             }
 
             allRowRanges.add(rowRanges);
@@ -69,19 +80,24 @@ public class NonogramSolverUtils {
         return allColumnRanges;
     }
 
-    public static boolean isBoardConsistentWithSequences(List<List<String>> board, List<List<Integer>> rowSeq, List<List<Integer>> colSeq) {
-        List<List<List<Integer>>> rowRanges = inferSequenceRangesFromBoard(board);
-        List<List<List<Integer>>> colRanges = inferSequenceRangesFromColumns(board);
-
-        return sequencesMatch(rowRanges, rowSeq) && sequencesMatch(colRanges, colSeq);
-    }
-
-    private static boolean sequencesMatch(List<List<List<Integer>>> ranges, List<List<Integer>> expected) {
-        for (int i = 0; i < ranges.size(); i++) {
+    private static boolean sequencesMatch(List<List<List<Integer>>> rowsRanges, List<List<Integer>> expected) {
+        for (int i = 0; i < rowsRanges.size(); i++) {
             List<Integer> expectedLengths = expected.get(i);
-            List<Integer> actualLengths = ranges.get(i).stream()
-                    .map(range -> range.get(1) - range.get(0) + 1)
-                    .toList();
+            List<List<Integer>> ranges = rowsRanges.get(i);
+            List<Integer> actualLengths;
+
+            // empty range only sequence 0 ([0])
+            if (ranges.size() == 1 && ranges.get(0).equals(List.of(-1, -1))) {
+                actualLengths = List.of(0);
+            } else {
+                actualLengths = ranges.stream()
+                        .map(range -> range.get(1) - range.get(0) + 1)
+                        .toList();
+            }
+
+            if (expectedLengths.isEmpty()) {
+                expectedLengths = List.of(0);
+            }
 
             if (!actualLengths.equals(expectedLengths)) {
                 return false;
@@ -91,7 +107,8 @@ public class NonogramSolverUtils {
     }
 
     public static NonogramFullSolutionData loadFullSolutionData(String filename) {
-        try (FileReader reader = new FileReader(FileHelper.nonogramSolutionLoadPathForFilename(filename))) {
+        String solutionPath = FileHelper.nonogramSolutionLoadPathForFilename(filename);
+        try (FileReader reader = new FileReader(solutionPath)) {
             return new Gson().fromJson(JsonParser.parseReader(reader), NonogramFullSolutionData.class);
         } catch (Exception e) {
             System.out.println(e);
