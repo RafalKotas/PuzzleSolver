@@ -180,6 +180,7 @@ public class NonogramsDataInitializer implements CommandLineRunner {
         try {
             fileLines = Files.lines(filePath).collect(Collectors.toList());
         } catch (IOException e) {
+            System.out.println("Here IOException");
             throw new IOException(e);
         }
         NonogramFileDetails nonogramFileDetails;
