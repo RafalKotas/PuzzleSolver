@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.colour.extend.toright;
 
 import org.junit.jupiter.params.provider.Arguments;
 
@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 public class ExtendColouredFieldsToRightRowDiff2Test
         extends ExtendColouredFieldsToRightRowTestBase
-        implements ExtendRightRowTestExecutor {
+        implements ExtendColouredFieldsToRightRowTestExecutor {
 
     static Stream<Arguments> provideTestCasesForExtendRight() {
         return Stream.of(

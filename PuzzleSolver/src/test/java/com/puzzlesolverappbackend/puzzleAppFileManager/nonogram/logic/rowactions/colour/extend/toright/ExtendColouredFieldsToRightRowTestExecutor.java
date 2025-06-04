@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.colour.extend.toright;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -7,7 +7,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.stream.Stream;
 
-public interface ExtendRightRowTestExecutor {
+public interface ExtendColouredFieldsToRightRowTestExecutor {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideTestCasesForExtendRight")

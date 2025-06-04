@@ -1,7 +1,8 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.colour.extend;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramRules;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramState;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.NonogramRowLogic;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,25 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public abstract class ExtendColouredFieldsToRightRowTestBase {
-
-    protected static void assertExtensionRight(
-            String testLabel,
-            List<String> initialRowState,
-            List<List<Integer>> rowSequenceRanges,
-            List<Integer> rowSequenceLengths,
-            List<String> expectedRowState
-    ) {
-        // given
-        NonogramRowLogic logic = prepareLogic(initialRowState, rowSequenceRanges, rowSequenceLengths);
-
-        // when
-        logic.extendColouredFieldsToRightNearXToMaximumPossibleLengthInRow(0);
-
-        // then
-        List<String> actualRow = logic.getNonogramSolutionBoard().get(0);
-        assertEquals(expectedRowState, actualRow, "Mismatch in row state for: " + testLabel);
-    }
+public abstract class ExtendColouredFieldsRowTestBase {
 
     protected static NonogramRowLogic prepareLogic(
             List<String> initialRowState,
@@ -65,6 +48,42 @@ public abstract class ExtendColouredFieldsToRightRowTestBase {
 
     protected static NonogramState buildInitialEmptyNonogramState() {
         return new NonogramState();
+    }
+
+    protected static void assertExtensionLeft(
+            String testLabel,
+            List<String> initialRowState,
+            List<List<Integer>> rowSequenceRanges,
+            List<Integer> rowSequenceLengths,
+            List<String> expectedRowState
+    ) {
+        // given
+        NonogramRowLogic logic = prepareLogic(initialRowState, rowSequenceRanges, rowSequenceLengths);
+
+        // when
+        logic.extendColouredFieldsToLeftNearXToMaximumPossibleLengthInRow(0);
+
+        // then
+        List<String> actualRow = logic.getNonogramSolutionBoard().get(0);
+        assertEquals(expectedRowState, actualRow, "Mismatch in row state for: " + testLabel);
+    }
+
+    protected static void assertExtensionRight(
+            String testLabel,
+            List<String> initialRowState,
+            List<List<Integer>> rowSequenceRanges,
+            List<Integer> rowSequenceLengths,
+            List<String> expectedRowState
+    ) {
+        // given
+        NonogramRowLogic logic = prepareLogic(initialRowState, rowSequenceRanges, rowSequenceLengths);
+
+        // when
+        logic.extendColouredFieldsToRightNearXToMaximumPossibleLengthInRow(0);
+
+        // then
+        List<String> actualRow = logic.getNonogramSolutionBoard().get(0);
+        assertEquals(expectedRowState, actualRow, "Mismatch in row state for: " + testLabel);
     }
 }
 
