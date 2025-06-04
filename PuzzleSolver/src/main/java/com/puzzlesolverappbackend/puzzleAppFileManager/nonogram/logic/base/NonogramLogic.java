@@ -445,8 +445,6 @@ public class NonogramLogic extends NonogramLogicParams {
 
         int actionListIndex = 0;
         int currentActionRCIndex; // row or column index
-        int stepsBefore;
-        int stepsAfter;
         NonogramActionDetails currentActionDetails;
         NonogramSolveAction nonogramSolveAction;
 
@@ -457,33 +455,9 @@ public class NonogramLogic extends NonogramLogicParams {
 
             try {
                 if (getRowSolveActions().contains(nonogramSolveAction)) {
-                    this.copyLogicToNonogramRowLogic();
-
-                    stepsBefore = this.getNonogramState().getNewStepsMade();
-
-                    makeProperActionInRow(currentActionRCIndex, currentActionDetails.getActionName());
-                    stepsAfter = this.getNonogramState().getNewStepsMade();
-
-                    if (LOG_CHANGES && stepsBefore != stepsAfter) {
-                        logRowStateBefore(currentActionDetails, currentActionRCIndex);
-                        logRowStateAfter(currentActionDetails, currentActionRCIndex);
-                    }
-
-                    this.copyLogicFromNonogramRowLogic();
+                    executeRowAction(currentActionRCIndex, currentActionDetails);
                 } else {
-                    this.copyLogicToNonogramColumnLogic();
-
-                    stepsBefore = this.getNonogramState().getNewStepsMade();
-
-                    makeProperActionInColumn(currentActionRCIndex, currentActionDetails.getActionName());
-                    stepsAfter = this.getNonogramState().getNewStepsMade();
-
-                    if (LOG_CHANGES && stepsBefore != stepsAfter) {
-                        logColumnStateBefore(currentActionDetails, currentActionRCIndex);
-                        logColumnStateAfter(currentActionDetails, currentActionRCIndex);
-                    }
-
-                    this.copyLogicFromNonogramColumnLogic();
+                    executeColumnAction(currentActionRCIndex, currentActionDetails);
                 }
             } catch (Exception e) {
                 // empty
@@ -499,6 +473,40 @@ public class NonogramLogic extends NonogramLogicParams {
 
             actionListIndex++;
         }
+    }
+
+    private void executeRowAction(int rowIdx, NonogramActionDetails actionDetails) {
+        copyLogicToNonogramRowLogic();
+
+        int stepsBefore = nonogramState.getNewStepsMade();
+
+        makeProperActionInRow(rowIdx, actionDetails.getActionName());
+
+        int stepsAfter = nonogramState.getNewStepsMade();
+
+        if (LOG_CHANGES && stepsBefore != stepsAfter) {
+            logRowStateBefore(actionDetails, rowIdx);
+            logRowStateAfter(actionDetails, rowIdx);
+        }
+
+        copyLogicFromNonogramRowLogic();
+    }
+
+    private void executeColumnAction(int columnIdx, NonogramActionDetails actionDetails) {
+        copyLogicToNonogramColumnLogic();
+
+        int stepsBefore = nonogramState.getNewStepsMade();
+
+        makeProperActionInColumn(columnIdx, actionDetails.getActionName());
+
+        int stepsAfter = nonogramState.getNewStepsMade();
+
+        if (false && LOG_CHANGES && stepsBefore != stepsAfter) {
+            logColumnStateBefore(actionDetails, columnIdx);
+            logColumnStateAfter(actionDetails, columnIdx);
+        }
+
+        copyLogicFromNonogramColumnLogic();
     }
 
     public boolean validateAgainstCorrectSolution(int actionIndex, NonogramActionDetails currentActionDetails) {
@@ -553,7 +561,21 @@ public class NonogramLogic extends NonogramLogicParams {
             elementToLog = this.getNonogramSolutionBoard().get(nextActionRowIndex).toString();
         }
 
-        log.info("Row {} before making action {}: {}", nextActionRowIndex, actionDetails.getActionName(), elementToLog);
+        String rangesLog = "";
+        String lengthsLog = "";
+
+        if (!actionDetails.getActionName().toString().contains("CORRECT")) {
+            rangesLog = this.getRowsSequencesRanges().get(nextActionRowIndex).toString();
+            lengthsLog = this.nonogramRules.getRowSequencesLengths().get(nextActionRowIndex).toString();
+        }
+
+        if (actionDetails.getActionName().toString().contains("EXTEND")) {
+            if (!rangesLog.isEmpty()) {
+                log.info("Row {} before making action {}: {} (ranges: {}, lengths: {})", nextActionRowIndex, actionDetails.getActionName(), elementToLog, rangesLog, lengthsLog);
+            } else {
+                log.info("Row {} before making action {}: {}", nextActionRowIndex, actionDetails.getActionName(), elementToLog);
+            }
+        }
     }
 
     private void logRowStateAfter(NonogramActionDetails actionDetails, int nextActionRowIndex) {
@@ -567,7 +589,9 @@ public class NonogramLogic extends NonogramLogicParams {
             elementToLog = this.getNonogramRowLogic().getNonogramSolutionBoard().get(nextActionRowIndex).toString();
         }
 
-        log.info("Row {} after  making action {}: {}", nextActionRowIndex, actionDetails.getActionName(), elementToLog);
+        if (actionDetails.getActionName().toString().contains("EXTEND")) {
+            log.info("Row {} after  making action {}: {}", nextActionRowIndex, actionDetails.getActionName(), elementToLog);
+        }
     }
 
     private void logColumnStateBefore(NonogramActionDetails actionDetails, int nextActionColumnIndex) {
