@@ -554,20 +554,12 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         }
     }
 
-    /**
-     * EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW
-     * @param rowIdx - row in which action should be done
-     * coloring the fields in row next to the x to the distance of the shortest possible sequence in a given area
-     */
     @Override
     public void extendColouredFieldsNearXToMaximumPossibleLengthInRow(int rowIdx) {
         extendColouredFieldsToLeftNearXToMaximumPossibleLengthInRow(rowIdx);
         extendColouredFieldsToRightNearXToMaximumPossibleLengthInRow(rowIdx);
     }
 
-    /**
-     * @param rowIdx - row index on which try to extend subsequence to minimum possible matching (to left)
-     */
     public void extendColouredFieldsToLeftNearXToMaximumPossibleLengthInRow(int rowIdx) {
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
         List<Integer> rowSequencesLengths = this.getNonogramRules().getRowSequencesLengths().get(rowIdx);
@@ -649,9 +641,6 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         return List.of(lastColouredFieldColumnIndexInSubsequence, firstColouredFieldColumnIndexInSubsequence);
     }
 
-    /**
-     * @param rowIdx - row index on which try to extend subsequence to minimum possible matching (to right)
-     */
     public void extendColouredFieldsToRightNearXToMaximumPossibleLengthInRow(int rowIdx) {
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
         List<Integer> rowSequencesLengths = this.getNonogramRules().getRowSequencesLengths().get(rowIdx);
@@ -790,10 +779,6 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         }
     }
 
-    /**
-     * @param rowIdx - place an "X" on fields which not belong to any row possible range
-     * PLACE_XS_ROW_AT_UNREACHABLE_FIELDS
-     */
     @Override
     public void placeXsRowAtUnreachableFields(int rowIdx) {
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
@@ -1512,10 +1497,6 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         }
     }
 
-    /**
-     * MARK_AVAILABLE_FIELDS_IN_ROW
-     * @param rowIdx - row index on which mark fields with char sequences identifiers
-     */
     @Override
     public void markAvailableFieldsInRow(int rowIdx) {
         Field potentiallyColouredField;

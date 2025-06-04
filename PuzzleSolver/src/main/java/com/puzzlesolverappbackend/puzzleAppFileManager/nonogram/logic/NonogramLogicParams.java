@@ -171,17 +171,6 @@ public abstract class NonogramLogicParams {
         x_fields.forEach(field -> placeXAtGivenField(field, true));
     }
 
-
-
-
-
-
-
-
-
-
-
-
     protected void addRowAndColumnToAffectedByIdentifiers(Field field, NonogramSolveAction actionTriggered) {
         List<NonogramSolveAction> actionsToDo = ActionDependencyMap.actionDependencies.get(actionTriggered);
 
