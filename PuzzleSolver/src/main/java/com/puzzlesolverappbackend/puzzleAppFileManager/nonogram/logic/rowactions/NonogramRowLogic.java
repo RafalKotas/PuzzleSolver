@@ -551,6 +551,9 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
     }
 
     public void extendColouredFieldsToLeftNearXToMaximumPossibleLengthInRow(int rowIdx) {
+        List<String> rowBefore = getRowCopy(rowIdx);
+        boolean anyGlobalFieldColoured = false;
+
         for (int columnIdx = this.getNonogramRules().getWidth() - 1; columnIdx >= 0; columnIdx--) {
             Field currentField = new Field(rowIdx, columnIdx);
 
@@ -572,11 +575,28 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
                 if (distanceFromX > 0) {
                     int minExtensionIdx = colouredRange.get(0) + distanceFromX - minSequenceLength;
-                    extendToLeft(rowIdx, colouredRange.get(0) - 1, minExtensionIdx);
+                    boolean extended = extendToLeft(rowIdx, colouredRange.get(0) - 1, minExtensionIdx);
+
+                    if (extended) {
+                        anyGlobalFieldColoured = true;
+                    }
                 }
 
                 columnIdx = colouredRange.get(0);
             }
+        }
+
+        if (anyGlobalFieldColoured) {
+            List<String> rowAfter = getRowCopy(rowIdx);
+            tmpLog = generateExtendSequenceInRow(
+                    rowIdx,
+                    "toRight",
+                    rowBefore,
+                    this.getRowsSequencesRanges().get(rowIdx),
+                    this.getNonogramRules().getRowSequencesLengths().get(rowIdx),
+                    rowAfter
+            );
+            addLog();
         }
     }
 
@@ -601,7 +621,9 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         return 0;
     }
 
-    private void extendToLeft(int rowIdx, int fromInclusive, int toInclusive) {
+    private boolean extendToLeft(int rowIdx, int fromInclusive, int toInclusive) {
+        boolean anyFieldColoured = false;
+
         for (int col = fromInclusive; col >= toInclusive && col >= 0; col--) {
             Field field = new Field(rowIdx, col);
             try {
@@ -609,10 +631,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                     this.colourFieldAtGivenPosition(field, "R---");
                     this.addRowAndColumnToAffectedByIdentifiers(field, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW);
                     this.nonogramState.increaseMadeSteps();
-
-                    tmpLog = generateColourStepDescription(rowIdx, col,
-                            "extend coloured fields to the left near X");
-                    addLog();
+                    anyFieldColoured = true;
                 } else if (SHOW_REPETITIONS) {
                     System.out.println("Row field already coloured.");
                 }
@@ -620,9 +639,14 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 this.nonogramState.invalidateSolution();
             }
         }
+
+        return anyFieldColoured;
     }
 
     public void extendColouredFieldsToRightNearXToMaximumPossibleLengthInRow(int rowIdx) {
+        List<String> rowBefore = getRowCopy(rowIdx);
+        boolean anyGlobalFieldColoured = false;
+
         for (int columnIdx = 0; columnIdx < this.getNonogramRules().getWidth(); columnIdx++) {
             Field currentField = new Field(rowIdx, columnIdx);
 
@@ -644,9 +668,25 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
                 if (distanceFromX > 0) {
                     int maxExtensionIdx = colouredRange.get(1) - distanceFromX + minSequenceLength;
-                    extendToRight(rowIdx, colouredRange.get(1) + 1, maxExtensionIdx);
+                    boolean extended = extendToRight(rowIdx, colouredRange.get(1) + 1, maxExtensionIdx);
+                    if (extended) {
+                        anyGlobalFieldColoured = true;
+                    }
                 }
             }
+        }
+
+        if (anyGlobalFieldColoured) {
+            List<String> rowAfter = getRowCopy(rowIdx);
+            tmpLog = generateExtendSequenceInRow(
+                    rowIdx,
+                    "toRight",
+                    rowBefore,
+                    this.getRowsSequencesRanges().get(rowIdx),
+                    this.getNonogramRules().getRowSequencesLengths().get(rowIdx),
+                    rowAfter
+            );
+            addLog();
         }
     }
 
@@ -687,7 +727,9 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         return 0;
     }
 
-    private void extendToRight(int rowIdx, int fromInclusive, int toInclusive) {
+    private boolean extendToRight(int rowIdx, int fromInclusive, int toInclusive) {
+        boolean anyFieldColoured = false;
+
         for (int col = fromInclusive; col <= toInclusive && col < this.getNonogramRules().getWidth(); col++) {
             Field field = new Field(rowIdx, col);
             try {
@@ -695,10 +737,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                     this.colourFieldAtGivenPosition(field, "R---");
                     this.addRowAndColumnToAffectedByIdentifiers(field, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW);
                     this.nonogramState.increaseMadeSteps();
-
-                    tmpLog = generateColourStepDescription(rowIdx, col,
-                            "extend coloured fields to the right near X");
-                    addLog();
+                    anyFieldColoured = true;
                 } else if (SHOW_REPETITIONS) {
                     System.out.println("Row field already coloured.");
                 }
@@ -706,6 +745,12 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 this.nonogramState.invalidateSolution();
             }
         }
+
+        return anyFieldColoured;
+    }
+
+    private List<String> getRowCopy(int rowIdx) {
+        return new ArrayList<>(this.nonogramSolutionBoard.get(rowIdx));
     }
 
     @Override
