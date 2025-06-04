@@ -8,34 +8,37 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public abstract class ExtendColouredFieldsRowTestBase {
 
-    protected static NonogramRowLogic prepareLogic(
+    protected static NonogramRowLogic prepareRowLogic(
             List<String> initialRowState,
             List<List<Integer>> rowSequenceRanges,
             List<Integer> rowSequenceLengths
     ) {
-        NonogramRowLogic logic = new NonogramRowLogic();
+        NonogramRowLogic nonogramRowLogic = new NonogramRowLogic();
 
-        logic.setNonogramState(buildInitialEmptyNonogramState());
-        logic.setNonogramRules(createMockRulesWithWidth(initialRowState.size(), rowSequenceLengths));
+        nonogramRowLogic.setNonogramState(buildInitialEmptyNonogramState());
+        nonogramRowLogic.setNonogramRules(createMockRulesWithWidth(initialRowState.size(), rowSequenceLengths));
 
         List<List<List<Integer>>> rowsSequencesRanges = new ArrayList<>(List.of(rowSequenceRanges));
-        logic.setRowsSequencesRanges(rowsSequencesRanges);
+        nonogramRowLogic.setRowsSequencesRanges(rowsSequencesRanges);
 
         List<List<String>> nonogramSolutionBoard = new ArrayList<>();
         nonogramSolutionBoard.add(new ArrayList<>(initialRowState));
-        logic.setNonogramSolutionBoard(nonogramSolutionBoard);
+        nonogramRowLogic.setNonogramSolutionBoard(nonogramSolutionBoard);
 
         List<List<String>> nonogramSolutionBoardWithMarks = new ArrayList<>();
         nonogramSolutionBoardWithMarks.add(new ArrayList<>(Collections.nCopies(initialRowState.size(), "----")));
-        logic.setNonogramSolutionBoardWithMarks(nonogramSolutionBoardWithMarks);
+        nonogramRowLogic.setNonogramSolutionBoardWithMarks(nonogramSolutionBoardWithMarks);
 
-        return logic;
+        return nonogramRowLogic;
+    }
+
+    protected static NonogramState buildInitialEmptyNonogramState() {
+        return new NonogramState();
     }
 
     protected static NonogramRules createMockRulesWithWidth(int width, List<Integer> rowSeqLengths) {
@@ -44,46 +47,6 @@ public abstract class ExtendColouredFieldsRowTestBase {
         when(rules.getWidth()).thenReturn(width);
         when(rules.getRowSequencesLengths()).thenReturn(List.of(rowSeqLengths));
         return rules;
-    }
-
-    protected static NonogramState buildInitialEmptyNonogramState() {
-        return new NonogramState();
-    }
-
-    protected static void assertExtensionLeft(
-            String testLabel,
-            List<String> initialRowState,
-            List<List<Integer>> rowSequenceRanges,
-            List<Integer> rowSequenceLengths,
-            List<String> expectedRowState
-    ) {
-        // given
-        NonogramRowLogic logic = prepareLogic(initialRowState, rowSequenceRanges, rowSequenceLengths);
-
-        // when
-        logic.extendColouredFieldsToLeftNearXToMaximumPossibleLengthInRow(0);
-
-        // then
-        List<String> actualRow = logic.getNonogramSolutionBoard().get(0);
-        assertEquals(expectedRowState, actualRow, "Mismatch in row state for: " + testLabel);
-    }
-
-    protected static void assertExtensionRight(
-            String testLabel,
-            List<String> initialRowState,
-            List<List<Integer>> rowSequenceRanges,
-            List<Integer> rowSequenceLengths,
-            List<String> expectedRowState
-    ) {
-        // given
-        NonogramRowLogic logic = prepareLogic(initialRowState, rowSequenceRanges, rowSequenceLengths);
-
-        // when
-        logic.extendColouredFieldsToRightNearXToMaximumPossibleLengthInRow(0);
-
-        // then
-        List<String> actualRow = logic.getNonogramSolutionBoard().get(0);
-        assertEquals(expectedRowState, actualRow, "Mismatch in row state for: " + testLabel);
     }
 }
 

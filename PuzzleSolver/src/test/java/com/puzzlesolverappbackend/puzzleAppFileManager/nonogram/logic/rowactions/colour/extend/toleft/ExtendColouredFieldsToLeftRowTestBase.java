@@ -16,7 +16,7 @@ public abstract class ExtendColouredFieldsToLeftRowTestBase extends ExtendColour
             List<Integer> rowSequenceLengths,
             List<String> expectedRowState
     ) {
-        NonogramRowLogic logic = prepareLogic(initialRowState, rowSequenceRanges, rowSequenceLengths);
+        NonogramRowLogic logic = prepareRowLogic(initialRowState, rowSequenceRanges, rowSequenceLengths);
         logic.extendColouredFieldsToLeftNearXToMaximumPossibleLengthInRow(0);
         List<String> actualRow = logic.getNonogramSolutionBoard().get(0);
         assertEquals(expectedRowState, actualRow, "Mismatch in row state for: " + testLabel);
