@@ -23,6 +23,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.col
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnCorrectSequencesRangesHelper.reduceColouredSequenceMatches;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnCorrectSequencesRangesHelper.sequenceAssignmentAppearsAsFirstLater;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnMixedActionsHelper.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.OverlappingLogHelper.generateOverlappingSequenceLog;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.EMPTY_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.MARKED_COLUMN_INDICATOR;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.logic.NonogramLogicService.rangesListIncludingAnotherRange;
@@ -490,6 +491,9 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
 
     @Override
     public void colourOverlappingFieldsInColumn(int columnIdx) {
+        List<String> columnBefore = getColumnCopy(columnIdx);
+        boolean anyFieldColoured = false;
+
         List<Integer> sequenceLengths = getNonogramRules().getColumnSequencesLengths().get(columnIdx);
         List<List<Integer>> sequenceRanges = getColumnsSequencesRanges().get(columnIdx);
 
@@ -498,22 +502,36 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             List<Integer> range = sequenceRanges.get(sequenceIdx);
 
             List<Integer> overlapRange = ColouringHelper.calculateOverlappingRange(range, sequenceLength);
-            colourAllEmptyFieldsInRangeForColumn(columnIdx, overlapRange, sequenceIdx);
+            boolean coloured = colourAllEmptyFieldsInRangeForColumn(columnIdx, overlapRange, sequenceIdx);
+            anyFieldColoured |= coloured;
+        }
+
+        if (anyFieldColoured) {
+            List<String> columnAfter = getColumnCopy(columnIdx);
+            tmpLog = generateOverlappingSequenceLog(
+                    columnIdx,
+                    false,
+                    columnBefore,
+                    getColumnsSequencesRanges().get(columnIdx),
+                    getNonogramRules().getRowSequencesLengths().get(columnIdx),
+                    columnAfter
+            );
+            addLog();
         }
     }
 
-    private void colourAllEmptyFieldsInRangeForColumn(int columnIdx, List<Integer> rows, int sequenceIdx) {
-        if (rows.isEmpty()) return;
+    private boolean colourAllEmptyFieldsInRangeForColumn(int columnIdx, List<Integer> rows, int sequenceIdx) {
+        if (rows.isEmpty()) return false;
 
         int sequenceLength = getNonogramRules().getColumnSequencesLengths().get(columnIdx).get(sequenceIdx);
+        boolean anyFieldColoured = false;
 
         for (int rowIdx : rows) {
             Field field = new Field(rowIdx, columnIdx);
 
             if (isFieldEmpty(nonogramSolutionBoard, field)) {
                 colourFieldAtGivenPosition(field, "--C-");
-                tmpLog = generateColourStepDescription(columnIdx, rowIdx, FILL_OVERLAPPING_FIELDS);
-                addLog();
+                anyFieldColoured = true;
                 addRowAndColumnToAffectedByIdentifiers(field, NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_COLUMN);
                 nonogramState.increaseMadeSteps();
             } else if (SHOW_REPETITIONS) {
@@ -524,6 +542,8 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         if (rows.size() == sequenceLength) {
             excludeSequenceInColumn(columnIdx, sequenceIdx);
         }
+
+        return anyFieldColoured;
     }
 
     @Override

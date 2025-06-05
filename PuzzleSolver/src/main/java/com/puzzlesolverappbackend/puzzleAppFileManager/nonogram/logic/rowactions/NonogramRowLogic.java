@@ -17,6 +17,7 @@ import java.util.*;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.ColouringHelper.calculateOverlappingRange;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.OverlappingLogHelper.generateOverlappingSequenceLog;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.collectColouredSequencesRangesInRow;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.matchColouredSequencesToPossibleSeqIDs;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowPreventExtendingColouredSequenceToExcessLengthHelpers.*;
@@ -376,6 +377,9 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
     @Override
     public void colourOverlappingFieldsInRow(int rowIdx) {
+        List<String> rowBefore = getRowCopy(rowIdx);
+        boolean anyFieldColoured = false;
+
         List<Integer> sequenceLengths = getNonogramRules().getRowSequencesLengths().get(rowIdx);
         List<List<Integer>> sequenceRanges = getRowsSequencesRanges().get(rowIdx);
 
@@ -384,22 +388,36 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             List<Integer> range = sequenceRanges.get(sequenceIdx);
 
             List<Integer> overlapRange = calculateOverlappingRange(range, sequenceLength);
-            colourAllEmptyFieldsInRange(rowIdx, overlapRange, sequenceIdx);
+            boolean coloured = colourAllEmptyFieldsInRange(rowIdx, overlapRange, sequenceIdx);
+            anyFieldColoured |= coloured;
+        }
+
+        if (anyFieldColoured) {
+            List<String> rowAfter = getRowCopy(rowIdx);
+            tmpLog = generateOverlappingSequenceLog(
+                    rowIdx,
+                    true,
+                    rowBefore,
+                    getRowsSequencesRanges().get(rowIdx),
+                    getNonogramRules().getRowSequencesLengths().get(rowIdx),
+                    rowAfter
+            );
+            addLog();
         }
     }
 
-    private void colourAllEmptyFieldsInRange(int rowIdx, List<Integer> columns, int sequenceIdx) {
-        if (columns.isEmpty()) return;
+    private boolean colourAllEmptyFieldsInRange(int rowIdx, List<Integer> columns, int sequenceIdx) {
+        if (columns.isEmpty()) return false;
 
         int sequenceLength = getNonogramRules().getRowSequencesLengths().get(rowIdx).get(sequenceIdx);
+        boolean anyFieldColoured = false;
 
         for (int colIdx : columns) {
             Field field = new Field(rowIdx, colIdx);
 
             if (isFieldEmpty(nonogramSolutionBoard, field)) {
                 this.colourFieldAtGivenPosition(field, "R---");
-                tmpLog = generateColourStepDescription(rowIdx, colIdx, FILL_OVERLAPPING_FIELDS);
-                addLog();
+                anyFieldColoured = true;
                 addRowAndColumnToAffectedByIdentifiers(field, NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_ROW);
                 nonogramState.increaseMadeSteps();
             } else if (SHOW_REPETITIONS) {
@@ -410,6 +428,8 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         if (columns.size() == sequenceLength) {
             excludeSequenceInRow(rowIdx, sequenceIdx);
         }
+
+        return anyFieldColoured;
     }
 
     @Override
