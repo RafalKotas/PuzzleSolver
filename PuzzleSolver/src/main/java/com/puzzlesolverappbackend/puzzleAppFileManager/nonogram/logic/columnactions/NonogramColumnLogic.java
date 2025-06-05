@@ -715,7 +715,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
 
                 if (distanceFromX > 0) {
                     int maxExtensionIdx = colouredRange.get(1) - distanceFromX + minSequenceLength;
-                    boolean extended = extendToBottom(rowIdx, colouredRange.get(1) + 1, maxExtensionIdx);
+                    boolean extended = extendToBottom(columnIdx, colouredRange.get(1) + 1, maxExtensionIdx);
                     if (extended) {
                         anyGlobalFieldColoured = true;
                     }

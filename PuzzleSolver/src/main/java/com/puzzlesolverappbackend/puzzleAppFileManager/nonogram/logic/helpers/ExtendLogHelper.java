@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers;
 
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
 import lombok.experimental.UtilityClass;
 
 import java.util.Arrays;
@@ -35,15 +36,35 @@ public class ExtendLogHelper {
         );
     }
 
-    public static String convertLogToTestArguments(String logText) {
+    public static String convertLogToTestArguments(
+            String logText,
+            String solutionName,
+            NonogramLogic logic
+    ) {
         String[] lines = logText.strip().split("\n");
 
-        String header = lines[0].replace("EXTEND_", "").replace("_SEQUENCE:", "").trim(); // e.g. "ROW row=2, dir=toLeft"
+        String header = lines[0].replace("EXTEND_", "").replace("_SEQUENCE:", "").trim(); // e.g. "COLUMN col=2, dir=toBottom"
         String[] headerParts = header.split(", ");
-        String indexInfo = headerParts[0]; // "row=2" or "col=5"
+        String indexInfo = headerParts[0]; // "row=14" or "col=2"
+        String direction = headerParts[1].split("=")[1]; // e.g. "toBottom"
+
         int indexNumber = Integer.parseInt(indexInfo.split("=")[1]);
         String isRow = indexInfo.startsWith("row") ? "Row" : "Column";
-        String testLabel = "/ " + isRow + " " + indexNumber;
+
+        String fileName = solutionName.startsWith("r") ? solutionName.substring(1) : solutionName;
+
+        int height = logic.getNonogramRules().getHeight();
+        int width = logic.getNonogramRules().getWidth();
+
+        String testLabel = String.format(
+                "%s / %dx%d / diff  / %s %d / %s",
+                fileName,
+                height,
+                width,
+                isRow,
+                indexNumber,
+                direction
+        );
 
         String initialLine = lines[1].replace("initial=", "").trim();
         String rangesLine = lines[2].replace("ranges=", "").trim();
