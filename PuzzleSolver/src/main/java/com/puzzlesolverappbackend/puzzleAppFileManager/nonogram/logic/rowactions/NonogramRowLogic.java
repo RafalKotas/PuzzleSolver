@@ -5,6 +5,7 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSo
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.Field;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicParams;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.ExtendLogHelper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.RangeCorrectionHelper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramHelper;
 import lombok.Getter;
@@ -588,13 +589,14 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
         if (anyGlobalFieldColoured) {
             List<String> rowAfter = getRowCopy(rowIdx);
-            tmpLog = generateExtendSequenceInRow(
+            tmpLog = ExtendLogHelper.generateExtendSequenceLog(
                     rowIdx,
                     "toLeft",
                     rowBefore,
                     this.getRowsSequencesRanges().get(rowIdx),
                     this.getNonogramRules().getRowSequencesLengths().get(rowIdx),
-                    rowAfter
+                    rowAfter,
+                    true
             );
             addLog();
         }
@@ -680,13 +682,14 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
         if (anyGlobalFieldColoured) {
             List<String> rowAfter = getRowCopy(rowIdx);
-            tmpLog = generateExtendSequenceInRow(
+            tmpLog = ExtendLogHelper.generateExtendSequenceLog(
                     rowIdx,
                     "toRight",
                     rowBefore,
                     this.getRowsSequencesRanges().get(rowIdx),
                     this.getNonogramRules().getRowSequencesLengths().get(rowIdx),
-                    rowAfter
+                    rowAfter,
+                    true
             );
             addLog();
         }
@@ -1702,29 +1705,6 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         for (int columnIdx = 0; columnIdx < this.getNonogramRules().getWidth(); columnIdx++) {
             this.nonogramSolutionBoard.get(rowIdx).set(columnIdx, boardRow.get(columnIdx));
         }
-    }
-
-    public String generateExtendSequenceInRow(
-            int rowIndex,
-            String direction,
-            List<String> initialRowState,
-            List<List<Integer>> rowSequenceRanges,
-            List<Integer> rowSequenceLengths,
-            List<String> finalRowState
-    ) {
-        return String.format(
-                "EXTEND_ROW_SEQUENCE: row=%d, dir=%s\n" +
-                        "initial=%s\n" +
-                        "ranges=%s\n" +
-                        "lengths=%s\n" +
-                        "final=%s\n",
-                rowIndex,
-                direction,
-                initialRowState.toString(),
-                rowSequenceRanges.toString(),
-                rowSequenceLengths.toString(),
-                finalRowState.toString()
-        );
     }
 
     public String generateColourStepDescription(int rowIndex, int columnIndex, String actionType) {
