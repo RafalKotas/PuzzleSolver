@@ -582,7 +582,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                     }
                 }
 
-                columnIdx = colouredRange.get(0);
+                columnIdx = colouredRange.get(0) - 1;
             }
         }
 
@@ -590,7 +590,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             List<String> rowAfter = getRowCopy(rowIdx);
             tmpLog = generateExtendSequenceInRow(
                     rowIdx,
-                    "toRight",
+                    "toLeft",
                     rowBefore,
                     this.getRowsSequencesRanges().get(rowIdx),
                     this.getNonogramRules().getRowSequencesLengths().get(rowIdx),
@@ -673,6 +673,8 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                         anyGlobalFieldColoured = true;
                     }
                 }
+
+                columnIdx = colouredRange.get(1) + 1;
             }
         }
 
