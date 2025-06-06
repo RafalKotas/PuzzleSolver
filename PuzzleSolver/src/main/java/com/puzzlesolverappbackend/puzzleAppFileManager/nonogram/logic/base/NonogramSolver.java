@@ -2,6 +2,7 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base;
 
 import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.OverlappingLogHelper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionDecision;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionNode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramFullSolutionData;
@@ -13,9 +14,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.COLOURED_FIELD;
@@ -32,7 +31,7 @@ public class NonogramSolver {
     private final boolean recursionModeEnabled = false;
     private boolean solved = false;
 
-    private boolean LOG_STEPS_SOLVER = false;
+    private boolean LOG_STEPS_SOLVER = true;
     private boolean printNodeCompletionPercentage = true;
 
     private boolean oneOfTwoDecisionsWrong;
@@ -126,9 +125,27 @@ public class NonogramSolver {
             log.info("Fields filled after fill trivial rows and columns: {}", nonogramSubsolutionNode.getNonogramLogic().fieldsFilled());
             log.info("COMPLETION PERCENTAGE: {}, DECISIONS SIZE: {}", nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage(), nonogramSubsolutionNode.getNonogramGuessDecisions().size());
             log.info("SOLUTION STEPS: ");
+
+            Map<String, Integer> labelCounters = new HashMap<>();
+
             for (String nonogramNodeLog : nonogramSubsolutionNode.getNodeLogs()) {
-                if (!nonogramNodeLog.contains("correcting")) {
-                    log.info("nodeLog: {}", nonogramNodeLog);
+                if (nonogramNodeLog.contains("OVERLAP_COLUMN_SEQUENCE")) {
+                    String converted = OverlappingLogHelper.convertLogToTestArguments(
+                            nonogramNodeLog,
+                            solutionFileName,
+                            nonogramSubsolutionNode.getNonogramLogic()
+                    );
+
+                    String prefix = converted.split(",")[0];
+                    String label = prefix.replaceAll(".* / (Row \\d+|Column \\d+).*", "$1");
+
+                    int count = labelCounters.getOrDefault(label, 0) + 1;
+                    labelCounters.put(label, count);
+
+                    String newLabel = label + " #" + count;
+                    String newConverted = converted.replace(label, newLabel);
+
+                    System.out.println(newConverted + ",");
                 }
             }
         }

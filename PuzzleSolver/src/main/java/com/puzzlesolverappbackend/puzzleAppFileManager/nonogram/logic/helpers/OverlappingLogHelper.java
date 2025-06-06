@@ -42,13 +42,28 @@ public class OverlappingLogHelper {
     ) {
         String[] lines = logText.strip().split("\n");
 
-        String header = lines[0].replace("OVERLAP_", "").replace("_SEQUENCE:", "").trim(); // "ROW row=2" lub "COLUMN col=3"
+        String header = lines[0].replace("OVERLAP_", "").replace("_SEQUENCE:", "").trim();
         String[] headerParts = header.split(" ");
-        String indexInfo = headerParts[1]; // "row=2" lub "col=3"
 
+        if (headerParts.length < 2 || !headerParts[1].contains("=")) {
+            throw new IllegalArgumentException("Invalid log header format: " + lines[0]);
+        }
+
+        String indexInfo = headerParts[1];
         boolean isRow = indexInfo.startsWith("row");
         String isRowLabel = isRow ? "Row" : "Column";
-        int index = Integer.parseInt(indexInfo.split("=")[1]);
+
+        String[] indexSplit = indexInfo.split("=");
+        if (indexSplit.length != 2) {
+            throw new IllegalArgumentException("Invalid index info: " + indexInfo);
+        }
+
+        int index;
+        try {
+            index = Integer.parseInt(indexSplit[1]);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid number in index info: " + indexInfo);
+        }
 
         String fileName = solutionName.startsWith("r") ? solutionName.substring(1) : solutionName;
         int height = logic.getNonogramRules().getHeight();

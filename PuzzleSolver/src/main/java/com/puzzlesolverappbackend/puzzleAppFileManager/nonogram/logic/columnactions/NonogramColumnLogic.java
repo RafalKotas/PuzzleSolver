@@ -513,7 +513,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                     false,
                     columnBefore,
                     getColumnsSequencesRanges().get(columnIdx),
-                    getNonogramRules().getRowSequencesLengths().get(columnIdx),
+                    getNonogramRules().getColumnSequencesLengths().get(columnIdx),
                     columnAfter
             );
             addLog();
