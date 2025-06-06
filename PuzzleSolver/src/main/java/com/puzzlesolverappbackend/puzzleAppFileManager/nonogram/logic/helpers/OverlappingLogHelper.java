@@ -3,12 +3,13 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
 import lombok.experimental.UtilityClass;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.LogFormatUtils.formatList;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.LogFormatUtils.formatNestedList;
 
 @UtilityClass
-public class OverlappingLogHelper {
+public final class OverlappingLogHelper {
 
     public static String generateOverlappingSequenceLog(
             int index,
@@ -96,21 +97,5 @@ public class OverlappingLogHelper {
                 formatList(lengthsLine),
                 formatList(finalLine)
         );
-    }
-
-    private static String formatList(String input) {
-        return Arrays.stream(input.replaceAll("[\\[\\]]", "").split(","))
-                .map(String::trim)
-                .map(s -> s.matches("-?\\d+") ? s : "\"" + s + "\"")
-                .collect(Collectors.joining(", "));
-    }
-
-    private static String formatNestedList(String input) {
-        if (input.equals("[]")) return "";
-
-        String[] parts = input.replaceAll("\\[\\[|\\]\\]", "").split("\\],\\s*\\[");
-        return Arrays.stream(parts)
-                .map(p -> "List.of(" + formatList("[" + p + "]") + ")")
-                .collect(Collectors.joining(", "));
     }
 }

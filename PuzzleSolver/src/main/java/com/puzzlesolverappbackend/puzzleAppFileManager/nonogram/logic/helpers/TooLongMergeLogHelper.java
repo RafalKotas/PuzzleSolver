@@ -9,27 +9,27 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.hel
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.LogFormatUtils.formatNestedList;
 
 @UtilityClass
-public class ExtendLogHelper {
+public class TooLongMergeLogHelper {
 
-    public static String generateExtendSequenceLog(
+    public static String generateTooLongMergeSequenceLog(
             int index,
-            String direction,
+            boolean isRow,
             List<String> initialState,
             List<List<Integer>> sequenceRanges,
             List<Integer> sequenceLengths,
-            List<String> finalState,
-            boolean isRow
+            List<String> finalState
     ) {
+        String label = isRow ? "ROW" : "COLUMN";
+
         return String.format(
-                "EXTEND_%s_SEQUENCE: %s=%d, dir=%s\n" +
+                "TOO_LONG_MERGE_%s_SEQUENCE: %s=%d\n" +
                         "initial=%s\n" +
                         "ranges=%s\n" +
                         "lengths=%s\n" +
                         "final=%s\n",
-                isRow ? "ROW" : "COLUMN",
+                label,
                 isRow ? "row" : "col",
                 index,
-                direction,
                 initialState.toString(),
                 sequenceRanges.toString(),
                 sequenceLengths.toString(),
@@ -44,27 +44,38 @@ public class ExtendLogHelper {
     ) {
         String[] lines = logText.strip().split("\n");
 
-        String header = lines[0].replace("EXTEND_", "").replace("_SEQUENCE:", "").trim(); // e.g. "COLUMN col=2, dir=toBottom"
-        String[] headerParts = header.split(", ");
-        String indexInfo = headerParts[0]; // "row=14" or "col=2"
-        String direction = headerParts[1].split("=")[1]; // e.g. "toBottom"
+        String header = lines[0]
+                .replace("TOO_LONG_MERGE_ROW_SEQUENCE:", "")
+                .replace("TOO_LONG_MERGE_COLUMN_SEQUENCE:", "")
+                .trim();
 
-        int indexNumber = Integer.parseInt(indexInfo.split("=")[1]);
-        String isRow = indexInfo.startsWith("row") ? "Row" : "Column";
+        String[] headerParts = header.split("=");
+        if (headerParts.length != 2) {
+            throw new IllegalArgumentException("Invalid header format: " + lines[0]);
+        }
 
-        String fileName = solutionName.startsWith("r") ? solutionName.substring(1) : solutionName;
+        String indexKey = headerParts[0].trim(); // "row" lub "col"
+        int index;
+        try {
+            index = Integer.parseInt(headerParts[1].trim());
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid index number in header: " + lines[0]);
+        }
 
+        boolean isRow = indexKey.equalsIgnoreCase("row");
+        String isRowLabel = isRow ? "Row" : "Column";
+
+        String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
         int height = logic.getNonogramRules().getHeight();
         int width = logic.getNonogramRules().getWidth();
 
         String testLabel = String.format(
-                "%s / %dx%d / diff  / %s %d / %s",
+                "%s / %dx%d / diff  / %s %d",
                 fileName,
                 height,
                 width,
-                isRow,
-                indexNumber,
-                direction
+                isRowLabel,
+                index
         );
 
         String initialLine = lines[1].replace("initial=", "").trim();

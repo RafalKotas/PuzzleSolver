@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class ColouringHelper {
+public final class ColouringHelper {
 
     public static List<Integer> calculateOverlappingRange(List<Integer> range, int sequenceLength) {
         int start = range.get(1) - sequenceLength + 1;
