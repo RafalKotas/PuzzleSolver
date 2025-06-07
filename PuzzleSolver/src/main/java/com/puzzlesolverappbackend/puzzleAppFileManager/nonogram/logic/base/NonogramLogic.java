@@ -6,6 +6,7 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.common.LogicFunctions;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.*;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.NonogramColumnLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.TrivialFillLogHelper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.NonogramRowLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionDecision;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramActionDetails;
@@ -149,54 +150,39 @@ public class NonogramLogic extends NonogramLogicParams {
     }
 
     private void fillTrivialRows() {
-        Field rowField;
-        int width = this.getNonogramRules().getWidth();
-        for (int rowIdx = 0; rowIdx < this.getNonogramRules().getHeight(); rowIdx++) {
+        int width = getNonogramRules().getWidth();
+
+        for (int rowIdx = 0; rowIdx < getNonogramRules().getHeight(); rowIdx++) {
+            List<String> rowBefore = getRowCopy(rowIdx);
+            boolean changed = false;
+
             if (isRowTrivial(rowIdx)) {
-                addFillTrivialRowLog(rowIdx);
-                int seqNo = 0;
-                int subsequentXs = 0;
-                List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
-                List<Integer> rowSequenceRange = rowSequencesRanges.get(seqNo);
-                for (int columnIdx = 0; columnIdx < width; columnIdx++) {
-                    rowField = new Field(rowIdx, columnIdx);
-                    if (rangeInsideAnotherRange(List.of(columnIdx, columnIdx), rowSequenceRange)) {
-                        subsequentXs = 0;
-                        fillTrivialRowField(rowField, seqNo);
-                        addRowFieldToExcluded(rowField);
-                        addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.COLOUR_FIELD_IN_TRIVIAL_ROW);
-                    } else {
-                        placeXAtGivenPosition(rowField);
-                        addRowFieldToExcluded(rowField);
-                        addColumnFieldToExcluded(rowField);
-                        addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.PLACING_X_IN_TRIVIAL_ROW);
-                        subsequentXs += 1;
-                        if (subsequentXs == 1 && seqNo + 1 < rowSequencesRanges.size()) {
-                            rowSequenceRange = this.getRowsSequencesRanges().get(rowIdx).get(++seqNo);
-                        } else {
-                            break;
-                        }
-                    }
-                }
-                addAllRowSequencesIdxToNotToInclude(rowIdx);
+                fillTrivialRow(rowIdx, width);
+                changed = true;
             } else if (isRowEmpty(rowIdx)) {
-                for (int columnIdx = 0; columnIdx < width; columnIdx++) {
-                    rowField = new Field(rowIdx, columnIdx);
-                    placeXAtGivenPosition(rowField);
-                    addRowFieldToExcluded(rowField);
-                    addColumnFieldToExcluded(rowField);
-                    addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.PLACING_X_IN_TRIVIAL_ROW);
-                }
-                addAllRowSequencesIdxToNotToInclude(rowIdx);
+                fillEmptyRow(rowIdx, width);
+                changed = true;
+            }
+
+            if (changed) {
+                List<String> rowAfter = getRowCopy(rowIdx);
+                List<Integer> sequenceLengths = getNonogramRules().getRowSequencesLengths().get(rowIdx);
+                List<List<Integer>> sequenceRanges = getRowsSequencesRanges().get(rowIdx);
+
+                this.tmpLog = TrivialFillLogHelper.generateTrivialLineLog(
+                        rowIdx,
+                        true,
+                        rowBefore,
+                        rowAfter,
+                        sequenceLengths,
+                        sequenceRanges
+                );
+                addLog();
             }
         }
     }
 
-    protected boolean isRowEmpty(int rowIdx) {
-        return sequencesRangesEqual(this.getRowsSequencesRanges().get(rowIdx), List.of(List.of(-1, -1)));
-    }
-
-    protected boolean isRowTrivial(int rowIdx) {
+    private boolean isRowTrivial(int rowIdx) {
         List<Integer> rowSequencesLengths = this.getNonogramRules().getRowSequencesLengths().get(rowIdx);
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
         for (int seqNo = 0; seqNo < rowSequencesLengths.size(); seqNo++) {
@@ -206,6 +192,56 @@ public class NonogramLogic extends NonogramLogicParams {
         }
 
         return true;
+    }
+
+    private void fillTrivialRow(int rowIdx, int width) {
+        int seqNo = 0;
+        int subsequentXs = 0;
+
+        List<List<Integer>> rowSequencesRanges = getRowsSequencesRanges().get(rowIdx);
+        List<Integer> currentSequenceRange = rowSequencesRanges.get(seqNo);
+
+        for (int colIdx = 0; colIdx < width; colIdx++) {
+            Field field = new Field(rowIdx, colIdx);
+            boolean inRange = rangeInsideAnotherRange(List.of(colIdx, colIdx), currentSequenceRange);
+
+            if (inRange) {
+                subsequentXs = 0;
+                fillTrivialRowField(field, seqNo);
+                addRowFieldToExcluded(field);
+                addColumnToAffectedActionsByIdentifiers(colIdx, NonogramSolveAction.COLOUR_FIELD_IN_TRIVIAL_ROW);
+            } else {
+                placeXAtGivenPosition(field);
+                addRowFieldToExcluded(field);
+                addColumnFieldToExcluded(field);
+                addColumnToAffectedActionsByIdentifiers(colIdx, NonogramSolveAction.PLACING_X_IN_TRIVIAL_ROW);
+
+                subsequentXs++;
+                if (subsequentXs == 1 && seqNo + 1 < rowSequencesRanges.size()) {
+                    currentSequenceRange = rowSequencesRanges.get(++seqNo);
+                } else if (seqNo + 1 >= rowSequencesRanges.size()) {
+                    break;
+                }
+            }
+        }
+
+        addAllRowSequencesIdxToNotToInclude(rowIdx);
+    }
+
+    private boolean isRowEmpty(int rowIdx) {
+        return sequencesRangesEqual(this.getRowsSequencesRanges().get(rowIdx), List.of(List.of(-1, -1)));
+    }
+
+    private void fillEmptyRow(int rowIdx, int width) {
+        for (int colIdx = 0; colIdx < width; colIdx++) {
+            Field field = new Field(rowIdx, colIdx);
+            placeXAtGivenPosition(field);
+            addRowFieldToExcluded(field);
+            addColumnFieldToExcluded(field);
+            addColumnToAffectedActionsByIdentifiers(colIdx, NonogramSolveAction.PLACING_X_IN_TRIVIAL_ROW);
+        }
+
+        addAllRowSequencesIdxToNotToInclude(rowIdx);
     }
 
     private void addAllRowSequencesIdxToNotToInclude(int rowIdx) {
@@ -226,11 +262,6 @@ public class NonogramLogic extends NonogramLogicParams {
             this.rowsSequencesIdsNotToInclude.get(rowIdx).add(seqIdx);
             Collections.sort(this.rowsSequencesIdsNotToInclude.get(rowIdx));
         }
-    }
-
-    private void addFillTrivialRowLog(int rowIdx) {
-        this.tmpLog = String.format("ROW %d is trivial - filling whole", rowIdx);
-        addLog();
     }
 
     private void fillTrivialRowField(Field trivialRowField, int seqNo) {
@@ -256,54 +287,89 @@ public class NonogramLogic extends NonogramLogicParams {
     }
 
     private void fillTrivialColumns() {
-        Field columnField;
-        int height = this.getNonogramRules().getHeight();
-        for (int columnIdx = 0; columnIdx < this.getNonogramRules().getWidth(); columnIdx++) {
+        int height = getNonogramRules().getHeight();
+
+        for (int columnIdx = 0; columnIdx < getNonogramRules().getWidth(); columnIdx++) {
+            List<String> columnBefore = getColumnCopy(columnIdx);
+            boolean changed = false;
+
             if (isColumnTrivial(columnIdx)) {
-                addFillTrivialColumnLog(columnIdx);
-                int seqNo = 0;
-                int subsequentXs = 0;
-                List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
-                List<Integer> columnSequenceRange = columnSequencesRanges.get(seqNo);
-                for (int rowIdx = 0; rowIdx < height; rowIdx++) {
-                    columnField = new Field(rowIdx, columnIdx);
-                    if (rangeInsideAnotherRange(List.of(rowIdx), columnSequenceRange)) {
-                        subsequentXs = 0;
-                        fillTrivialColumnField(columnField, seqNo);
-                        addColumnFieldToExcluded(columnField);
-                        addRowToAffectedActionsByIdentifiers(rowIdx, NonogramSolveAction.COLOUR_FIELD_IN_TRIVIAL_COLUMN);
-                    } else {
-                        placeXAtGivenPosition(columnField);
-                        addColumnFieldToExcluded(columnField);
-                        addRowFieldToExcluded(columnField);
-                        addRowToAffectedActionsByIdentifiers(rowIdx, NonogramSolveAction.PLACING_X_IN_TRIVIAL_COLUMN);
-                        subsequentXs += 1;
-                        if (subsequentXs == 1 && seqNo + 1 < columnSequencesRanges.size()) {
-                            columnSequenceRange = columnSequencesRanges.get(++seqNo);
-                        } else {
-                            break;
-                        }
-                    }
-                }
-                addAllColumnSequencesIdxToNotToInclude(columnIdx);
+                fillTrivialColumn(columnIdx, height);
+                changed = true;
             } else if (isColumnEmpty(columnIdx)) {
-                for (int rowIdx = 0; rowIdx < height; rowIdx++) {
-                    columnField = new Field(rowIdx, columnIdx);
-                    placeXAtGivenPosition(columnField);
-                    addRowFieldToExcluded(columnField);
-                    addColumnFieldToExcluded(columnField);
-                    addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.PLACING_X_IN_TRIVIAL_COLUMN);
-                }
-                addAllColumnSequencesIdxToNotToInclude(columnIdx);
+                fillEmptyColumn(columnIdx, height);
+                changed = true;
+            }
+
+            if (changed) {
+                List<String> columnAfter = getColumnCopy(columnIdx);
+                List<Integer> sequenceLengths = getNonogramRules().getColumnSequencesLengths().get(columnIdx);
+                List<List<Integer>> sequenceRanges = getColumnsSequencesRanges().get(columnIdx);
+
+                this.tmpLog = TrivialFillLogHelper.generateTrivialLineLog(
+                        columnIdx,
+                        false,
+                        columnBefore,
+                        columnAfter,
+                        sequenceLengths,
+                        sequenceRanges
+                );
+                addLog();
             }
         }
     }
 
-    protected boolean isColumnEmpty(int columnIdx) {
+    private void fillTrivialColumn(int columnIdx, int height) {
+        int seqNo = 0;
+        int subsequentXs = 0;
+
+        List<List<Integer>> colSeqRanges = getColumnsSequencesRanges().get(columnIdx);
+        List<Integer> currentRange = colSeqRanges.get(seqNo);
+
+        for (int rowIdx = 0; rowIdx < height; rowIdx++) {
+            Field field = new Field(rowIdx, columnIdx);
+            boolean inRange = rangeInsideAnotherRange(List.of(rowIdx, rowIdx), currentRange);
+
+            if (inRange) {
+                subsequentXs = 0;
+                fillTrivialColumnField(field, seqNo);
+                addColumnFieldToExcluded(field);
+                addRowToAffectedActionsByIdentifiers(rowIdx, NonogramSolveAction.COLOUR_FIELD_IN_TRIVIAL_COLUMN);
+            } else {
+                placeXAtGivenPosition(field);
+                addColumnFieldToExcluded(field);
+                addRowFieldToExcluded(field);
+                addRowToAffectedActionsByIdentifiers(rowIdx, NonogramSolveAction.PLACING_X_IN_TRIVIAL_COLUMN);
+
+                subsequentXs++;
+                if (subsequentXs == 1 && seqNo + 1 < colSeqRanges.size()) {
+                    currentRange = colSeqRanges.get(++seqNo);
+                } else if (seqNo + 1 >= colSeqRanges.size()) {
+                    break;
+                }
+            }
+        }
+
+        addAllColumnSequencesIdxToNotToInclude(columnIdx);
+    }
+
+    private void fillEmptyColumn(int columnIdx, int height) {
+        for (int rowIdx = 0; rowIdx < height; rowIdx++) {
+            Field field = new Field(rowIdx, columnIdx);
+            placeXAtGivenPosition(field);
+            addRowFieldToExcluded(field);
+            addColumnFieldToExcluded(field);
+            addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.PLACING_X_IN_TRIVIAL_COLUMN);
+        }
+
+        addAllColumnSequencesIdxToNotToInclude(columnIdx);
+    }
+
+    private boolean isColumnEmpty(int columnIdx) {
         return sequencesRangesEqual(this.getColumnsSequencesRanges().get(columnIdx), List.of(List.of(-1, -1)));
     }
 
-    protected boolean isColumnTrivial(int columnIdx) {
+    private boolean isColumnTrivial(int columnIdx) {
         List<Integer> columnSequencesLengths = this.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
         List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
         for (int seqNo = 0; seqNo < columnSequencesLengths.size(); seqNo++) {
@@ -333,11 +399,6 @@ public class NonogramLogic extends NonogramLogicParams {
             this.columnsSequencesIdsNotToInclude.get(columnIdx).add(seqIdx);
             Collections.sort(this.columnsSequencesIdsNotToInclude.get(columnIdx));
         }
-    }
-
-    private void addFillTrivialColumnLog(int columnIdx) {
-        this.tmpLog = String.format("COLUMN %d is trivial - filling whole", columnIdx);
-        addLog();
     }
 
     private void fillTrivialColumnField(Field trivialColumnField, int seqNo) {
