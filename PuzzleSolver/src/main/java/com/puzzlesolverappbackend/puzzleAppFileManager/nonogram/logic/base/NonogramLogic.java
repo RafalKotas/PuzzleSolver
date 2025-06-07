@@ -213,7 +213,14 @@ public class NonogramLogic extends NonogramLogicParams {
 
     public void addTrivialRowSequenceIdxToNotToInclude(int rowIdx, int seqIdx) {
         if (!this.rowsSequencesIdsNotToInclude.get(rowIdx).contains(seqIdx)) {
-            this.tmpLog = generateAddingRowSequenceToNotToIncludeDescription(rowIdx, seqIdx);
+            this.tmpLog = generateExcludedSequenceLog(
+                    rowIdx,
+                    seqIdx,
+                    true,
+                    this.getRowCopy(rowIdx),
+                    this.getNonogramRules().getRowSequencesLengths().get(rowIdx),
+                    this.getRowsSequencesRanges().get(rowIdx)
+            );
             addLog();
             this.rowsSequencesIdsNotToInclude.get(rowIdx).add(seqIdx);
             Collections.sort(this.rowsSequencesIdsNotToInclude.get(rowIdx));
@@ -313,7 +320,15 @@ public class NonogramLogic extends NonogramLogicParams {
 
     public void addColumnSequenceIdxToNotToInclude(int columnIdx, int seqIdx) {
         if (!this.columnsSequencesIdsNotToInclude.get(columnIdx).contains(seqIdx)) {
-            generateAddingColumnSequenceToNotToIncludeDescription(columnIdx, seqIdx);
+            this.tmpLog = generateExcludedSequenceLog(
+                    columnIdx,
+                    seqIdx,
+                    true,
+                    this.getColumnCopy(columnIdx),
+                    this.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
+                    this.getColumnsSequencesRanges().get(columnIdx)
+            );
+            addLog();
             this.columnsSequencesIdsNotToInclude.get(columnIdx).add(seqIdx);
             Collections.sort(this.columnsSequencesIdsNotToInclude.get(columnIdx));
         }

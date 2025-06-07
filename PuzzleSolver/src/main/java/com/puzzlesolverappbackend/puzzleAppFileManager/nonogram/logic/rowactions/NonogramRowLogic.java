@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.*;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.*;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.ColouringHelper.calculateOverlappingRange;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.ExcludedSequenceLogHelper.generateExcludedSequenceLog;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.OverlappingLogHelper.generateOverlappingSequenceLog;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.collectColouredSequencesRangesInRow;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.matchColouredSequencesToPossibleSeqIDs;
@@ -1630,9 +1630,15 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
     }
 
     public void excludeSequenceInRow(int rowIdx, int seqIdx) {
-        boolean rowValid = isRowIndexValid(rowIdx);
-        if (rowValid && !this.rowsSequencesIdsNotToInclude.get(rowIdx).contains(seqIdx)) {
-            tmpLog = generateAddingRowSequenceToNotToIncludeDescription(rowIdx, seqIdx);
+        if (isRowIndexValid(rowIdx) && !this.rowsSequencesIdsNotToInclude.get(rowIdx).contains(seqIdx)) {
+            tmpLog =  generateExcludedSequenceLog(
+                    rowIdx,
+                    seqIdx,
+                    true,
+                    this.getRowCopy(rowIdx),
+                    this.getNonogramRules().getRowSequencesLengths().get(rowIdx),
+                    this.getRowsSequencesRanges().get(rowIdx)
+            );
             addLog();
             this.rowsSequencesIdsNotToInclude.get(rowIdx).add(seqIdx);
             Collections.sort(this.rowsSequencesIdsNotToInclude.get(rowIdx));

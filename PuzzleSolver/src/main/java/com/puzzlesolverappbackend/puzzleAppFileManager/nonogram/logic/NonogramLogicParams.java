@@ -239,14 +239,6 @@ public abstract class NonogramLogicParams {
         return updatedField.toString();
     }
 
-    protected String generateAddingRowSequenceToNotToIncludeDescription(int rowIdx, int seqNo) {
-        return String.format("ROW %d - seqNo = %d excluded", rowIdx, seqNo);
-    }
-
-    protected String generateAddingColumnSequenceToNotToIncludeDescription(int columnIdx, int seqNo) {
-        return String.format("COLUMN %d - seqNo = %d excluded", columnIdx, seqNo);
-    }
-
     public List<String> getNonogramBoardColumn(int columnIdx) {
         List<String> solutionBoardColumn = new ArrayList<>();
 

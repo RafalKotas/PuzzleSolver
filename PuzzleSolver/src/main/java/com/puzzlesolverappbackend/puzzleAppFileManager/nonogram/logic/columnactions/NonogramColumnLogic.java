@@ -23,6 +23,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.col
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnCorrectSequencesRangesHelper.reduceColouredSequenceMatches;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnCorrectSequencesRangesHelper.sequenceAssignmentAppearsAsFirstLater;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnMixedActionsHelper.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.ExcludedSequenceLogHelper.generateExcludedSequenceLog;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.OverlappingLogHelper.generateOverlappingSequenceLog;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.EMPTY_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.MARKED_COLUMN_INDICATOR;
@@ -1638,8 +1639,15 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
     }
 
     public void excludeSequenceInColumn(int columnIdx, int seqIdx) {
-        if (!this.columnsSequencesIdsNotToInclude.get(columnIdx).contains(seqIdx)) {
-            this.tmpLog = generateAddingColumnSequenceToNotToIncludeDescription(columnIdx, seqIdx);
+        if (isColumnIndexValid(columnIdx) && !this.columnsSequencesIdsNotToInclude.get(columnIdx).contains(seqIdx)) {
+            tmpLog =  generateExcludedSequenceLog(
+                    columnIdx,
+                    seqIdx,
+                    false,
+                    this.getColumnCopy(columnIdx),
+                    this.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
+                    this.getColumnsSequencesRanges().get(columnIdx)
+            );
             addLog();
             this.columnsSequencesIdsNotToInclude.get(columnIdx).add(seqIdx);
             Collections.sort(this.columnsSequencesIdsNotToInclude.get(columnIdx));
