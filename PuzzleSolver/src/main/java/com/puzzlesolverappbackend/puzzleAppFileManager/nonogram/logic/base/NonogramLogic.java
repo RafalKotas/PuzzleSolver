@@ -31,9 +31,8 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.Non
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramStructureFactory.generateEmptyColumns;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramStructureFactory.generateEmptyRows;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramState.buildInitialEmptyNonogramState;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.collectColouredSequencesRangesInColumn;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.ExcludedSequenceLogHelper.generateExcludedSequenceLog;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.collectColouredSequencesRangesInRow;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.TooLongMergeFieldHelper.collectColouredSequencesRanges;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.isFieldEmpty;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramHelper.indexToSequenceCharMark;
@@ -1033,7 +1032,9 @@ public class NonogramLogic extends NonogramLogicParams {
             List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
             List<Integer> rowSequencesLengths = this.getNonogramRules().getRowSequencesLengths().get(rowIdx);
 
-            List<List<Integer>> colouredSequencesInRow = collectColouredSequencesRangesInRow(this.getNonogramSolutionBoard(), rowIdx);
+            List<List<Integer>> colouredSequencesInRow = collectColouredSequencesRanges(this.getNonogramSolutionBoard(),
+                    rowIdx,
+                    true);
             List<Integer> currentColouredSequence;
 
             if (rowSequencesLengths.equals(List.of(0)) && colouredSequencesInRow.isEmpty()) {
@@ -1057,7 +1058,10 @@ public class NonogramLogic extends NonogramLogicParams {
             List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
             List<Integer> columnSequencesLengths = this.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
 
-            List<List<Integer>> colouredSequencesInColumn = collectColouredSequencesRangesInColumn(this.getNonogramSolutionBoard(), columnIdx);
+            List<List<Integer>> colouredSequencesInColumn = collectColouredSequencesRanges(
+                    this.getNonogramSolutionBoard(),
+                    columnIdx,
+                    false);
             List<Integer> currentColouredSequence;
 
             if (colouredSequencesInColumn.size() != columnSequencesLengths.size()) {

@@ -20,8 +20,8 @@ import java.util.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.ExcludedSequenceLogHelper.generateExcludedSequenceLog;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.OverlappingLogHelper.generateOverlappingSequenceLog;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.collectColouredSequencesRangesInRow;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.matchColouredSequencesToPossibleSeqIDs;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.TooLongMergeFieldHelper.collectColouredSequencesRanges;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.TooLongMergeFieldHelper.matchColouredSequencesToPossibleSeqIDs;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowPreventExtendingColouredSequenceToExcessLengthHelpers.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.EMPTY_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.MARKED_ROW_INDICATOR;
@@ -315,9 +315,13 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
         List<Integer> rowSequencesLengths = this.getNonogramRules().getRowSequencesLengths().get(rowIdx);
 
-        List<List<Integer>> colouredSequencesPartsRanges = collectColouredSequencesRangesInRow(this.getNonogramSolutionBoard(), rowIdx);
+        List<List<Integer>> colouredSequencesPartsRanges = collectColouredSequencesRanges(
+                this.getNonogramSolutionBoard(),
+                rowIdx,
+                true);
 
-        List<List<Integer>> colouredSequencesPartsMaxRanges = getColouredSequencesPartsMaxRanges(rowIdx, colouredSequencesPartsRanges);
+        List<List<Integer>> colouredSequencesPartsMaxRanges = getColouredSequencesPartsMaxRanges(rowIdx,
+                colouredSequencesPartsRanges);
 
         List<List<Integer>> colouredSequencesPartsMatches = new ArrayList<>();
 
@@ -441,7 +445,9 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
         List<Integer> sequenceLengths = getNonogramRules().getRowSequencesLengths().get(rowIdx);
         List<List<Integer>> originalRanges = cloneAndMakeImmutable2DList(getRowsSequencesRanges().get(rowIdx));
-        List<List<Integer>> colouredSequences = collectColouredSequencesRangesInRow(getNonogramSolutionBoard(), rowIdx);
+        List<List<Integer>> colouredSequences = collectColouredSequencesRanges(getNonogramSolutionBoard(),
+                rowIdx,
+                true);
 
         anyFieldColoured |= handleLeftMergeScenarios(rowIdx, sequenceLengths, originalRanges, colouredSequences);
         anyFieldColoured |= handleRightMergeScenarios(rowIdx, sequenceLengths, originalRanges, colouredSequences);
@@ -460,12 +466,16 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         }
     }
 
-    private boolean handleLeftMergeScenarios(int rowIdx, List<Integer> seqLens, List<List<Integer>> originalRanges, List<List<Integer>> colouredSeqs) {
+    private boolean handleLeftMergeScenarios(int rowIdx,
+            List<Integer> seqLens,
+            List<List<Integer>> originalRanges,
+            List<List<Integer>> colouredSequences
+    ) {
         boolean anyFieldColoured = false;
 
-        for (int i = 0; i < colouredSeqs.size() - 1; i++) {
-            List<Integer> first = colouredSeqs.get(i);
-            List<Integer> second = colouredSeqs.get(i + 1);
+        for (int i = 0; i < colouredSequences.size() - 1; i++) {
+            List<Integer> first = colouredSequences.get(i);
+            List<Integer> second = colouredSequences.get(i + 1);
 
             int mergeStart = first.get(0);
             int mergePoint = second.get(0) - 1;
@@ -479,6 +489,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             }
 
             boolean shouldSkip = mergedSequenceViolatesConstraints(rowIdx, first, List.of(mergeStart, mergeEnd), mergePoint, seqLens);
+
             if (!shouldSkip) {
                 Field toColour = new Field(rowIdx, mergeStart - 1);
                 if (isFieldEmpty(nonogramSolutionBoard, toColour)) {
@@ -495,16 +506,19 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         return anyFieldColoured;
     }
 
-    private boolean handleRightMergeScenarios(int rowIdx, List<Integer> seqLens, List<List<Integer>> originalRanges, List<List<Integer>> colouredSeqs) {
+    private boolean handleRightMergeScenarios(int rowIdx,
+                                              List<Integer> seqLens,
+                                              List<List<Integer>> originalRanges,
+                                              List<List<Integer>> colouredSequences) {
         boolean anyFieldColoured = false;
 
-        for (int i = colouredSeqs.size() - 1; i > 0; i--) {
-            List<Integer> second = colouredSeqs.get(i);
-            List<Integer> first = colouredSeqs.get(i - 1);
+        for (int i = colouredSequences.size() - 1; i > 0; i--) {
+            List<Integer> second = colouredSequences.get(i);
+            List<Integer> first = colouredSequences.get(i - 1);
 
             int mergeStart = first.get(0);
-            int mergeEnd = second.get(1);
             int mergePoint = first.get(1) + 1;
+            int mergeEnd = second.get(1);
 
             Field tempX = new Field(rowIdx, mergeEnd + 1);
             if (isFieldEmpty(nonogramSolutionBoard, tempX)) {
@@ -514,6 +528,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             }
 
             boolean shouldSkip = mergedSequenceViolatesConstraints(rowIdx, second, List.of(mergeStart, mergeEnd), mergePoint, seqLens);
+
             if (!shouldSkip) {
                 Field toColour = new Field(rowIdx, mergeEnd + 1);
                 if (isFieldEmpty(nonogramSolutionBoard, toColour)) {
@@ -534,7 +549,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                                                       List<Integer> mergedRange, int mergePoint,
                                                       List<Integer> seqLens) {
         Map<List<Integer>, List<Integer>> mapping = matchColouredSequencesToPossibleSeqIDs(
-                collectColouredSequencesRangesInRow(nonogramSolutionBoard, rowIdx),
+                collectColouredSequencesRanges(nonogramSolutionBoard, rowIdx, true),
                 getRowsSequencesRanges().get(rowIdx)
         );
 
@@ -770,7 +785,10 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
     public void colourFieldsInRowIfXCausesAssignmentConflict(int rowIdx) {
         List<String> boardRow = this.getNonogramSolutionBoard().get(rowIdx);
         List<List<Integer>> oldRowSequencesRanges = cloneAndMakeImmutable2DList(this.getRowsSequencesRanges().get(rowIdx));
-        List<List<Integer>> colouredFieldsInRowRanges = collectColouredSequencesRangesInRow(this.getNonogramSolutionBoard(), rowIdx);
+        List<List<Integer>> colouredFieldsInRowRanges = collectColouredSequencesRanges(this.getNonogramSolutionBoard(),
+                rowIdx,
+                true
+        );
 
         // no X fields between ranges to check if placement is wrong
         if (colouredFieldsInRowRanges.size() < 2) return;

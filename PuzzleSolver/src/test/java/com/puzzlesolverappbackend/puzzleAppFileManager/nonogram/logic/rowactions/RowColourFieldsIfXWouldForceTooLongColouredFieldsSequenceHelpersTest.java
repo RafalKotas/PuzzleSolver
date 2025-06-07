@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.TooLongMergeFieldHelper.collectColouredSequencesRanges;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.NonogramRowLogic.prepareNonogramRowLogic;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpers.collectColouredSequencesRangesInRow;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.COLOURED_FIELD;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,7 +36,10 @@ class RowColourFieldsIfXWouldForceTooLongColouredFieldsSequenceHelpersTest {
         nonogramRowLogic.setNonogramSolutionBoardRow(ROW_TO_TEST, rowOnSolutionBoard);
 
         // when
-        List<List<Integer>> colouredSequences = collectColouredSequencesRangesInRow(nonogramRowLogic.getNonogramSolutionBoard(), ROW_TO_TEST);
+        List<List<Integer>> colouredSequences = collectColouredSequencesRanges(
+                nonogramRowLogic.getNonogramSolutionBoard(),
+                ROW_TO_TEST,
+                true);
 
         // then
         List<List<Integer>> expectedColouredSequences = List.of(List.of(12, 12), List.of(16, 17));
