@@ -54,6 +54,14 @@ public abstract class NonogramLogicParams {
         this.logs = logs;
     }
 
+    protected List<String> getRowCopy(int rowIdx) {
+        return new ArrayList<>(this.nonogramSolutionBoard.get(rowIdx));
+    }
+
+    protected List<String> getColumnCopy(int columnIdx) {
+        return new ArrayList<>(this.getNonogramBoardColumn(columnIdx));
+    }
+
     public int fieldsColoured() {
         int colouredFieldsOnBoard = 0;
         Field potentiallyColouredField;

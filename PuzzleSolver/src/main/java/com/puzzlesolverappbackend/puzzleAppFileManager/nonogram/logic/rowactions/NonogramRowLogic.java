@@ -774,10 +774,6 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         return anyFieldColoured;
     }
 
-    private List<String> getRowCopy(int rowIdx) {
-        return new ArrayList<>(this.nonogramSolutionBoard.get(rowIdx));
-    }
-
     @Override
     public void colourFieldsInRowIfXCausesAssignmentConflict(int rowIdx) {
         List<String> boardRow = this.getNonogramSolutionBoard().get(rowIdx);

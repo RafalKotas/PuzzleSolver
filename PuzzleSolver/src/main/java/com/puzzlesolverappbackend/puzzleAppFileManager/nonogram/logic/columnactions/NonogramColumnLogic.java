@@ -819,10 +819,6 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         return anyFieldColoured;
     }
 
-    private List<String> getColumnCopy(int columnIdx) {
-        return new ArrayList<>(this.getNonogramBoardColumn(columnIdx));
-    }
-
     @Override
     public void colourFieldsInColumnIfXCausesAssignmentConflict(int columnIdx) {
 
