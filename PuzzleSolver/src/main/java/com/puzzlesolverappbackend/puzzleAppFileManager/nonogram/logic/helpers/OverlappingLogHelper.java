@@ -9,7 +9,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.hel
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.LogFormatUtils.formatNestedList;
 
 @UtilityClass
-public final class OverlappingLogHelper {
+public class OverlappingLogHelper {
 
     public static String generateOverlappingSequenceLog(
             int index,

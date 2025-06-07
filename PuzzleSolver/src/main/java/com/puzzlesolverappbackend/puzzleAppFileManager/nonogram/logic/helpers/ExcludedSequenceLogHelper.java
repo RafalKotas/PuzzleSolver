@@ -1,6 +1,7 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
+import lombok.experimental.UtilityClass;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.LogFormatUtils.formatList;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.LogFormatUtils.formatNestedList;
 
+@UtilityClass
 public class ExcludedSequenceLogHelper {
 
     public static String generateExcludedSequenceLog(
