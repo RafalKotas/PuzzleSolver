@@ -44,9 +44,8 @@ public class NonogramLogicService {
 
     public NonogramLogic initializeLogicFromRequest(NonogramInitializationRequest request) {
         NonogramRules rules = new NonogramRules(request.getRowSequences(), request.getColumnSequences(), request.getHeight(), request.getWidth());
-        NonogramLogic logic = new NonogramLogic(rules, GuessMode.DISABLED);
 
-        return logic;
+        return new NonogramLogic(rules, GuessMode.DISABLED);
     }
 
     public NonogramLogic fillOverLappingFieldsInColumnsRange (NonogramLogic nonogramLogicObject, int columnBegin, int columnEnd) {

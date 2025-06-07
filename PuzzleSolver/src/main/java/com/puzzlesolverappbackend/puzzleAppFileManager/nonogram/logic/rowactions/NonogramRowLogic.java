@@ -5,6 +5,7 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSo
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.Field;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicParams;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.ColouringHelper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.ExtendLogHelper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.RangeCorrectionHelper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.TooLongMergeLogHelper;
@@ -388,7 +389,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             int sequenceLength = sequenceLengths.get(sequenceIdx);
             List<Integer> range = sequenceRanges.get(sequenceIdx);
 
-            List<Integer> overlapRange = calculateOverlappingRange(range, sequenceLength);
+            List<Integer> overlapRange = ColouringHelper.calculateOverlappingRange(range, sequenceLength);
             boolean coloured = colourAllEmptyFieldsInRange(rowIdx, overlapRange, sequenceIdx);
             anyFieldColoured |= coloured;
         }

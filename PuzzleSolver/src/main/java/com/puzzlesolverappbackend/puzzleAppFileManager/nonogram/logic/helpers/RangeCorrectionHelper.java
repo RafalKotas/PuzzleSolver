@@ -1,12 +1,14 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.Field;
+import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.isFieldColoured;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.isFieldWithX;
 
+@UtilityClass
 public class RangeCorrectionHelper {
 
     public static List<Integer> calculateUpdatedNextSequenceRangeAfterExcludedSequence(

@@ -110,11 +110,14 @@ public class NonogramSolverUtils {
     }
 
     public static NonogramFullSolutionData loadFullSolutionData(String filename) {
-        String solutionPath = FileHelper.nonogramSolutionLoadPathForFilename(filename);
-        try (FileReader reader = new FileReader(solutionPath)) {
+        Path projectDir = Paths.get(System.getProperty("user.dir")).normalize();
+
+        Path solutionPath = projectDir.resolve(Paths.get("data", "solutions", "Nonograms", filename));
+        try (FileReader reader = new FileReader(solutionPath.toFile())) {
             return new Gson().fromJson(JsonParser.parseReader(reader), NonogramFullSolutionData.class);
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Error reading solution file: " + solutionPath);
+            e.printStackTrace();
             return null;
         }
     }
