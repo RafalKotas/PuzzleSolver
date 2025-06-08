@@ -95,8 +95,26 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
     @Override
     public void correctRowSequencesRanges(int rowIdx) {
+        List<List<Integer>> beforeRangesSnapshot = deepCopy(getRowsSequencesRanges().get(rowIdx));
+
         correctSequencesRangesInRowFromLeft(rowIdx);
         correctSequencesRangesInRowFromRight(rowIdx);
+
+        List<List<Integer>> afterRangesSnapshot = getRowsSequencesRanges().get(rowIdx);
+
+        if (!rangesListEqual(beforeRangesSnapshot, afterRangesSnapshot)) {
+            tmpLog = SequenceRangeCorrectionLogHelper.generateLog(
+                    rowIdx,
+                    beforeRangesSnapshot,
+                    afterRangesSnapshot,
+                    getNonogramRules().getRowSequencesLengths().get(rowIdx),
+                    getRowsFieldsNotToInclude().get(rowIdx),
+                    getRowsSequencesIdsNotToInclude().get(rowIdx),
+                    true
+            );
+            addLog();
+            addRowToAffectedActionsByIdentifiers(rowIdx, NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES);
+        }
     }
 
     private void correctSequencesRangesInRowFromLeft(int rowIdx) {
@@ -110,8 +128,8 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             if (rowSequencesIdsNotToInclude.contains(nextSeqIdx)) continue;
 
             List<Integer> updatedNextRange = rowSequencesIdsNotToInclude.contains(seqIdx)
-                    ? RangeCorrectionHelper.calculateUpdatedNextSequenceRangeAfterExcludedSequence(rowSequencesRanges, rowFieldsNotToInclude, seqIdx, nextSeqIdx)
-                    : RangeCorrectionHelper.calculateUpdatedNextSequenceRangeAfterIncludedSequence(rowSequencesRanges, rowSequencesLengths, seqIdx, nextSeqIdx);
+                    ? SequenceRangeCorrectionHelper.calculateUpdatedNextSequenceRangeAfterExcludedSequence(rowSequencesRanges, rowFieldsNotToInclude, seqIdx, nextSeqIdx)
+                    : SequenceRangeCorrectionHelper.calculateUpdatedNextSequenceRangeAfterIncludedSequence(rowSequencesRanges, rowSequencesLengths, seqIdx, nextSeqIdx);
 
             tryToCorrectRowRangeFromLeft(rowIdx, rowSequencesLengths, rowSequencesRanges.get(nextSeqIdx), updatedNextRange, nextSeqIdx);
         }
@@ -124,7 +142,6 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                                               int nextSeqIdx) {
         if (!oldNextRange.get(0).equals(updatedNextRange.get(0))) {
             updateRowSequenceRange(rowIdx, nextSeqIdx, updatedNextRange);
-            logRowSequenceCorrection(rowIdx, nextSeqIdx, oldNextRange, updatedNextRange, "correcting from left");
             markRowAsChanged(rowIdx);
 
             if (rangeLength(updatedNextRange) == rowSequencesLengths.get(nextSeqIdx)
@@ -145,8 +162,8 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             if (rowSequencesIdsNotToInclude.contains(prevSeqIdx)) continue;
 
             List<Integer> updatedPrevRange = rowSequencesIdsNotToInclude.contains(seqIdx)
-                    ? RangeCorrectionHelper.calculateUpdatedPreviousSequenceRangeAfterExcludedSequence(rowSequencesRanges, rowFieldsNotToInclude, seqIdx, prevSeqIdx)
-                    : RangeCorrectionHelper.calculateUpdatedPreviousSequenceRangeAfterIncludedSequence(rowSequencesRanges, rowSequencesLengths, seqIdx, prevSeqIdx);
+                    ? SequenceRangeCorrectionHelper.calculateUpdatedPreviousSequenceRangeAfterExcludedSequence(rowSequencesRanges, rowFieldsNotToInclude, seqIdx, prevSeqIdx)
+                    : SequenceRangeCorrectionHelper.calculateUpdatedPreviousSequenceRangeAfterIncludedSequence(rowSequencesRanges, rowSequencesLengths, seqIdx, prevSeqIdx);
 
             tryToCorrectRowRangeFromRight(rowIdx, rowSequencesLengths, rowSequencesRanges.get(prevSeqIdx), updatedPrevRange, prevSeqIdx);
         }
@@ -159,7 +176,6 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                                                int prevSeqIdx) {
         if (!oldPrevRange.get(1).equals(updatedPrevRange.get(1))) {
             updateRowSequenceRange(rowIdx, prevSeqIdx, updatedPrevRange);
-            logRowSequenceCorrection(rowIdx, prevSeqIdx, oldPrevRange, updatedPrevRange, "correcting from right");
             markRowAsChanged(rowIdx);
 
             if (rangeLength(updatedPrevRange) == rowSequencesLengths.get(prevSeqIdx)
@@ -167,13 +183,6 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 excludeSequenceInRow(rowIdx, prevSeqIdx);
             }
         }
-    }
-
-    private void logRowSequenceCorrection(int rowIdx, int sequenceId,
-                                             List<Integer> oldRange, List<Integer> newRange, String action) {
-        tmpLog = generateCorrectingRowSequenceRangeStepDescription(
-                rowIdx, sequenceId, oldRange, newRange, action);
-        addLog();
     }
 
     private void markRowAsChanged(int rowIdx) {

@@ -80,8 +80,26 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
 
     @Override
     public void correctColumnSequencesRanges(int columnIdx) {
+        List<List<Integer>> beforeRangesSnapshot = deepCopy(getColumnsSequencesRanges().get(columnIdx));
+
         correctSequencesRangesInColumnFromTop(columnIdx);
         correctSequencesRangesInColumnFromBottom(columnIdx);
+
+        List<List<Integer>> afterRangesSnapshot = getColumnsSequencesRanges().get(columnIdx);
+
+        if (!rangesListEqual(beforeRangesSnapshot, afterRangesSnapshot)) {
+            tmpLog = SequenceRangeCorrectionLogHelper.generateLog(
+                    columnIdx,
+                    beforeRangesSnapshot,
+                    afterRangesSnapshot,
+                    getNonogramRules().getColumnSequencesLengths().get(columnIdx),
+                    getColumnsFieldsNotToInclude().get(columnIdx),
+                    getColumnsSequencesIdsNotToInclude().get(columnIdx),
+                    false
+            );
+            addLog();
+            addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES);
+        }
     }
 
     private void correctSequencesRangesInColumnFromTop(int columnIdx) {
@@ -95,8 +113,8 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             if (colSeqIdsNotToInclude.contains(nextSeqIdx)) continue;
 
             List<Integer> updatedNextRange = colSeqIdsNotToInclude.contains(seqIdx)
-                    ? RangeCorrectionHelper.calculateUpdatedNextSequenceRangeAfterExcludedSequence(colSeqRanges, colFieldsNotToInclude, seqIdx, nextSeqIdx)
-                    : RangeCorrectionHelper.calculateUpdatedNextSequenceRangeAfterIncludedSequence(colSeqRanges, colSeqLengths, seqIdx, nextSeqIdx);
+                    ? SequenceRangeCorrectionHelper.calculateUpdatedNextSequenceRangeAfterExcludedSequence(colSeqRanges, colFieldsNotToInclude, seqIdx, nextSeqIdx)
+                    : SequenceRangeCorrectionHelper.calculateUpdatedNextSequenceRangeAfterIncludedSequence(colSeqRanges, colSeqLengths, seqIdx, nextSeqIdx);
 
             tryToCorrectColumnRangeFromTop(columnIdx, colSeqLengths, colSeqRanges.get(nextSeqIdx), updatedNextRange, nextSeqIdx);
         }
@@ -130,8 +148,8 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             if (colSeqIdsNotToInclude.contains(prevSeqIdx)) continue;
 
             List<Integer> updatedPrevRange = colSeqIdsNotToInclude.contains(seqIdx)
-                    ? RangeCorrectionHelper.calculateUpdatedPreviousSequenceRangeAfterExcludedSequence(colSeqRanges, colFieldsNotToInclude, seqIdx, prevSeqIdx)
-                    : RangeCorrectionHelper.calculateUpdatedPreviousSequenceRangeAfterIncludedSequence(colSeqRanges, colSeqLengths, seqIdx, prevSeqIdx);
+                    ? SequenceRangeCorrectionHelper.calculateUpdatedPreviousSequenceRangeAfterExcludedSequence(colSeqRanges, colFieldsNotToInclude, seqIdx, prevSeqIdx)
+                    : SequenceRangeCorrectionHelper.calculateUpdatedPreviousSequenceRangeAfterIncludedSequence(colSeqRanges, colSeqLengths, seqIdx, prevSeqIdx);
 
             tryToCorrectColumnRangeFromBottom(columnIdx, colSeqLengths, colSeqRanges.get(prevSeqIdx), updatedPrevRange, prevSeqIdx);
         }

@@ -20,6 +20,8 @@ public class LogConverter {
             case "TOO_LONG_MERGE" -> Optional.of(TooLongMergeLogHelper.convertLogToTestArguments(log, solutionName, logic));
             case "TRIVIAL" -> Optional.of(TrivialFillLogHelper.convertLogToTestArguments(log, solutionName, logic));
             case "EXCLUDED" -> Optional.of(ExcludedSequenceLogHelper.convertLogToTestArguments(log, solutionName, logic));
+            case "SEQUENCES_RANGES_CORRECTION" ->
+                    Optional.of(SequenceRangeCorrectionLogHelper.convertLogToTestArguments(log, solutionName));
             case "SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS" ->
                     Optional.of(SequenceCorrectionWhenMetColouredFieldsLogHelper.convertLogToTestArguments(log, solutionName, logic));
             case "SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS" ->
@@ -40,6 +42,9 @@ public class LogConverter {
         if (log.startsWith("TOO_LONG_MERGE_")) return "TOO_LONG_MERGE";
         if (log.startsWith("TRIVIAL_ROW_SEQUENCE:") || log.startsWith("TRIVIAL_COLUMN_SEQUENCE:")) return "TRIVIAL";
         if (log.startsWith("EXCLUDED_ROW_SEQUENCE:") || log.startsWith("EXCLUDED_COLUMN_SEQUENCE:")) return "EXCLUDED";
+        if (log.startsWith("ROW_SEQUENCES_RANGES_CORRECTED:")
+                || log.startsWith("COLUMN_SEQUENCES_RANGES_CORRECTED:"))
+            return "SEQUENCES_RANGES_CORRECTION";
         if (log.startsWith("ROW_SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS:")
                 || log.startsWith("COLUMN_SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS:"))
             return "SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS";

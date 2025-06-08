@@ -68,16 +68,31 @@ public class LogFormatUtils {
     }
 
     public static List<List<Integer>> parseNestedListLine(String line) {
-        String content = line.replaceAll(".*=\\[\\[", "").replaceAll("]]", "");
-        String[] parts = content.split("\\],\\s*\\[");
+        if (line == null || line.isBlank()) return List.of();
+
         List<List<Integer>> result = new ArrayList<>();
 
+        String trimmed = line.trim();
+        if (trimmed.startsWith("List.of(") && trimmed.endsWith(")")) {
+            trimmed = trimmed.substring(8, trimmed.length() - 1);
+        } else {
+            throw new IllegalArgumentException("Line does not start with 'List.of(': " + line);
+        }
+
+        String[] parts = trimmed.split("List\\.of\\(");
+
         for (String part : parts) {
-            List<Integer> inner = Arrays.stream(part.split(","))
+            if (part.isBlank()) continue;
+
+            String content = part.replace(")", "").trim();
+            if (content.isBlank()) continue;
+
+            List<Integer> inner = Arrays.stream(content.split(","))
                     .map(String::trim)
                     .filter(s -> !s.isEmpty())
                     .map(Integer::parseInt)
                     .collect(Collectors.toList());
+
             result.add(inner);
         }
 
