@@ -13,6 +13,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.columnactions.ColumnCorrectSequencesRangesHelper.reduceColouredSequenceMatches;
@@ -269,11 +270,15 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
 
     @Override
     public void correctColumnSequencesRangesIfXOnWay(int columnIdx, boolean changeLogicDetails) {
-        boolean changed = false;
+        boolean madeAnyCorrection = false;
 
         List<Integer> lengths = getNonogramRules().getColumnSequencesLengths().get(columnIdx);
         List<List<Integer>> ranges = getColumnsSequencesRanges().get(columnIdx);
         List<Integer> excluded = getColumnsSequencesIdsNotToInclude().get(columnIdx);
+
+        List<List<Integer>> initialRangesSnapshot = ranges.stream()
+                .map(range -> List.of(range.get(0), range.get(1)))
+                .collect(Collectors.toList());
 
         for (int seqIdx = 0; seqIdx < ranges.size(); seqIdx++) {
             if (excluded.contains(seqIdx)) continue;
@@ -281,30 +286,40 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             List<Integer> currentRange = ranges.get(seqIdx);
             int length = lengths.get(seqIdx);
 
-            int newStart = RangeCorrectionHelper.findFirstValidSequenceStartIndexWithoutX(
-                    currentRange.get(0), currentRange.get(1), length, columnIdx, true, nonogramSolutionBoard);
-
-            int newEnd = RangeCorrectionHelper.findLastValidSequenceEndIndexWithoutX(
-                    currentRange.get(0), currentRange.get(1), length, columnIdx, true, nonogramSolutionBoard);
-
-            List<Integer> newRange = List.of(newStart, newEnd);
+            List<Integer> newRange = SequenceRangeCorrectionWhenMetXHelper.calculateCorrectedRangeWithoutX(
+                    currentRange, length, columnIdx, true, nonogramSolutionBoard
+            );
 
             if (!rangesEqual(currentRange, newRange)) {
-                changed = true;
+                madeAnyCorrection = true;
                 changeColumnSequenceRange(columnIdx, seqIdx, newRange);
-                tmpLog = generateCorrectingColumnSequenceRangeStepDescription(columnIdx, seqIdx, currentRange, newRange, "\"X\" on way");
-                addLog();
 
-                if (changeLogicDetails && rangeLength(newRange) == length && isRowRangeColoured(columnIdx, newRange)) {
+                if (changeLogicDetails && shouldExcludeSequence(newRange, length, columnIdx)) {
                     excludeSequenceInColumn(columnIdx, seqIdx);
                 }
             }
         }
 
-        if (changed && changeLogicDetails) {
+        if (madeAnyCorrection && changeLogicDetails) {
+            List<List<Integer>> updatedRangesSnapshot = getColumnsSequencesRanges().get(columnIdx);
+
+            tmpLog = SequenceRangeCorrectionWhenMetXLogHelper.generateLog(
+                    columnIdx,
+                    initialRangesSnapshot,
+                    updatedRangesSnapshot,
+                    lengths,
+                    excluded,
+                    false  // isRow
+            );
+            addLog();
+
             nonogramState.increaseMadeSteps();
             addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY);
         }
+    }
+
+    private boolean shouldExcludeSequence(List<Integer> newRange, int length, int columnIdx) {
+        return rangeLength(newRange) == length && isRowRangeColoured(columnIdx, newRange);
     }
 
     @Override

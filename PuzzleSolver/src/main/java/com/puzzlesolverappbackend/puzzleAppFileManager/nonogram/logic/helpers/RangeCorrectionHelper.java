@@ -69,44 +69,6 @@ public class RangeCorrectionHelper {
         }
     }
 
-    public static int findFirstValidSequenceStartIndexWithoutX(
-            int sequenceStart, int sequenceEnd, int sequenceLength,
-            int fixedIdx, boolean isVertical, List<List<String>> board) {
-
-        for (int start = sequenceStart; start <= sequenceEnd - sequenceLength + 1; start++) {
-            boolean valid = true;
-            for (int offset = 0; offset < sequenceLength; offset++) {
-                Field f = isVertical ? new Field(start + offset, fixedIdx)
-                        : new Field(fixedIdx, start + offset);
-                if (isFieldWithX(board, f)) {
-                    valid = false;
-                    break;
-                }
-            }
-            if (valid) return start;
-        }
-        return sequenceStart;
-    }
-
-    public static int findLastValidSequenceEndIndexWithoutX(
-            int sequenceStart, int sequenceEnd, int sequenceLength,
-            int fixedIdx, boolean isVertical, List<List<String>> board) {
-
-        for (int end = sequenceEnd; end >= sequenceStart + sequenceLength - 1; end--) {
-            boolean valid = true;
-            for (int offset = 0; offset < sequenceLength; offset++) {
-                Field f = isVertical ? new Field(end - offset, fixedIdx)
-                        : new Field(fixedIdx, end - offset);
-                if (isFieldWithX(board, f)) {
-                    valid = false;
-                    break;
-                }
-            }
-            if (valid) return end;
-        }
-        return sequenceEnd;
-    }
-
     public static List<Integer> adjustRangeIfColouredAtEdges(List<Integer> range, int lineIdx, boolean isVertical, List<List<String>> board, int lineLimit) {
         int start = range.get(0);
         int end = range.get(1);
