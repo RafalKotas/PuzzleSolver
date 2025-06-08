@@ -2,14 +2,16 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.*;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramFullSolutionData;
 import lombok.experimental.UtilityClass;
 
 import java.io.FileReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -167,31 +169,6 @@ public class NonogramSolverUtils {
             }
         }
         return true;
-    }
-
-    public static Optional<String> convertLogByAction(
-            String log,
-            String solutionName,
-            NonogramLogic logic,
-            String actionType
-    ) {
-        return switch (actionType) {
-            case "OVERLAP" -> Optional.of(OverlappingLogHelper.convertLogToTestArguments(log, solutionName, logic));
-            case "EXTEND" -> Optional.of(ExtendLogHelper.convertLogToTestArguments(log, solutionName, logic));
-            case "TOO_LONG_MERGE" -> Optional.of(TooLongMergeLogHelper.convertLogToTestArguments(log, solutionName, logic));
-            case "TRIVIAL" -> Optional.of(TrivialFillLogHelper.convertLogToTestArguments(log, solutionName, logic));
-            case "EXCLUDED" -> Optional.of(ExcludedSequenceLogHelper.convertLogToTestArguments(log, solutionName, logic));
-            default -> Optional.empty();
-        };
-    }
-
-    public static String detectActionTypeFromLog(String log) {
-        if (log.startsWith("OVERLAP_")) return "OVERLAP";
-        if (log.startsWith("EXTEND_")) return "EXTEND";
-        if (log.startsWith("TOO_LONG_MERGE_")) return "TOO_LONG_MERGE";
-        if (log.startsWith("TRIVIAL_ROW_SEQUENCE:") || log.startsWith("TRIVIAL_COLUMN_SEQUENCE:")) return "TRIVIAL";
-        if (log.startsWith("EXCLUDED_ROW_SEQUENCE:") || log.startsWith("EXCLUDED_COLUMN_SEQUENCE:")) return "EXCLUDED";
-        return "UNKNOWN";
     }
 
     public static void numberedLogToArgumentsWithCaseNumbers(List<String> convertedLogs) {

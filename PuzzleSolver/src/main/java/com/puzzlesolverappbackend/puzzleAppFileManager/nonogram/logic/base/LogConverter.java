@@ -1,0 +1,43 @@
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base;
+
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.*;
+import lombok.experimental.UtilityClass;
+
+import java.util.Optional;
+
+@UtilityClass
+public class LogConverter {
+    public static Optional<String> convertLogByAction(
+            String log,
+            String solutionName,
+            NonogramLogic logic,
+            String actionType
+    ) {
+        return switch (actionType) {
+            case "OVERLAP" -> Optional.of(OverlappingLogHelper.convertLogToTestArguments(log, solutionName, logic));
+            case "EXTEND" -> Optional.of(ExtendLogHelper.convertLogToTestArguments(log, solutionName, logic));
+            case "TOO_LONG_MERGE" -> Optional.of(TooLongMergeLogHelper.convertLogToTestArguments(log, solutionName, logic));
+            case "TRIVIAL" -> Optional.of(TrivialFillLogHelper.convertLogToTestArguments(log, solutionName, logic));
+            case "EXCLUDED" -> Optional.of(ExcludedSequenceLogHelper.convertLogToTestArguments(log, solutionName, logic));
+            case "SEQUENCE_CORRECTION" -> Optional.of(SequenceCorrectionWhenMetColouredFieldsLogHelper.convertLogToTestArguments(log, solutionName, logic));
+            case "PLACE_XS_AROUND_LONGEST_SEQUENCE" -> Optional.of(PlaceXsAroundLongestSequenceLogHelper.convertLogToTestArguments(log, solutionName));
+            case "PLACE_XS_AT_UNREACHABLE_FIELDS_IN" -> Optional.of(PlaceXsAtUnreachableFieldsLogHelper.convertLogToTestArguments(log, solutionName));
+            default -> Optional.empty();
+        };
+    }
+
+    public static String detectActionTypeFromRawLog(String log) {
+        if (log.startsWith("OVERLAP_")) return "OVERLAP";
+        if (log.startsWith("EXTEND_")) return "EXTEND";
+        if (log.startsWith("TOO_LONG_MERGE_")) return "TOO_LONG_MERGE";
+        if (log.startsWith("TRIVIAL_ROW_SEQUENCE:") || log.startsWith("TRIVIAL_COLUMN_SEQUENCE:")) return "TRIVIAL";
+        if (log.startsWith("EXCLUDED_ROW_SEQUENCE:") || log.startsWith("EXCLUDED_COLUMN_SEQUENCE:")) return "EXCLUDED";
+        if (log.startsWith("ROW_SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS:") || log.startsWith("COLUMN_SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS:"))
+            return "SEQUENCE_CORRECTION";
+        if (log.startsWith("PLACE_XS_ROW_AROUND_LONGEST_SEQUENCE:") || log.startsWith("PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCE:"))
+            return "PLACE_XS_AROUND_LONGEST_SEQUENCE";
+        if (log.startsWith("PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW:") || log.startsWith("PLACE_XS_AT_UNREACHABLE_FIELDS_IN_COLUMN:"))
+            return "PLACE_XS_AT_UNREACHABLE_FIELDS";
+        return "UNKNOWN";
+    }
+}

@@ -123,21 +123,16 @@ public class NonogramSolver {
             System.out.println(nonogramSubsolutionNode.getNonogramLogic().getActionsToDoList().size());
             System.out.println("-".repeat(100));
 
-            log.info("Fields filled after fill trivial rows and columns: {}", nonogramSubsolutionNode.getNonogramLogic().fieldsFilled());
-            log.info("COMPLETION PERCENTAGE: {}, DECISIONS SIZE: {}", nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage(), nonogramSubsolutionNode.getNonogramGuessDecisions().size());
-            log.info("SOLUTION STEPS: ");
-
+            List<String> rawLogs = nonogramSubsolutionNode.getNodeLogs();
             List<String> convertedLogs = new ArrayList<>();
 
-            for (String rawLog : nonogramSubsolutionNode.getNodeLogs()) {
-                String actionType = NonogramSolverUtils.detectActionTypeFromLog(rawLog);
+            for (String rawLog : rawLogs) {
                 NonogramLogic logic = nonogramSubsolutionNode.getNonogramLogic();
-
-                NonogramSolverUtils.convertLogByAction(rawLog, solutionFileName, logic, actionType)
+                LogConverter.convertLogByAction(rawLog, solutionFileName, logic, LogConverter.detectActionTypeFromRawLog(rawLog))
                         .ifPresent(convertedLogs::add);
             }
 
-            NonogramSolverUtils.numberedLogToArgumentsWithCaseNumbers(convertedLogs);
+            LogGroupingPrinter.printLogsGroupedByDetectedType(rawLogs, convertedLogs);
         }
 
         // heuristic logs
