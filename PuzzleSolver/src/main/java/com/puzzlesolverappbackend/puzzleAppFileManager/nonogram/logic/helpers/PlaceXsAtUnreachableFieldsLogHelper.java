@@ -38,7 +38,7 @@ public class PlaceXsAtUnreachableFieldsLogHelper {
         int index = Integer.parseInt(header.split("=")[1]);
 
         List<String> initial = parseList(lines[1].split("=")[1]);
-        List<List<Integer>> ranges = parseNestedList(lines[2].split("=")[1]);
+        List<List<Integer>> ranges = parseNestedListFromListOfString(lines[2].split("=")[1].trim());
         List<String> expectedFinal = parseList(lines[3].split("=")[1]);
 
         return String.format(
@@ -64,9 +64,16 @@ public class PlaceXsAtUnreachableFieldsLogHelper {
                 .collect(Collectors.toList());
     }
 
-    private static List<List<Integer>> parseNestedList(String input) {
-        return Arrays.stream(input.replaceAll("\\[\\[|\\]\\]", "").split("\\],\\s*\\["))
-                .map(pair -> Arrays.stream(pair.split(","))
+    private static List<List<Integer>> parseNestedListFromListOfString(String input) {
+        String trimmed = input.trim();
+        if (trimmed.startsWith("List.of(")) {
+            trimmed = trimmed.substring(8, trimmed.length() - 1); // usuń List.of( ... )
+        }
+
+        return Arrays.stream(trimmed.split("List.of\\("))
+                .map(s -> s.replace(")", "").trim())
+                .filter(s -> !s.isEmpty())
+                .map(inner -> Arrays.stream(inner.split(","))
                         .map(String::trim)
                         .map(Integer::parseInt)
                         .collect(Collectors.toList()))

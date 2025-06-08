@@ -1,9 +1,13 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers;
 
+import lombok.experimental.UtilityClass;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@UtilityClass
 public class LogFormatUtils {
 
     public static String formatList(String input) {
@@ -30,5 +34,66 @@ public class LogFormatUtils {
         return nestedList.stream()
                 .map(inner -> "List.of(" + formatList(inner) + ")")
                 .collect(Collectors.joining(", "));
+    }
+
+    public static String toQuotedStringList(List<String> list) {
+        return list.stream()
+                .map(s -> "\"" + s + "\"")
+                .collect(Collectors.joining(", "));
+    }
+
+    public static String toRangeStringList(List<List<Integer>> ranges) {
+        return ranges.stream()
+                .map(inner -> "List.of(" + inner.stream().map(String::valueOf).collect(Collectors.joining(", ")) + ")")
+                .collect(Collectors.joining(", "));
+    }
+
+    public static List<String> parseStringListLine(String line) {
+        return Arrays.stream(line.replaceAll(".*=", "")
+                        .replaceAll("[\\[\\]]", "")
+                        .split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+    }
+
+    public static List<Integer> parseIntegerListLine(String line) {
+        return Arrays.stream(line.replaceAll(".*=", "")
+                        .replaceAll("[\\[\\]]", "")
+                        .split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+    }
+
+    public static List<List<Integer>> parseNestedListLine(String line) {
+        String content = line.replaceAll(".*=\\[\\[", "").replaceAll("]]", "");
+        String[] parts = content.split("\\],\\s*\\[");
+        List<List<Integer>> result = new ArrayList<>();
+
+        for (String part : parts) {
+            List<Integer> inner = Arrays.stream(part.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .map(Integer::parseInt)
+                    .collect(Collectors.toList());
+            result.add(inner);
+        }
+
+        return result;
+    }
+
+    public static List<List<Integer>> parseNestedListLineWrappedInListOf(String input) {
+        String trimmed = input.trim();
+        if (trimmed.startsWith("List.of(")) {
+            trimmed = trimmed.substring(8, trimmed.length() - 1); // usuń "List.of(" i końcowe ")"
+        }
+        return Arrays.stream(trimmed.split("\\),\\s*List.of\\("))
+                .map(s -> Arrays.stream(s.replaceAll("[\\[\\]()]", "").split(","))
+                        .map(String::trim)
+                        .map(Integer::parseInt)
+                        .collect(Collectors.toList()))
+                .collect(Collectors.toList());
     }
 }

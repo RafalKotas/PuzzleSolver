@@ -7,6 +7,7 @@ import java.util.Optional;
 
 @UtilityClass
 public class LogConverter {
+
     public static Optional<String> convertLogByAction(
             String log,
             String solutionName,
@@ -19,9 +20,16 @@ public class LogConverter {
             case "TOO_LONG_MERGE" -> Optional.of(TooLongMergeLogHelper.convertLogToTestArguments(log, solutionName, logic));
             case "TRIVIAL" -> Optional.of(TrivialFillLogHelper.convertLogToTestArguments(log, solutionName, logic));
             case "EXCLUDED" -> Optional.of(ExcludedSequenceLogHelper.convertLogToTestArguments(log, solutionName, logic));
-            case "SEQUENCE_CORRECTION" -> Optional.of(SequenceCorrectionWhenMetColouredFieldsLogHelper.convertLogToTestArguments(log, solutionName, logic));
-            case "PLACE_XS_AROUND_LONGEST_SEQUENCE" -> Optional.of(PlaceXsAroundLongestSequenceLogHelper.convertLogToTestArguments(log, solutionName));
-            case "PLACE_XS_AT_UNREACHABLE_FIELDS_IN" -> Optional.of(PlaceXsAtUnreachableFieldsLogHelper.convertLogToTestArguments(log, solutionName));
+            case "SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS" ->
+                    Optional.of(SequenceCorrectionWhenMetColouredFieldsLogHelper.convertLogToTestArguments(log, solutionName, logic));
+            case "SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS" ->
+                    Optional.of(SequenceRangeCorrectionWhenMarkingFieldsLogHelper.convertLogToTestArguments(log, solutionName, logic));
+            case "PLACE_XS_AROUND_LONGEST_SEQUENCE" ->
+                    Optional.of(PlaceXsAroundLongestSequenceLogHelper.convertLogToTestArguments(log, solutionName));
+            case "PLACE_XS_AT_UNREACHABLE_FIELDS" ->
+                    Optional.of(PlaceXsAtUnreachableFieldsLogHelper.convertLogToTestArguments(log, solutionName));
+            case "MARK_AVAILABLE_FIELDS" ->
+                    Optional.of(MarkAvailableFieldsLogHelper.convertLogToTestArguments(log, solutionName, logic));
             default -> Optional.empty();
         };
     }
@@ -32,12 +40,21 @@ public class LogConverter {
         if (log.startsWith("TOO_LONG_MERGE_")) return "TOO_LONG_MERGE";
         if (log.startsWith("TRIVIAL_ROW_SEQUENCE:") || log.startsWith("TRIVIAL_COLUMN_SEQUENCE:")) return "TRIVIAL";
         if (log.startsWith("EXCLUDED_ROW_SEQUENCE:") || log.startsWith("EXCLUDED_COLUMN_SEQUENCE:")) return "EXCLUDED";
-        if (log.startsWith("ROW_SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS:") || log.startsWith("COLUMN_SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS:"))
-            return "SEQUENCE_CORRECTION";
-        if (log.startsWith("PLACE_XS_ROW_AROUND_LONGEST_SEQUENCE:") || log.startsWith("PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCE:"))
+        if (log.startsWith("ROW_SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS:")
+                || log.startsWith("COLUMN_SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS:"))
+            return "SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS";
+        if (log.startsWith("ROW_SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS:")
+                || log.startsWith("COLUMN_SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS:"))
+            return "SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS";
+        if (log.startsWith("PLACE_XS_ROW_AROUND_LONGEST_SEQUENCE:")
+                || log.startsWith("PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCE:"))
             return "PLACE_XS_AROUND_LONGEST_SEQUENCE";
-        if (log.startsWith("PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW:") || log.startsWith("PLACE_XS_AT_UNREACHABLE_FIELDS_IN_COLUMN:"))
+        if (log.startsWith("PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW:")
+                || log.startsWith("PLACE_XS_AT_UNREACHABLE_FIELDS_IN_COLUMN:"))
             return "PLACE_XS_AT_UNREACHABLE_FIELDS";
+        if (log.startsWith("MARK_AVAILABLE_FIELDS_IN_ROW:")
+                || log.startsWith("MARK_AVAILABLE_FIELDS_IN_COLUMN:"))
+            return "MARK_AVAILABLE_FIELDS";
         return "UNKNOWN";
     }
 }
