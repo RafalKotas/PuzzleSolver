@@ -398,6 +398,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
         List<List<Integer>> ranges = getRowsSequencesRanges().get(rowIdx);
 
+        List<List<Integer>> before = deepCopy(ranges);
         for (int seqIdx = 0; seqIdx < ranges.size(); seqIdx++) {
             List<Integer> currentRange = ranges.get(seqIdx);
             List<Integer> updatedRange = RangeCorrectionHelper.adjustRangeIfColouredAtEdges(
@@ -408,16 +409,24 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 anyUpdated = true;
                 updateRowSequenceRange(rowIdx, seqIdx, updatedRange);
                 nonogramState.increaseMadeSteps();
-
-                tmpLog = generateCorrectingRowSequenceRangeStepDescription(
-                        rowIdx, seqIdx, currentRange, updatedRange,
-                        "correcting row sequence range when start from edge index will create too long sequence"
-                );
-                addLog();
             }
         }
 
         if (anyUpdated) {
+            List<List<Integer>> after = getRowsSequencesRanges().get(rowIdx);
+            List<Integer> lengths = getNonogramRules().getRowSequencesLengths().get(rowIdx);
+            List<String> line = getNonogramSolutionBoard().get(rowIdx);
+
+            tmpLog = SequenceRangeCorrectionFromColouredEdgesLogHelper.generateLog(
+                    rowIdx,
+                    before,
+                    after,
+                    lengths,
+                    line,
+                    true
+            );
+            addLog();
+
             addRowToAffectedActionsByIdentifiers(rowIdx, NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE);
         }
     }

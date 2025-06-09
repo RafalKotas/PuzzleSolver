@@ -26,6 +26,10 @@ public class LogConverter {
                     Optional.of(SequenceCorrectionWhenMetColouredFieldsLogHelper.convertLogToTestArguments(log, solutionName, logic));
             case "SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS" ->
                     Optional.of(SequenceRangeCorrectionWhenMarkingFieldsLogHelper.convertLogToTestArguments(log, solutionName, logic));
+            case "SEQUENCES_RANGES_CORRECTION_FROM_COLOURED_EDGES" ->
+                    Optional.of(SequenceRangeCorrectionFromColouredEdgesLogHelper.convertLogToTestArguments(log, solutionName));
+            case "SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY" ->
+                    Optional.of(SequenceRangeCorrectionWhenMetXLogHelper.convertLogToTestArguments(log, solutionName, logic));
             case "PLACE_XS_AROUND_LONGEST_SEQUENCE" ->
                     Optional.of(PlaceXsAroundLongestSequenceLogHelper.convertLogToTestArguments(log, solutionName));
             case "PLACE_XS_AT_UNREACHABLE_FIELDS" ->
@@ -51,9 +55,15 @@ public class LogConverter {
         if (log.startsWith("ROW_SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS:")
                 || log.startsWith("COLUMN_SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS:"))
             return "SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS";
+        if (log.startsWith("ROW_CORRECTING_SEQUENCES_RANGES_FROM_COLOURED_EDGES:")
+                || log.startsWith("COLUMN_CORRECTING_SEQUENCES_RANGES_FROM_COLOURED_EDGES:"))
+            return "SEQUENCES_RANGES_CORRECTION_FROM_COLOURED_EDGES";
         if (log.startsWith("PLACE_XS_ROW_AROUND_LONGEST_SEQUENCE:")
                 || log.startsWith("PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCE:"))
             return "PLACE_XS_AROUND_LONGEST_SEQUENCE";
+        if (log.startsWith("CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY:")
+                || log.startsWith("CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY:"))
+            return "SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY";
         if (log.startsWith("PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW:")
                 || log.startsWith("PLACE_XS_AT_UNREACHABLE_FIELDS_IN_COLUMN:"))
             return "PLACE_XS_AT_UNREACHABLE_FIELDS";

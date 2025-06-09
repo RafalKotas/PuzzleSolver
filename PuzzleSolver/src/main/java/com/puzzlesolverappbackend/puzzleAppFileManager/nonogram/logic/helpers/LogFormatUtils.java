@@ -111,4 +111,11 @@ public class LogFormatUtils {
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
     }
+
+    public static List<Integer> safeParseIntegerListLine(String line) {
+        if (!line.contains("=") || line.split("=").length < 2 || line.split("=")[1].trim().isEmpty()) {
+            return List.of();
+        }
+        return parseIntegerListLine(line.split("=")[1].trim());
+    }
 }

@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @UtilityClass
 public class ArrayUtils {
@@ -24,29 +25,24 @@ public class ArrayUtils {
         return rangeEnd - rangeStart + 1;
     }
 
+    public static List<List<Integer>> deepCopy(List<List<Integer>> list) {
+        return list.stream()
+                .map(ArrayList::new)
+                .collect(Collectors.toList());
+    }
+
+    public static boolean rangesListEqual(List<List<Integer>> a, List<List<Integer>> b) {
+        if (a.size() != b.size()) return false;
+        for (int i = 0; i < a.size(); i++) {
+            if (!a.get(i).equals(b.get(i))) return false;
+        }
+        return true;
+    }
+
     public static int sumListElements(List<Integer> list) {
         return list.stream().mapToInt(Integer::intValue).sum();
     }
 
-    public static List<String> get2dimArrayRow(List<List<String>> array, int rowIdx) {
-        if (rowIdx >= 0 && rowIdx < array.size()) {
-            return array.get(rowIdx);
-        } else {
-            return null;
-        }
-    }
-
-    public static List<String> get2dimArrayColumn(List<List<String>> array, int columnIdx) {
-        return array.stream()
-                .map(row -> {
-                    if (row != null && columnIdx >= 0 && columnIdx < row.size()) {
-                        return row.get(columnIdx);
-                    } else {
-                        return null;
-                    }
-                })
-                .collect(java.util.stream.Collectors.toList());
-    }
 
     public static <T> List<List<T>> cloneAndMakeImmutable2DList(List<List<T>> original) {
         List<List<T>> cloned = new ArrayList<>();
@@ -62,9 +58,5 @@ public class ArrayUtils {
             cloned.add(new ArrayList<>(innerList));
         }
         return cloned;
-    }
-
-    public static <T> List<T> immutableCloneList(List<T> original) {
-        return List.copyOf(original);
     }
 }

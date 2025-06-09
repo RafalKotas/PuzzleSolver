@@ -518,6 +518,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
 
         List<List<Integer>> ranges = getColumnsSequencesRanges().get(columnIdx);
 
+        List<List<Integer>> before = deepCopy(ranges);
         for (int seqIdx = 0; seqIdx < ranges.size(); seqIdx++) {
             List<Integer> currentRange = ranges.get(seqIdx);
             List<Integer> updatedRange = RangeCorrectionHelper.adjustRangeIfColouredAtEdges(
@@ -528,16 +529,24 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                 anyUpdated = true;
                 updateColumnSequenceRange(columnIdx, seqIdx, updatedRange);
                 nonogramState.increaseMadeSteps();
-
-                tmpLog = generateCorrectingColumnSequenceRangeStepDescription(
-                        columnIdx, seqIdx, currentRange, updatedRange,
-                        "correcting column sequence range when start from edge index will create too long sequence"
-                );
-                addLog();
             }
         }
 
         if (anyUpdated) {
+            List<List<Integer>> after = getColumnsSequencesRanges().get(columnIdx);
+            List<Integer> lengths = getNonogramRules().getColumnSequencesLengths().get(columnIdx);
+            List<String> line = getNonogramBoardColumn(columnIdx);
+
+            tmpLog = SequenceRangeCorrectionFromColouredEdgesLogHelper.generateLog(
+                    columnIdx,
+                    before,
+                    after,
+                    lengths,
+                    line,
+                    false
+            );
+            addLog();
+
             addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE);
         }
     }
