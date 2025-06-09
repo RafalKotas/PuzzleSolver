@@ -40,7 +40,7 @@ public class SequenceRangeCorrectionWhenMetXLogHelper {
         List<List<Integer>> initialRanges = LogFormatUtils.parseNestedListLine(lines[1].split("=")[1].trim());
         List<List<Integer>> updatedRanges = LogFormatUtils.parseNestedListLine(lines[2].split("=")[1].trim());
         List<Integer> lengths = LogFormatUtils.parseIntegerListLine(lines[3].split("=")[1].trim());
-        List<Integer> excluded = LogFormatUtils.parseIntegerListLine(lines[4].split("=")[1].trim());
+        List<Integer> excluded = LogFormatUtils.safeParseIntegerListLine(lines[4]);
 
         return String.format(
                 "Arguments.of(\"%s / %dx%d / %s %d - ranges correction if X on way\",%n" +
