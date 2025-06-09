@@ -34,6 +34,8 @@ public class LogConverter {
                     Optional.of(PlaceXsAroundLongestSequenceLogHelper.convertLogToTestArguments(log, solutionName));
             case "PLACE_XS_AT_UNREACHABLE_FIELDS" ->
                     Optional.of(PlaceXsAtUnreachableFieldsLogHelper.convertLogToTestArguments(log, solutionName));
+            case "PLACE_X_IF_O_WILL_CREATE_TOO_LONG_SEQUENCE" ->
+                    Optional.of(PlaceXsIfOWillCreateTooLongSequenceLogHelper.convertLogToTestArguments(log, solutionName, logic));
             case "MARK_AVAILABLE_FIELDS" ->
                     Optional.of(MarkAvailableFieldsLogHelper.convertLogToTestArguments(log, solutionName, logic));
             default -> Optional.empty();
@@ -58,15 +60,19 @@ public class LogConverter {
         if (log.startsWith("ROW_CORRECTING_SEQUENCES_RANGES_FROM_COLOURED_EDGES:")
                 || log.startsWith("COLUMN_CORRECTING_SEQUENCES_RANGES_FROM_COLOURED_EDGES:"))
             return "SEQUENCES_RANGES_CORRECTION_FROM_COLOURED_EDGES";
-        if (log.startsWith("PLACE_XS_ROW_AROUND_LONGEST_SEQUENCE:")
-                || log.startsWith("PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCE:"))
-            return "PLACE_XS_AROUND_LONGEST_SEQUENCE";
         if (log.startsWith("CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY:")
                 || log.startsWith("CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY:"))
             return "SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY";
+        if (log.contains("correcting sequence when matching fields to only possible coloured sequences"))
+            return "SEQUENCE_RANGE_CORRECTION_BY_MATCHING";
+        if (log.startsWith("PLACE_XS_ROW_AROUND_LONGEST_SEQUENCE:")
+                || log.startsWith("PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCE:"))
+            return "PLACE_XS_AROUND_LONGEST_SEQUENCE";
         if (log.startsWith("PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW:")
                 || log.startsWith("PLACE_XS_AT_UNREACHABLE_FIELDS_IN_COLUMN:"))
             return "PLACE_XS_AT_UNREACHABLE_FIELDS";
+        if (log.contains("placing \"X\" because \"O\" will create too long sequence"))
+            return "PLACE_X_IF_O_TOO_LONG";
         if (log.startsWith("MARK_AVAILABLE_FIELDS_IN_ROW:")
                 || log.startsWith("MARK_AVAILABLE_FIELDS_IN_COLUMN:"))
             return "MARK_AVAILABLE_FIELDS";
