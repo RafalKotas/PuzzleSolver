@@ -1148,106 +1148,77 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         }
     }
 
-    /***
-     * PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE
-     * @param rowIdx - row index to check if O can't be placed on field because of creating too long possible coloured sequence
-     * How it works:
-     *               1. Find coloured fields indexes in row, f.e. for:
-     *                  ["-", "-", "O", "O", "-", "O", "-", "-", "-", "-", "-", "-", "-", "-", "O", "O", "-", "X"]
-     *                  it will be [ 2, 3, 7, 17, 18]
-     *               2. Group fields into ranges (field column indexes that differs by one column)
-     *                  [ 2, 3, 7, 17, 18] -> [ [2, 3], [7, 7], [17, 18] ]
-     *               3. For every range create new coloured sequences ranges, simulating colour field before or after current range:
-     *                  [2, 3]: before -> [1, 3], after [2, 4] -> [[1, 3], [2, 4]]
-     *                  whole ranges array: [ [2, 3], [7, 7], [17, 18] ] -> [ [[1, 3], [2, 4]], [[6, 7], [7, 8]], [[16, 18], [17, 19]] ]
-     *               4. For every coloured fields sequence (2.) check if this sequence:
-     *                  - can be merged with previous coloured sequence
-     *                     (f.e. for seqNo == 1: [2, 3] and [6, 7] (3. arr[1][0]) -> 3 + 1 != 6 -> can't be merged)
-     *                  - can be merged with next coloured sequence
-     *                     (f.e. for seqNo == 1: [7, 8] (3. arr[1][1]) and [17, 18] -> 8 + 1 != 17 -> can't be merged)
-     *               5. If sequence can be merged when placing "O":
-     *                  - validate created coloured sequence -> NonogramLogicUtils.colouredSequenceInRowIsValid()
-     *                  Else validate only current coloured sequence (when isn't merged with another after placing "O")
-     *               6. If sequence is not valid, place "X" at field on which trying to place "O", in other case do nothing
-     */
     @Override
     public void placeXsRowIfOWillMergeNearFieldsToTooLongColouredSequence(int rowIdx) {
-        List<Integer> colouredFieldsIndexesInRow = findColouredFieldsIndexesInRow(this.nonogramSolutionBoard, rowIdx);
+        List<Integer> colouredFields = findColouredFieldsIndexesInRow(nonogramSolutionBoard, rowIdx);
+        List<List<Integer>> colouredRanges = groupConsecutiveIndices(colouredFields);
+        List<List<List<Integer>>> rangesWithExtras = createSequencesRangesWithColouredFieldAdded(colouredRanges);
 
-        List<List<Integer>> colouredSequencesRanges = groupConsecutiveIndices(colouredFieldsIndexesInRow);
+        List<String> rowBefore = getRowCopy(rowIdx);
+        for (int i = 0; i < colouredRanges.size(); i++) {
+            List<List<Integer>> currentWithExtras = rangesWithExtras.get(i);
 
-        int previousColumnIndex;
-        Field fieldWithPreviousColumnColoured;
-        int nextColumnIndex;
-        Field fieldWithNextColumnColoured;
-
-        List<List<List<Integer>>> colouredSequencesRangesWithColouredFieldAdded = createSequencesRangesWithColouredFieldAdded
-                (colouredSequencesRanges);
-        List<List<Integer>> currentColouredSequenceRangesWithColouredFieldAdded;
-
-        List<Integer> sequenceWithFieldAddedBefore;
-        List<Integer> mergedSequenceWithFieldAddedBefore;
-        List<Integer> colouredSequenceRangeBeforeCurrent;
-
-        List<Integer> mergedSequenceWithFieldAddedAfter;
-        List<Integer> colouredSequenceRangeAfterCurrent;
-
-        boolean colouredSequenceValid;
-
-        for (int seqRangeIndex = 0; seqRangeIndex < colouredSequencesRanges.size(); seqRangeIndex++) {
-            currentColouredSequenceRangesWithColouredFieldAdded = colouredSequencesRangesWithColouredFieldAdded.get(seqRangeIndex);
-
-            sequenceWithFieldAddedBefore = currentColouredSequenceRangesWithColouredFieldAdded.get(0);
-
-            if (seqRangeIndex > 0) {
-                colouredSequenceRangeBeforeCurrent = colouredSequencesRanges.get(seqRangeIndex - 1);
-                mergedSequenceWithFieldAddedBefore = tryToMergeColouredSequenceWithPrevious(
-                        colouredSequenceRangeBeforeCurrent, sequenceWithFieldAddedBefore);
-            } else {
-                mergedSequenceWithFieldAddedBefore = sequenceWithFieldAddedBefore;
-            }
-
-            previousColumnIndex = sequenceWithFieldAddedBefore.get(0);
-            fieldWithPreviousColumnColoured = new Field(rowIdx, previousColumnIndex);
-            colouredSequenceValid = colouredSequenceInRowIsValid(mergedSequenceWithFieldAddedBefore, rowIdx, this);
-            if (!colouredSequenceValid && isColumnIndexValid(previousColumnIndex) && isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithPreviousColumnColoured)) {
-                this.placeXAtGivenField(fieldWithPreviousColumnColoured, true);
-                this.addRowAndColumnToAffectedByIdentifiers(fieldWithPreviousColumnColoured, NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
-
-                tmpLog = generatePlacingXStepDescription(rowIdx, previousColumnIndex,
-                        "placing \"X\" because \"O\" will create too long sequence");
-                addLog();
-                this.nonogramState.increaseMadeSteps();
-            } else if (this.SHOW_REPETITIONS) {
-                System.out.println("X because \"O\" will create too long sequence in row placed earlier!");
-            }
-
-            mergedSequenceWithFieldAddedAfter = currentColouredSequenceRangesWithColouredFieldAdded.get(1);
-
-            nextColumnIndex = mergedSequenceWithFieldAddedAfter.get(1);
-            if (nextColumnIndex != this.getNonogramRules().getWidth()) {
-
-                if (seqRangeIndex < colouredSequencesRanges.size() - 1) {
-                    colouredSequenceRangeAfterCurrent = colouredSequencesRanges.get(seqRangeIndex + 1);
-                    mergedSequenceWithFieldAddedAfter = tryToMergeColouredSequenceWithNext(
-                            mergedSequenceWithFieldAddedAfter, colouredSequenceRangeAfterCurrent);
-                }
-
-                fieldWithNextColumnColoured = new Field(rowIdx, nextColumnIndex);
-                colouredSequenceValid = colouredSequenceInRowIsValid(mergedSequenceWithFieldAddedAfter, rowIdx, this);
-                if (!colouredSequenceValid && isFieldEmpty(this.getNonogramSolutionBoard(), fieldWithNextColumnColoured)) {
-                    this.placeXAtGivenField(fieldWithNextColumnColoured, true);
-                    this.addRowAndColumnToAffectedByIdentifiers(fieldWithNextColumnColoured, NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
-
-                    tmpLog = generatePlacingXStepDescription(rowIdx, nextColumnIndex,
-                            "placing \"X\" because \"O\" will create too long sequence");
-                    addLog();
-                    this.nonogramState.increaseMadeSteps();
-                } else if (this.SHOW_REPETITIONS) {
-                    System.out.println("X because \"O\" will create too long sequence in row placed earlier!");
-                }
-            }
+            checkAndPlaceXBeforeInRow(colouredRanges, currentWithExtras.get(0), i, rowIdx);
+            checkAndPlaceXAfterInRow(colouredRanges, currentWithExtras.get(1), i, rowIdx);
         }
+        List<String> rowAfter = getRowCopy(rowIdx);
+
+        if (!rowBefore.equals(rowAfter)) {
+            tmpLog = PlaceXsIfOWillCreateTooLongSequenceLogHelper.generateLog(
+                    rowIdx,
+                    rowBefore,
+                    rowAfter,
+                    getNonogramRules().getRowSequencesLengths().get(rowIdx),
+                    getRowsSequencesRanges().get(rowIdx),
+                    true
+            );
+            addLog();
+        }
+    }
+
+    private void checkAndPlaceXBeforeInRow(List<List<Integer>> colouredRanges, List<Integer> rangeWithExtra, int idx, int rowIdx) {
+        List<Integer> merged = (idx > 0)
+                ? tryToMergeColouredSequenceWithPrevious(colouredRanges.get(idx - 1), rangeWithExtra)
+                : rangeWithExtra;
+
+        int col = rangeWithExtra.get(0);
+        Field field = new Field(rowIdx, col);
+
+        if (shouldPlaceXInRow(rowIdx, col, field, merged)) {
+            placeXAtGivenField(field, true);
+            addRowAndColumnToAffectedByIdentifiers(field, NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
+            tmpLog = generatePlacingXStepDescription(rowIdx, col, "placing \"X\" because \"O\" will create too long sequence");
+            addLog();
+            nonogramState.increaseMadeSteps();
+        } else if (SHOW_REPETITIONS) {
+            System.out.println("X because \"O\" will create too long sequence in row placed earlier!");
+        }
+    }
+
+    private void checkAndPlaceXAfterInRow(List<List<Integer>> colouredRanges, List<Integer> rangeWithExtra, int idx, int rowIdx) {
+        int nextCol = rangeWithExtra.get(1);
+        if (nextCol == getNonogramRules().getWidth()) return;
+
+        Field field = new Field(rowIdx, nextCol);
+        List<Integer> merged = (idx < colouredRanges.size() - 1)
+                ? tryToMergeColouredSequenceWithNext(rangeWithExtra, colouredRanges.get(idx + 1))
+                : rangeWithExtra;
+
+        if (shouldPlaceXInRow(rowIdx, nextCol, field, merged)) {
+            placeXAtGivenField(field, true);
+            addRowAndColumnToAffectedByIdentifiers(field, NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
+            tmpLog = generatePlacingXStepDescription(rowIdx, nextCol, "placing \"X\" because \"O\" will create too long sequence");
+            addLog();
+            nonogramState.increaseMadeSteps();
+        } else if (SHOW_REPETITIONS) {
+            System.out.println("X because \"O\" will create too long sequence in row placed earlier!");
+        }
+    }
+
+    private boolean shouldPlaceXInRow(int rowIdx, int colIdx, Field field, List<Integer> range) {
+        return isColumnIndexValid(colIdx)
+                && isFieldEmpty(nonogramSolutionBoard, field)
+                && !colouredSequenceInRowIsValid(range, rowIdx, this);
     }
 
     @Override
