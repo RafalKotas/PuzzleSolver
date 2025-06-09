@@ -127,7 +127,6 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                                                 int nextSeqIdx) {
         if (!oldNextRange.get(0).equals(updatedNextRange.get(0))) {
             updateColumnSequenceRange(colIdx, nextSeqIdx, updatedNextRange);
-            logColumnSequenceCorrection(colIdx, nextSeqIdx, oldNextRange, updatedNextRange, "correcting from top");
             markColumnAsChanged(colIdx);
 
             if (rangeLength(updatedNextRange) == colSeqLengths.get(nextSeqIdx)
@@ -162,7 +161,6 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                                                    int prevSeqIdx) {
         if (!oldPrevRange.get(1).equals(updatedPrevRange.get(1))) {
             updateColumnSequenceRange(columnIdx, prevSeqIdx, updatedPrevRange);
-            logColumnSequenceCorrection(columnIdx, prevSeqIdx, oldPrevRange, updatedPrevRange, "correcting from bottom");
             markColumnAsChanged(columnIdx);
 
             if (rangeLength(updatedPrevRange) == colSeqLengths.get(prevSeqIdx)
@@ -170,13 +168,6 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                 excludeSequenceInColumn(columnIdx, prevSeqIdx);
             }
         }
-    }
-
-    private void logColumnSequenceCorrection(int columnIdx, int sequenceId,
-                                             List<Integer> oldRange, List<Integer> newRange, String action) {
-        this.tmpLog = generateCorrectingColumnSequenceRangeStepDescription(
-                columnIdx, sequenceId, oldRange, newRange, action);
-        addLog();
     }
 
     private void markColumnAsChanged(int columnIdx) {
@@ -1258,8 +1249,6 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         if (shouldPlaceX(row, merged, colIdx, field)) {
             placeXAtGivenField(field, true);
             addRowAndColumnToAffectedByIdentifiers(field, NonogramSolveAction.PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
-            tmpLog = generatePlacingXStepDescription(colIdx, row, "placing \"X\" because \"O\" will create too long sequence");
-            addLog();
             nonogramState.increaseMadeSteps();
         } else if (SHOW_REPETITIONS) {
             System.out.println("X because \"O\" will create too long sequence in column placed earlier!");
@@ -1278,8 +1267,6 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         if (shouldPlaceX(nextRow, merged, colIdx, field)) {
             placeXAtGivenField(field, true);
             addRowAndColumnToAffectedByIdentifiers(field, NonogramSolveAction.PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
-            tmpLog = generatePlacingXStepDescription(nextRow, colIdx, "placing \"X\" because \"O\" will create too long sequence");
-            addLog();
             nonogramState.increaseMadeSteps();
         } else if (SHOW_REPETITIONS) {
             System.out.println("X because \"O\" will create too long sequence in row placed earlier!");

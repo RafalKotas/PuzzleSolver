@@ -16,7 +16,7 @@ public class PlaceXsIfOWillCreateTooLongSequenceLogHelper {
             boolean isRow
     ) {
         return String.format(
-                "PLACE_X_IF_O_TOO_LONG_%s: %s=%d\n" +
+                "PLACE_X_IF_O_WILL_CREATE_TOO_LONG_SEQUENCE_IN_%s: %s=%d\n" +
                         "before=%s\n" +
                         "after=%s\n" +
                         "lengths=%s\n" +
@@ -34,7 +34,7 @@ public class PlaceXsIfOWillCreateTooLongSequenceLogHelper {
     public static String convertLogToTestArguments(String log, String solutionName, NonogramLogic logic) {
         String[] lines = log.split("\\n");
 
-        boolean isRow = lines[0].startsWith("PLACE_X_IF_O_TOO_LONG_ROW");
+        boolean isRow = lines[0].startsWith("PLACE_X_IF_O_WILL_CREATE_TOO_LONG_SEQUENCE_IN_ROW");
         String axisLabel = isRow ? "row" : "col";
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
