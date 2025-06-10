@@ -1063,7 +1063,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             Field edgeField = new Field(rowIdx, columnIdx);
             if (isFieldEmpty(this.nonogramSolutionBoard, edgeField)) {
                 this.placeXAtGivenField(edgeField, true);
-                this.addRowAndColumnToAffectedByIdentifiers(edgeField, NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES);
+                this.addRowAndColumnToAffectedByIdentifiers(edgeField, NonogramSolveAction.PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES);
                 this.nonogramState.increaseMadeSteps();
                 anyXPlaced = true;
             } else if (this.SHOW_REPETITIONS) {
