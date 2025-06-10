@@ -34,6 +34,8 @@ public class LogConverter {
                     Optional.of(PlaceXsAroundLongestSequenceLogHelper.convertLogToTestArguments(log, solutionName));
             case "PLACE_XS_AT_UNREACHABLE_FIELDS" ->
                     Optional.of(PlaceXsAtUnreachableFieldsLogHelper.convertLogToTestArguments(log, solutionName));
+            case "PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES" ->
+                    Optional.of(PlaceXsAtTooShortEmptySequencesLogHelper.convertLogToTestArguments(log, solutionName, logic));
             case "PLACE_X_IF_O_WILL_CREATE_TOO_LONG_SEQUENCE" ->
                     Optional.of(PlaceXsIfOWillCreateTooLongSequenceLogHelper.convertLogToTestArguments(log, solutionName, logic));
             case "MARK_AVAILABLE_FIELDS" ->
@@ -71,8 +73,12 @@ public class LogConverter {
         if (log.startsWith("PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW:")
                 || log.startsWith("PLACE_XS_AT_UNREACHABLE_FIELDS_IN_COLUMN:"))
             return "PLACE_XS_AT_UNREACHABLE_FIELDS";
-        if (log.contains("placing \"X\" because \"O\" will create too long sequence"))
-            return "PLACE_X_IF_O_TOO_LONG";
+        if (log.startsWith("PLACE_XS_IN_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES:")
+                || log.startsWith("PLACE_XS_IN_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES:"))
+            return "PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES";
+        if (log.startsWith("PLACE_X_IF_O_WILL_CREATE_TOO_LONG_SEQUENCE_IN_ROW:")
+                || log.startsWith("PLACE_X_IF_O_WILL_CREATE_TOO_LONG_SEQUENCE_IN_COLUMN:"))
+            return "PLACE_X_IF_O_WILL_CREATE_TOO_LONG_SEQUENCE";
         if (log.startsWith("MARK_AVAILABLE_FIELDS_IN_ROW:")
                 || log.startsWith("MARK_AVAILABLE_FIELDS_IN_COLUMN:"))
             return "MARK_AVAILABLE_FIELDS";
