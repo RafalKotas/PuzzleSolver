@@ -58,9 +58,13 @@ public class LogFormatUtils {
     }
 
     public static List<Integer> parseIntegerListLine(String line) {
-        return Arrays.stream(line.replaceAll(".*=", "")
-                        .replaceAll("[\\[\\]]", "")
-                        .split(","))
+        String content = line.replaceAll(".*=", "").replaceAll("[\\[\\]]", "").trim();
+
+        if (content.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return Arrays.stream(content.split(","))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .map(Integer::parseInt)
