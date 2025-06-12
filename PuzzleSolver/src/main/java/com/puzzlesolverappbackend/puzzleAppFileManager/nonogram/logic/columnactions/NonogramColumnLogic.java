@@ -413,8 +413,9 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                     this.updateColumnSequenceRange(columnIdx, seqId, newRange);
                     this.addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES);
                     this.nonogramState.increaseMadeSteps();
-                    this.tmpLog = generateCorrectingColumnSequenceRangeStepDescription(columnIdx, seqId, oldRange, newRange, "correcting sequence when matching fields to only possible coloured sequences");
-                    addLog();
+                    // TODO
+//                    this.tmpLog = generateCorrectingColumnSequenceRangeStepDescription(columnIdx, seqId, oldRange, newRange, "correcting sequence when matching fields to only possible coloured sequences");
+//                    addLog();
 
                     if (rangeLength(newRange) == columnSequencesLengths.get(seqId) && isRowRangeColoured(columnIdx, newRange)) {
                         this.excludeSequenceInColumn(columnIdx, seqId);
@@ -453,11 +454,12 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                     this.nonogramState.increaseMadeSteps();
 
                     // Generate a log description for the change
-                    this.tmpLog = generateCorrectingColumnSequenceRangeStepDescription(
-                            columnIdx, primarySeqId, oldRange, newRange,
-                            "correcting sequence when matching fields to only possible coloured sequences"
-                    );
-                    addLog();
+                    // TODO
+//                    this.tmpLog = generateCorrectingColumnSequenceRangeStepDescription(
+//                            columnIdx, primarySeqId, oldRange, newRange,
+//                            "correcting sequence when matching fields to only possible coloured sequences"
+//                    );
+//                    addLog();
 
                     // If the new range matches the length of the sequence and is coloured correctly, exclude the sequence
                     if (rangeLength(newRange) == columnSequencesLengths.get(primarySeqId) && isRowRangeColoured(columnIdx, newRange)) {
@@ -1028,7 +1030,8 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         List<Integer> matchingLengths = new ArrayList<>();
 
         for (int i = 0; i < columnRanges.size(); i++) {
-            if (rangeInsideAnotherRange(colouredRange, columnRanges.get(i))) {
+            if (rangeInsideAnotherRange(colouredRange, columnRanges.get(i))
+                    && lengthOnBoard <= columnLengths.get(i)) {
                 matchingIndices.add(i);
                 matchingLengths.add(columnLengths.get(i));
             }

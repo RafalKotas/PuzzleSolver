@@ -967,7 +967,8 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         List<Integer> matchingLengths = new ArrayList<>();
 
         for (int i = 0; i < rowRanges.size(); i++) {
-            if (rangeInsideAnotherRange(colouredRange, rowRanges.get(i))) {
+            if (rangeInsideAnotherRange(colouredRange, rowRanges.get(i))
+                && lengthOnBoard <= rowLengths.get(i)) {
                 matchingIndices.add(i);
                 matchingLengths.add(rowLengths.get(i));
             }
