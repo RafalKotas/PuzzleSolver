@@ -1037,19 +1037,19 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         List<Integer> edgeXs = List.of(colouredRange.get(0) - 1, colouredRange.get(1) + 1);
 
         if (matchingIndices.size() == 1 && lengthOnBoard == matchingLengths.get(0)) {
-            placeXsAndUpdateSingleSequence(columnIdx, edgeXs, matchingIndices.get(0), colouredRange);
+            placeXsAndUpdateSingleSequence(columnIdx, edgeXs, matchingIndices.get(0));
         } else if (matchingLengths.size() > 1 && lengthOnBoard == Collections.max(matchingLengths)) {
             placeXsAroundLongestSequence(columnIdx, edgeXs, false);
         }
     }
 
-    private void placeXsAndUpdateSingleSequence(int columnIdx, List<Integer> xEdges, int seqIdx, List<Integer> colouredRange) {
+    private void placeXsAndUpdateSingleSequence(int columnIdx, List<Integer> xEdges, int seqIdx) {
         placeXsAroundLongestSequence(columnIdx, xEdges, true);
 
         List<Integer> updatedRange = List.of(xEdges.get(0) + 1, xEdges.get(1) - 1);
         excludeColouredFieldsBetweenXs(columnIdx, updatedRange);
 
-        updateLogicAfterXsPlacement(columnIdx, seqIdx, colouredRange, updatedRange);
+        updateLogicAfterXsPlacement(columnIdx, seqIdx, updatedRange);
     }
 
     private void placeXsAroundLongestSequence(int columnIdx, List<Integer> xEdges, boolean onlyMatching) {
@@ -1091,8 +1091,8 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         }
     }
 
-    private void updateLogicAfterXsPlacement(int columnIdx, int seqIdx, List<Integer> oldRange, List<Integer> newRange) {
-        updateColumnSequenceAndExclude(columnIdx, seqIdx, oldRange, newRange, true);
+    private void updateLogicAfterXsPlacement(int columnIdx, int seqIdx, List<Integer> newRange) {
+        updateColumnSequenceAndExclude(columnIdx, seqIdx, newRange, true);
 
         Field topEdge = new Field(newRange.get(0) - 1, columnIdx);
         Field bottomEdge = new Field(newRange.get(1) + 1, columnIdx);
@@ -1107,9 +1107,9 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
 
     private void updateColumnSequenceAndExclude(int columnIdx,
                                              int seqIdx,
-                                             List<Integer> oldRange,
                                              List<Integer> newRange,
                                              boolean triggeredByPlacingXs) {
+        List<Integer> oldRange = this.getColumnsSequencesRanges().get(columnIdx).get(seqIdx);
         if (!newRange.equals(oldRange)) {
             this.changeColumnSequenceRange(columnIdx, seqIdx, newRange);
 
@@ -1776,15 +1776,12 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
     }
 
     private boolean isRowRangeColoured(int columnIdx, List<Integer> rowRange) {
-        Field potentiallyColouredField;
-        for (Integer rowIdx : rowRange) {
-            potentiallyColouredField = new Field(rowIdx, columnIdx);
-            if (!isFieldColoured(this.nonogramSolutionBoard, potentiallyColouredField)) {
-                return false;
-            }
-        }
+        int start = rowRange.get(0);
+        int end = rowRange.get(1);
 
-        return true;
+        return IntStream.rangeClosed(start, end)
+                .mapToObj(rowIdx -> new Field(rowIdx, columnIdx))
+                .allMatch(field -> isFieldColoured(nonogramSolutionBoard, field));
     }
 
     public int minimumRowIndexWithoutX(int columnIdx, int lastSequenceRowIdx, int sequenceFullLength) {

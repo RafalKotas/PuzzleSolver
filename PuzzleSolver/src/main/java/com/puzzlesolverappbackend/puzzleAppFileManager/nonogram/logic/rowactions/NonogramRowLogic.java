@@ -939,7 +939,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 List<Integer> colouredRange = findColouredSequenceRangeInRow(columnIdx, rowIdx);
                 columnIdx = colouredRange.get(1);
 
-                processColouredSequenceRange(rowIdx, colouredRange);
+                processColouredSequenceRangeInRow(rowIdx, colouredRange);
             }
         }
     }
@@ -957,7 +957,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         return colouredSequenceRange;
     }
 
-    private void processColouredSequenceRange(int rowIdx, List<Integer> colouredRange) {
+    private void processColouredSequenceRangeInRow(int rowIdx, List<Integer> colouredRange) {
         List<List<Integer>> rowRanges = this.getRowsSequencesRanges().get(rowIdx);
         List<Integer> rowLengths = this.getNonogramRules().getRowSequencesLengths().get(rowIdx);
 
@@ -976,19 +976,19 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         List<Integer> edgeXs = List.of(colouredRange.get(0) - 1, colouredRange.get(1) + 1);
 
         if (matchingIndices.size() == 1 && lengthOnBoard == matchingLengths.get(0)) {
-            placeXsAndUpdateSingleSequence(rowIdx, edgeXs, matchingIndices.get(0), colouredRange);
+            placeXsAndUpdateSingleSequence(rowIdx, edgeXs, matchingIndices.get(0));
         } else if (matchingLengths.size() > 1 && lengthOnBoard == Collections.max(matchingLengths)) {
             placeXsAroundLongestSequence(rowIdx, edgeXs, false);
         }
     }
 
-    private void placeXsAndUpdateSingleSequence(int rowIdx, List<Integer> xEdges, int seqIdx, List<Integer> colouredRange) {
+    private void placeXsAndUpdateSingleSequence(int rowIdx, List<Integer> xEdges, int seqIdx) {
         placeXsAroundLongestSequence(rowIdx, xEdges, true);
 
         List<Integer> updatedRange = List.of(xEdges.get(0) + 1, xEdges.get(1) - 1);
         excludeColouredFieldsBetweenXs(rowIdx, updatedRange);
 
-        updateLogicAfterXsPlacement(rowIdx, seqIdx, colouredRange, updatedRange);
+        updateLogicAfterXsPlacement(rowIdx, seqIdx, updatedRange);
     }
 
     private void placeXsAroundLongestSequence(int rowIdx, List<Integer> xEdges, boolean onlyMatching) {
@@ -1030,8 +1030,8 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         }
     }
 
-    private void updateLogicAfterXsPlacement(int rowIdx, int seqIdx, List<Integer> oldRange, List<Integer> newRange) {
-        updateRowSequenceAndExclude(rowIdx, seqIdx, oldRange, newRange, true);
+    private void updateLogicAfterXsPlacement(int rowIdx, int seqIdx, List<Integer> newRange) {
+        updateRowSequenceAndExclude(rowIdx, seqIdx, newRange, true);
 
         Field leftEdge = new Field(rowIdx, newRange.get(0) - 1);
         Field rightEdge = new Field(rowIdx, newRange.get(1) + 1);
@@ -1046,9 +1046,9 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
     private void updateRowSequenceAndExclude(int rowIdx,
                                              int seqIdx,
-                                             List<Integer> oldRange,
                                              List<Integer> newRange,
                                              boolean triggeredByPlacingXs) {
+        List<Integer> oldRange = this.getRowsSequencesRanges().get(rowIdx).get(seqIdx);
         if (!newRange.equals(oldRange)) {
             this.changeRowSequenceRange(rowIdx, seqIdx, newRange);
 
