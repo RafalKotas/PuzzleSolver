@@ -1008,16 +1008,18 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
     }
 
     private List<Integer> findColouredSequenceRangeInColumn(int startRowIdx, int columnIdx) {
-        int rowIdx = startRowIdx;
+        int start = startRowIdx;
+        int end = startRowIdx;
 
-        List<Integer> colouredSequenceRange = new ArrayList<>();
-        colouredSequenceRange.add(rowIdx);
-        while (rowIdx < this.getNonogramRules().getHeight() && isFieldColoured(this.nonogramSolutionBoard, new Field(rowIdx, columnIdx))) {
-            rowIdx++;
+        while (start > 0 && isFieldColoured(this.nonogramSolutionBoard, new Field(start - 1, columnIdx))) {
+            start--;
         }
-        colouredSequenceRange.add(rowIdx - 1);
 
-        return colouredSequenceRange;
+        while (end + 1 < this.getNonogramRules().getHeight() && isFieldColoured(this.nonogramSolutionBoard, new Field(end + 1, columnIdx))) {
+            end++;
+        }
+
+        return List.of(start, end);
     }
 
     private void processColouredSequenceRangeInColumn(int columnIdx, List<Integer> colouredRange) {
@@ -1669,66 +1671,80 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         List<Integer> columnSequencesLengths = this.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
         List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
 
-        for (int rowIdx = 0; rowIdx < this.getNonogramRules().getHeight(); rowIdx++) {
-            Field field = new Field(rowIdx, columnIdx);
-            if (!isFieldColoured(this.nonogramSolutionBoard, field)) continue;
+        boolean progress;
+        do {
+            progress = false;
 
-            List<Integer> colouredRange = findColouredSequenceRangeInColumn(rowIdx, columnIdx);
-            int colouredLength = rangeLength(colouredRange);
+            for (int rowIdx = 0; rowIdx < this.getNonogramRules().getHeight(); rowIdx++) {
+                Field field = new Field(rowIdx, columnIdx);
+                if (!isFieldColoured(this.nonogramSolutionBoard, field)) continue;
 
-            int matchingCount = 0;
-            int matchedSeqIdx = -1;
+                List<Integer> colouredRange = findColouredSequenceRangeInColumn(rowIdx, columnIdx);
+                int colouredLength = rangeLength(colouredRange);
 
-            for (int seqIdx = 0; seqIdx < columnSequencesLengths.size(); seqIdx++) {
-                List<Integer> range = columnSequencesRanges.get(seqIdx);
-                if (rangeInsideAnotherRange(colouredRange, range) && colouredLength <= columnSequencesLengths.get(seqIdx)) {
-                    matchingCount++;
-                    matchedSeqIdx = seqIdx;
-                }
-            }
+                int matchingCount = 0;
+                int matchedSeqIdx = -1;
 
-            if (matchingCount == 1) {
-                String marker = NonogramHelper.indexToSequenceCharMark(matchedSeqIdx);
-                List<String> beforeMarking = new ArrayList<>(this.getNonogramBoardColumnWithMarks(columnIdx));
+                for (int seqIdx = 0; seqIdx < columnSequencesLengths.size(); seqIdx++) {
+                    List<Integer> range = columnSequencesRanges.get(seqIdx);
+                    if (rangeInsideAnotherRange(colouredRange, range) &&
+                            colouredLength <= columnSequencesLengths.get(seqIdx)) {
 
-                for (int i = colouredRange.get(0); i <= colouredRange.get(1); i++) {
-                    String cell = this.getNonogramSolutionBoardWithMarks().get(rowIdx).get(i);
-                    if (cell.startsWith(EMPTY_FIELD, 1)) {
-                        this.markColumnBoardField(columnIdx, i, marker);
-                        this.nonogramState.increaseMadeSteps();
-                    } else if (this.SHOW_REPETITIONS) {
-                        System.out.println("Column field was marked earlier.");
+                        matchingCount++;
+                        matchedSeqIdx = seqIdx;
                     }
                 }
 
-                List<String> afterMarking = new ArrayList<>(this.getNonogramBoardColumnWithMarks(columnIdx));
-                if (!beforeMarking.equals(afterMarking)) {
-                    tmpLog = MarkAvailableFieldsLogHelper.generateLog(
-                            columnIdx, beforeMarking, afterMarking, matchedSeqIdx, marker, false
-                    );
-                    addLog();
-                }
+                if (matchingCount == 1 && this.getColumnsSequencesIdsNotToInclude().get(columnIdx).contains(matchedSeqIdx)) {
+                    String marker = NonogramHelper.indexToSequenceCharMark(matchedSeqIdx);
+                    List<String> beforeMarking = new ArrayList<>(this.getNonogramBoardColumnWithMarks(columnIdx));
 
-                List<Integer> oldRange = columnSequencesRanges.get(matchedSeqIdx);
-                List<Integer> newRange = calculateNewMarkedRangeFromParameters(
-                        oldRange, colouredRange, columnSequencesLengths.get(matchedSeqIdx)
-                );
+                    for (int i = colouredRange.get(0); i <= colouredRange.get(1); i++) {
+                        String cell = this.getNonogramSolutionBoardWithMarks().get(i).get(columnIdx);
+                        if (cell.charAt(3) == EMPTY_FIELD.charAt(0)) {
+                            this.markColumnBoardField(columnIdx, i, marker);
+                            this.nonogramState.increaseMadeSteps();
+                            progress = true;
+                        } else if (this.SHOW_REPETITIONS) {
+                            System.out.println("Column field was marked earlier.");
+                        }
+                    }
 
-                if (!rangesEqual(oldRange, newRange)) {
-                    tmpLog = SequenceRangeCorrectionWhenMarkingFieldsLogHelper.generateLog(
-                            columnIdx,
-                            matchedSeqIdx,
-                            columnSequencesRanges,
-                            newRange,
-                            columnSequencesLengths,
-                            false
+                    List<String> afterMarking = new ArrayList<>(this.getNonogramBoardColumnWithMarks(columnIdx));
+                    if (!beforeMarking.equals(afterMarking)) {
+                        tmpLog = MarkAvailableFieldsLogHelper.generateLog(
+                                columnIdx, beforeMarking, afterMarking, matchedSeqIdx, marker, false
+                        );
+                        addLog();
+                    }
+
+                    List<Integer> oldRange = columnSequencesRanges.get(matchedSeqIdx);
+                    List<Integer> newRange = calculateNewMarkedRangeFromParameters(
+                            oldRange, colouredRange, columnSequencesLengths.get(matchedSeqIdx)
                     );
-                    addLog();
-                    this.changeColumnSequenceRange(columnIdx, matchedSeqIdx, newRange);
-                    addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN);
+
+                    if (!rangesEqual(oldRange, newRange)) {
+                        tmpLog = SequenceRangeCorrectionWhenMarkingFieldsLogHelper.generateLog(
+                                columnIdx,
+                                matchedSeqIdx,
+                                columnSequencesRanges,
+                                newRange,
+                                columnSequencesLengths,
+                                false
+                        );
+                        addLog();
+
+                        this.changeColumnSequenceRange(columnIdx, matchedSeqIdx, newRange);
+                        progress = true;
+
+                        if (rangeLength(newRange) == columnSequencesLengths.get(matchedSeqIdx)) {
+                            excludeSequenceInColumn(columnIdx, matchedSeqIdx);
+                        }
+                        addColumnToAffectedActionsByIdentifiers(columnIdx, NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN);
+                    }
                 }
             }
-        }
+        } while (progress);
     }
 
     @Override
