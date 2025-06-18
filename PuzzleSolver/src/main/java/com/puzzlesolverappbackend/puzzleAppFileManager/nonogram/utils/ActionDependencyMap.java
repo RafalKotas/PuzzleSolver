@@ -169,7 +169,7 @@ public class ActionDependencyMap {
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW // base
         ));
 
-        actionDependencies.put(COLOUR_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE, List.of(
+        actionDependencies.put(NonogramSolveAction.COLOUR_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE, List.of(
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE,
 
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
@@ -178,7 +178,7 @@ public class ActionDependencyMap {
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN
         ));
 
-        actionDependencies.put(COLOUR_FIELDS_IN_COLUMN_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE, List.of(
+        actionDependencies.put(NonogramSolveAction.COLOUR_FIELDS_IN_COLUMN_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE, List.of(
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE,
 
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
@@ -370,24 +370,24 @@ public class ActionDependencyMap {
                NonogramSolveAction.PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS // base
         ));
 
-        actionDependencies.put(COLOUR_FIELD_IN_TRIVIAL_ROW, List.of(
+        actionDependencies.put(NonogramSolveAction.COLOUR_FIELD_IN_TRIVIAL_ROW, List.of(
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS, // base
                 NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN, // base
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN // base
         ));
 
-        actionDependencies.put(COLOUR_FIELD_IN_TRIVIAL_COLUMN, List.of(
+        actionDependencies.put(NonogramSolveAction.COLOUR_FIELD_IN_TRIVIAL_COLUMN, List.of(
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS, // base
                 NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW, // base
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW // base
         ));
 
-        actionDependencies.put(PLACING_X_IN_TRIVIAL_ROW, List.of(
+        actionDependencies.put(NonogramSolveAction.PLACING_X_IN_TRIVIAL_ROW, List.of(
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY, // base
                 NonogramSolveAction.PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES // base
         ));
 
-        actionDependencies.put(PLACING_X_IN_TRIVIAL_COLUMN, List.of(
+        actionDependencies.put(NonogramSolveAction.PLACING_X_IN_TRIVIAL_COLUMN, List.of(
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES, // no improvement
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY, // base
                 NonogramSolveAction.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES // base
