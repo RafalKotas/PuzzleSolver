@@ -1277,32 +1277,32 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
 
     @Override
     public void placeXsColumnIfONearXWillBeginTooLongPossibleColouredSequence(int columnIdx) {
-        checkDirectionAndPlaceXs(columnIdx, true);  // z góry
-        checkDirectionAndPlaceXs(columnIdx, false); // z dołu
+        checkDirectionAndPlaceXs(columnIdx, true);
+        checkDirectionAndPlaceXs(columnIdx, false);
     }
 
     private void checkDirectionAndPlaceXs(int columnIdx, boolean fromTop) {
-        int start = fromTop ? this.getNonogramRules().getHeight() - 1 : 0;
-        int end = fromTop ? 0 : this.getNonogramRules().getHeight();
-        int step = fromTop ? -1 : 1;
+        int start = fromTop ? 0 : this.getNonogramRules().getHeight() - 1;
+        int end = fromTop ? this.getNonogramRules().getHeight() : 0;
+        int step = fromTop ? 1 : -1;
 
-        for (int rowIdx = start; fromTop ? rowIdx > end : rowIdx < end; rowIdx += step) {
+        for (int rowIdx = start; fromTop ? rowIdx < end : rowIdx > end; rowIdx += step) {
             Field xField = new Field(rowIdx, columnIdx);
             if (!isFieldWithX(this.getNonogramSolutionBoard(), xField)) continue;
 
             List<Integer> emptyRange = fromTop
-                    ? getEmptyFieldsRangeFromXToFirstColouredFieldOnTop(xField)
-                    : getEmptyFieldsRangeFromXToFirstColouredFieldOnBottom(xField);
+                    ? getEmptyFieldsRangeFromXToFirstColouredFieldFromTop(xField)
+                    : getEmptyFieldsRangeFromXToFirstColouredFieldToTop(xField);
 
             if (emptyRange.equals(NOT_FOUND_EMPTY_FIELDS_RANGE_VALUE)) continue;
 
             Field colouredStart = fromTop
-                    ? new Field(emptyRange.get(0) - 1, columnIdx)
-                    : new Field(emptyRange.get(1) + 1, columnIdx);
+                    ? new Field(emptyRange.get(1) + 1, columnIdx)
+                    : new Field(emptyRange.get(0) - 1, columnIdx);
 
             List<Integer> colouredRange = fromTop
-                    ? getColouredFieldsRangeNearEmptySequenceOnTop(colouredStart)
-                    : getColouredFieldsRangeNearEmptySequenceOnBottom(colouredStart);
+                    ? getColouredFieldsRangeNearEmptySequenceFromTop(colouredStart)
+                    : getColouredFieldsRangeNearEmptySequenceToTop(colouredStart);
 
             if (colouredRange.equals(NOT_FOUND_COLOURED_FIELDS_RANGE_VALUE)) continue;
 
@@ -1310,7 +1310,31 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         }
     }
 
-    private List<Integer> getEmptyFieldsRangeFromXToFirstColouredFieldOnTop(Field xField) {
+    private List<Integer> getEmptyFieldsRangeFromXToFirstColouredFieldFromTop(Field xField) {
+        List<Integer> emptyFieldsRange = new ArrayList<>();
+        Field fieldToCheckEmpty = new Field(xField.getRowIdx() + 1, xField.getColumnIdx());
+
+        while (areFieldIndexesValid(fieldToCheckEmpty) && isFieldEmpty(this.getNonogramSolutionBoard(), fieldToCheckEmpty)) {
+            if (emptyFieldsRange.isEmpty()) {
+                emptyFieldsRange.add(fieldToCheckEmpty.getRowIdx());
+            } else if (emptyFieldsRange.size() == 1) {
+                emptyFieldsRange.add(fieldToCheckEmpty.getRowIdx());
+            } else {
+                emptyFieldsRange.set(1, fieldToCheckEmpty.getRowIdx());
+            }
+            fieldToCheckEmpty.setRowIdx(fieldToCheckEmpty.getRowIdx() + 1);
+        }
+
+        if (emptyFieldsRange.isEmpty()) {
+            return List.of(-1, -1);
+        } else if (emptyFieldsRange.size() == 1) {
+            emptyFieldsRange.add(emptyFieldsRange.get(0));
+        }
+
+        return emptyFieldsRange;
+    }
+
+    private List<Integer> getEmptyFieldsRangeFromXToFirstColouredFieldToTop(Field xField) {
         List<Integer> emptyFieldsRange = new ArrayList<>();
         Field fieldToCheckEmpty = new Field(xField.getRowIdx() - 1, xField.getColumnIdx());
 
@@ -1334,31 +1358,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         return emptyFieldsRange;
     }
 
-    private List<Integer> getEmptyFieldsRangeFromXToFirstColouredFieldOnBottom(Field xField) {
-        List<Integer> emptyFieldsRange = new ArrayList<>();
-        Field fieldToCheckEmpty = new Field(xField.getRowIdx() + 1, xField.getColumnIdx());
-
-        while (areFieldIndexesValid(fieldToCheckEmpty) && isFieldEmpty(this.getNonogramSolutionBoard(), fieldToCheckEmpty)) {
-            if (emptyFieldsRange.isEmpty()) {
-                emptyFieldsRange.add(fieldToCheckEmpty.getRowIdx());
-            } else if (emptyFieldsRange.size() == 1) {
-                emptyFieldsRange.add(1, fieldToCheckEmpty.getRowIdx());
-            } else {
-                emptyFieldsRange.set(1, fieldToCheckEmpty.getRowIdx());
-            }
-            fieldToCheckEmpty.setRowIdx(fieldToCheckEmpty.getRowIdx() + 1);
-        }
-
-        if (emptyFieldsRange.isEmpty()) {
-            return List.of(-1, -1);
-        } else if (emptyFieldsRange.size() == 1) {
-            emptyFieldsRange.add(emptyFieldsRange.get(0));
-        }
-
-        return emptyFieldsRange;
-    }
-
-    private List<Integer> getColouredFieldsRangeNearEmptySequenceOnTop(Field firstSequenceField) {
+    private List<Integer> getColouredFieldsRangeNearEmptySequenceFromTop(Field firstSequenceField) {
         List<Integer> colouredFieldsRange = new ArrayList<>();
         Field fieldToCheckO = new Field(firstSequenceField.getRowIdx(), firstSequenceField.getColumnIdx());
 
@@ -1366,31 +1366,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             if (colouredFieldsRange.isEmpty()) {
                 colouredFieldsRange.add(fieldToCheckO.getRowIdx());
             } else if (colouredFieldsRange.size() == 1) {
-                colouredFieldsRange.add(0, fieldToCheckO.getRowIdx());
-            } else {
-                colouredFieldsRange.set(0, fieldToCheckO.getRowIdx());
-            }
-            fieldToCheckO.setRowIdx(fieldToCheckO.getRowIdx() - 1);
-        }
-
-        if (colouredFieldsRange.isEmpty()) {
-            return List.of(-1, -1); // no coloured fields (X before - sequence)
-        } else if (colouredFieldsRange.size() == 1) {
-            colouredFieldsRange.add(colouredFieldsRange.get(0)); // one coloured field before empty sequence
-        }
-
-        return colouredFieldsRange;
-    }
-
-    private List<Integer> getColouredFieldsRangeNearEmptySequenceOnBottom(Field firstSequenceField) {
-        List<Integer> colouredFieldsRange = new ArrayList<>();
-        Field fieldToCheckO = new Field(firstSequenceField.getRowIdx(), firstSequenceField.getColumnIdx());
-
-        while (areFieldIndexesValid(fieldToCheckO) && isFieldColoured(this.getNonogramSolutionBoard(), fieldToCheckO)) {
-            if (colouredFieldsRange.isEmpty()) {
                 colouredFieldsRange.add(fieldToCheckO.getRowIdx());
-            } else if (colouredFieldsRange.size() == 1) {
-                colouredFieldsRange.add(1, fieldToCheckO.getRowIdx());
             } else {
                 colouredFieldsRange.set(1, fieldToCheckO.getRowIdx());
             }
@@ -1406,26 +1382,31 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         return colouredFieldsRange;
     }
 
-    private boolean columnSequenceCanFitAfterColouredField(int columnIdx, int seqNo, List<Integer> emptyFieldsRange) {
-        List<Integer> columnPossibleRange = this.getColumnsSequencesRanges().get(columnIdx).get(seqNo);
-        int seqLength = this.getNonogramRules().getColumnSequencesLengths().get(columnIdx).get(seqNo);
-        List<Integer> lastRangeAfterColouredField = List.of(columnPossibleRange.get(0), columnPossibleRange.get(0) + seqLength - 1);
+    private List<Integer> getColouredFieldsRangeNearEmptySequenceToTop(Field firstSequenceField) {
+        List<Integer> colouredFieldsRange = new ArrayList<>();
+        Field fieldToCheckO = new Field(firstSequenceField.getRowIdx(), firstSequenceField.getColumnIdx());
 
-        return rangeInsideAnotherRange(lastRangeAfterColouredField, emptyFieldsRange);
-    }
+        while (areFieldIndexesValid(fieldToCheckO) && isFieldColoured(this.getNonogramSolutionBoard(), fieldToCheckO)) {
+            if (colouredFieldsRange.isEmpty()) {
+                colouredFieldsRange.add(fieldToCheckO.getRowIdx());
+            } else if (colouredFieldsRange.size() == 1) {
+                colouredFieldsRange.add(0, fieldToCheckO.getRowIdx());
+            } else {
+                colouredFieldsRange.set(0, fieldToCheckO.getRowIdx());
+            }
+            fieldToCheckO.setRowIdx(fieldToCheckO.getRowIdx() - 1);
+        }
 
-    private boolean columnSequenceCanFitBeforeColouredField(int columnIdx, int seqNo, List<Integer> emptyFieldsRange) {
-        List<Integer> columnPossibleRange = this.getColumnsSequencesRanges().get(columnIdx).get(seqNo);
-        int seqLength = this.getNonogramRules().getColumnSequencesLengths().get(columnIdx).get(seqNo);
-        List<Integer> lastRangeBeforeColouredField = List.of(columnPossibleRange.get(1) - seqLength + 1, columnPossibleRange.get(1));
+        if (colouredFieldsRange.isEmpty()) {
+            return List.of(-1, -1);
+        } else if (colouredFieldsRange.size() == 1) {
+            colouredFieldsRange.add(colouredFieldsRange.get(0));
+        }
 
-        return rangeInsideAnotherRange(lastRangeBeforeColouredField, emptyFieldsRange);
+        return colouredFieldsRange;
     }
 
     private void evaluateAndMaybePlaceX(int columnIdx, List<Integer> emptyRange, List<Integer> colouredRange, boolean isFromTop) {
-        int expectedStart = isFromTop ? emptyRange.get(0) - 1 : emptyRange.get(1) + 1;
-        if (colouredRange.get(0) != expectedStart) return;
-
         List<Integer> columnSequencesLengths = this.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
         List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
 
@@ -1439,22 +1420,21 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             List<Integer> seqRange = columnSequencesRanges.get(seqIdx);
             int sequenceLength = columnSequencesLengths.get(seqIdx);
 
-            boolean canFitEmpty = rangeInsideAnotherRange(emptyRange, seqRange)
-                    && (isFromTop
-                    ? columnSequenceCanFitAfterColouredField(columnIdx, seqIdx, emptyRange)
-                    : columnSequenceCanFitBeforeColouredField(columnIdx, seqIdx, emptyRange));
+            List<Integer> columnSequenceNearXRange = isFromTop ? List.of(emptyRange.get(0) + sequenceLength - 1) :
+                    List.of(emptyRange.get(1) - sequenceLength + 1, emptyRange.get(1));
 
-            boolean colouredInside = rangeInsideAnotherRange(colouredRange, seqRange);
+            boolean firstCase = rangeLength(columnSequenceNearXRange) < rangeLength(emptyRange)
+                    && rangeInsideAnotherRange(columnSequenceNearXRange, seqRange);
+            boolean secondCase = rangeLength(columnSequenceNearXRange) >= rangeLength(emptyRange)
+                    && totalLength <= sequenceLength && rangeInsideAnotherRange(columnSequenceNearXRange, seqRange);
 
-            if (canFitEmpty && colouredInside && totalLength < sequenceLength) {
+            if (firstCase || secondCase) {
                 fittingSequences.add(seqIdx);
-            } else if (canFitEmpty && colouredInside) {
-                return;
             }
         }
 
-        if (!fittingSequences.isEmpty()) {
-            int xRow = isFromTop ? emptyRange.get(1) : emptyRange.get(0);
+        if (fittingSequences.isEmpty()) {
+            int xRow = isFromTop ? emptyRange.get(0) : emptyRange.get(1);
             Field targetField = new Field(xRow, columnIdx);
 
             if (isFieldEmpty(this.getNonogramSolutionBoard(), targetField)) {
