@@ -5,8 +5,6 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSo
 import java.util.EnumMap;
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction.*;
-
 public class ActionDependencyMap {
     public static final EnumMap<NonogramSolveAction, List<NonogramSolveAction>> actionDependencies = new EnumMap<>(NonogramSolveAction.class);
 
@@ -62,6 +60,7 @@ public class ActionDependencyMap {
                 NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_COLUMN, // base
                 NonogramSolveAction.PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS, //base
                 NonogramSolveAction.PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE, //base
+                NonogramSolveAction.PLACE_XS_COLUMN_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE,
                 NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH //no improvement,
         ));
 
