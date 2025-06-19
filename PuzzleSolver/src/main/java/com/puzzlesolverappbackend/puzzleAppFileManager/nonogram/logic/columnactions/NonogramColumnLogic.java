@@ -1420,7 +1420,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             List<Integer> seqRange = columnSequencesRanges.get(seqIdx);
             int sequenceLength = columnSequencesLengths.get(seqIdx);
 
-            List<Integer> columnSequenceNearXRange = isFromTop ? List.of(emptyRange.get(0) + sequenceLength - 1) :
+            List<Integer> columnSequenceNearXRange = isFromTop ? List.of(emptyRange.get(0), emptyRange.get(0) + sequenceLength - 1) :
                     List.of(emptyRange.get(1) - sequenceLength + 1, emptyRange.get(1));
 
             boolean firstCase = rangeLength(columnSequenceNearXRange) < rangeLength(emptyRange)
