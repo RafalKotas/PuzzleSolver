@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.ExcludedSequenceLogHelper.generateExcludedSequenceLog;
@@ -1658,19 +1659,26 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
     }
 
     public void excludeSequenceInRow(int rowIdx, int seqIdx) {
-        if (isRowIndexValid(rowIdx) && !this.rowsSequencesIdsNotToInclude.get(rowIdx).contains(seqIdx)) {
-            tmpLog =  generateExcludedSequenceLog(
-                    rowIdx,
-                    seqIdx,
-                    true,
-                    this.getRowCopy(rowIdx),
-                    this.getNonogramRules().getRowSequencesLengths().get(rowIdx),
-                    this.getRowsSequencesRanges().get(rowIdx)
-            );
-            addLog();
-            this.rowsSequencesIdsNotToInclude.get(rowIdx).add(seqIdx);
-            Collections.sort(this.rowsSequencesIdsNotToInclude.get(rowIdx));
-        }
+        if (!isRowIndexValid(rowIdx) || this.rowsSequencesIdsNotToInclude.get(rowIdx).contains(seqIdx)) return;
+
+        String marker = NonogramHelper.indexToSequenceCharMark(seqIdx);
+        List<Integer> rowSeqRange = this.getRowsSequencesRanges().get(rowIdx).get(seqIdx);
+
+        IntStream.rangeClosed(rowSeqRange.get(0), rowSeqRange.get(1))
+                .forEach(columnIdx -> markRowBoardField(rowIdx, columnIdx, marker));
+
+        tmpLog = generateExcludedSequenceLog(
+                rowIdx,
+                seqIdx,
+                false,
+                this.getRowCopy(rowIdx),
+                this.getNonogramRules().getRowSequencesLengths().get(rowIdx),
+                this.getRowsSequencesRanges().get(rowIdx)
+        );
+        addLog();
+
+        this.rowsSequencesIdsNotToInclude.get(rowIdx).add(seqIdx);
+        Collections.sort(this.rowsSequencesIdsNotToInclude.get(rowIdx));
     }
 
     public void excludeFieldsInRow(List<Field> fieldsToExclude) {

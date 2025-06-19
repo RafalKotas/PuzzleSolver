@@ -1647,7 +1647,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                     }
                 }
 
-                if (matchingCount == 1 && this.getColumnsSequencesIdsNotToInclude().get(columnIdx).contains(matchedSeqIdx)) {
+                if (matchingCount == 1 && !this.getColumnsSequencesIdsNotToInclude().get(columnIdx).contains(matchedSeqIdx)) {
                     String marker = NonogramHelper.indexToSequenceCharMark(matchedSeqIdx);
                     List<String> beforeMarking = new ArrayList<>(this.getNonogramBoardColumnWithMarks(columnIdx));
 
@@ -1705,19 +1705,26 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
     }
 
     public void excludeSequenceInColumn(int columnIdx, int seqIdx) {
-        if (isColumnIndexValid(columnIdx) && !this.columnsSequencesIdsNotToInclude.get(columnIdx).contains(seqIdx)) {
-            tmpLog =  generateExcludedSequenceLog(
-                    columnIdx,
-                    seqIdx,
-                    false,
-                    this.getColumnCopy(columnIdx),
-                    this.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
-                    this.getColumnsSequencesRanges().get(columnIdx)
-            );
-            addLog();
-            this.columnsSequencesIdsNotToInclude.get(columnIdx).add(seqIdx);
-            Collections.sort(this.columnsSequencesIdsNotToInclude.get(columnIdx));
-        }
+        if (!isColumnIndexValid(columnIdx) || this.columnsSequencesIdsNotToInclude.get(columnIdx).contains(seqIdx)) return;
+
+        String marker = NonogramHelper.indexToSequenceCharMark(seqIdx);
+        List<Integer> columnSeqRange = this.getColumnsSequencesRanges().get(columnIdx).get(seqIdx);
+
+        IntStream.rangeClosed(columnSeqRange.get(0), columnSeqRange.get(1))
+                .forEach(rowIdx -> markColumnBoardField(columnIdx, rowIdx, marker));
+
+        tmpLog = generateExcludedSequenceLog(
+                columnIdx,
+                seqIdx,
+                false,
+                this.getColumnCopy(columnIdx),
+                this.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
+                this.getColumnsSequencesRanges().get(columnIdx)
+        );
+        addLog();
+
+        this.columnsSequencesIdsNotToInclude.get(columnIdx).add(seqIdx);
+        Collections.sort(this.columnsSequencesIdsNotToInclude.get(columnIdx));
     }
 
     public void excludeFieldsInColumn(List<Field> fieldsToExclude) {
