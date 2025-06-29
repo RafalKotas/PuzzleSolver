@@ -9,11 +9,7 @@ import java.io.FileReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.COLOURED_FIELD;
 
@@ -124,6 +120,38 @@ public class NonogramSolverUtils {
         }
     }
 
+    public static boolean actualRangesContainCorrectRanges(List<List<Integer>> expectedRanges, List<List<Integer>> actualRanges) {
+        if (expectedRanges.size() != actualRanges.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < expectedRanges.size(); i++) {
+            List<Integer> expected = expectedRanges.get(i);
+            List<Integer> actual = actualRanges.get(i);
+
+            if (expected.size() != 2 || actual.size() != 2) {
+                return false;
+            }
+
+            int expectedStart = expected.get(0);
+            int expectedEnd = expected.get(1);
+            int actualStart = actual.get(0);
+            int actualEnd = actual.get(1);
+
+            if (expectedStart < actualStart || expectedEnd > actualEnd) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean rangeContains(List<Integer> container, List<Integer> contained) {
+        if (container.size() != 2 || contained.size() != 2) return false;
+        return contained.get(0) >= container.get(0) && contained.get(1) <= container.get(1);
+    }
+
+
     public static boolean rangesContainCorrectRanges(
             List<List<List<Integer>>> correctRanges,
             List<List<List<Integer>>> currentRanges
@@ -151,46 +179,5 @@ public class NonogramSolverUtils {
         }
 
         return true;
-    }
-
-    private static boolean rangeContains(List<Integer> outer, List<Integer> inner) {
-        return outer.get(0) <= inner.get(0) && outer.get(1) >= inner.get(1);
-    }
-
-    public static boolean partialBoardMatchesSolution(List<List<String>> partialBoard, List<List<String>> correctBoard) {
-        for (int i = 0; i < partialBoard.size(); i++) {
-            for (int j = 0; j < partialBoard.get(i).size(); j++) {
-                String current = partialBoard.get(i).get(j);
-                if (!"-".equals(current)) {
-                    if (!current.equals(correctBoard.get(i).get(j))) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
-    public static void numberedLogToArgumentsWithCaseNumbers(List<String> convertedLogs) {
-        Map<String, Integer> labelCounters = new HashMap<>();
-
-        for (String converted : convertedLogs) {
-            String prefix = converted.split(",")[0];
-
-            Matcher matcher = Pattern.compile("(Row|Column) \\d+").matcher(prefix);
-            if (!matcher.find()) {
-                System.out.println("// Not found Row/Column in: " + prefix);
-                continue;
-            }
-
-            String label = matcher.group();
-            int count = labelCounters.getOrDefault(label, 0) + 1;
-            labelCounters.put(label, count);
-
-            String numberedLabel = label + " #" + count;
-            String newConverted = converted.replace(label, numberedLabel);
-
-            System.out.println(newConverted + ",");
-        }
     }
 }
