@@ -30,7 +30,9 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramStructureFactory.generateEmptyColumns;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramStructureFactory.generateEmptyRows;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramSolverUtils.actualRangesContainCorrectRanges;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramState.buildInitialEmptyNonogramState;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.generators.ActionDetailsGenerator.generateAllPossibleSingleActionDetails;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.ExcludedSequenceLogHelper.generateExcludedSequenceLog;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.TooLongMergeFieldHelper.collectColouredSequencesRanges;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.*;
@@ -518,28 +520,12 @@ public class NonogramLogic extends NonogramLogicParams {
     }
 
     public void basicSolve() {
-
         int actionListIndex = 0;
-        int currentActionRCIndex; // row or column index
-        NonogramActionDetails currentActionDetails;
-        NonogramSolveAction nonogramSolveAction;
 
         while (actionListIndex < this.actionsToDoList.size()) {
-            currentActionDetails = this.actionsToDoList.get(actionListIndex);
-            currentActionRCIndex = currentActionDetails.getIndex();
-            nonogramSolveAction = currentActionDetails.getActionName();
+            NonogramActionDetails currentAction = this.actionsToDoList.get(actionListIndex);
 
-            try {
-                if (getRowSolveActions().contains(nonogramSolveAction)) {
-                    executeRowAction(currentActionRCIndex, currentActionDetails);
-                } else {
-                    executeColumnAction(currentActionRCIndex, currentActionDetails);
-                }
-            } catch (Exception e) {
-                // empty
-            }
-
-            if (!validateAgainstCorrectSolution(actionListIndex, currentActionDetails)) {
+            if (!executeSingleActionWithValidation(actionListIndex, currentAction)) {
                 break;
             }
 
@@ -549,6 +535,55 @@ public class NonogramLogic extends NonogramLogicParams {
 
             actionListIndex++;
         }
+//        printEmptyFieldsAsList(this.getNonogramSolutionBoard());
+//        makeExtraActions();
+//        makeExtraActions();
+//        makeExtraActions();
+    }
+
+    private void makeExtraActions() {
+        List<NonogramActionDetails> nonogramExtraActions =
+                generateAllPossibleSingleActionDetails(this.getNonogramRules().getHeight(), this.getNonogramRules().getWidth());
+
+        for (NonogramActionDetails extraAction : nonogramExtraActions) {
+            int currentIndex = extraAction.getIndex();
+            NonogramSolveAction extraActionName = extraAction.getActionName();
+
+            try {
+                if (getRowSolveActions().contains(extraActionName)) {
+                    executeRowAction(currentIndex, extraAction);
+                } else {
+                    executeColumnAction(currentIndex, extraAction);
+                }
+            } catch (Exception e) {
+                // empty
+            }
+
+            if (!validateAgainstCorrectSolution(currentIndex, extraAction)) {
+                break;
+            }
+
+            if (this.guessMode == GuessMode.ENABLED && this.nonogramState.isInvalidSolution()) {
+                break;
+            }
+        }
+    }
+
+    private boolean executeSingleActionWithValidation(int actionIndex, NonogramActionDetails action) {
+        int index = action.getIndex();
+        NonogramSolveAction actionName = action.getActionName();
+
+        try {
+            if (getRowSolveActions().contains(actionName)) {
+                executeRowAction(index, action);
+            } else {
+                executeColumnAction(index, action);
+            }
+        } catch (Exception e) {
+            log.warn("Exception during action execution: {}", actionName, e);
+        }
+
+        return validateAgainstCorrectSolution(actionIndex, action);
     }
 
     private void executeRowAction(int rowIdx, NonogramActionDetails actionDetails) {
@@ -590,35 +625,41 @@ public class NonogramLogic extends NonogramLogicParams {
             return true;
         }
 
-        boolean boardCorrect = NonogramSolverUtils.partialBoardMatchesSolution(
-                getNonogramSolutionBoard(), correctSolutionBoard
-        );
-        boolean rowRangesCorrect = NonogramSolverUtils.rangesContainCorrectRanges(
-                correctRowRanges, getRowsSequencesRanges()
-        );
-        boolean columnRangesCorrect = NonogramSolverUtils.rangesContainCorrectRanges(
-                correctColumnRanges, getColumnsSequencesRanges()
-        );
-
         List<String> errors = new ArrayList<>();
 
-        if (!boardCorrect) {
-            errors.add("Board not correct after action %d: %s"
-                    .formatted(actionIndex, currentActionDetails));
+        for (int row = 0; row < getNonogramSolutionBoard().size(); row++) {
+            List<String> currentRow = getNonogramSolutionBoard().get(row);
+            List<String> correctRow = correctSolutionBoard.get(row);
+            for (int col = 0; col < currentRow.size(); col++) {
+                String current = currentRow.get(col);
+                String correct = correctRow.get(col);
+                if (!current.equals("-") && !current.equals(correct)) {
+                    errors.add("Mismatch at (" + row + "," + col + ") - found: " + current + ", expected: " + correct);
+                }
+            }
         }
 
-        if (!rowRangesCorrect) {
-            errors.add("Correct row ranges are not contained in current row ranges");
+        List<List<List<Integer>>> currentRowRanges = getRowsSequencesRanges();
+        for (int rowIdx = 0; rowIdx < currentRowRanges.size(); rowIdx++) {
+            List<List<Integer>> expectedRanges = correctRowRanges.get(rowIdx);
+            List<List<Integer>> actualRanges = currentRowRanges.get(rowIdx);
+            if (!actualRangesContainCorrectRanges(expectedRanges, actualRanges)) {
+                errors.add("Row range mismatch at row " + rowIdx);
+            }
         }
 
-        if (!columnRangesCorrect) {
-            errors.add("Correct column ranges are not contained in current column ranges");
+        List<List<List<Integer>>> currentColRanges = getColumnsSequencesRanges();
+        for (int colIdx = 0; colIdx < currentColRanges.size(); colIdx++) {
+            List<List<Integer>> expectedRanges = correctColumnRanges.get(colIdx);
+            List<List<Integer>> actualRanges = currentColRanges.get(colIdx);
+            if (!actualRangesContainCorrectRanges(expectedRanges, actualRanges)) {
+                errors.add("Column range mismatch at column " + colIdx);
+            }
         }
 
         if (!errors.isEmpty()) {
             log.error("Validation failed at action {}: {}", actionIndex, currentActionDetails);
             errors.forEach(log::error);
-
             getNonogramState().setInvalidSolution(true);
             return false;
         }
@@ -699,83 +740,87 @@ public class NonogramLogic extends NonogramLogicParams {
     }
 
     public void makeProperActionInRow(int rowIdx, NonogramSolveAction actionToDoInRow) {
-        switch (actionToDoInRow) {
-            case CORRECT_ROW_SEQUENCES_RANGES -> {
-                this.nonogramRowLogic.correctRowSequencesRanges(rowIdx);
-                if (this.guessMode == GuessMode.ENABLED) {
-                    invalidateSolutionIfRowSequencesWrong(rowIdx);
+        if (isRowIndexValid(rowIdx)) {
+            switch (actionToDoInRow) {
+                case CORRECT_ROW_SEQUENCES_RANGES -> {
+                    this.nonogramRowLogic.correctRowSequencesRanges(rowIdx);
+                    if (this.guessMode == GuessMode.ENABLED) {
+                        invalidateSolutionIfRowSequencesWrong(rowIdx);
+                    }
                 }
-            }
-            case CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS -> {
-                this.nonogramRowLogic.correctRowSequencesRangesWhenMetColouredField(rowIdx);
-                if (this.guessMode == GuessMode.ENABLED) {
-                    invalidateSolutionIfRowSequencesWrong(rowIdx);
+                case CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS -> {
+                    this.nonogramRowLogic.correctRowSequencesRangesWhenMetColouredField(rowIdx);
+                    if (this.guessMode == GuessMode.ENABLED) {
+                        invalidateSolutionIfRowSequencesWrong(rowIdx);
+                    }
                 }
-            }
-            case CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY -> {
-                this.nonogramRowLogic.correctRowSequencesRangesIfXOnWay(rowIdx, true);
-                if (this.guessMode == GuessMode.ENABLED) {
-                    invalidateSolutionIfRowSequencesWrong(rowIdx);
+                case CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY -> {
+                    this.nonogramRowLogic.correctRowSequencesRangesIfXOnWay(rowIdx, true);
+                    if (this.guessMode == GuessMode.ENABLED) {
+                        invalidateSolutionIfRowSequencesWrong(rowIdx);
+                    }
                 }
-            }
-            case CORRECT_ROW_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES ->
-                    this.nonogramRowLogic.correctRowSequencesRangesWhenMatchingFieldsToSequences(rowIdx);
-            case CORRECT_ROW_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE ->
-                    this.nonogramRowLogic.correctRowSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence(rowIdx);
-            case COLOUR_OVERLAPPING_FIELDS_IN_ROW -> this.nonogramRowLogic.colourOverlappingFieldsInRow(rowIdx);
-            case COLOUR_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE -> this.nonogramRowLogic.colourFieldsIfInRowXWouldForceTooLongColouredFieldsSequence(rowIdx);
-            case EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW -> this.nonogramRowLogic.extendColouredFieldsNearXToMaximumPossibleLengthInRow(rowIdx);
-            //case COLOUR_FIELDS_IN_ROW_IF_X_CAUSES_ASSIGNMENT_CONFLICT -> this.nonogramRowLogic.colourFieldsInRowIfXCausesAssignmentConflict(rowIdx);
-            case PLACE_XS_ROW_AT_UNREACHABLE_FIELDS -> this.nonogramRowLogic.placeXsRowAtUnreachableFields(rowIdx);
-            case PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES -> this.nonogramRowLogic.placeXsAroundLongestSequencesInRow(rowIdx);
-            case PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES -> this.nonogramRowLogic.placeXsRowAtTooShortEmptySequences(rowIdx);
-            case PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE -> this.nonogramRowLogic.placeXsRowIfOWillMergeNearFieldsToTooLongColouredSequence(rowIdx);
-            //case PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE -> this.nonogramRowLogic.placeXsRowIfONearXWillBeginTooLongPossibleColouredSequence(rowIdx);
-            //case ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH -> this.nonogramRowLogic.preventExtendingColouredSequenceToExcessLengthInRow(rowIdx);
-            case MARK_AVAILABLE_FIELDS_IN_ROW -> this.nonogramRowLogic.markAvailableFieldsInRow(rowIdx);
-            default -> {
-                // empty
+                case CORRECT_ROW_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES ->
+                        this.nonogramRowLogic.correctRowSequencesRangesWhenMatchingFieldsToSequences(rowIdx);
+                case CORRECT_ROW_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE ->
+                        this.nonogramRowLogic.correctRowSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence(rowIdx);
+                case COLOUR_OVERLAPPING_FIELDS_IN_ROW -> this.nonogramRowLogic.colourOverlappingFieldsInRow(rowIdx);
+                case COLOUR_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE -> this.nonogramRowLogic.colourFieldsIfInRowXWouldForceTooLongColouredFieldsSequence(rowIdx);
+                case EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW -> this.nonogramRowLogic.extendColouredFieldsNearXToMaximumPossibleLengthInRow(rowIdx);
+                case COLOUR_FIELDS_IN_ROW_IF_X_CAUSES_ASSIGNMENT_CONFLICT -> this.nonogramRowLogic.colourFieldsInRowIfXCausesAssignmentConflict(rowIdx);
+                case PLACE_XS_ROW_AT_UNREACHABLE_FIELDS -> this.nonogramRowLogic.placeXsRowAtUnreachableFields(rowIdx);
+                case PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES -> this.nonogramRowLogic.placeXsAroundLongestSequencesInRow(rowIdx);
+                case PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES -> this.nonogramRowLogic.placeXsRowAtTooShortEmptySequences(rowIdx);
+                case PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE -> this.nonogramRowLogic.placeXsRowIfOWillMergeNearFieldsToTooLongColouredSequence(rowIdx);
+                case PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE -> this.nonogramRowLogic.placeXsRowIfONearXWillBeginTooLongPossibleColouredSequence(rowIdx);
+                //case ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH -> this.nonogramRowLogic.preventExtendingColouredSequenceToExcessLengthInRow(rowIdx);
+                case MARK_AVAILABLE_FIELDS_IN_ROW -> this.nonogramRowLogic.markAvailableFieldsInRow(rowIdx);
+                default -> {
+                    // empty
+                }
             }
         }
     }
 
     public void makeProperActionInColumn(int columnIdx, NonogramSolveAction actionToDoInColumn) {
-        switch (actionToDoInColumn) {
-            case CORRECT_COLUMN_SEQUENCES_RANGES -> {
-                this.nonogramColumnLogic.correctColumnSequencesRanges(columnIdx);
-                if (this.guessMode == GuessMode.ENABLED) {
-                    invalidateSolutionIfColumnSequencesWrong(columnIdx);
+        if (isColumnIndexValid(columnIdx)) {
+            switch (actionToDoInColumn) {
+                case CORRECT_COLUMN_SEQUENCES_RANGES -> {
+                    this.nonogramColumnLogic.correctColumnSequencesRanges(columnIdx);
+                    if (this.guessMode == GuessMode.ENABLED) {
+                        invalidateSolutionIfColumnSequencesWrong(columnIdx);
+                    }
                 }
-            }
-            case CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS -> {
-                this.nonogramColumnLogic.correctColumnSequencesRangesWhenMetColouredField(columnIdx);
-                if (this.guessMode == GuessMode.ENABLED) {
-                    invalidateSolutionIfColumnSequencesWrong(columnIdx);
+                case CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS -> {
+                    this.nonogramColumnLogic.correctColumnSequencesRangesWhenMetColouredField(columnIdx);
+                    if (this.guessMode == GuessMode.ENABLED) {
+                        invalidateSolutionIfColumnSequencesWrong(columnIdx);
+                    }
                 }
-            }
-            case CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY -> {
-                this.nonogramColumnLogic.correctColumnSequencesRangesIfXOnWay(columnIdx, true);
-                if (this.guessMode == GuessMode.ENABLED) {
-                    invalidateSolutionIfColumnSequencesWrong(columnIdx);
+                case CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY -> {
+                    this.nonogramColumnLogic.correctColumnSequencesRangesIfXOnWay(columnIdx, true);
+                    if (this.guessMode == GuessMode.ENABLED) {
+                        invalidateSolutionIfColumnSequencesWrong(columnIdx);
+                    }
                 }
-            }
-            case CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES ->
-                    this.nonogramColumnLogic.correctColumnSequencesRangesWhenMatchingFieldsToSequences(columnIdx);
-            case CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE ->
-                    this.nonogramColumnLogic.correctColumnSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence(columnIdx);
-            case COLOUR_OVERLAPPING_FIELDS_IN_COLUMN -> this.nonogramColumnLogic.colourOverlappingFieldsInColumn(columnIdx);
-            case COLOUR_FIELDS_IN_COLUMN_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE -> this.nonogramColumnLogic.colourFieldsInColumnIfXWouldForceTooLongColouredFieldsSequence(columnIdx);
-            case EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN -> this.nonogramColumnLogic.extendColouredFieldsNearXToMaximumPossibleLengthInColumn(columnIdx);
-            //case COLOUR_FIELDS_IN_COLUMN_IF_X_CAUSES_ASSIGNMENT_CONFLICT -> this.nonogramColumnLogic.colourFieldsInColumnIfXCausesAssignmentConflict(columnIdx);
-            case PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS -> this.nonogramColumnLogic.placeXsColumnAtUnreachableFields(columnIdx);
-            case PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES -> this.nonogramColumnLogic.placeXsAroundLongestSequencesInColumn(columnIdx);
-            case PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES -> this.nonogramColumnLogic.placeXsColumnAtTooShortEmptySequences(columnIdx);
-            case PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE -> this.nonogramColumnLogic.placeXsColumnIfOWillMergeNearFieldsToTooLongColouredSequence(columnIdx);
-            case PLACE_XS_COLUMN_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE -> this.nonogramColumnLogic.placeXsColumnIfONearXWillBeginTooLongPossibleColouredSequence(columnIdx);
-            //case COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH -> this.nonogramColumnLogic.preventExtendingColouredSequenceToExcessLengthInColumn(columnIdx);
-            case MARK_AVAILABLE_FIELDS_IN_COLUMN -> this.nonogramColumnLogic.markAvailableFieldsInColumn(columnIdx);
-            default -> {
-                // empty
+                case CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES ->
+                        this.nonogramColumnLogic.correctColumnSequencesRangesWhenMatchingFieldsToSequences(columnIdx);
+                case CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE ->
+                        this.nonogramColumnLogic.correctColumnSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence(columnIdx);
+                case COLOUR_OVERLAPPING_FIELDS_IN_COLUMN -> this.nonogramColumnLogic.colourOverlappingFieldsInColumn(columnIdx);
+                case COLOUR_FIELDS_IN_COLUMN_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE -> this.nonogramColumnLogic.colourFieldsInColumnIfXWouldForceTooLongColouredFieldsSequence(columnIdx);
+                case EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN -> this.nonogramColumnLogic.extendColouredFieldsNearXToMaximumPossibleLengthInColumn(columnIdx);
+                //case COLOUR_FIELDS_IN_COLUMN_IF_X_CAUSES_ASSIGNMENT_CONFLICT -> this.nonogramColumnLogic.colourFieldsInColumnIfXCausesAssignmentConflict(columnIdx);
+                case PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS -> this.nonogramColumnLogic.placeXsColumnAtUnreachableFields(columnIdx);
+                case PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES -> this.nonogramColumnLogic.placeXsAroundLongestSequencesInColumn(columnIdx);
+                case PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES -> this.nonogramColumnLogic.placeXsColumnAtTooShortEmptySequences(columnIdx);
+                case PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE -> this.nonogramColumnLogic.placeXsColumnIfOWillMergeNearFieldsToTooLongColouredSequence(columnIdx);
+                case PLACE_XS_COLUMN_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE -> this.nonogramColumnLogic.placeXsColumnIfONearXWillBeginTooLongPossibleColouredSequence(columnIdx);
+                //case COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH -> this.nonogramColumnLogic.preventExtendingColouredSequenceToExcessLengthInColumn(columnIdx);
+                case MARK_AVAILABLE_FIELDS_IN_COLUMN -> this.nonogramColumnLogic.markAvailableFieldsInColumn(columnIdx);
+                default -> {
+                    // empty
+                }
             }
         }
     }
