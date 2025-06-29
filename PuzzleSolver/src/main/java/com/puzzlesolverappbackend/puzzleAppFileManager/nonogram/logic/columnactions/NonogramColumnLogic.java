@@ -647,7 +647,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             int mergeEnd = second.get(1);
 
             Field tempX = new Field(mergeStart - 1, columnIdx);
-            if (isFieldEmpty(nonogramSolutionBoard, tempX)) {
+            if (isRowIndexValid(mergeStart - 1) && isFieldEmpty(nonogramSolutionBoard, tempX)) {
                 placeXAtGivenField(tempX, false);
                 correctColumnSequencesRangesIfXOnWay(columnIdx, false);
                 clearField(tempX);
@@ -688,7 +688,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             int mergeEnd = second.get(1);
 
             Field tempX = new Field(mergeEnd + 1, columnIdx);
-            if (isFieldEmpty(nonogramSolutionBoard, tempX)) {
+            if (isRowIndexValid(mergeEnd + 1) && isFieldEmpty(nonogramSolutionBoard, tempX)) {
                 placeXAtGivenField(tempX, false);
                 correctColumnSequencesRangesIfXOnWay(columnIdx, false);
                 clearField(tempX);
@@ -1066,7 +1066,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             if (!isColumnIndexValid(rowIdx)) continue;
 
             Field edgeField = new Field(rowIdx, columnIdx);
-            if (isFieldEmpty(this.nonogramSolutionBoard, edgeField)) {
+            if (isRowIndexValid(rowIdx) && isFieldEmpty(this.nonogramSolutionBoard, edgeField)) {
                 this.placeXAtGivenField(edgeField, true);
                 this.addRowAndColumnToAffectedByIdentifiers(edgeField, NonogramSolveAction.PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES);
                 this.nonogramState.increaseMadeSteps();
