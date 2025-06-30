@@ -351,47 +351,157 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
     @Override
     public void correctRowSequencesRangesWhenMatchingFieldsToSequences(int rowIdx) {
-        List<String> boardRow = this.getNonogramSolutionBoard().get(rowIdx);
-
         List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
-
         List<Integer> rowSequencesLengths = this.getNonogramRules().getRowSequencesLengths().get(rowIdx);
+        List<List<Integer>> colouredRanges = collectColouredSequencesRanges(this.getNonogramSolutionBoard(), rowIdx, true);
 
-        List<List<Integer>> colouredSequencesPartsRanges = collectColouredSequencesRanges(
-                this.getNonogramSolutionBoard(),
-                rowIdx,
-                true);
+        boolean hasChangedGlobal = false;
 
-        List<List<Integer>> colouredSequencesPartsMaxRanges = getColouredSequencesPartsMaxRanges(rowIdx,
-                colouredSequencesPartsRanges);
+        boolean hasChanged;
+        do {
+            hasChanged = false;
+            Map<Integer, List<Integer>> colouredRangeToSeqIds = new HashMap<>();
 
-        List<List<Integer>> colouredSequencesPartsMatches = new ArrayList<>();
+            for (int colouredIdx = 0; colouredIdx < colouredRanges.size(); colouredIdx++) {
+                List<Integer> colouredRange = colouredRanges.get(colouredIdx);
+                int colouredLen = rangeLength(colouredRange);
+                List<Integer> possibleSeqs = new ArrayList<>();
 
-        for (List<Integer> colouredRange : colouredSequencesPartsRanges) {
-            List<Integer> matches = new ArrayList<>();
+                for (int seqIdx = 0; seqIdx < rowSequencesRanges.size(); seqIdx++) {
+                    List<Integer> seqRange = rowSequencesRanges.get(seqIdx);
+                    int sequenceLen = rowSequencesLengths.get(seqIdx);
 
-            for (int seqIdx = 0; seqIdx < rowSequencesRanges.size(); seqIdx++) {
-                List<Integer> seqRange = rowSequencesRanges.get(seqIdx);
-                int seqLength = rowSequencesLengths.get(seqIdx);
-                int colouredLength = rangeLength(colouredRange);
+                    if (rangeInsideAnotherRange(colouredRange, seqRange) && sequenceLen >= colouredLen) {
+                        possibleSeqs.add(seqIdx);
+                    }
+                }
 
-                if (rangeInsideAnotherRange(colouredRange, seqRange)
-                        && colouredLength <= seqLength) {
-                    matches.add(seqIdx);
+                colouredRangeToSeqIds.put(colouredIdx, possibleSeqs);
+            }
+
+            int maxAssignedSeqId = -1;
+            for (int i = 0; i < colouredRanges.size(); i++) {
+                List<Integer> possibleSeqs = colouredRangeToSeqIds.get(i);
+                if (possibleSeqs == null || possibleSeqs.isEmpty()) continue;
+
+                List<Integer> filtered = new ArrayList<>();
+                for (int seqId : possibleSeqs) {
+                    if (seqId >= maxAssignedSeqId) {
+                        filtered.add(seqId);
+                    }
+                }
+
+                colouredRangeToSeqIds.put(i, filtered);
+
+                if (filtered.size() == 1) {
+                    maxAssignedSeqId = filtered.get(0);
                 }
             }
 
-            colouredSequencesPartsMatches.add(matches);
-        }
+            for (Map.Entry<Integer, List<Integer>> entry : colouredRangeToSeqIds.entrySet()) {
+                List<Integer> possibleSeqs = entry.getValue();
+                if (possibleSeqs == null || possibleSeqs.isEmpty()) continue;
 
-        log.debug("Analyzing row {}", rowIdx);
-        log.debug("Board row: {}", boardRow);
-        log.debug("Row sequence ranges: {}", rowSequencesRanges);
-        log.debug("Row sequence lengths: {}", rowSequencesLengths);
-        log.debug("Coloured sequences ranges: {}", colouredSequencesPartsRanges);
-        log.debug("Max coloured ranges: {}", colouredSequencesPartsMaxRanges);
-        log.debug("Matches: {}", colouredSequencesPartsMatches);
+                int seqIdx = Collections.min(possibleSeqs);
+                List<Integer> seqRange = rowSequencesRanges.get(seqIdx);
+                int sequenceLength = rowSequencesLengths.get(seqIdx);
+
+                List<Integer> colouredRange = colouredRanges.get(entry.getKey());
+                int newStart = colouredRange.get(1) - sequenceLength + 1;
+                int newEnd = colouredRange.get(0) + sequenceLength - 1;
+
+                int oldStart = seqRange.get(0);
+                int oldEnd = seqRange.get(1);
+
+                boolean isCertainAssignment = possibleSeqs.size() == 1;
+                int updatedStart = isCertainAssignment ? Math.max(newStart, oldStart) : oldStart;
+                int updatedEnd = Math.min(newEnd, oldEnd);
+
+                boolean colouredInSeqRange = rangeInsideAnotherRange(colouredRange, seqRange);
+                boolean newRangeValid = newStart <= newEnd;
+
+                if (colouredInSeqRange && newRangeValid && (updatedStart != oldStart || updatedEnd != oldEnd)) {
+                    seqRange.set(0, updatedStart);
+                    seqRange.set(1, updatedEnd);
+                    hasChanged = true;
+                    hasChangedGlobal = true;
+                }
+            }
+
+            Map<Integer, List<Integer>> colouredRangeToSeqIdsRight = new HashMap<>();
+            for (int i = colouredRanges.size() - 1; i >= 0; i--) {
+                List<Integer> colouredRange = colouredRanges.get(i);
+                int colouredLen = rangeLength(colouredRange);
+                List<Integer> possibleSeqs = new ArrayList<>();
+
+                for (int seqIdx = rowSequencesRanges.size() - 1; seqIdx >= 0; seqIdx--) {
+                    List<Integer> seqRange = rowSequencesRanges.get(seqIdx);
+                    int sequenceLen = rowSequencesLengths.get(seqIdx);
+
+                    if (rangeInsideAnotherRange(colouredRange, seqRange) && sequenceLen >= colouredLen) {
+                        possibleSeqs.add(seqIdx);
+                    }
+                }
+
+                colouredRangeToSeqIdsRight.put(i, possibleSeqs);
+            }
+
+            int minAssignedSeqId = rowSequencesRanges.size();
+            for (int i = colouredRanges.size() - 1; i >= 0; i--) {
+                List<Integer> possibleSeqs = colouredRangeToSeqIdsRight.get(i);
+                if (possibleSeqs == null || possibleSeqs.isEmpty()) continue;
+
+                List<Integer> filtered = new ArrayList<>();
+                for (int seqId : possibleSeqs) {
+                    if (seqId <= minAssignedSeqId) {
+                        filtered.add(seqId);
+                    }
+                }
+
+                colouredRangeToSeqIdsRight.put(i, filtered);
+
+                if (filtered.size() == 1) {
+                    minAssignedSeqId = filtered.get(0);
+                }
+            }
+
+            for (Map.Entry<Integer, List<Integer>> entry : colouredRangeToSeqIdsRight.entrySet()) {
+                List<Integer> possibleSeqs = entry.getValue();
+                if (possibleSeqs == null || possibleSeqs.isEmpty()) continue;
+
+                int seqIdx = Collections.max(possibleSeqs);
+                List<Integer> seqRange = rowSequencesRanges.get(seqIdx);
+                int sequenceLength = rowSequencesLengths.get(seqIdx);
+
+                List<Integer> colouredRange = colouredRanges.get(entry.getKey());
+                int newStart = colouredRange.get(1) - sequenceLength + 1;
+                int newEnd = colouredRange.get(0) + sequenceLength - 1;
+
+                int oldStart = seqRange.get(0);
+                int oldEnd = seqRange.get(1);
+
+                boolean isCertainAssignment = possibleSeqs.size() == 1;
+                int updatedEnd = isCertainAssignment ? Math.min(newEnd, oldEnd) : oldEnd;
+                int updatedStart = Math.max(newStart, oldStart);
+
+                boolean colouredInSeqRange = rangeInsideAnotherRange(colouredRange, seqRange);
+                boolean newRangeValid = newStart <= newEnd;
+
+                if (colouredInSeqRange && newRangeValid && (updatedStart != oldStart || updatedEnd != oldEnd)) {
+                    seqRange.set(0, updatedStart);
+                    seqRange.set(1, updatedEnd);
+                    hasChanged = true;
+                    hasChangedGlobal = true;
+                }
+            }
+
+        } while (hasChanged);
+
+        if (hasChangedGlobal) {
+            this.addRowToAffectedActionsByIdentifiers(rowIdx, NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES);
+        }
     }
+
 
     @Override
     public void correctRowSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence(int rowIdx) {
@@ -533,7 +643,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             int mergeEnd = second.get(1);
 
             Field tempX = new Field(rowIdx, mergeStart - 1);
-            if (isFieldEmpty(nonogramSolutionBoard, tempX)) {
+            if (isColumnIndexValid(mergeStart - 1) && isFieldEmpty(nonogramSolutionBoard, tempX)) {
                 placeXAtGivenField(tempX, false);
                 correctRowSequencesRangesIfXOnWay(rowIdx, false);
                 clearField(tempX);
@@ -572,7 +682,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             int mergeEnd = second.get(1);
 
             Field tempX = new Field(rowIdx, mergeEnd + 1);
-            if (isFieldEmpty(nonogramSolutionBoard, tempX)) {
+            if (isColumnIndexValid(mergeEnd + 1) && isFieldEmpty(nonogramSolutionBoard, tempX)) {
                 placeXAtGivenField(tempX, false);
                 correctRowSequencesRangesIfXOnWay(rowIdx, false);
                 clearField(tempX);
@@ -1223,9 +1333,6 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         int start = fromLeft ? 0 : this.getNonogramRules().getWidth() - 1;
         int end = fromLeft ? this.getNonogramRules().getWidth() : 0;
         int step = fromLeft ? 1 : -1;
-
-        List<Integer> rowSequencesLengths = this.getNonogramRules().getColumnSequencesLengths().get(rowIdx);
-        List<List<Integer>> rowSequencesRanges = this.getRowsSequencesRanges().get(rowIdx);
 
         for (int columnIdx = start; fromLeft ? columnIdx < end : columnIdx > end; columnIdx += step) {
             Field xField = new Field(rowIdx, columnIdx);
