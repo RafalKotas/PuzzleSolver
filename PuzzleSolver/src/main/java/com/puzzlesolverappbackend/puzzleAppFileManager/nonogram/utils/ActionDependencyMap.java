@@ -39,7 +39,6 @@ public class ActionDependencyMap {
 
     // TODO test completeness of actions dependencies
     static {
-        // 30 -> 28 o11684 o07811
         actionDependencies.put(NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES, List.of(
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS, // improvement o11684 -> test
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY, // base
@@ -51,7 +50,6 @@ public class ActionDependencyMap {
                 NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH
         ));
 
-        // 28 -> 27 o06011
         actionDependencies.put(NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES, List.of(
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS, // improvement_row
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY, // base
@@ -64,7 +62,6 @@ public class ActionDependencyMap {
                 NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH //no improvement,
         ));
 
-        // 27 -> 25 o07956 o07584
         actionDependencies.put(NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS, List.of(
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES, // check-
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES, // improvement o07956  with CORRECT_ROW_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE -> test
@@ -78,7 +75,6 @@ public class ActionDependencyMap {
                 NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH // check-
         ));
 
-        // 25 -> 22 o10935 o07632 o05614
         actionDependencies.put(NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS, List.of(
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES, // improvement o10935
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES, // no improvement
@@ -91,7 +87,6 @@ public class ActionDependencyMap {
                 NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH // improvement o05614
         ));
 
-        // 22 -> 22
         actionDependencies.put(NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY, List.of(
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES, // base
                 NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_ROW, // base
@@ -100,8 +95,6 @@ public class ActionDependencyMap {
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW // base
         ));
 
-
-        // 22 -> 22
         actionDependencies.put(NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY, List.of(
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES, // base
                 NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_COLUMN, // base
@@ -110,37 +103,38 @@ public class ActionDependencyMap {
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN // base
         ));
 
-        // 22 -> 22
         actionDependencies.put(NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES, List.of(
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES, // base
                 NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_ROW, // base
                 NonogramSolveAction.PLACE_XS_ROW_AT_UNREACHABLE_FIELDS, // base
-                NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW // base
+                NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES, // base
+                NonogramSolveAction.PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE,
+                NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW, // base
+                NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART
         ));
 
-        // 22 -> 22
         actionDependencies.put(NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES, List.of(
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES, // base
                 NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_COLUMN, // base
                 NonogramSolveAction.PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS, // base
-                NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN // base
+                NonogramSolveAction.PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES, // base (new) i bez tego
+                NonogramSolveAction.PLACE_XS_COLUMN_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE,
+                NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN, // base
+                NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH
         ));
 
-        // 22 -> 21 o11686
         actionDependencies.put(NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE, List.of(
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES, // improvement o11686
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY, // base
                 NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_ROW // base
         ));
 
-        // 21 -> 20 o10173
         actionDependencies.put(NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE, List.of(
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES, // improvement o10173
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY, // base
                 NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_COLUMN // base
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_ROW, List.of(
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW, // base
 
@@ -154,7 +148,6 @@ public class ActionDependencyMap {
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN // base
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_COLUMN, List.of(
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN, // base
 
@@ -162,6 +155,7 @@ public class ActionDependencyMap {
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES, // base
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE, // base
                 NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW, // base
+                NonogramSolveAction.COLOUR_FIELDS_IN_ROW_IF_X_CAUSES_ASSIGNMENT_CONFLICT, // new
                 NonogramSolveAction.COLOUR_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE,
                 NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES, // base
                 NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE, // base
@@ -186,7 +180,6 @@ public class ActionDependencyMap {
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW, List.of(
                 NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES, // base
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW, // base
@@ -207,7 +200,6 @@ public class ActionDependencyMap {
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN
         ));
 
-        // 20 -> 19 o08542
         actionDependencies.put(NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN, List.of(
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES,
                 NonogramSolveAction.PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES, // base
@@ -224,8 +216,6 @@ public class ActionDependencyMap {
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW // base
         ));
 
-        // - after check all again
-        // 21 -> 20  o11684
         actionDependencies.put(NonogramSolveAction.PLACE_XS_ROW_AT_UNREACHABLE_FIELDS, List.of(
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES, // base
 
@@ -238,7 +228,6 @@ public class ActionDependencyMap {
                 NonogramSolveAction.PLACE_XS_COLUMN_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE // base
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS, List.of(
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES, // base
 
@@ -250,7 +239,6 @@ public class ActionDependencyMap {
                 NonogramSolveAction.PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE // base
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES, List.of(
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES, // base
                 NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW, // base
@@ -263,7 +251,6 @@ public class ActionDependencyMap {
                 NonogramSolveAction.PLACE_XS_COLUMN_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE // base
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES, List.of(
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES, // base
                 NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN, // base
@@ -276,24 +263,20 @@ public class ActionDependencyMap {
                 NonogramSolveAction.PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE // base
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES, List.of(
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY, // base
                 NonogramSolveAction.PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES // base
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES, List.of(
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY, // base
                 NonogramSolveAction.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES // base
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE, List.of(
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY, // base
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES, // base
-
-
+                NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW,
 
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY, // base
                 NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN, // base
@@ -302,10 +285,10 @@ public class ActionDependencyMap {
                 NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH // no improvement
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE, List.of(
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY, // base
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES, // base
+                NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN,
 
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY, // base
                 NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW, // base
@@ -314,49 +297,40 @@ public class ActionDependencyMap {
                 NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH // no improvement
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE, List.of(
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY, // base
                 NonogramSolveAction.PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES // base
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.PLACE_XS_COLUMN_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE, List.of(
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY, // base
                 NonogramSolveAction.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES // base
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART, List.of(
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS, // base
                 NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART, List.of(
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS, // base
                 NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART, List.of(
                 NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY // base
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART, List.of(
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY // base
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART, List.of(
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART, List.of(
         ));
 
-        // 20 -> 20
         actionDependencies.put(NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW, List.of(
                 NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES, // base
                 NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_ROW, // base
