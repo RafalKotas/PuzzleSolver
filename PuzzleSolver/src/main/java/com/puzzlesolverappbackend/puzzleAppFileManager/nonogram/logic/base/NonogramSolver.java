@@ -2,6 +2,7 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base;
 
 import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.LogGroupingPrinter;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionDecision;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionNode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramFullSolutionData;
@@ -32,7 +33,7 @@ public class NonogramSolver {
     private final boolean recursionModeEnabled = false;
     private boolean solved = false;
 
-    private boolean LOG_STEPS_SOLVER = true;
+    private boolean LOG_STEPS_SOLVER = false;
     private boolean printNodeCompletionPercentage = true;
 
     private boolean oneOfTwoDecisionsWrong;
@@ -118,10 +119,14 @@ public class NonogramSolver {
         nonogramSubsolutionNode.makeBasicSolverActions();
 
         if (LOG_STEPS_SOLVER) {
-            nonogramSubsolutionNode.getNonogramLogic().printSolutionBoard();
-            nonogramSubsolutionNode.getNonogramLogic().printSolutionBoardWithMarks();
-            System.out.println(nonogramSubsolutionNode.getNonogramLogic().getActionsToDoList().size());
-            System.out.println("-".repeat(100));
+//            nonogramSubsolutionNode.getNonogramLogic().printSolutionBoard();
+//            nonogramSubsolutionNode.getNonogramLogic().printSolutionBoardWithMarks();
+//            System.out.println(nonogramSubsolutionNode.getNonogramLogic().getActionsToDoList().size());
+//            System.out.println("-".repeat(100));
+//
+//            log.info("Fields filled after fill trivial rows and columns: {}", nonogramSubsolutionNode.getNonogramLogic().fieldsFilled());
+//            log.info("COMPLETION PERCENTAGE: {}, DECISIONS SIZE: {}", nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage(), nonogramSubsolutionNode.getNonogramGuessDecisions().size());
+//            log.info("SOLUTION STEPS: ");
 
             List<String> rawLogs = nonogramSubsolutionNode.getNodeLogs();
             List<String> convertedLogs = new ArrayList<>();
@@ -129,7 +134,10 @@ public class NonogramSolver {
             for (String rawLog : rawLogs) {
                 NonogramLogic logic = nonogramSubsolutionNode.getNonogramLogic();
                 LogConverter.convertLogByAction(rawLog, solutionFileName, logic, LogConverter.detectActionTypeFromRawLog(rawLog))
-                        .ifPresent(convertedLogs::add);
+                        .ifPresentOrElse(
+                                convertedLogs::add,
+                                () -> System.out.println(rawLog)
+                        );
             }
 
             LogGroupingPrinter.printLogsGroupedByDetectedType(rawLogs, convertedLogs);

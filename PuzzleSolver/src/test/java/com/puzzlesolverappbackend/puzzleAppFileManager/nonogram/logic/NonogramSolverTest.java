@@ -73,6 +73,8 @@ class NonogramSolverTest {
                 if (!result.nonogramIsFullyAndCorrectSolved()) {
                     notSolvedMap.computeIfAbsent(difficulty, d -> new ArrayList<>()).add(filename);
                     System.out.println(filename + " - NOT SOLVED (difficulty " + difficulty + ")");
+                } else {
+                    System.out.println(filename + " - SOLVED! (difficulty " + difficulty + ")");
                 }
             }
         }
