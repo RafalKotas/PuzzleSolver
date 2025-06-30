@@ -29,6 +29,7 @@ public class ActionDetailsGenerator {
                     NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES,
                     NonogramSolveAction.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES,
                     NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE,
+                    NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH,
                     NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW
             )) {
                 NonogramActionDetails detail = new NonogramActionDetails();
@@ -56,6 +57,7 @@ public class ActionDetailsGenerator {
                     NonogramSolveAction.PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES,
                     NonogramSolveAction.PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE,
                     NonogramSolveAction.PLACE_XS_COLUMN_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE,
+                    NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH,
                     NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN
             )) {
                 NonogramActionDetails detail = new NonogramActionDetails();
