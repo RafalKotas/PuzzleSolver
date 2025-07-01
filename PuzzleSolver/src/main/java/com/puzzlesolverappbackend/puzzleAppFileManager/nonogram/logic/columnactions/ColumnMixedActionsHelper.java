@@ -56,7 +56,7 @@ public class ColumnMixedActionsHelper {
                     break;
                 }
 
-                if (isFieldWithX(solutionBoard, new Field(currentRowIdx, columnIdx))) {
+                if (currentRowIdx == -1 || isFieldWithX(solutionBoard, new Field(currentRowIdx, columnIdx))) { // TODO - temp condition currentRowIdx == -1
                     fieldWithXFound = true;
                 }
             } else if (isFieldWithX(solutionBoard, new Field(currentRowIdx, columnIdx))) {
@@ -86,7 +86,7 @@ public class ColumnMixedActionsHelper {
         int currentRowIdx = possibleColouredSequencesStartIndexesRange.get(0);
         int potentiallyColouredSequenceRowIdx;
 
-        while (currentRowIdx <= possibleColouredSequencesStartIndexesRange.get(1)) {
+        while (currentRowIdx < height && currentRowIdx <= possibleColouredSequencesStartIndexesRange.get(1)) {
 
             if (isFieldColoured(solutionBoard, new Field(currentRowIdx, columnIdx))) {
                 potentiallyColouredSequenceRowIdx = currentRowIdx;
