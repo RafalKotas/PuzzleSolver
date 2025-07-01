@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.LogConverter.detectActionTypeFromRawLog;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.LogConverter.detectActionTypeFromRawLog;
 
 @UtilityClass
 public class LogGroupingPrinter {

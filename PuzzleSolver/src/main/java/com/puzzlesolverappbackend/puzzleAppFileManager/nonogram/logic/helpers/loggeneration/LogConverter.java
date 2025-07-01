@@ -1,6 +1,6 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.TrivialFillLogHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.colouring.ExtendLogHelper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.colouring.OverlappingLogHelper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.colouring.TooLongMergeLogHelper;
