@@ -2,7 +2,7 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base;
 
 import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.LogGroupingPrinter;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.LogGroupingPrinter;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionDecision;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionNode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramFullSolutionData;

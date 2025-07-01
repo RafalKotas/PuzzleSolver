@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.range;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
 import lombok.experimental.UtilityClass;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @UtilityClass
-public class SequenceCorrectionWhenMetColouredFieldsLogHelper {
+public class SequenceRangeCorrectionWhenMetColouredFieldsLogHelper {
 
     public static String generateLog(
             int index,

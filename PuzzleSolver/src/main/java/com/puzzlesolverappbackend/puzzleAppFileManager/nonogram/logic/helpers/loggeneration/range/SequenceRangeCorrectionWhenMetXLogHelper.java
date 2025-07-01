@@ -1,6 +1,7 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.range;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.LogFormatUtils;
 
 import java.util.List;
 

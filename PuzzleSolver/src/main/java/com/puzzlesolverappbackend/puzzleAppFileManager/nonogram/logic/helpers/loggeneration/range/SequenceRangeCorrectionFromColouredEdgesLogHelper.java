@@ -1,5 +1,6 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.range;
 
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.LogFormatUtils;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;

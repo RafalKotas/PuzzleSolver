@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.solve;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.Field;
 

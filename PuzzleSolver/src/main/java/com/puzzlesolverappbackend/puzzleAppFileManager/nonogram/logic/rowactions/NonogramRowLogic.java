@@ -5,7 +5,16 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSo
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.Field;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.NonogramLogicParams;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.*;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.colouring.ExtendLogHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.colouring.TooLongMergeLogHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.marking.MarkAvailableFieldsLogHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.range.*;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.xplacement.PlaceXsAroundLongestSequenceLogHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.xplacement.PlaceXsAtTooShortEmptySequencesLogHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.xplacement.PlaceXsAtUnreachableFieldsLogHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.xplacement.PlaceXsIfOWillCreateTooLongSequenceLogHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.solve.ColouringHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.solve.RangeCorrectionHelper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramHelper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,10 +26,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.*;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.ExcludedSequenceLogHelper.generateExcludedSequenceLog;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.OverlappingLogHelper.generateOverlappingSequenceLog;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.TooLongMergeFieldHelper.collectColouredSequencesRanges;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.TooLongMergeFieldHelper.matchColouredSequencesToPossibleSeqIDs;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.colouring.OverlappingLogHelper.generateOverlappingSequenceLog;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.exclusion.ExcludedSequenceLogHelper.generateExcludedSequenceLog;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.solve.TooLongMergeFieldHelper.collectColouredSequencesRanges;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.solve.TooLongMergeFieldHelper.matchColouredSequencesToPossibleSeqIDs;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.RowPreventExtendingColouredSequenceToExcessLengthHelpers.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.EMPTY_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.MARKED_ROW_INDICATOR;
@@ -213,7 +222,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                         oldRange.get(0), oldRange.get(1), colIdx, seqLength, true);
 
                 if (!updatedRange.equals(oldRange)) {
-                    this.tmpLog = SequenceCorrectionWhenMetColouredFieldsLogHelper.generateLog(
+                    this.tmpLog = SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.generateLog(
                             rowIdx,
                             seqId,
                             rowSeqRanges,
@@ -261,7 +270,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                         oldRange.get(0), oldRange.get(1), colIdx, seqLength, false);
 
                 if (!updatedRange.equals(oldRange)) {
-                    this.tmpLog = SequenceCorrectionWhenMetColouredFieldsLogHelper.generateLog(
+                    this.tmpLog = SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.generateLog(
                             rowIdx,
                             seqId,
                             rowSeqRanges,
@@ -1171,7 +1180,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 List<Integer> lengths = getNonogramRules().getRowSequencesLengths().get(rowIdx);
                 List<String> rowState = getRowCopy(rowIdx);
 
-                tmpLog = SequenceCorrectionWhenPlacingXsLogHelper.generateLog(rowIdx, seqIdx, allRanges, newRange, rowState, lengths);
+                tmpLog = SequenceRangeCorrectionWhenPlacingXsLogHelper.generateLog(rowIdx, seqIdx, allRanges, newRange, rowState, lengths);
                 addLog();
             }
         }

@@ -1,11 +1,11 @@
-package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers;
+package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.range;
 
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
 @UtilityClass
-public class SequenceCorrectionWhenPlacingXsLogHelper {
+public class SequenceRangeCorrectionWhenPlacingXsLogHelper {
 
     public static String generateLog(
             int rowIdx,

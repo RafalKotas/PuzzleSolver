@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.TooLongMergeFieldHelper.collectColouredSequencesRanges;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.solve.TooLongMergeFieldHelper.collectColouredSequencesRanges;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.NonogramRowLogic.prepareNonogramRowLogic;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.COLOURED_FIELD;
 import static org.assertj.core.api.Assertions.assertThat;

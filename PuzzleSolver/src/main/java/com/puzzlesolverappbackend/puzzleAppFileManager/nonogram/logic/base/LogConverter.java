@@ -1,6 +1,16 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.*;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.TrivialFillLogHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.colouring.ExtendLogHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.colouring.OverlappingLogHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.colouring.TooLongMergeLogHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.exclusion.ExcludedSequenceLogHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.marking.MarkAvailableFieldsLogHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.range.*;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.xplacement.PlaceXsAroundLongestSequenceLogHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.xplacement.PlaceXsAtTooShortEmptySequencesLogHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.xplacement.PlaceXsAtUnreachableFieldsLogHelper;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.xplacement.PlaceXsIfOWillCreateTooLongSequenceLogHelper;
 import lombok.experimental.UtilityClass;
 
 import java.util.Optional;
@@ -23,7 +33,7 @@ public class LogConverter {
             case "SEQUENCES_RANGES_CORRECTION" ->
                     Optional.of(SequenceRangeCorrectionLogHelper.convertLogToTestArguments(log, solutionName));
             case "SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS" ->
-                    Optional.of(SequenceCorrectionWhenMetColouredFieldsLogHelper.convertLogToTestArguments(log, solutionName, logic));
+                    Optional.of(SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.convertLogToTestArguments(log, solutionName, logic));
             case "SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS" ->
                     Optional.of(SequenceRangeCorrectionWhenMarkingFieldsLogHelper.convertLogToTestArguments(log, solutionName, logic));
             case "SEQUENCES_RANGES_CORRECTION_FROM_COLOURED_EDGES" ->
