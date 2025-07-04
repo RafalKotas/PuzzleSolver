@@ -1,6 +1,6 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.dto;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramRules;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.core.rules.NonogramRules;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

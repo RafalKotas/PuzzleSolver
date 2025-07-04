@@ -1,9 +1,9 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.controller;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.common.CommonService;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.Nonogram;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramFileDetails;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramFiltersResponse;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.core.model.Nonogram;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.core.model.NonogramFileDetails;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.core.model.NonogramFiltersResponse;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.repository.NonogramRepository;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.NonogramService;
 import lombok.extern.slf4j.Slf4j;

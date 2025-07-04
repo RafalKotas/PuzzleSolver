@@ -1,8 +1,8 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.mapper;
 
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.core.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.dto.NonogramLogicResponse;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.dto.NonogramSolutionSaveRequest;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
 
 public class NonogramMapper {
 

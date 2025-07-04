@@ -1,7 +1,8 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramRules;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.NonogramRowLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.core.rules.NonogramRules;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.features.solve.row.NonogramRowLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.helper.board.NonogramBoardUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.groupConsecutiveIndices;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.helper.board.NonogramBoardUtils.groupConsecutiveIndices;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

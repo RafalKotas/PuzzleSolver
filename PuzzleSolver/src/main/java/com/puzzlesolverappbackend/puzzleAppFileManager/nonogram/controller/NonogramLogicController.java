@@ -1,11 +1,11 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.controller;
 
 import com.google.gson.Gson;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.core.logic.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.core.logic.NonogramLogicFactory;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.dto.*;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogicFactory;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.mapper.NonogramMapper;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.logic.NonogramLogicService;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.NonogramLogicService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

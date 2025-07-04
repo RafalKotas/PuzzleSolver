@@ -5,12 +5,12 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils;
 import com.puzzlesolverappbackend.puzzleAppFileManager.common.CommonService;
 import com.puzzlesolverappbackend.puzzleAppFileManager.common.FileHelper;
 import com.puzzlesolverappbackend.puzzleAppFileManager.constants.InitializerConstants;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.core.logic.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.core.model.NonogramFileDetails;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.core.model.NonogramFiltersResponse;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramCorrectnessIndicator;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramFileDetails;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramFiltersResponse;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.helper.json.NonogramJsonWriter;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.repository.NonogramRepository;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramJsonWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.sumListElements;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION_LENGTH;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramJsonWriter.saveSolutionBoard;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.helper.json.NonogramJsonWriter.saveSolutionBoard;
 
 @Service
 @Slf4j
