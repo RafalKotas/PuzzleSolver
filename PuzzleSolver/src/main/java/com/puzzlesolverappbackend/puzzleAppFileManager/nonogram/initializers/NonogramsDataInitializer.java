@@ -62,9 +62,9 @@ public class NonogramsDataInitializer implements CommandLineRunner {
     int newNonogramsSaved;
     int nonogramsRepeated;
 
-    List<List<String>> sourceMonthCombinations;
+    public static final List<List<String>> sourceMonthCombinations = new ArrayList<>();
 
-    List<String> filesToCorrect;
+    public static final List<String> filesToCorrect= new ArrayList<>();
 
     int filesCount = 0;
     int filesOK = 0;
@@ -75,8 +75,6 @@ public class NonogramsDataInitializer implements CommandLineRunner {
     public NonogramsDataInitializer(NonogramRepository nonogramRepository, CommonService commonService) {
         this.nonogramRepository = nonogramRepository;
         this.commonService = commonService;
-        this.sourceMonthCombinations = new ArrayList<>();
-        this.filesToCorrect = new ArrayList<>();
     }
 
     @Override
@@ -161,14 +159,14 @@ public class NonogramsDataInitializer implements CommandLineRunner {
     }
 
     private void addToSourceMonthCombinationsIfNotExist(List<String> sourceMonthCombination) {
-        boolean sourceMonthCombinationExist = this.sourceMonthCombinations
+        boolean sourceMonthCombinationExist = sourceMonthCombinations
                 .stream()
                 .anyMatch(combination -> combination.size() == 2 &&
                         combination.get(0).equals(sourceMonthCombination.get(0)) &&
                         combination.get(1).equals(sourceMonthCombination.get(1)));
 
         if (!sourceMonthCombinationExist) {
-            this.sourceMonthCombinations.add(sourceMonthCombination);
+            sourceMonthCombinations.add(sourceMonthCombination);
         }
     }
 

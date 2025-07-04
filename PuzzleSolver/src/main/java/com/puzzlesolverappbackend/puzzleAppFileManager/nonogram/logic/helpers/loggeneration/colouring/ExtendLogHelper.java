@@ -21,11 +21,13 @@ public class ExtendLogHelper {
             boolean isRow
     ) {
         return String.format(
-                "EXTEND_%s_SEQUENCE: %s=%d, dir=%s\n" +
-                        "initial=%s\n" +
-                        "ranges=%s\n" +
-                        "lengths=%s\n" +
-                        "final=%s\n",
+                """
+                        EXTEND_%s_SEQUENCE: %s=%d, dir=%s
+                        initial=%s
+                        ranges=%s
+                        lengths=%s
+                        final=%s
+                        """,
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",
                 index,

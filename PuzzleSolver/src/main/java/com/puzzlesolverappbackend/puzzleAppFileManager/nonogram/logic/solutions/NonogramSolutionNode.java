@@ -1,10 +1,9 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogicFactory;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramSolution;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,14 +28,9 @@ public class NonogramSolutionNode {
     // log of taken actions (heuristics, guesses decisions, and in nodeHeight > 0 also recursion decisions)
     private List<String> nodeLogs;
 
-    public NonogramSolutionNode(NonogramLogic nonogramLogic) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.nonogramLogic = mapper.readValue(mapper.writeValueAsString(nonogramLogic), NonogramLogic.class);
-            this.nonogramSolution = mapper.readValue(mapper.writeValueAsString(nonogramLogic), NonogramLogic.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to deep copy NonogramLogic", e);
-        }
+    public NonogramSolutionNode(NonogramLogic baseLogic, NonogramLogicFactory factory) {
+        this.nonogramLogic = factory.copy(baseLogic);
+        this.nonogramSolution = factory.copy(baseLogic);
         this.nonogramGuessDecisions = new ArrayList<>();
         this.nonogramRecursionDecisions = new ArrayList<>();
         this.nodeLogs = new ArrayList<>();
@@ -73,7 +67,7 @@ public class NonogramSolutionNode {
     public void makeBasicSolverActions() {
         this.getNonogramLogic().basicSolve();
 
-        NonogramLogic logicAfterActionsMade = copyNonogramLogic();
+        NonogramLogic logicAfterActionsMade = this.getNonogramLogic().deepCopy();
         this.nodeLogs = logicAfterActionsMade.getLogs();
     }
 

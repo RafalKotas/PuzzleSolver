@@ -2,10 +2,12 @@ package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.l
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.loggeneration.LogFormatUtils;
+import lombok.experimental.UtilityClass;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@UtilityClass
 public class PlaceXsIfOWillCreateTooLongSequenceLogHelper {
 
     public static String generateLog(
@@ -17,11 +19,13 @@ public class PlaceXsIfOWillCreateTooLongSequenceLogHelper {
             boolean isRow
     ) {
         return String.format(
-                "PLACE_X_IF_O_WILL_CREATE_TOO_LONG_SEQUENCE_IN_%s: %s=%d\n" +
-                        "before=%s\n" +
-                        "after=%s\n" +
-                        "lengths=%s\n" +
-                        "ranges=%s\n",
+                """
+                        PLACE_X_IF_O_WILL_CREATE_TOO_LONG_SEQUENCE_IN_%s: %s=%d
+                        before=%s
+                        after=%s
+                        lengths=%s
+                        ranges=%s
+                        """,
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",
                 index,

@@ -140,7 +140,7 @@ public interface RowPreventExtendingColouredSequenceToExcessLengthHelpers {
         });
     }
 
-    public static List<Integer> findValidSequencesIdsMergingToRight(List<Integer> sequenceIds, List<Integer> expectedLengths, int colouredColumnIndexAfterX, List<List<Integer>> colouredSequences) {
+    static List<Integer> findValidSequencesIdsMergingToRight(List<Integer> sequenceIds, List<Integer> expectedLengths, int colouredColumnIndexAfterX, List<List<Integer>> colouredSequences) {
 
         return IntStream.range(0, sequenceIds.size())
                 .filter(i -> !wouldMergeTooLongToRight(expectedLengths.get(i), colouredColumnIndexAfterX, colouredSequences))

@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramCorrectnessIndicator;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogicFactory;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramRules;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramSolver;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionNode;
@@ -44,7 +45,7 @@ class NonogramSolverTest {
     void shouldSolveAllLogiNonogramsHeuristically() {
         Map<Double, List<String>> notSolvedByDifficulty = new HashMap<>();
 
-        for (double difficulty : List.of(/*1.0,*/ 2.0/*, 3.0*/)) {
+        for (double difficulty : List.of(1.0, 2.0, 3.0)) {
             solveNonogramsAtDifficulty(difficulty, notSolvedByDifficulty);
         }
 
@@ -66,8 +67,9 @@ class NonogramSolverTest {
             if (indicator == NonogramCorrectnessIndicator.VALID) {
                 NonogramRules rules = NonogramRules.mapNonogramFileDetailsToNonogramRules(details);
                 NonogramLogic logic = new NonogramLogic(rules, guessMode);
-                NonogramSolver solver = new NonogramSolver(logic, filename, guessMode);
-                NonogramSolutionNode node = new NonogramSolutionNode(logic);
+                NonogramLogicFactory logicFactory = new NonogramLogicFactory();
+                NonogramSolver solver = new NonogramSolver(logic, filename, guessMode, logicFactory);
+                NonogramSolutionNode node = new NonogramSolutionNode(logic, logicFactory);
                 NonogramLogic result = solver.runSolutionAtNode(node);
 
                 if (!result.nonogramIsFullyAndCorrectSolved()) {
@@ -100,7 +102,7 @@ class NonogramSolverTest {
             List<String> previousList = previous.getOrDefault(difficulty, Collections.emptyList());
 
             Set<String> newlyBroken = new HashSet<>(currentList);
-            newlyBroken.removeAll(previousList);
+            previousList.forEach(newlyBroken::remove);
 
             if (!newlyBroken.isEmpty()) {
                 System.out.printf("Difficulty %.1f - newly unsolved: %s%n", difficulty, newlyBroken);

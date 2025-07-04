@@ -11,14 +11,12 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramFi
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.repository.NonogramRepository;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.NonogramService;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.logic.NonogramLogicService;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.constants.SharedConsts.JSON_EXTENSION;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramRules.mapNonogramFileDetailsToNonogramRules;
@@ -79,550 +77,528 @@ public class NonogramSolveInitializer implements CommandLineRunner {
         int selectedCount = 0;
         int solvedCount = 0;
 
-        List<String> filesTooLongSolving = new ArrayList<>();
-        //Difficulty 2 logi:
-        //filesTooLongSolving.add("o09976"); // 11.787s
-        //filesTooLongSolving.add("o04678"); //  32.250s
-        //Difficulty 3 logi:
-//        filesTooLongSolving.add("o08214"); //  17.388s
-//        filesTooLongSolving.add("o05862"); // 164.811s
-//        filesTooLongSolving.add("o10335"); //  48.767s
-//        filesTooLongSolving.add("o07956"); //  19.971s
-//        filesTooLongSolving.add("o08232"); //  42.038s
-//        filesTooLongSolving.add("o11507"); // 118.479s
-//        filesTooLongSolving.add("o11465"); //  37.088s
-//        filesTooLongSolving.add("o07811"); //  10.713s
-//        filesTooLongSolving.add("o06554"); //  11.463s
-//        filesTooLongSolving.add("o11278"); //  20.025s
-//        filesTooLongSolving.add("o10090"); //  60.769s
-//        filesTooLongSolving.add("o11487"); //  28.395s
-//        filesTooLongSolving.add("o10340"); //  11.469s
-//        filesTooLongSolving.add("o10316"); //  90.630s
-//        filesTooLongSolving.add("o07953"); //  13.136s
-//        filesTooLongSolving.add("o09800"); //  18.852s
-//        filesTooLongSolving.add("o09728"); // 227.544s
-//        filesTooLongSolving.add("o08198"); //  24.748s
-//        filesTooLongSolving.add("o11215"); //  12.968s
-//        filesTooLongSolving.add("o11612"); //  18.972s
-//        filesTooLongSolving.add("o04761"); //  19.556s
-//        filesTooLongSolving.add("o11023"); // 535.178s
-//        filesTooLongSolving.add("o08182"); //  79.576s
-//        filesTooLongSolving.add("o07948"); //  88.193s
-//        filesTooLongSolving.add("o03697"); //  14.408s
-//        filesTooLongSolving.add("o08545"); //  65.254s
-//        filesTooLongSolving.add("o07939"); //  32.258s
-//        filesTooLongSolving.add("o10989"); //  44.310s
-//        filesTooLongSolving.add("o10936"); // 100.840s
-//        filesTooLongSolving.add("o07798"); // 124.305s
-//        filesTooLongSolving.add("o10476"); //  17.187s
-//        filesTooLongSolving.add("o10113"); //  23.955s
-//        filesTooLongSolving.add("o07939"); //  32.258s
-//        filesTooLongSolving.add("o11007"); //2341.486s
-//        filesTooLongSolving.add("o11699"); //  17.440s
-//        filesTooLongSolving.add("o11816"); //  13.477s
-        //Difficulty 4 logi:
-//        filesTooLongSolving.add("o11512"); // 0.446s //completion 12.22%
-//        filesTooLongSolving.add("o08178"); // 0.105s //completion 8.38%
-//        filesTooLongSolving.add("o10668"); // 0.105s //completion 36.42%
-//        filesTooLongSolving.add("o08351"); // 951.247s //completion 36.49%
-//        filesTooLongSolving.add("o10631"); // 0.193s //completion 31.29%
-//
-//        filesTooLongSolving.add("o10191"); //  16.197s
-//        filesTooLongSolving.add("o07850"); //  48.004s
-//        filesTooLongSolving.add("o11435"); //  16.641s
-//        filesTooLongSolving.add("o07577"); // 138.247s
-//        filesTooLongSolving.add("o07067"); //  90.932s
-//        filesTooLongSolving.add("o07536"); //  15.720s
-//        filesTooLongSolving.add("o07898"); //  69.222s
-//        filesTooLongSolving.add("o08503"); // 130.960s
-//        filesTooLongSolving.add("o08747"); //  14.666s
-//        filesTooLongSolving.add("o07333"); //  10.903s
-//        filesTooLongSolving.add("o09224"); //  83.781s
-//        filesTooLongSolving.add("o08320"); // 380.274s
-//        filesTooLongSolving.add("o08345"); // 375.685s
-//        filesTooLongSolving.add("o10656"); //  14.995s
-//        filesTooLongSolving.add("o08438"); // 134.673s
-//        filesTooLongSolving.add("o12014"); //  31.355s
-//        filesTooLongSolving.add("o08686"); //  14.316s
-//        filesTooLongSolving.add("o07949"); //  14.662s
-//        filesTooLongSolving.add("o07504"); //  22.594s
-//        filesTooLongSolving.add("o07550"); // 104.862s
-//        filesTooLongSolving.add("o10105"); //  17.037s
-//        filesTooLongSolving.add("o10083"); //  11.047s
-//        filesTooLongSolving.add("o07344"); //  60.576s
-//        filesTooLongSolving.add("o10999"); //  88.101s
-//        filesTooLongSolving.add("o07814"); //  68.298s
-//        filesTooLongSolving.add("o10331"); //  44.834s
-//        filesTooLongSolving.add("o10489"); //  34.535s
-//        filesTooLongSolving.add("o07572"); // 354.769s
-//        filesTooLongSolving.add("o07555"); //  52.196s
-//        filesTooLongSolving.add("o10112"); //1006.832s
-//        filesTooLongSolving.add("o11155"); // 408.093s
-//        filesTooLongSolving.add("o08314"); //1231.940s
-//        filesTooLongSolving.add("o07522"); //  28.220s
-//        filesTooLongSolving.add("o07958"); // 171.917s
-//        filesTooLongSolving.add("o10669"); // 446.298s
-//        filesTooLongSolving.add("o08307"); //  17.298s
-//        filesTooLongSolving.add("o11681"); //  19.994s
-//        filesTooLongSolving.add("o10638"); // 247.256s
-//        filesTooLongSolving.add("o03656"); //  37.574s
-//        filesTooLongSolving.add("o11462"); // 240.753s
-//        filesTooLongSolving.add("o10144"); // 456.449s
-//        filesTooLongSolving.add("o11852"); // 173.743s
-//        filesTooLongSolving.add("o08180"); //  15.898s
-//        filesTooLongSolving.add("o09543"); //  54.812s
-//        filesTooLongSolving.add("o06552"); //  27.976s
-//        filesTooLongSolving.add("o07707"); //1434.048s
-//        filesTooLongSolving.add("o08162"); // 104.073s
-//        filesTooLongSolving.add("o10096"); //  87.522s
-//        filesTooLongSolving.add("o07976"); //  34.169s
-//        filesTooLongSolving.add("o08185"); //  42.171s
-//        filesTooLongSolving.add("o08168"); //  22.660s
-//        filesTooLongSolving.add("o08321"); // 141.312s
-//        filesTooLongSolving.add("o07477"); //  70.381s
-//        filesTooLongSolving.add("o08132"); //  60.938s
-//        filesTooLongSolving.add("o11812"); //  3319.6s
-//        filesTooLongSolving.add("o07548"); //1076.675s
-//        filesTooLongSolving.add("o07626"); //  36.990s
-//        filesTooLongSolving.add("o10114"); //  38.876s
-//        filesTooLongSolving.add("o07280"); //  34.460s
-//        filesTooLongSolving.add("o10069"); // 751.956s
-//        filesTooLongSolving.add("o10255"); //  13.390s
-//        filesTooLongSolving.add("o08681"); //  12.458s
-//        filesTooLongSolving.add("o06608"); //  24.277s
-//        filesTooLongSolving.add("o08530"); //  27.261s
-//        filesTooLongSolving.add("o10117"); //  19.580s
-//        filesTooLongSolving.add("o12219"); //  14.054s
-//        filesTooLongSolving.add("o11142"); //  82.061s
-//        filesTooLongSolving.add("o07525"); //  45.396s
-//        filesTooLongSolving.add("o09435"); // 124.702s
-//        filesTooLongSolving.add("o10068"); //  18.242s
-//        filesTooLongSolving.add("o09485"); //  88.657s
-//        filesTooLongSolving.add("o07899"); // 149.847s
-//        filesTooLongSolving.add("o11159"); //  84.168s
-//        filesTooLongSolving.add("o10932"); //  11.659s
-//        filesTooLongSolving.add("o03097"); //  40.282s
-//        filesTooLongSolving.add("o10991"); //  22.667s
-//        filesTooLongSolving.add("o08676"); //  17.002s
-//        filesTooLongSolving.add("o08360"); //  25.310s
-//        filesTooLongSolving.add("o07594"); // 153.977s
-//        filesTooLongSolving.add("o07810"); //  29.974s
-//        filesTooLongSolving.add("o07501"); //  38.632s
-//        filesTooLongSolving.add("o11427"); //  35.744s
-//        filesTooLongSolving.add("o07833"); //  15.620s
-//        filesTooLongSolving.add("o08222"); //  10.242s
-//        filesTooLongSolving.add("o07343"); // 137.371s
-//        filesTooLongSolving.add("o08026"); // 776.377s
-//        filesTooLongSolving.add("o08123"); //1509.205s
-//        filesTooLongSolving.add("o11542"); //  12.398s
-//        filesTooLongSolving.add("o08493"); //  43.212s
-//        filesTooLongSolving.add("o07978"); //  66.419s
-//        filesTooLongSolving.add("o07406"); //  15.669s
-//        filesTooLongSolving.add("o11601"); //  89.373s
-//        filesTooLongSolving.add("o11630"); // 618.831s
-//        filesTooLongSolving.add("o11513"); // 122.383s
-//        filesTooLongSolving.add("o10659"); // 115.068s
-//        filesTooLongSolving.add("o07860"); // 124.187s
-//        filesTooLongSolving.add("o10070"); //  20.019s
-//        filesTooLongSolving.add("o07276"); //  33.114s
-//        filesTooLongSolving.add("o11798"); //  10.912s
-//        filesTooLongSolving.add("o08346"); //  21.058s
-//        filesTooLongSolving.add("o07495"); //  20.127s
-//        filesTooLongSolving.add("o09828"); //  10.937s
-//        filesTooLongSolving.add("o10851"); //  33.628s
-//        filesTooLongSolving.add("o07402"); //  46.640s
-//        filesTooLongSolving.add("o11177"); //2068.865s
-//        filesTooLongSolving.add("o07985"); // 200.167s
-//        filesTooLongSolving.add("o08748"); //  23.340s
-//        filesTooLongSolving.add("o10170"); //  51.768s
-//        filesTooLongSolving.add("o10153"); // 586.056s
-//        filesTooLongSolving.add("o07499"); //  18.385s
-//        filesTooLongSolving.add("o08315"); // 137.070s
-//        filesTooLongSolving.add("o11430"); //  88.187s
-//        filesTooLongSolving.add("o07483"); // 121.726s
-//        filesTooLongSolving.add("o10589"); //  55.825s
-//        filesTooLongSolving.add("o08421"); //  29.556s
-//        filesTooLongSolving.add("o11463"); //  20.459s
-//        filesTooLongSolving.add("o11375"); //  12.593s
-//        filesTooLongSolving.add("o03300"); //  32.880s
-//        filesTooLongSolving.add("o11375"); //  17.136s
-//        filesTooLongSolving.add("o11375"); //  12.593s
-//        filesTooLongSolving.add("o10573"); //  50.930s
-//        filesTooLongSolving.add("o10493"); //  14.832s
-//        filesTooLongSolving.add("o08365"); //  14.820s
-//        filesTooLongSolving.add("o11141"); //  10.429s
-//        filesTooLongSolving.add("o06607"); //1070.954s
-//        filesTooLongSolving.add("o08197"); //  11.387s
-//        filesTooLongSolving.add("o09940"); //  59.697s
-//        filesTooLongSolving.add("o07160"); //  13.877s
-//        filesTooLongSolving.add("o08139"); //  98.871s
-//        filesTooLongSolving.add("o07839"); //  256.79s
-//        filesTooLongSolving.add("o07160"); // 194.885s
-//        filesTooLongSolving.add("o07423"); //  12.700s
-//        filesTooLongSolving.add("o07160"); //  22.954s
-//        filesTooLongSolving.add("o07332"); // 832.156s
-//        filesTooLongSolving.add("o08547"); //  51.000s
-//        filesTooLongSolving.add("o08050"); //  10.929s
-//        filesTooLongSolving.add("o11511"); //  84.340s
-//        filesTooLongSolving.add("o05747"); // 743.947s
-//        filesTooLongSolving.add("o10637"); //  97.957s
-//        filesTooLongSolving.add("o11460"); //  14.068s
-//        filesTooLongSolving.add("o10922"); //  30.786s
-//        filesTooLongSolving.add("o11704"); //  83.757s
-//        filesTooLongSolving.add("o12324"); // 145.639s
-//        filesTooLongSolving.add("o11425"); //  12.616s
-//        filesTooLongSolving.add("o09995"); //  12.998s
-//        filesTooLongSolving.add("o11457"); // 842.810s
-//        filesTooLongSolving.add("o09090"); //  51.415s
-//        filesTooLongSolving.add("o12313"); //  15.324s
-//        filesTooLongSolving.add("o10306"); //  10.140s
-//        filesTooLongSolving.add("o12099"); //  16.131s
+        List<Pair<String, Double>> filesWithTimeTooLongSolvingDifficulty2Logi = List.of(
+                Pair.of("o09976", 11.787),
+                Pair.of("o04678", 32.250)
+        );
 
-        //Difficulty 5 logi:
-//        filesTooLongSolving.add("o10310"); // 57s
-//        filesTooLongSolving.add("o07502"); // 87s
-//        filesTooLongSolving.add("o07518"); // 66s
-//        filesTooLongSolving.add("o08298"); // długo nie wiem ile
-//        filesTooLongSolving.add("o11803"); // ~62s
-//        filesTooLongSolving.add("o07279"); // ~60s
-//        filesTooLongSolving.add("o08623"); // 59s
-//        filesTooLongSolving.add("o09378"); // 365s
-//        filesTooLongSolving.add("o07412"); // ~550s
-//        filesTooLongSolving.add("o10073"); // nie wiem ile
-//        filesTooLongSolving.add("o11543"); // ~8min
-//        filesTooLongSolving.add("o10686"); // ~5min
-//        filesTooLongSolving.add("o07283"); // inf
-//        filesTooLongSolving.add("o07396"); // inf
-//        filesTooLongSolving.add("o11495"); // nie wiem ile
-//        filesTooLongSolving.add("o08674"); // 63.5s
-//        filesTooLongSolving.add("o10988"); // 52s
-//        filesTooLongSolving.add("o11835"); // 68s
-//        filesTooLongSolving.add("o11616"); // 55.3s
-//        filesTooLongSolving.add("o09476"); // 219s
-//        filesTooLongSolving.add("o07350"); // 192s
-//        filesTooLongSolving.add("o08071"); // 1013s
-//        filesTooLongSolving.add("o07486"); // 283s
-//        filesTooLongSolving.add("o06941"); // 60s
-//        filesTooLongSolving.add("o11964"); // 153s
-//        filesTooLongSolving.add("o07961"); // 307s
-//        filesTooLongSolving.add("o09471"); // 118s
-//        filesTooLongSolving.add("o07803"); // 109s
-//        filesTooLongSolving.add("o07460"); // 118s
+        List<String> filesWithTimeOkDifficulty2Logi = List.of();
+
+        List<Pair<String, Double>> filesWithTimeTooLongSolvingDifficulty3Logi = List.of(
+                Pair.of("o08214", 17.388),
+                Pair.of("o05862", 164.811),
+                Pair.of("o10335", 48.767),
+                Pair.of("o07956", 19.971),
+                Pair.of("o08232", 42.038),
+                Pair.of("o11507", 118.479),
+                Pair.of("o11465", 37.088),
+                Pair.of("o07811", 10.713),
+                Pair.of("o06554", 11.463),
+                Pair.of("o11278", 20.025),
+                Pair.of("o10090", 60.769),
+                Pair.of("o11487", 28.395),
+                Pair.of("o10340", 11.469),
+                Pair.of("o10316", 90.630),
+                Pair.of("o07953", 13.136),
+                Pair.of("o09800", 18.852),
+                Pair.of("o09728", 227.544),
+                Pair.of("o08198", 24.748),
+                Pair.of("o11215", 12.968),
+                Pair.of("o11612", 18.972),
+                Pair.of("o04761", 19.556),
+                Pair.of("o11023", 535.178),
+                Pair.of("o08182", 79.576),
+                Pair.of("o07948", 88.193),
+                Pair.of("o03697", 14.408),
+                Pair.of("o08545", 65.254),
+                Pair.of("o07939", 32.258),
+                Pair.of("o10989", 44.310),
+                Pair.of("o10936", 100.840),
+                Pair.of("o07798", 124.305),
+                Pair.of("o10476", 17.187),
+                Pair.of("o10113", 23.955),
+                Pair.of("o07939", 32.258),
+                Pair.of("o11007", 2341.486),
+                Pair.of("o11699", 17.440),
+                Pair.of("o11816", 13.477)
+        );
+
+        List<String> filesWithTimeOkDifficulty3Logi = List.of();
+
+        List<String> filesTooLongSolving = new ArrayList<>();
+
+        List<Pair<String, Double>> filesWithTimeTooLongSolving_Difficulty4Logi = List.of(
+                Pair.of("o11512", 0.446),
+                Pair.of("o08178", 0.105),
+                Pair.of("o10668", 0.105),
+                Pair.of("o08351", 951.247),
+                Pair.of("o10631", 0.193),
+                Pair.of("o10191", 16.197),
+                Pair.of("o07850", 48.004),
+                Pair.of("o11435", 16.641),
+                Pair.of("o07577", 138.247),
+                Pair.of("o07067", 90.932),
+                Pair.of("o07536", 15.720),
+                Pair.of("o07898", 69.222),
+                Pair.of("o08503", 130.960),
+                Pair.of("o08747", 14.666),
+                Pair.of("o07333", 10.903),
+                Pair.of("o09224", 83.781),
+                Pair.of("o08320", 380.274),
+                Pair.of("o08345", 375.685),
+                Pair.of("o10656", 14.995),
+                Pair.of("o08438", 134.673),
+                Pair.of("o12014", 31.355),
+                Pair.of("o08686", 14.316),
+                Pair.of("o07949", 14.662),
+                Pair.of("o07504", 22.594),
+                Pair.of("o07550", 104.862),
+                Pair.of("o10105", 17.037),
+                Pair.of("o10083", 11.047),
+                Pair.of("o07344", 60.576),
+                Pair.of("o10999", 88.101),
+                Pair.of("o07814", 68.298),
+                Pair.of("o10331", 44.834),
+                Pair.of("o10489", 34.535),
+                Pair.of("o07572", 354.769),
+                Pair.of("o07555", 52.196),
+                Pair.of("o10112", 1006.832),
+                Pair.of("o11155", 408.093),
+                Pair.of("o08314", 1231.940),
+                Pair.of("o07522", 28.220),
+                Pair.of("o07958", 171.917),
+                Pair.of("o10669", 446.298),
+                Pair.of("o08307", 17.298),
+                Pair.of("o11681", 19.994),
+                Pair.of("o10638", 247.256),
+                Pair.of("o03656", 37.574),
+                Pair.of("o11462", 240.753),
+                Pair.of("o10144", 456.449),
+                Pair.of("o11852", 173.743),
+                Pair.of("o08180", 15.898),
+                Pair.of("o09543", 54.812),
+                Pair.of("o06552", 27.976),
+                Pair.of("o07707", 1434.048),
+                Pair.of("o08162", 104.073),
+                Pair.of("o10096", 87.522),
+                Pair.of("o07976", 34.169),
+                Pair.of("o08185", 42.171),
+                Pair.of("o08168", 22.660),
+                Pair.of("o08321", 141.312),
+                Pair.of("o07477", 70.381),
+                Pair.of("o08132", 60.938),
+                Pair.of("o11812", 3319.600),
+                Pair.of("o07548", 1076.675),
+                Pair.of("o07626", 36.990),
+                Pair.of("o10114", 38.876),
+                Pair.of("o07280", 34.460),
+                Pair.of("o10069", 751.956),
+                Pair.of("o10255", 13.390),
+                Pair.of("o08681", 12.458),
+                Pair.of("o06608", 24.277),
+                Pair.of("o08530", 27.261),
+                Pair.of("o10117", 19.580),
+                Pair.of("o12219", 14.054),
+                Pair.of("o11142", 82.061),
+                Pair.of("o07525", 45.396),
+                Pair.of("o09435", 124.702),
+                Pair.of("o10068", 18.242),
+                Pair.of("o09485", 88.657),
+                Pair.of("o07899", 149.847),
+                Pair.of("o11159", 84.168),
+                Pair.of("o10932", 11.659),
+                Pair.of("o03097", 40.282),
+                Pair.of("o10991", 22.667),
+                Pair.of("o08676", 17.002),
+                Pair.of("o08360", 25.310),
+                Pair.of("o07594", 153.977),
+                Pair.of("o07810", 29.974),
+                Pair.of("o07501", 38.632),
+                Pair.of("o11427", 35.744),
+                Pair.of("o07833", 15.620),
+                Pair.of("o08222", 10.242),
+                Pair.of("o07343", 137.371),
+                Pair.of("o08026", 776.377),
+                Pair.of("o08123", 1509.205),
+                Pair.of("o11542", 12.398),
+                Pair.of("o08493", 43.212),
+                Pair.of("o07978", 66.419),
+                Pair.of("o07406", 15.669),
+                Pair.of("o11601", 89.373),
+                Pair.of("o11630", 618.831),
+                Pair.of("o11513", 122.383),
+                Pair.of("o10659", 115.068),
+                Pair.of("o07860", 124.187),
+                Pair.of("o10070", 20.019),
+                Pair.of("o07276", 33.114),
+                Pair.of("o11798", 10.912),
+                Pair.of("o08346", 21.058),
+                Pair.of("o07495", 20.127),
+                Pair.of("o09828", 10.937),
+                Pair.of("o10851", 33.628),
+                Pair.of("o07402", 46.640),
+                Pair.of("o11177", 2068.865),
+                Pair.of("o07985", 200.167),
+                Pair.of("o08748", 23.340),
+                Pair.of("o10170", 51.768),
+                Pair.of("o10153", 586.056),
+                Pair.of("o07499", 18.385),
+                Pair.of("o08315", 137.070),
+                Pair.of("o11430", 88.187),
+                Pair.of("o07483", 121.726),
+                Pair.of("o10589", 55.825),
+                Pair.of("o08421", 29.556),
+                Pair.of("o11463", 20.459),
+                Pair.of("o11375", 12.593),
+                Pair.of("o03300", 32.880),
+                Pair.of("o11375", 17.136),
+                Pair.of("o11375", 12.593),
+                Pair.of("o10573", 50.930),
+                Pair.of("o10493", 14.832),
+                Pair.of("o08365", 14.820),
+                Pair.of("o11141", 10.429),
+                Pair.of("o06607", 1070.954),
+                Pair.of("o08197", 11.387),
+                Pair.of("o09940", 59.697),
+                Pair.of("o07160", 13.877),
+                Pair.of("o08139", 98.871),
+                Pair.of("o07839", 256.790),
+                Pair.of("o07160", 194.885),
+                Pair.of("o07423", 12.700),
+                Pair.of("o07160", 22.954),
+                Pair.of("o07332", 832.156),
+                Pair.of("o08547", 51.000),
+                Pair.of("o08050", 10.929),
+                Pair.of("o11511", 84.340),
+                Pair.of("o05747", 743.947),
+                Pair.of("o10637", 97.957),
+                Pair.of("o11460", 14.068),
+                Pair.of("o10922", 30.786),
+                Pair.of("o11704", 83.757),
+                Pair.of("o12324", 145.639),
+                Pair.of("o11425", 12.616),
+                Pair.of("o09995", 12.998),
+                Pair.of("o11457", 842.810),
+                Pair.of("o09090", 51.415),
+                Pair.of("o12313", 15.324),
+                Pair.of("o10306", 10.140),
+                Pair.of("o12099", 16.131)
+        );
+
+        List<String> filesWithTimeOkDifficulty4Logi = List.of();
+
+        List<Pair<String, Double>> filesWithTimeTooLongSolving_Difficulty5Logi = Arrays.asList(
+                Pair.of("o10310", 57.0),
+                Pair.of("o07502", 87.0),
+                Pair.of("o07518", 66.0),
+                Pair.of("o08298", -1.0),      // długo nie wiem ile
+                Pair.of("o11803", 62.0),
+                Pair.of("o07279", 60.0),
+                Pair.of("o08623", 59.0),
+                Pair.of("o09378", 365.0),
+                Pair.of("o07412", 550.0),
+                Pair.of("o10073", -1.0),      // nie wiem ile
+                Pair.of("o11543", 480.0),     // ~8min
+                Pair.of("o10686", 300.0),     // ~5min
+                Pair.of("o07283", -1.0),      // inf
+                Pair.of("o07396", -1.0),      // inf
+                Pair.of("o11495", -1.0),      // nie wiem ile
+                Pair.of("o08674", 63.5),
+                Pair.of("o10988", 52.0),
+                Pair.of("o11835", 68.0),
+                Pair.of("o11616", 55.3),
+                Pair.of("o09476", 219.0),
+                Pair.of("o07350", 192.0),
+                Pair.of("o08071", 1013.0),
+                Pair.of("o07486", 283.0),
+                Pair.of("o06941", 60.0),
+                Pair.of("o11964", 153.0),
+                Pair.of("o07961", 307.0),
+                Pair.of("o09471", 118.0),
+                Pair.of("o07803", 109.0),
+                Pair.of("o07460", 118.0)
+        );
+
+        List<String> filesWithTimeOkDifficulty5Logi = List.of();
 
         // katana non-solved heuristically in first version
-        //15x15
-//        filesTooLongSolving.add("Miś(Bear)(auth_aPeer)"); // 86s
-//        filesTooLongSolving.add("Snejinka(auth_satt3047)"); // 67s
-//        filesTooLongSolving.add("Pattern15x15_1(auth_wiki)"); // Recursion or sth need, Completion 0.89, 28s
-//        filesTooLongSolving.add("Tak(auth_machina_virtualna)"); // 66s
-//        filesTooLongSolving.add("Pattern(Patroon)(auth_Yayolo)"); // 52s
-//        filesTooLongSolving.add("Wiatrak(Fan)(auth_Fromasz)"); // Recursion or sth need, Completion 0.89, 22s
-//        filesTooLongSolving.add("Twirl(auth_Nillerdyret)"); // Recursion or sth need, Completion 40.89, 20s
-//        filesTooLongSolving.add("Screaming_birdie(auth_Gam)"); // 106s
-//        filesTooLongSolving.add("Diamond(auth_Amilida)"); // Recursion or sth need, Completion 21.33, 70s
-//        filesTooLongSolving.add("Pattern(auth_lliyaa)"); // 25s
-//        filesTooLongSolving.add("Carrelages(auth_Blinda)"); // Recursion or sth need, Completion 43.11, 23.593
-//        filesTooLongSolving.add("Propeller(auth_Dobriy)"); //nullPointerException (empty solution)
-//        filesTooLongSolving.add("Tea(auth_Les)"); // 32s
-//        filesTooLongSolving.add("Flower(auth_Mirka3)"); // 59s
-//        filesTooLongSolving.add("Earth_symbol(auth_Naar)"); // 43s
-//        filesTooLongSolving.add("snowflake(auth_Arina2008Arina)"); // 31.917s
-//        filesTooLongSolving.add("Pattern_37(auth_Ariannav)"); // 84s
-//        filesTooLongSolving.add("Regression(auth_PrefrontalCortex)"); // Recursion or sth need, Completion 43.56, 30.858
-//        filesTooLongSolving.add("Pig(auth_Mark321)"); // 82s
-//        filesTooLongSolving.add("Spruce(auth_Murzik)"); // 166s (completion 100.0 - Recursion)
-//        filesTooLongSolving.add("Heart(auth_beclyn)"); // Recursion or sth need, Completion 30.22, 50s
-//        filesTooLongSolving.add("Pattern_2(auth_wim13)"); // Recursion or sth need, Completion 13.33, 91s
-//        filesTooLongSolving.add("Magic_Staff(Staff)(auth_Twilia)"); // 31s
-//        filesTooLongSolving.add("Christmas_Tree(auth_DejaV)"); // 65s
-//        filesTooLongSolving.add("Cocker_Spaniel(auth_petunya)"); // 83s
-//        filesTooLongSolving.add("My_weird_patterns_-_LII(auth_Psexanutik)"); // Recursion or sth need, Completion 1.78, 26s
-//        filesTooLongSolving.add("Lilac(auth_Lisa80lvl)"); // 63s
-//        filesTooLongSolving.add("Krtek(auth_Mirka3)"); // 28s
-//        filesTooLongSolving.add("PGR(auth_Pegura)"); // 84s, 100% Completion (Recursion?)
-//        filesTooLongSolving.add("(kanji)_fire(auth_Sonolumin)"); // 27.668s
-//        filesTooLongSolving.add("(kanji)_fire(auth_Sonolumin)"); // 34s
-//        filesTooLongSolving.add("Sleepy(auth_spock2009)"); // 92s
-//        filesTooLongSolving.add("Farfalla(auth_ieia)"); // 107s, 100% Completion (completion 100.0 - Recursion)
-//        filesTooLongSolving.add("X-Men(auth_Quodgephelph)"); // Recursion or sth need, Completion 5.33, 44.558s
-//        filesTooLongSolving.add("sword_with_aura(auth_PPAPER)"); // 33s
-//        filesTooLongSolving.add("My_weird_patterns_-_LVIII)(auth_Psexanutik)"); // 26.108s
-//        filesTooLongSolving.add("Fancy_Crosshair(auth_Alexander_Aguirre)"); // 52s (completion 100.0 - Recursion)
-//        filesTooLongSolving.add("Lilie(auth_FanLinkin)"); // 34s
-//        filesTooLongSolving.add("Masterchief_helmet(Halo)(auth_Pate)"); // 45s
-//        filesTooLongSolving.add("Bottle(auth_Scripty)"); // 79s, 100% Completion (completion 100.0 - Recursion)
-//        filesTooLongSolving.add("X(auth_Tid88)"); //nullPointerException (empty solution)
-//        filesTooLongSolving.add("Another_challenge_for_you(auth_Psexanutik)"); // 27s
-//        filesTooLongSolving.add("Sword(auth_Darien_Fawkes)"); // 23s
-//        filesTooLongSolving.add("Mouse(auth_Puzzhorn)"); // 26s
-//        filesTooLongSolving.add("Wild_West(auth_Ed95206)"); // 24s
-//        filesTooLongSolving.add("Escakeras(auth_El...)"); // 21s
-//        filesTooLongSolving.add("Staircase(auth_Lullabeauxbug)"); // 29s
-//        filesTooLongSolving.add("Pig(auth_Liuna)"); // 21s
-//        filesTooLongSolving.add("Pattern15x15_2(auth_wiki)"); // 20s
-//        filesTooLongSolving.add("Rocket(Auth_AlexPo03011975)"); // 19.9s
-//        filesTooLongSolving.add("Pattern3(auth_OmaMor)"); // 28.199s
-//        filesTooLongSolving.add("Baby_Stroller(Kingerwagen)(auth_Lostir)"); // 17.719s
-//        filesTooLongSolving.add("Butterfly(Papillon)(auth_isiem)"); // 29.316s
-//        filesTooLongSolving.add("Krest(auth_JannaS)"); // 50.398s
-//        filesTooLongSolving.add("Pattern15x15_2(auth_KILK_UHA)"); // 32.59s
-//        filesTooLongSolving.add("Vorobey(auth_Pechenka.)"); // 43.574s
-//        filesTooLongSolving.add("Pattern(auth_Zettoo_Lei)"); // 28.654s
-//        filesTooLongSolving.add("pattern(auth_Alexys12345)"); // 31.726s
-//        filesTooLongSolving.add("Dying_bush(auth_Kateivas)"); // 31.648s
-//        filesTooLongSolving.add("Targeting_computer(auth_m.junior)"); // Recursion or sth need, Completion 18.22, 59.171s
-//        filesTooLongSolving.add("ghost(auth_anna3337777)"); // 62.438s
-//        filesTooLongSolving.add("Scissors(Schere)(auth_Zarathustra)"); // Recursion or sth need, Completion 12.44, 71.446s
-//        filesTooLongSolving.add("Flower(auth_Rain)"); // 42.792s
-//        filesTooLongSolving.add("Curl(auth_mystery_soul)"); // 139.058s
-//        filesTooLongSolving.add("Scissors(Schere)(auth_Zarathustra)"); // Recursion or sth need, Completion 14.67, 69.792s
-//        filesTooLongSolving.add("pattern_1(auth_Erfina)"); // Recursion or sth need, Completion 23.11, 73.195s
-//        filesTooLongSolving.add("Bracelet(auth_DrewSamson)"); // 39.554s
-//        filesTooLongSolving.add("Chick(auth_keikyu2100gata)"); // 28.858s
-//        filesTooLongSolving.add("Uzor(auth_Shurik702)"); // 29.993s
-//        filesTooLongSolving.add("The_allseeing_eye(auth_Donovan)"); // 48.193s
-//        filesTooLongSolving.add("Butterfly(Mariposa)(auth_zupermami)"); // 35.591s
-//        filesTooLongSolving.add("Goat(auth_MissMijo)"); // 54.377s
-//        filesTooLongSolving.add("Pattern_7(auth_Logard)"); //nullPointerException
-//        filesTooLongSolving.add("Stamp(Estampa)(auth_Nunovni)"); // Recursion or sth need, Completion 14.67, 83.473s
-//        filesTooLongSolving.add("Desert_Highway(auth_BlindWanderer)"); // Recursion or sth need, Completion 2.67, 55.287s
-//        filesTooLongSolving.add("Snowflake(auth_Evgenyi)"); // 65s, 100% Completion (completion 100.0 - Recursion)
-//        filesTooLongSolving.add("flower(auth_snowyowl8)"); // Recursion or sth need, Completion 25.33, 111.076s
-//        filesTooLongSolving.add("Pattern(auth_Yennefer17)"); // Recursion or sth need, Completion 43.11, 54.499s
-//        filesTooLongSolving.add("Web(auth_Vitaliy_Lokos)"); // 26.45s
-//        filesTooLongSolving.add("Enda(auth_naaaa)"); // 41.393s
-//        filesTooLongSolving.add("Feather(auth_Annsan)"); // 98s, 100% Completion (completion 100.0 - Recursion)
-//        filesTooLongSolving.add("Stripes(auth_Mag&3)"); // 26.032s
-//        filesTooLongSolving.add("Argentine_Mate(Mate_Argentino)(auth_Alud)"); // 20.396s
-//        filesTooLongSolving.add("Little_bird(P1)(auth_charly65)"); // 52.654s
-//        filesTooLongSolving.add("Pattern(auth_KILK_UHA)"); // Recursion or sth need, Completion 40.89, 167.889s
-//        filesTooLongSolving.add("Clover(auth_cyndidee)"); // 93s, 100% Completion (Recursion?)
-        //20x20                                                                                    up to 5 recursion depth (sC = 157, sP = 89.2)
-        //filesTooLongSolving.add("Doggy(Chiot)(auth_Liaaaaaaaaaa)");                                 //    2.054s 100.00%
-        //filesTooLongSolving.add("Halberd(auth_Aurelius)");                                          //    2.321s 100.00%
-        filesTooLongSolving.add("Doily(auth_Ricarix)");                                             //  141.034s   0.00%
-        //filesTooLongSolving.add("White_cross(auth_Sanchez_Solver)");                                //    0.605s   0.00%
-        filesTooLongSolving.add("Knight(auth_DrTimer)");                                            //   84.636s 100.00%
-        filesTooLongSolving.add("Pocket_bouquet(auth_inush)");                                      //  184.109s 100.00%
-        filesTooLongSolving.add("Links(auth_Ricarix)");                                             //   69.375s 100.00%
-        filesTooLongSolving.add("Geo_Abstract(auth_Turfer)");                                       //    1.585s 100.00%
-        filesTooLongSolving.add("Rune(auth_Mihail102)");                                            //  348.304s  20.00%
-        filesTooLongSolving.add("Owl(auth_Yanire)");                                                //    1.858s 100.00%
+        List<Pair<String, Double>> filesWithTimeTooLongSolving_Katana15x15 = Arrays.asList(
+                Pair.of("Miś(Bear)(auth_aPeer)", 86.0),
+                Pair.of("Snejinka(auth_satt3047)", 67.0),
+                Pair.of("Pattern15x15_1(auth_wiki)", 28.0), // Recursion or sth need, Completion 0.89
+                Pair.of("Tak(auth_machina_virtualna)", 66.0),
+                Pair.of("Pattern(Patroon)(auth_Yayolo)", 52.0),
+                Pair.of("Wiatrak(Fan)(auth_Fromasz)", 22.0), // Recursion or sth need, Completion 0.89
+                Pair.of("Twirl(auth_Nillerdyret)", 20.0), // Recursion or sth need, Completion 40.89
+                Pair.of("Screaming_birdie(auth_Gam)", 106.0),
+                Pair.of("Diamond(auth_Amilida)", 70.0), // Recursion or sth need, Completion 21.33
+                Pair.of("Pattern(auth_lliyaa)", 25.0),
+                Pair.of("Carrelages(auth_Blinda)", 23.593), // Recursion or sth need, Completion 43.11
+                Pair.of("Tea(auth_Les)", 32.0),
+                Pair.of("Flower(auth_Mirka3)", 59.0),
+                Pair.of("Earth_symbol(auth_Naar)", 43.0),
+                Pair.of("snowflake(auth_Arina2008Arina)", 31.917),
+                Pair.of("Pattern_37(auth_Ariannav)", 84.0),
+                Pair.of("Regression(auth_PrefrontalCortex)", 30.858), // Recursion or sth need, Completion 43.56
+                Pair.of("Pig(auth_Mark321)", 82.0),
+                Pair.of("Spruce(auth_Murzik)", 166.0), // Completion 100.0 - Recursion
+                Pair.of("Heart(auth_beclyn)", 50.0), // Recursion or sth need, Completion 30.22
+                Pair.of("Pattern_2(auth_wim13)", 91.0), // Recursion or sth need, Completion 13.33
+                Pair.of("Magic_Staff(Staff)(auth_Twilia)", 31.0),
+                Pair.of("Christmas_Tree(auth_DejaV)", 65.0),
+                Pair.of("Cocker_Spaniel(auth_petunya)", 83.0),
+                Pair.of("My_weird_patterns_-_LII(auth_Psexanutik)", 26.0), // Recursion or sth need, Completion 1.78
+                Pair.of("Lilac(auth_Lisa80lvl)", 63.0),
+                Pair.of("Krtek(auth_Mirka3)", 28.0),
+                Pair.of("PGR(auth_Pegura)", 84.0), // Completion 100.0 - Recursion
+                Pair.of("(kanji)_fire(auth_Sonolumin)", 27.668),
+                Pair.of("(kanji)_fire(auth_Sonolumin)", 34.0),
+                Pair.of("Sleepy(auth_spock2009)", 92.0),
+                Pair.of("Farfalla(auth_ieia)", 107.0), // Completion 100.0 - Recursion
+                Pair.of("X-Men(auth_Quodgephelph)", 44.558), // Recursion or sth need, Completion 5.33
+                Pair.of("sword_with_aura(auth_PPAPER)", 33.0),
+                Pair.of("My_weird_patterns_-_LVIII)(auth_Psexanutik)", 26.108),
+                Pair.of("Fancy_Crosshair(auth_Alexander_Aguirre)", 52.0), // Completion 100.0 - Recursion
+                Pair.of("Lilie(auth_FanLinkin)", 34.0),
+                Pair.of("Masterchief_helmet(Halo)(auth_Pate)", 45.0),
+                Pair.of("Bottle(auth_Scripty)", 79.0), // Completion 100.0 - Recursion
+                Pair.of("Another_challenge_for_you(auth_Psexanutik)", 27.0),
+                Pair.of("Sword(auth_Darien_Fawkes)", 23.0),
+                Pair.of("Mouse(auth_Puzzhorn)", 26.0),
+                Pair.of("Wild_West(auth_Ed95206)", 24.0),
+                Pair.of("Escakeras(auth_El...)", 21.0),
+                Pair.of("Staircase(auth_Lullabeauxbug)", 29.0),
+                Pair.of("Pig(auth_Liuna)", 21.0),
+                Pair.of("Pattern15x15_2(auth_wiki)", 20.0),
+                Pair.of("Rocket(Auth_AlexPo03011975)", 19.9),
+                Pair.of("Pattern3(auth_OmaMor)", 28.199),
+                Pair.of("Baby_Stroller(Kingerwagen)(auth_Lostir)", 17.719),
+                Pair.of("Butterfly(Papillon)(auth_isiem)", 29.316),
+                Pair.of("Krest(auth_JannaS)", 50.398),
+                Pair.of("Pattern15x15_2(auth_KILK_UHA)", 32.59),
+                Pair.of("Vorobey(auth_Pechenka.)", 43.574),
+                Pair.of("Pattern(auth_Zettoo_Lei)", 28.654),
+                Pair.of("pattern(auth_Alexys12345)", 31.726),
+                Pair.of("Dying_bush(auth_Kateivas)", 31.648),
+                Pair.of("Targeting_computer(auth_m.junior)", 59.171), // Recursion or sth need, Completion 18.22
+                Pair.of("ghost(auth_anna3337777)", 62.438),
+                Pair.of("Scissors(Schere)(auth_Zarathustra)", 71.446), // Recursion or sth need, Completion 12.44
+                Pair.of("Flower(auth_Rain)", 42.792),
+                Pair.of("Curl(auth_mystery_soul)", 139.058),
+                Pair.of("Scissors(Schere)(auth_Zarathustra)", 69.792), // Recursion or sth need, Completion 14.67
+                Pair.of("pattern_1(auth_Erfina)", 73.195), // Recursion or sth need, Completion 23.11
+                Pair.of("Bracelet(auth_DrewSamson)", 39.554),
+                Pair.of("Chick(auth_keikyu2100gata)", 28.858),
+                Pair.of("Uzor(auth_Shurik702)", 29.993),
+                Pair.of("The_allseeing_eye(auth_Donovan)", 48.193),
+                Pair.of("Butterfly(Mariposa)(auth_zupermami)", 35.591),
+                Pair.of("Goat(auth_MissMijo)", 54.377),
+                Pair.of("Stamp(Estampa)(auth_Nunovni)", 83.473), // Recursion or sth need, Completion 14.67
+                Pair.of("Desert_Highway(auth_BlindWanderer)", 55.287), // Recursion or sth need, Completion 2.67
+                Pair.of("Snowflake(auth_Evgenyi)", 65.0), // Completion 100.0 - Recursion
+                Pair.of("flower(auth_snowyowl8)", 111.076), // Recursion or sth need, Completion 25.33
+                Pair.of("Pattern(auth_Yennefer17)", 54.499), // Recursion or sth need, Completion 43.11
+                Pair.of("Web(auth_Vitaliy_Lokos)", 26.45),
+                Pair.of("Enda(auth_naaaa)", 41.393),
+                Pair.of("Feather(auth_Annsan)", 98.0), // Completion 100.0 - Recursion
+                Pair.of("Stripes(auth_Mag&3)", 26.032),
+                Pair.of("Argentine_Mate(Mate_Argentino)(auth_Alud)", 20.396),
+                Pair.of("Little_bird(P1)(auth_charly65)", 52.654),
+                Pair.of("Pattern(auth_KILK_UHA)", 167.889), // Recursion or sth need, Completion 40.89
+                Pair.of("Clover(auth_cyndidee)", 93.0) // Completion 100.0 - Recursion
+        );
 
-        filesTooLongSolving.add("Little_star(auth_Force_of_Nature)");                               //  467.579s   8.75%
-        filesTooLongSolving.add("Bumpy_1989_y.(Game)(auth_Milana.)");                               //   23.429s 100.00%
-        filesTooLongSolving.add("Sword(auth_Izuri_Natsuki)");                                       //  117.306s 100.00%
-        filesTooLongSolving.add("Entrance(auth_The_Dimmon0811)");                                   //   13.318s 100.00%
-        filesTooLongSolving.add("Island(auth_Lexruss)");                                            //  141.846s 100.00% /recDepth=1
-        filesTooLongSolving.add("Baymax(auth_chopper)");                                            //  285.787s 100.00% /recDepth=1
-        filesTooLongSolving.add("Simmetria3(auth_mrs.zenzy)");                                      //    4.645s 100.00%
-        filesTooLongSolving.add("Ficus_elastica(Gummibaum)(auth_FairyWings29)");                    //   32.275s 100.00%
-        filesTooLongSolving.add("Pedestal(auth_igormart)");                                         //   26.940s 100.00%
-        filesTooLongSolving.add("Puzzle_2(auth_Eccentric)");                                        //    6.221s 100.00%
+        List<Pair<String, Double>> filesWithTimeOk_Katana15x15 = List.of();
 
-        filesTooLongSolving.add("Muster(auth_lisa&)");                                              //   15.198s 100.00%
-        filesTooLongSolving.add("jellyfish(auth_dydh1)");                                           //   86.415s 100.00%
-        filesTooLongSolving.add("Spirale(auth_Whitiger13)");                                        //   45.266s 100.00%
-        filesTooLongSolving.add("Pattern_9(auth_wim13)");                                           //    5.175s 100.00%
-        filesTooLongSolving.add("Gecko(auth_Neeky)");                                               //   56.052s 100.00%
-        filesTooLongSolving.add("Uzory_Taimyra_3(auth_untaika)");                                   //  135.863s  48.50%
-        filesTooLongSolving.add("Squares(auth_bakagiggio)");                                        //  135.042s 100.00%
-        filesTooLongSolving.add("Crabe(auth_D93)");                                                 //   82.003s 100.00%
-        filesTooLongSolving.add("Teddy_Bear(auth_dizziness)");                                      //  109.376s 100.00%
-        filesTooLongSolving.add("Trumpet(auth_sydmoney42)");                                        //   64.994s 100.00%
+        List<Pair<String, Double>> filesWithTimeTooLongSolvingKatana20x20 = List.of(
+                Pair.of("Doggy(Chiot)(auth_Liaaaaaaaaaa)", 2.054),
+                Pair.of("Halberd(auth_Aurelius)", 2.321),
+                Pair.of("White_cross(auth_Sanchez_Solver)", 0.605),
+                Pair.of("Mozaika(auth_ka_ha)", 0.151),
+                Pair.of("Tarcza(auth_tabaq)", 0.762),
+                Pair.of("wifi(auth_mana)", 0.826),
+                Pair.of("Rebellion(auth_Spiderlux)", 0.268),
+                Pair.of("pattern(auth_jh1318)", 1.602),
+                Pair.of("Don't_know(auth_Y88n_)", 0.478),
+                Pair.of("Palm(auth_mmaga)", 0.975),
+                Pair.of("Mozaic_1(auth_wim13)", 1.570),
+                Pair.of("Girl(auth_Yucia)", 0.391),
+                Pair.of("KGungnir(auth_Super_hitman)", 0.447),
+                Pair.of("Flower(auth_eil5026)", 0.304),
+                Pair.of("Coffee_jug(auth_Ricarix)", 0.774),
+                Pair.of("Coal_Waggon(auth_Triple_S)", 0.251),
+                Pair.of("Clown(auth_chopper)", 0.253),
+                Pair.of("Pattern(auth_greenmusic)", 0.774)
+        );
 
-        filesTooLongSolving.add("Screw(auth_Feiry)");                                               //  125.888s 100.00% /recDepth=3
-        filesTooLongSolving.add("Nothing(auth_mijo)");                                              //  192.251s  52.00%
-        filesTooLongSolving.add("Samurai(auth_Nomad)");                                             //  112.158s 100.00%
-        filesTooLongSolving.add("wintertree(winterboom)(auth_sterredag)");                          //   78.469s 100.00%
-        filesTooLongSolving.add("Roza_vetrov(auth_Dittodendron)");                                  //   31.291s 100.00%
-        filesTooLongSolving.add("Square(hard_for_computer_easy_for_human)(auth_Gcpsu)");            //  479.165s  11.75%
-        filesTooLongSolving.add("Snowman(auth_Ladyweed)");                                          //  408.659s 100.00%
-        filesTooLongSolving.add("Mini_evil(auth_Mefis)");                                           //   94.979s 100.00%
-        filesTooLongSolving.add("Needle_and_Button(auth_Swapnil_Bankar)");                          //   95.942s 100.00%
-        filesTooLongSolving.add("Mozaika(auth_ka_ha)");                                             //    0.151s 100.00%
+        List<Pair<String, Double>> filesWithTimeOkKatana20x20 = List.of(
+                Pair.of("Doily(auth_Ricarix)", 141.034),
+                Pair.of("Knight(auth_DrTimer)", 84.636),
+                Pair.of("Pocket_bouquet(auth_inush)", 184.109),
+                Pair.of("Links(auth_Ricarix)", 69.375),
+                Pair.of("Geo_Abstract(auth_Turfer)", 1.585),
+                Pair.of("Rune(auth_Mihail102)", 348.304),
+                Pair.of("Owl(auth_Yanire)", 1.858),
+                Pair.of("Little_star(auth_Force_of_Nature)", 467.579),
+                Pair.of("Bumpy_1989_y.(Game)(auth_Milana.)", 23.429),
+                Pair.of("Sword(auth_Izuri_Natsuki)", 117.306),
+                Pair.of("Entrance(auth_The_Dimmon0811)", 13.318),
+                Pair.of("Island(auth_Lexruss)", 141.846),
+                Pair.of("Baymax(auth_chopper)", 285.787),
+                Pair.of("Simmetria3(auth_mrs.zenzy)", 4.645),
+                Pair.of("Ficus_elastica(Gummibaum)(auth_FairyWings29)", 32.275),
+                Pair.of("Pedestal(auth_igormart)", 26.94),
+                Pair.of("Puzzle_2(auth_Eccentric)", 6.221),
+                Pair.of("Muster(auth_lisa&)", 15.198),
+                Pair.of("jellyfish(auth_dydh1)", 86.415),
+                Pair.of("Spirale(auth_Whitiger13)", 45.266),
+                Pair.of("Pattern_9(auth_wim13)", 5.175),
+                Pair.of("Gecko(auth_Neeky)", 56.052),
+                Pair.of("Uzory_Taimyra_3(auth_untaika)", 135.863),
+                Pair.of("Squares(auth_bakagiggio)", 135.042),
+                Pair.of("Crabe(auth_D93)", 82.003),
+                Pair.of("Teddy_Bear(auth_dizziness)", 109.376),
+                Pair.of("Trumpet(auth_sydmoney42)", 64.994),
+                Pair.of("Screw(auth_Feiry)", 125.888),
+                Pair.of("Nothing(auth_mijo)", 192.251),
+                Pair.of("Samurai(auth_Nomad)", 112.158),
+                Pair.of("wintertree(winterboom)(auth_sterredag)", 78.469),
+                Pair.of("Roza_vetrov(auth_Dittodendron)", 31.291),
+                Pair.of("Square(hard_for_computer_easy_for_human)(auth_Gcpsu)", 479.165),
+                Pair.of("Snowman(auth_Ladyweed)", 408.659),
+                Pair.of("Mini_evil(auth_Mefis)", 94.979),
+                Pair.of("Needle_and_Button(auth_Swapnil_Bankar)", 95.942),
+                Pair.of("Insect(Insetto)(auth_mrs.zenzy)", 143.369),
+                Pair.of("X-MAS_TREE(Kerstboom)(auth_Dientje85)", 96.134),
+                Pair.of("Circle(Cirkel)(auth_Bro94)", 23.279),
+                Pair.of("Clock(auth_rasolinenet1988)", 329.324),
+                Pair.of("Chain_Link(auth_BlueRolex)", 128.712),
+                Pair.of("Mosaic(auth_eil5026)", 63.765),
+                Pair.of("4(Sword)(auth_XXIxDUDxIXX))", 85.564),
+                Pair.of("Cross(auth_KILK_UHA))", 253.694),
+                Pair.of("Piggy(Schweinchen)(auth_Flauschel)", 215.071),
+                Pair.of("Danseurs(auth_louiis)", 18.165),
+                Pair.of("Note_key(auth_Marryka11)", 14.7),
+                Pair.of("Forest(Wald)(auth_Arinome)", 11.255),
+                Pair.of("Horse(auth_Avtogragdanka)", 55.733),
+                Pair.of("Birdbox(Caja_nido)(auth_Caminero)", 138.864),
+                Pair.of("Knit(Tricot)(auth_gennao)", 6.314),
+                Pair.of("Battle_hammer(auth_money_D_luffy)", 11.26),
+                Pair.of("The_King(auth_Blizzard)", 27.191),
+                Pair.of("Vase(auth_kronki)", 122.524),
+                Pair.of("Symetry(Simetria)(auth_rockejr)", 125.72),
+                Pair.of("Rabbit(auth_Victor_304)", 96.81),
+                Pair.of("Pattern20x20_1(auth_wiki)", 19.347),
+                Pair.of("Fish(auth_Santalina)", 218.802),
+                Pair.of("Kitty(auth_Gragdanochka)", 64.303),
+                Pair.of("Sym-design(auth_Ankit_Seth))", 1.27),
+                Pair.of("Soccer_player(auth_Utsu)", 21.438),
+                Pair.of("The_world_is_one_family(Vasudaiva_kutumbakam)(auth_Aditya_Deshmukh)", 6.187),
+                Pair.of("Mt._FUJI(auth_kamegon)", 9.418),
+                Pair.of("Squirrel(auth_Trofimka2210)", 422.999),
+                Pair.of("In_a_Heartbeat(auth_Smartypants)", 114.47),
+                Pair.of("Love(auth_Callie_Cassidy)", 147.555),
+                Pair.of("Squirtle(auth_Scarheart)", 47.638),
+                Pair.of("Chertik(auth_Natik2002)", 212.89),
+                Pair.of("Simmetria9(auth_mrs.zenzy))", 8.551),
+                Pair.of("Flying_bird(auth_Ladyweed)", 254.866),
+                Pair.of("Flower20x20(auth_eil5026)", 24.19),
+                Pair.of("Parrot(auth_Natali_san)", 25.262),
+                Pair.of("Morkovka(auth_Yaroslav_Pidgurskyi)", 2.079),
+                Pair.of("Simmetria15(auth_mrs.zenzy)", 140.798),
+                Pair.of("Pattern_66(auth_Kleopatra)", 6.495),
+                Pair.of("Ghost(auth_Kyte)", 245.687),
+                Pair.of("Native_American(Indianer)(auth_gojira)", 181.139),
+                Pair.of("Smile(auth_whenwolf)", 40.562),
+                Pair.of("Fish(auth_IrinaYa)", 4.577),
+                Pair.of("KEngine_piston(Pistone,_fascia_e_perno)(auth_Sigmundd)", 134.346),
+                Pair.of("Sleeping_cat(auth_Juli-ma)", 56.502),
+                Pair.of("Tri(auth_st3fn0)", 226.002),
+                Pair.of("Znak_drogowy(auth_an84na)", 84.176),
+                Pair.of("Flying_monster(walk)(auth_Gipnoza)", 79.2),
+                Pair.of("Llama_Love(auth_SunKissed)", 19.515),
+                Pair.of("Hmmmph(auth_QuinnO)", 63.739),
+                Pair.of("1+1(auth_Russell2012)", 222.073),
+                Pair.of("Pattern4(auth_wiki)", 263.397),
+                Pair.of("Fingerwaves(Onde_Giapponesi)(auth_Fusettini)", 19.384),
+                Pair.of("Kanji_for_fire(huo3)(auth_ai2022ncg)", 148.163),
+                Pair.of("Celtic_cross(auth_Zipfish)", 92.224),
+                Pair.of("Pattern20x20(auth_wiki)", 465.87),
+                Pair.of("Curious_monkey(Neugiriger_Affe)(Auth_Fuzzly)", 55.25),
+                Pair.of("Heart(auth_Svar)", 35.216),
+                Pair.of("Jellyfish(auth_el1s3n)", 12.962),
+                Pair.of("Kaleidoscope(Kaleidoskop)(auth_MarStav)", 71.45),
+                Pair.of("Gold(auth_STK)", 14.343),
+                Pair.of("baseball(auth_Devikajoy)", 255.194),
+                Pair.of("Kat(auth_Happy__Girll)", 33.886),
+                Pair.of("Cute_dog(auth_Hawka)", 194.954),
+                Pair.of("Sunset(auth_pearlrose)", 116.217),
+                Pair.of("Bow_and_arrow(auth_Ankit_Seth)", 171.357),
+                Pair.of("Fist(auth_Alturo)", 3.48),
+                Pair.of("Pick_axe(auth_Kitticats)", 80.823),
+                Pair.of("Flower_on_a_vase(Flor_no_vaso)(auth_Marilha)", 577.847),
+                Pair.of("House(Maison)(auth_Shusy)", 116.657),
+                Pair.of("Baseball(auth_Doctor_J)", 84.049),
+                Pair.of("Horse(auth_Caballo)", 262.745),
+                Pair.of("Whack-a-mole(Acchiappa_la_talpa)(auth_XCloud92)", 59.95),
+                Pair.of("Pisces(auth_boobie420)", 185.992),
+                Pair.of("Kilroy_Was_Here(auth_TK421)", 5.348),
+                Pair.of("Cap's_Shield(Lo_scudo_del_Capitano)(auth_PC37)", 65.433),
+                Pair.of("Key(auth_dr_pure)", 30.252),
+                Pair.of("Dagger(auth_PPAPER)", 119.122),
+                Pair.of("Cubes(auth_NDee)", 1074.434),
+                Pair.of("Jellyfish(auth_byiguana)", 13.983),
+                Pair.of("Sword(auth_TAGVoar)", 131.329),
+                Pair.of("Sword(auth_Vojta_Vavrik)", 263.962),
+                Pair.of("Taurus(auth_GalyaAs)", 2.836),
+                Pair.of("Rosa_dos_ventos(auth_Desinho)", 262.412),
+                Pair.of("Star(auth_Aleris)", 145.601),
+                Pair.of("Design(auth_tkocer17)", 62.532),
+                Pair.of("Rose(auth_iStudent)", 83.276),
+                Pair.of("Ovni(auth_Porra)", 115.971),
+                Pair.of("Design_2(auth_SunKissed)", 391.164),
+                Pair.of("Bear(auth_Murzik)", 13.181),
+                Pair.of("Butterfly(auth_masha.ff)", 93.701),
+                Pair.of("Which_line_is_longest(auth_Samlls)", 231.53),
+                Pair.of("Star(Stern)(auth_sisika)", 4.361),
+                Pair.of("Sword(auth_AnkebuT35)", 206.525),
+                Pair.of("Cat(auth_Nec)", 134.165),
+                Pair.of("illusion(auth_efam)", 124.629),
+                Pair.of("Ddd(auth_bro_ry)", 37.064),
+                Pair.of("A37(auth_Ulti)", 141.072),
+                Pair.of("Pattern_8(auth_wim13)", 1.879),
+                Pair.of("Cat_in_the_sunshine(auth_aaa1)", 116.666),
+                Pair.of("Gothic_cat(auth_Auf228)", 256.059),
+                Pair.of("Duck(auth_Yurik)", 1447.235),
+                Pair.of("Pattern_91(auth_Irene_009)", 8.857),
+                Pair.of("Stsr(auth_Igaryok)", 25.521),
+                Pair.of("Wisdom_knot(Nyansapo)(auth_AhmetBayirli)", 82.738),
+                Pair.of("dandelion(auth_Gragdanochka)", 2.295),
+                Pair.of("King(auth_DrTimer)", 38.169),
+                Pair.of("Cubo(auth_Jasson_Manuel)", 12.138),
+                Pair.of("Eye_monster(auth_David_M)", 216.687),
+                Pair.of("Snail(Schnecke)(auth_bandenklette)", 447.348),
+                Pair.of("Flower(Fleur)(auth_cyn86)", 88.5),
+                Pair.of("Boat(auth_Thomas_van_Driel)", 6.846),
+                Pair.of("Branch(auth_Arahnia)", 2.357),
+                Pair.of("Design_01(auth_Nancy_McCrary)", 338.059),
+                Pair.of("Good_boy(auth_SayHi)", 97.466),
+                Pair.of("Star(auth_Ulti)", 133.921),
+                Pair.of("Cats(auth_blisster)", 89.726),
+                Pair.of("Foot(Planta_del_pie)(auth_Ladyweed)", 635.799),
+                Pair.of("Optical_pattern(auth_Purr_Norris)", 97.278),
+                Pair.of("Snail(Schnecke)(auth_bandenklette)", 245.366),
+                Pair.of("Tiles(auth_Miss_Annasita)", 3.102),
+                Pair.of("Kite(auth_Tatyana30)", 49.206),
+                Pair.of("Graveyard(auth_Engorged)", 94.294),
+                Pair.of("bismuth_patterns(auth_masekre)", 101.41),
+                Pair.of("Forks_4(auth_Arik_Manley)", 14.737),
+                Pair.of("Forks_2(auth_Arik_Manley)", 59.097),
+                Pair.of("floral_tile(auth_bizibody)", 481.528),
+                Pair.of("Pattern_10_Hard(gypsyfyed333(pub)(auth_Kimberly_Edens)", 1.602)
+        );
 
-        filesTooLongSolving.add("Insect(Insetto)(auth_mrs.zenzy)");                                 //  143.369s 100.00%
-        filesTooLongSolving.add("X-MAS_TREE(Kerstboom)(auth_Dientje85)");                           //   96.134s 100.00%
-        filesTooLongSolving.add("Circle(Cirkel)(auth_Bro94)");                                      //   23.279s 100.00%
-        filesTooLongSolving.add("Tarcza(auth_tabaq)");                                              //    0.762s 100.00%
-        filesTooLongSolving.add("Clock(auth_rasolinenet1988)");                                     //  329.324s 100.00% /recDepth=4
-        filesTooLongSolving.add("Chain_Link(auth_BlueRolex)");                                      //  128.712s 100.00%
-        filesTooLongSolving.add("Mosaic(auth_eil5026)");                                            //   63.765s  48.00%
-        filesTooLongSolving.add("4(Sword)(auth_XXIxDUDxIXX))");                                     //   85.564s 100.00%
-        filesTooLongSolving.add("Cross(auth_KILK_UHA))");                                           //  253.694s   0.00%
-        filesTooLongSolving.add("Piggy(Schweinchen)(auth_Flauschel)");                              //  215.071s 100.00%
-
-        filesTooLongSolving.add("Danseurs(auth_louiis)");                                           //   18.165s 100.00%
-        filesTooLongSolving.add("Note_key(auth_Marryka11)");                                        //   14.700s 100.00%
-        filesTooLongSolving.add("Forest(Wald)(auth_Arinome)");                                      //   11.255s 100.00%
-        filesTooLongSolving.add("Horse(auth_Avtogragdanka)");                                       //   55.733s 100.00%
-        filesTooLongSolving.add("Birdbox(Caja_nido)(auth_Caminero)");                               //  138.864s 100.00% /recDepth=1
-        filesTooLongSolving.add("Knit(Tricot)(auth_gennao)");                                       //    6.314s 100.00%
-        filesTooLongSolving.add("Battle_hammer(auth_money_D_luffy)");                               //   11.260s 100.00%
-        filesTooLongSolving.add("The_King(auth_Blizzard)");                                         //   27.191s 100.00%
-        filesTooLongSolving.add("Vase(auth_kronki)");                                               //  122.524s 100.00%
-        filesTooLongSolving.add("Symetry(Simetria)(auth_rockejr)");                                 //  125.720s 100.00%
-
-        filesTooLongSolving.add("Rabbit(auth_Victor_304)");                                         //   96.810s 100.00%
-        filesTooLongSolving.add("Pattern20x20_1(auth_wiki)");                                       //   19.347s 100.00%
-        filesTooLongSolving.add("Fish(auth_Santalina)");                                            //  218.802s   5.50%
-        filesTooLongSolving.add("Kitty(auth_Gragdanochka)");                                        //   64.303s 100.00%
-        filesTooLongSolving.add("Sym-design(auth_Ankit_Seth))");                                    //    1.270s 100.00%
-        filesTooLongSolving.add("Soccer_player(auth_Utsu)");                                        //   21.438s 100.00%
-        filesTooLongSolving.add("The_world_is_one_family(Vasudaiva_kutumbakam)(auth_Aditya_Deshmukh)");// 6.187s 100.00%
-        filesTooLongSolving.add("Mt._FUJI(auth_kamegon)");                                          //    9.418s 100.00%
-        filesTooLongSolving.add("Squirrel(auth_Trofimka2210)");                                     //  422.999s 100.00% /recDepth=5
-        filesTooLongSolving.add("In_a_Heartbeat(auth_Smartypants)");                                //  114.470s 100.00% /recDepth=2
-
-        filesTooLongSolving.add("Love(auth_Callie_Cassidy)");                                       //  147.555s 100.00%
-        filesTooLongSolving.add("Squirtle(auth_Scarheart)");                                        //   47.638s 100.00%
-        filesTooLongSolving.add("Chertik(auth_Natik2002)");                                         //  212.890s 100.00%
-        filesTooLongSolving.add("Simmetria9(auth_mrs.zenzy))");                                     //    8.551s 100.00%
-        filesTooLongSolving.add("Flying_bird(auth_Ladyweed)");                                      //  254.866s   2.50%
-        filesTooLongSolving.add("Flower20x20(auth_eil5026)");                                       //   24.190s 100.00%
-        filesTooLongSolving.add("Parrot(auth_Natali_san)");                                         //   25.262s 100.00%
-        filesTooLongSolving.add("Morkovka(auth_Yaroslav_Pidgurskyi)");                              //    2.079s 100.00%
-        filesTooLongSolving.add("Simmetria15(auth_mrs.zenzy)");                                     //  140.798s 100.00% /recDepth=2
-        filesTooLongSolving.add("Flower(auth_eil5026)");                                            //    0.304s 100.00%
-
-        filesTooLongSolving.add("Pattern_66(auth_Kleopatra)");                                      //    6.495s 100.00%
-        filesTooLongSolving.add("Ghost(auth_Kyte)");                                                //  245.687s 100.00% /recDepth=1
-        filesTooLongSolving.add("Native_American(Indianer)(auth_gojira)");                          //  181.139s 100.00%
-        filesTooLongSolving.add("Smile(auth_whenwolf)");                                            //   40.562s 100.00%
-        filesTooLongSolving.add("Fish(auth_IrinaYa)");                                              //    4.577s 100.00%
-        filesTooLongSolving.add("Girl(auth_Yucia)");                                                //    0.391s 100.00%
-        filesTooLongSolving.add("KEngine_piston(Pistone,_fascia_e_perno)(auth_Sigmundd)");          //  134.346s 100.00%
-        filesTooLongSolving.add("KGungnir(auth_Super_hitman)");                                     //    0.447s 100.00%
-        filesTooLongSolving.add("Sleeping_cat(auth_Juli-ma)");                                      //   56.502s 100.00%
-        filesTooLongSolving.add("Tri(auth_st3fn0)");                                                //  226.002s  16.50%
-
-        filesTooLongSolving.add("Znak_drogowy(auth_an84na)");                                       //   84.176s 100.00%
-        filesTooLongSolving.add("Flying_monster(walk)(auth_Gipnoza)");                              //   79.200s 100.00%
-        filesTooLongSolving.add("Llama_Love(auth_SunKissed)");                                      //   19.515s 100.00%
-        filesTooLongSolving.add("napkin(auth_IMITATOR)");                                           //    2.381s 100.00%
-        filesTooLongSolving.add("Hmmmph(auth_QuinnO)");                                             //   63.739s 100.00%
-        filesTooLongSolving.add("1+1(auth_Russell2012)");                                           //  222.073s 100.00%
-        filesTooLongSolving.add("Pattern4(auth_wiki)");                                             //  263.397s 100.00% /recDepth=5
-        filesTooLongSolving.add("Fingerwaves(Onde_Giapponesi)(auth_Fusettini)");                    //   19.384s 100.00%
-        filesTooLongSolving.add("Kanji_for_fire(huo3)(auth_ai2022ncg)");                            //  148.163s 100.00%
-        filesTooLongSolving.add("Palm(auth_mmaga)");                                                //    0.975s 100.00%
-
-        filesTooLongSolving.add("Celtic_cross(auth_Zipfish)");                                      //   92.224s 100.00% /recDepth=1
-        filesTooLongSolving.add("Mozaic_1(auth_wim13)");                                            //    1.570s 100.00%
-        filesTooLongSolving.add("Pattern20x20(auth_wiki)");                                         //  465.870s  21.00%
-        filesTooLongSolving.add("Curious_monkey(Neugiriger_Affe)(Auth_Fuzzly)");                    //   55.250s 100.00%
-        filesTooLongSolving.add("Heart(auth_Svar)");                                                //   35.216s 100.00%
-        filesTooLongSolving.add("Jellyfish(auth_el1s3n)");                                          //   12.962s 100.00%
-        filesTooLongSolving.add("Kaleidoscope(Kaleidoskop)(auth_MarStav)");                         //   71.450s 100.00%
-        filesTooLongSolving.add("Gold(auth_STK)");                                                  //   14.343s 100.00%
-        filesTooLongSolving.add("baseball(auth_Devikajoy)");                                        //  255.194s  27.00%
-        filesTooLongSolving.add("Don't_know(auth_Y88n_)");                                          //    0.478s 100.00%
-
-        filesTooLongSolving.add("Kat(auth_Happy__Girll)");                                          //   33.886s 100.00%
-        filesTooLongSolving.add("Cute_dog(auth_Hawka)");                                            //  194.954s 100.00%
-        filesTooLongSolving.add("Sunset(auth_pearlrose)");                                          //  116.217s 100.00%
-        filesTooLongSolving.add("Bow_and_arrow(auth_Ankit_Seth)");                                  //  171.357s 100.00%
-        filesTooLongSolving.add("Fist(auth_Alturo)");                                               //    3.480s 100.00%
-        filesTooLongSolving.add("Pick_axe(auth_Kitticats)");                                        //   80.823s 100.00%
-        filesTooLongSolving.add("Flower_on_a_vase(Flor_no_vaso)(auth_Marilha)");                    //  577.847s  31.50%
-        filesTooLongSolving.add("House(Maison)(auth_Shusy)");                                       //  116.657s 100.00%
-        filesTooLongSolving.add("Baseball(auth_Doctor_J)");                                         //   84.049s 100.00%
-        filesTooLongSolving.add("Horse(auth_Caballo)");                                             //  262.745s 100.00%
-
-        filesTooLongSolving.add("wifi(auth_mana)");                                                 //    0.826s 100.00%
-        filesTooLongSolving.add("Rebellion(auth_Spiderlux)");                                       //    0.268s 100.00%
-        filesTooLongSolving.add("Whack-a-mole(Acchiappa_la_talpa)(auth_XCloud92)");                 //   59.950s 100.00%
-        filesTooLongSolving.add("pattern(auth_jh1318)");                                            //    1.602s 100.00%
-        filesTooLongSolving.add("Pisces(auth_boobie420)");                                          //  185.992s 100.00%
-        filesTooLongSolving.add("Kilroy_Was_Here(auth_TK421)");                                     //    5.348s 100.00%
-        filesTooLongSolving.add("Cap's_Shield(Lo_scudo_del_Capitano)(auth_PC37)");                  //   65.433s 100.00%
-        filesTooLongSolving.add("Key(auth_dr_pure)");                                               //   30.252s 100.00%
-        filesTooLongSolving.add("Dagger(auth_PPAPER)");                                             //  119.122s 100.00%
-        filesTooLongSolving.add("Cubes(auth_NDee)");                                                // 1074.434s 100.00% /recDepth=5
-
-        filesTooLongSolving.add("Clown(auth_chopper)");                                             //    0.253s 100.00%
-        filesTooLongSolving.add("Jellyfish(auth_byiguana)");                                        //   13.983s 100.00%
-        filesTooLongSolving.add("Sword(auth_TAGVoar)");                                             //  131.329s 100.00%
-        filesTooLongSolving.add("Coal_Waggon(auth_Triple_S)");                                      //    0.251s 100.00%
-        filesTooLongSolving.add("Sword(auth_Vojta_Vavrik)");                                        //  263.962s 100.00%
-        filesTooLongSolving.add("Taurus(auth_GalyaAs)");                                            //    2.836s 100.00%
-        filesTooLongSolving.add("Rosa_dos_ventos(auth_Desinho)");                                   //  262.412s 100.00%
-        filesTooLongSolving.add("Star(auth_Aleris)");                                               //  145.601s   0.00%
-        filesTooLongSolving.add("Design(auth_tkocer17)");                                           //   62.532s 100.00%
-        filesTooLongSolving.add("Rose(auth_iStudent)");                                             //   83.276s 100.00%
-
-        filesTooLongSolving.add("Ovni(auth_Porra)");                                                //  115.971s 100.00% /recDepth=3
-        filesTooLongSolving.add("Design_2(auth_SunKissed)");                                        //  391.164s 34.00%
-        filesTooLongSolving.add("Bear(auth_Murzik)");                                               //   13.181s 100.00%
-        filesTooLongSolving.add("Butterfly(auth_masha.ff)");                                        //   93.701s 100.00%
-        filesTooLongSolving.add("Which_line_is_longest(auth_Samlls)");                              //  231.530s  19.50%
-        filesTooLongSolving.add("Star(Stern)(auth_sisika)");                                        //    4.361s 100.00%
-        filesTooLongSolving.add("Sword(auth_AnkebuT35)");                                           //  206.525s   0.50%
-        filesTooLongSolving.add("Cat(auth_Nec)");                                                   //  134.165s 100.00%
-        filesTooLongSolving.add("illusion(auth_efam)");                                             //  124.629s 100.00%
-        filesTooLongSolving.add("Pattern(auth_greenmusic)");                                        //    0.774s 100.00%
-
-        filesTooLongSolving.add("Ddd(auth_bro_ry)");                                                //   37.064s 100.00%
-        filesTooLongSolving.add("A37(auth_Ulti)");                                                  //  141.072s 100.00%
-        filesTooLongSolving.add("Pattern_8(auth_wim13)");                                           //    1.879s 100.00%
-        filesTooLongSolving.add("Cat_in_the_sunshine(auth_aaa1)");                                  //  116.666s 100.00%
-        filesTooLongSolving.add("Gothic_cat(auth_Auf228)");                                         //  256.059s 100.00%
-        filesTooLongSolving.add("Duck(auth_Yurik)");                                                // 1447.235s 100.00%
-        filesTooLongSolving.add("Coffee_jug(auth_Ricarix)");                                        //    0.774s  27.00%
-        filesTooLongSolving.add("Pattern_91(auth_Irene_009)");                                      //    8.857s 100.00%
-        filesTooLongSolving.add("Stsr(auth_Igaryok)");                                              //   25.521s 100.00%
-        filesTooLongSolving.add("Wisdom_knot(Nyansapo)(auth_AhmetBayirli)");                        //   82.738s 100.00%
-
-        filesTooLongSolving.add("Ddd(auth_bro_ry)");                                                //   37.064s 100.00%
-        filesTooLongSolving.add("A37(auth_Ulti)");                                                  //  141.072s 100.00%
-        filesTooLongSolving.add("Pattern_8(auth_wim13)");                                           //    1.879s 100.00%
-        filesTooLongSolving.add("Cat_in_the_sunshine(auth_aaa1)");                                  //  116.666s 100.00%
-        filesTooLongSolving.add("Gothic_cat(auth_Auf228)");                                         //  256.059s 100.00%
-        filesTooLongSolving.add("Duck(auth_Yurik)");                                                // 1447.235s 100.00%
-        filesTooLongSolving.add("Coffee_jug(auth_Ricarix)");                                        //    0.774s  27.00%
-        filesTooLongSolving.add("Pattern_91(auth_Irene_009)");                                      //    8.857s 100.00%
-        filesTooLongSolving.add("Stsr(auth_Igaryok)");                                              //   25.521s 100.00%
-        filesTooLongSolving.add("Wisdom_knot(Nyansapo)(auth_AhmetBayirli)");                        //   82.738s 100.00%
-
-        filesTooLongSolving.add("Ddd(auth_bro_ry)");                                                //   37.064s 100.00%
-        filesTooLongSolving.add("A37(auth_Ulti)");                                                  //  141.072s 100.00%
-        filesTooLongSolving.add("Pattern_8(auth_wim13)");                                           //    1.879s 100.00%
-        filesTooLongSolving.add("Cat_in_the_sunshine(auth_aaa1)");                                  //  116.666s 100.00%
-        filesTooLongSolving.add("Gothic_cat(auth_Auf228)");                                         //  256.059s 100.00%
-        filesTooLongSolving.add("Duck(auth_Yurik)");                                                // 1447.235s 100.00%
-        filesTooLongSolving.add("Coffee_jug(auth_Ricarix)");                                        //    0.774s  27.00%
-        filesTooLongSolving.add("Pattern_91(auth_Irene_009)");                                      //    8.857s 100.00%
-        filesTooLongSolving.add("Stsr(auth_Igaryok)");                                              //   25.521s 100.00%
-        filesTooLongSolving.add("Wisdom_knot(Nyansapo)(auth_AhmetBayirli)");                        //   82.738s 100.00%
-
-        filesTooLongSolving.add("dandelion(auth_Gragdanochka)");                                    //    2.295s 100.00%
-        filesTooLongSolving.add("King(auth_DrTimer)");                                              //   38.169s 100.00%
-        filesTooLongSolving.add("Cubo(auth_Jasson_Manuel)");                                        //   12.138s 100.00%
-        filesTooLongSolving.add("Eye_monster(auth_David_M)");                                       //  216.687s 100.00%
-        filesTooLongSolving.add("Snail(Schnecke)(auth_bandenklette)");                              //  447.348s 100.00%
-        filesTooLongSolving.add("Flower(Fleur)(auth_cyn86)");                                       //   88.500s 100.00%
-        filesTooLongSolving.add("Boat(auth_Thomas_van_Driel)");                                     //    6.846s  27.00%
-        filesTooLongSolving.add("Branch(auth_Arahnia)");                                            //    2.357s 100.00%
-        filesTooLongSolving.add("Design_01(auth_Nancy_McCrary)");                                   //  338.059s 100.00%
-        filesTooLongSolving.add("Good_boy(auth_SayHi)");                                            //   97.466s 100.00%
-
-        filesTooLongSolving.add("Star(auth_Ulti)");                                                 //  133.921s 100.00% /recDepth=2
-        filesTooLongSolving.add("Cats(auth_blisster)");                                             //   89.726s 100.00%
-        filesTooLongSolving.add("Foot(Planta_del_pie)(auth_Ladyweed)");                             //  635.799s  27.25%
-        filesTooLongSolving.add("Optical_pattern(auth_Purr_Norris)");                               //   97.278s 100.00% /recDepth=5
-        filesTooLongSolving.add("Snail(Schnecke)(auth_bandenklette)");                              //  245.366s 100.00%
-        filesTooLongSolving.add("Tiles(auth_Miss_Annasita)");                                       //    3.102s 100.00%
-        filesTooLongSolving.add("Kite(auth_Tatyana30)");                                            //   49.206s 100.00%
-        filesTooLongSolving.add("Graveyard(auth_Engorged)");                                        //   94.294s 100.00%
-        filesTooLongSolving.add("bismuth_patterns(auth_masekre)");                                  //  101.410s 100.00%
-        filesTooLongSolving.add("Forks_4(auth_Arik_Manley)");                                       //   14.737s 100.00%
-
-        filesTooLongSolving.add("Forks_2(auth_Arik_Manley)");                                       //   59.097s 100.00% /recDepth=2
-        filesTooLongSolving.add("floral_tile(auth_bizibody)");                                      //  481.528s 100.00% /recDepth=2
-        filesTooLongSolving.add("Pattern_10_Hard(gypsyfyed333(pub)(auth_Kimberly_Edens)");          //    1.602s 100.00%
-
-        //25x25 (results with maxTreeHeight == 1)
+        List<Pair<String, Double>> filesWithTimeOk_Katana20x20 = List.of();
 
         System.out.println("Selected nonograms count: " + selectedCount);
 
@@ -642,8 +618,6 @@ public class NonogramSolveInitializer implements CommandLineRunner {
             source = nonogram.getSource();
             width = nonogram.getWidth();
             year = nonogram.getYear();
-
-            //System.out.print('"' + filename + '"' + " " );
 
             ObjectMapper objectMapper = new ObjectMapper();
             nonogramFileDetails = objectMapper.readValue(

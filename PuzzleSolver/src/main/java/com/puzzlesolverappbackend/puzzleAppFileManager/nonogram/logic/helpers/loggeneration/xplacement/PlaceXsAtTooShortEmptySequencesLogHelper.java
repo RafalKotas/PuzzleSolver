@@ -18,11 +18,13 @@ public class PlaceXsAtTooShortEmptySequencesLogHelper {
             boolean isRow
     ) {
         return String.format(
-                "PLACE_XS_IN_%s_AT_TOO_SHORT_EMPTY_SEQUENCES: %s=%d\n" +
-                        "initial=%s\n" +
-                        "final=%s\n" +
-                        "lengths=%s\n" +
-                        "excluded=%s\n",
+                """
+                        PLACE_XS_IN_%s_AT_TOO_SHORT_EMPTY_SEQUENCES: %s=%d
+                        initial=%s
+                        final=%s
+                        lengths=%s
+                        excluded=%s
+                        """,
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",
                 index,

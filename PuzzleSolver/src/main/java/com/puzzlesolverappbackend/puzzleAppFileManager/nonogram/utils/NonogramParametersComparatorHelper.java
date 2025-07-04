@@ -40,17 +40,13 @@ public class NonogramParametersComparatorHelper {
         return false;
     }
 
-    public static boolean sequencesRangesEqual(List<List<Integer>> sequencesRanges_A, List<List<Integer>> sequenceRanges_B) {
-        Iterator<List<Integer>> sequencesRanges_AIterator = sequencesRanges_A.iterator();
-        Iterator<List<Integer>> sequenceRanges_BIterator = sequenceRanges_B.iterator();
+    public static boolean sequencesRangesEqual(List<List<Integer>> sequencesRanges_A, List<List<Integer>> sequencesRanges_B) {
+        if (sequencesRanges_A.size() != sequencesRanges_B.size()) {
+            return false;
+        }
 
-        List<Integer> sequenceRange_A;
-        List<Integer> sequenceRange_B;
-
-        while(sequencesRanges_AIterator.hasNext() && sequenceRanges_BIterator.hasNext()) {
-            sequenceRange_A = sequencesRanges_AIterator.next();
-            sequenceRange_B = sequenceRanges_BIterator.next();
-            if (!rangesEqual(sequenceRange_A, sequenceRange_B)) {
+        for (int i = 0; i < sequencesRanges_A.size(); i++) {
+            if (rangesNotEqual(sequencesRanges_A.get(i), sequencesRanges_B.get(i))) {
                 return false;
             }
         }
@@ -129,7 +125,7 @@ public class NonogramParametersComparatorHelper {
      * range_A in format [A_1, A_2]
      * range_B in format [B_1, B_2]
      ***/
-    public static boolean rangesEqual(List<Integer> range_A, List<Integer> range_B) {
-        return Objects.equals(range_A.get(0), range_B.get(0)) && Objects.equals(range_A.get(1), range_B.get(1));
+    public static boolean rangesNotEqual(List<Integer> range_A, List<Integer> range_B) {
+        return !Objects.equals(range_A.get(0), range_B.get(0)) || !Objects.equals(range_A.get(1), range_B.get(1));
     }
 }

@@ -29,6 +29,8 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.Non
 @ToString(onlyExplicitlyIncluded = true)
 public class NonogramSolver {
 
+    private final NonogramLogicFactory logicFactory;
+
     private final int maxTreeHeight = 50;
     private GuessMode guessMode = GuessMode.DISABLED;
     private final boolean recursionModeEnabled = false;
@@ -41,6 +43,7 @@ public class NonogramSolver {
     private NonogramSolutionNode rootNode;
     private NonogramSolutionNode solutionNode;
     private NonogramLogic finalSolutionLogic;
+
     @ToString.Include
     private String solutionFileName;
     private NonogramSolution nonogramSolution;
@@ -50,26 +53,9 @@ public class NonogramSolver {
 
     private List<NonogramSolutionNode> nonogramNodes;
 
-    public NonogramSolver(NonogramLogic nonogramLogic, GuessMode guessMode) {
-        this.solutionNode = new NonogramSolutionNode(nonogramLogic);
-        this.solutionLogic = new NonogramLogic(nonogramLogic.getNonogramRules(), guessMode);
-        this.nonogramNodes = new ArrayList<>();
-    }
-
-    public NonogramSolver(NonogramLogic nonogramLogic, String fileName) {
-        this.rootNode = new NonogramSolutionNode(nonogramLogic);
-        this.solutionNode = this.rootNode;
-
-        NonogramRules rules = nonogramLogic.getNonogramRules();
-        this.solutionLogic = new NonogramLogic(rules, guessMode);
-        this.finalSolutionLogic = new NonogramLogic(rules, guessMode);
-
-        this.solutionFileName = "r" + fileName + JSON_EXTENSION;
-        this.nonogramNodes = new ArrayList<>();
-    }
-
-    public NonogramSolver(NonogramLogic nonogramLogic, String fileName, GuessMode guessMode) {
-        this.solutionNode = new NonogramSolutionNode(nonogramLogic);
+    public NonogramSolver(NonogramLogic nonogramLogic, String fileName, GuessMode guessMode, NonogramLogicFactory logicFactory) {
+        this.logicFactory = logicFactory;
+        this.solutionNode = new NonogramSolutionNode(nonogramLogic, logicFactory);
 
         NonogramRules rules = nonogramLogic.getNonogramRules();
         this.solutionLogic = new NonogramLogic(rules, guessMode);
@@ -93,7 +79,7 @@ public class NonogramSolver {
 
     public void runHeuristicSolver(NonogramSolutionNode nonogramStartNode, String solutionFileName,
                                    int currentTreeHeight, int maxTreeHeight) {
-        NonogramSolutionNode nonogramSubsolutionNode = gson.fromJson(gson.toJson(nonogramStartNode), NonogramSolutionNode.class);
+        NonogramSolutionNode nonogramSubsolutionNode = logicFactory.copyNode(nonogramStartNode);
         NonogramSolutionNode leftNodeO;
         NonogramSolutionNode rightNodeX;
 
@@ -120,14 +106,7 @@ public class NonogramSolver {
         nonogramSubsolutionNode.makeBasicSolverActions();
 
         if (LOG_STEPS_SOLVER) {
-//            nonogramSubsolutionNode.getNonogramLogic().printSolutionBoard();
-//            nonogramSubsolutionNode.getNonogramLogic().printSolutionBoardWithMarks();
-//            System.out.println(nonogramSubsolutionNode.getNonogramLogic().getActionsToDoList().size());
-//            System.out.println("-".repeat(100));
-//
-//            log.info("Fields filled after fill trivial rows and columns: {}", nonogramSubsolutionNode.getNonogramLogic().fieldsFilled());
-//            log.info("COMPLETION PERCENTAGE: {}, DECISIONS SIZE: {}", nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage(), nonogramSubsolutionNode.getNonogramGuessDecisions().size());
-//            log.info("SOLUTION STEPS: ");
+            printOverallHeuristicsResult(nonogramSubsolutionNode);
 
             List<String> rawLogs = nonogramSubsolutionNode.getNodeLogs();
             List<String> convertedLogs = new ArrayList<>();
@@ -183,7 +162,7 @@ public class NonogramSolver {
                         if (rightNodeX.getNonogramLogic().getNonogramState().isInvalidSolution()) {
                             decision.setDecisionMarker(COLOURED_FIELD);
                             correctDecision = Optional.of(decision);
-                            nonogramSubsolutionNode = gson.fromJson(gson.toJson(leftNodeO), NonogramSolutionNode.class);
+                            nonogramSubsolutionNode = logicFactory.copyNode(leftNodeO);
                             if (currentTreeHeight == 0) {
                                 replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
                             }
@@ -199,7 +178,7 @@ public class NonogramSolver {
                         } else {
                             decision.setDecisionMarker(X_FIELD);
                             correctDecision = Optional.of(decision);
-                            nonogramSubsolutionNode = gson.fromJson(gson.toJson(rightNodeX), NonogramSolutionNode.class);
+                            nonogramSubsolutionNode = logicFactory.copyNode(rightNodeX);
                             if (currentTreeHeight == 0) {
                                 replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
                             }
@@ -263,17 +242,20 @@ public class NonogramSolver {
                             rightNodeFilled = rightNodeX.getNonogramLogic().fieldsFilled();
 
                             if (maxNextFilled < Math.max(leftNodeFilled, rightNodeFilled)) {
-                                decisionCoefficientsMax = gson.fromJson(gson.toJson(decision), NonogramSolutionDecision.class);
+                                decisionCoefficientsMax = new NonogramSolutionDecision(
+                                        decision.getDecisionMarker(),
+                                        decision.getDecisionField()
+                                );
                                 maxNextFilled = Math.max(leftNodeFilled, rightNodeFilled);
                             }
                         }
-                        NonogramSolutionNode leftNodeRecursive = gson.fromJson(gson.toJson(nonogramSubsolutionNode), NonogramSolutionNode.class);
+                        NonogramSolutionNode leftNodeRecursive = logicFactory.copyNode(nonogramSubsolutionNode);
                         decisionCoefficientsMax.setDecisionMarker(COLOURED_FIELD);
                         leftNodeRecursive.addDecision(decisionCoefficientsMax);
                         leftNodeRecursive.colourOrPlaceX();
                         leftNodeRecursive.makeBasicSolverActions();
 
-                        NonogramSolutionNode rightNodeRecursive = gson.fromJson(gson.toJson(nonogramSubsolutionNode), NonogramSolutionNode.class);
+                        NonogramSolutionNode rightNodeRecursive = logicFactory.copyNode(nonogramSubsolutionNode);
                         decisionCoefficientsMax.setDecisionMarker(X_FIELD);
                         rightNodeRecursive.addDecision(decisionCoefficientsMax);
                         rightNodeRecursive.colourOrPlaceX();
@@ -308,7 +290,10 @@ public class NonogramSolver {
                             rightNodeFilled = rightNodeX.getNonogramLogic().fieldsFilled();
 
                             if (maxNextFilled < Math.max(leftNodeFilled, rightNodeFilled)) {
-                                decisionCoefficientsMax = gson.fromJson(gson.toJson(decision), NonogramSolutionDecision.class);
+                                decisionCoefficientsMax = new NonogramSolutionDecision(
+                                        decision.getDecisionMarker(),
+                                        decision.getDecisionField()
+                                );
                                 maxNextFilled = Math.max(leftNodeFilled, rightNodeFilled);
                             }
                         }
@@ -335,13 +320,24 @@ public class NonogramSolver {
         }
     }
 
+    private void printOverallHeuristicsResult(NonogramSolutionNode nonogramSubsolutionNode) {
+            nonogramSubsolutionNode.getNonogramLogic().printSolutionBoard();
+            nonogramSubsolutionNode.getNonogramLogic().printSolutionBoardWithMarks();
+            System.out.println(nonogramSubsolutionNode.getNonogramLogic().getActionsToDoList().size());
+            System.out.println("-".repeat(100));
+
+            log.info("Fields filled after fill trivial rows and columns: {}", nonogramSubsolutionNode.getNonogramLogic().fieldsFilled());
+            log.info("COMPLETION PERCENTAGE: {}, DECISIONS SIZE: {}", nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage(), nonogramSubsolutionNode.getNonogramGuessDecisions().size());
+            log.info("SOLUTION STEPS: ");
+    }
+
     public NonogramSolutionNode copyNodeAndAddDecision(NonogramSolutionDecision decision, String decisionMarker, NonogramSolutionNode nodeToCopy) {
         NonogramSolutionDecision nodeDecision = new NonogramSolutionDecision(decisionMarker, decision.getDecisionField());
-        NonogramSolutionNode nodeToAddDecision = gson.fromJson(gson.toJson(nodeToCopy), NonogramSolutionNode.class);
+        NonogramSolutionNode nodeToAddDecision = logicFactory.copyNode(nodeToCopy);
         nodeToAddDecision.addDecision(nodeDecision);
         nodeToAddDecision.colourOrPlaceX();
         nodeToAddDecision.makeBasicSolverActions();
-        return gson.fromJson(gson.toJson(nodeToAddDecision), NonogramSolutionNode.class);
+        return logicFactory.copyNode(nodeToAddDecision);
     }
 
     //replace solutionNode with this with higher completion percentage
@@ -364,10 +360,11 @@ public class NonogramSolver {
                 nodeToCheck.getNonogramLogic().printSolutionBoardAsCode();
             }
 
-            this.solutionNode = gson.fromJson(gson.toJson(nodeToCheck), NonogramSolutionNode.class);
-            this.solutionLogic = new NonogramLogic(nodeToCheck.getNonogramLogic().getNonogramRules(), guessMode);// gson.fromJson(gson.toJson(nodeToCheck.getNonogramLogic()), NonogramLogic.class);
+            this.solutionNode = logicFactory.copyNode(nodeToCheck);
+            this.solutionLogic = logicFactory.copy(nodeToCheck.getNonogramLogic());
+            solutionLogic.initializeHelpers();
         } else {
-            this.solutionNode = gson.fromJson(gson.toJson(this.solutionNode), NonogramSolutionNode.class);
+            this.solutionNode = logicFactory.copyNode(this.solutionNode);
         }
     }
 

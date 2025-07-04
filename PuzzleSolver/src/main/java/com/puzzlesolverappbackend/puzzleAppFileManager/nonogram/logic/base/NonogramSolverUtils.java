@@ -115,14 +115,13 @@ public class NonogramSolverUtils {
             return new Gson().fromJson(JsonParser.parseReader(reader), NonogramFullSolutionData.class);
         } catch (Exception e) {
             System.out.println("Error reading solution file: " + solutionPath);
-            e.printStackTrace();
             return null;
         }
     }
 
-    public static boolean actualRangesContainCorrectRanges(List<List<Integer>> expectedRanges, List<List<Integer>> actualRanges) {
+    public static boolean actualRangesDoNotContainCorrectRanges(List<List<Integer>> expectedRanges, List<List<Integer>> actualRanges) {
         if (expectedRanges.size() != actualRanges.size()) {
-            return false;
+            return true;
         }
 
         for (int i = 0; i < expectedRanges.size(); i++) {
@@ -130,7 +129,7 @@ public class NonogramSolverUtils {
             List<Integer> actual = actualRanges.get(i);
 
             if (expected.size() != 2 || actual.size() != 2) {
-                return false;
+                return true;
             }
 
             int expectedStart = expected.get(0);
@@ -139,11 +138,11 @@ public class NonogramSolverUtils {
             int actualEnd = actual.get(1);
 
             if (expectedStart < actualStart || expectedEnd > actualEnd) {
-                return false;
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
     public static boolean rangeContains(List<Integer> container, List<Integer> contained) {

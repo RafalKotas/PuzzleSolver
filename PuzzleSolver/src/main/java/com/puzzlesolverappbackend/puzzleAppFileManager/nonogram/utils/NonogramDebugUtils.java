@@ -11,7 +11,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.Non
 @UtilityClass
 public class NonogramDebugUtils {
 
-    public static List<Field> fieldsToCheck = List.of(
+    public static final List<Field> fieldsToCheck = List.of(
             new Field(1, 8),
             new Field(1, 12),
             new Field(1, 14),

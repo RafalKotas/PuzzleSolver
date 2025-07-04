@@ -6,12 +6,12 @@ import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.dto.NonogramSolu
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.Field;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.GuessMode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
+import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogicFactory;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramRules;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramSolver;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.rowactions.NonogramRowLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionNode;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.mapper.NonogramMapper;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.NonogramService;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.service.NonogramSolutionSaver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,6 +24,8 @@ import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.rangeInsideAnotherRange;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.common.ArrayUtils.rangeLength;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.solve.mark.NonogramFieldMarkHelper.markColumnBoardField;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.helpers.solve.mark.NonogramFieldMarkHelper.markRowBoardField;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.*;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramHelper.indexToSequenceCharMark;
 
@@ -31,15 +33,16 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.Non
 @Slf4j
 public class NonogramLogicService {
 
-    private final NonogramService nonogramService;
+    private final NonogramLogicFactory logicFactory;
 
     private final NonogramSolutionSaver nonogramSolutionSaver;
 
     private final boolean showRepetitions = false;
 
-    public NonogramLogicService(NonogramService nonogramService, NonogramSolutionSaver nonogramSolutionSaver) {
-        this.nonogramService = nonogramService;
+    public NonogramLogicService(NonogramSolutionSaver nonogramSolutionSaver,
+                                NonogramLogicFactory logicFactory) {
         this.nonogramSolutionSaver = nonogramSolutionSaver;
+        this.logicFactory = logicFactory;
     }
 
     public NonogramLogic initializeLogicFromRequest(NonogramInitializationRequest request) {
@@ -262,7 +265,7 @@ public class NonogramLogicService {
                     sequenceMarker = indexToSequenceCharMark(lastMatchingSequenceIndex);
                     for (int sequenceColumnIdx = firstSequenceIndex; sequenceColumnIdx <= lastSequenceIndex; sequenceColumnIdx++) {
                         if (nonogramLogicObject.getNonogramSolutionBoardWithMarks().get(rowIdx).get(sequenceColumnIdx).startsWith(EMPTY_PART_MARKED_BOARD)) {
-                            nonogramLogicObject.getNonogramRowLogic().markRowBoardField(rowIdx, sequenceColumnIdx, sequenceMarker);
+                            markRowBoardField(nonogramLogicObject.getNonogramSolutionBoardWithMarks(), rowIdx, sequenceColumnIdx, sequenceMarker);
                             nonogramLogicObject.getNonogramState().increaseMadeSteps();
                         } else if (this.showRepetitions) {
                             System.out.println("Row field was marked before.");
@@ -365,7 +368,7 @@ public class NonogramLogicService {
                     sequenceMarker = indexToSequenceCharMark(lastMatchingSequenceIndex);
                     for (int sequenceRowIdx = firstSequenceIndex; sequenceRowIdx <= lastSequenceIndex; sequenceRowIdx++) {
                         if (nonogramLogicObject.getNonogramSolutionBoardWithMarks().get(sequenceRowIdx).get(columnIdx).substring(2).equals(EMPTY_PART_MARKED_BOARD)) {
-                            nonogramLogicObject.getNonogramColumnLogic().markColumnBoardField(sequenceRowIdx, columnIdx, sequenceMarker);
+                            markColumnBoardField(nonogramLogicObject.getNonogramSolutionBoardWithMarks(), sequenceRowIdx, columnIdx, sequenceMarker);
                             nonogramLogicObject.copyLogicFromNonogramColumnLogic();
                             nonogramLogicObject.getNonogramState().increaseMadeSteps();
                         } else if (this.showRepetitions) {
@@ -454,7 +457,7 @@ public class NonogramLogicService {
                             firstXFieldToExclude = new Field(rowIdx, firstXColumnIndex);
                             if (firstXColumnIndex >= 0) {
                                 if (isFieldEmpty(nonogramRowLogicDataToChange, firstXFieldToExclude)) {
-                                    nonogramRowLogicDataToChange.placeXAtGivenField(firstXFieldToExclude, true);
+                                    nonogramRowLogicDataToChange.getRowXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(firstXFieldToExclude, true);
 
                                     nonogramRowLogicDataToChange.getNonogramState().increaseMadeSteps();
 //
@@ -469,7 +472,7 @@ public class NonogramLogicService {
                                 List<Field> rowFieldsToExclude = List.of(new Field(rowIdx, firstXColumnIndex), new Field(rowIdx, lastXColumnIndex));
                                 nonogramLogicObject.getNonogramState().increaseMadeSteps();
 
-                                nonogramRowLogicDataToChange.placeXAtGivenFields(rowFieldsToExclude);
+                                nonogramRowLogicDataToChange.getRowXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenFields(rowFieldsToExclude);
                                 nonogramRowLogicDataToChange.excludeSequenceInRow(rowIdx,
                                         rowSequencesIndexesIncludingSequenceRange.get(0));
                                 nonogramRowLogicDataToChange.excludeFieldsInRow(rowFieldsToExclude);
@@ -494,7 +497,8 @@ public class NonogramLogicService {
                     if (sequenceOnBoardLength == Collections.max(rowSequencesLengthsIncludingSequenceRange)) {
                         firstXFieldToExclude = new Field(rowIdx, firstXColumnIndex);
                         if (isFieldEmpty(nonogramRowLogicDataToChange, firstXFieldToExclude)) {
-                            nonogramRowLogicDataToChange.placeXAtGivenField(firstXFieldToExclude, true);
+                            nonogramRowLogicDataToChange.getRowXPlacementHelper().getNonogramFieldPlacingXHelper()
+                                    .placeXAtGivenField(firstXFieldToExclude, true);
 
                             nonogramLogicObject.getNonogramState().increaseMadeSteps();
                         } else if (this.showRepetitions) {
@@ -503,7 +507,8 @@ public class NonogramLogicService {
 
                         lastXFieldToExclude = new Field(rowIdx, lastXColumnIndex);
                         if (isFieldEmpty(nonogramRowLogicDataToChange, lastXFieldToExclude)) {
-                            nonogramRowLogicDataToChange.placeXAtGivenField(lastXFieldToExclude, true);
+                            nonogramRowLogicDataToChange.getRowXPlacementHelper().getNonogramFieldPlacingXHelper()
+                                    .placeXAtGivenField(lastXFieldToExclude, true);
                             nonogramLogicObject.copyLogicFromNonogramRowLogic();
                             nonogramLogicObject.getNonogramState().increaseMadeSteps();
                         } else if (this.showRepetitions) {
@@ -1322,25 +1327,28 @@ public class NonogramLogicService {
         return filteredLengths;
     }
 
-    public NonogramLogic runSolverWithCorrectnessCheck(NonogramLogic nonogramLogicObject, String fileName) {
-        log.info("RUN SOLVER WITH CORRECTNESS CHECK");
-        NonogramSolver nonogramSolver = new NonogramSolver(nonogramLogicObject, fileName);
-        log.info("INITIALIZED nonogramSolver {}!", nonogramSolver);
-        NonogramSolutionNode nonogramSolutionNode = new NonogramSolutionNode(nonogramLogicObject);
-        log.info("INITIALIZED nonogramSolutionNode (DEC SIZE : {})! GO TO nonogramSolver.runSolutionAtNode()", nonogramSolutionNode.getNonogramGuessDecisions().size());
-        NonogramLogic heuristicSolvedPart = nonogramSolver.runSolutionAtNode(nonogramSolutionNode);
+    public NonogramLogic runSolverWithCorrectnessCheck(NonogramLogic logic, String fileName) {
+        log.info("Running heuristic solver with correctness check...");
 
-        if (heuristicSolvedPart.isSolved()) {
+        NonogramSolver solver = new NonogramSolver(logic, fileName, GuessMode.DISABLED, logicFactory);
+        log.info("Initialized NonogramSolver: {}", solver);
+
+        NonogramSolutionNode rootNode = new NonogramSolutionNode(logic, logicFactory);
+        log.info("Initialized NonogramSolutionNode (decisions: {})", rootNode.getNonogramGuessDecisions().size());
+
+        NonogramLogic solvedLogic = solver.runSolutionAtNode(rootNode);
+
+        if (solvedLogic.isSolved()) {
             try {
-                String solutionFileName = fileName;
-                NonogramSolutionSaveRequest request = NonogramMapper.toSaveRequest(heuristicSolvedPart, solutionFileName);
-                this.saveIfCorrect(request);
+                NonogramSolutionSaveRequest request = NonogramMapper.toSaveRequest(solvedLogic, fileName);
+                saveIfCorrect(request);
+                log.info("Solved nonogram was successfully saved.");
             } catch (IOException e) {
                 log.error("Failed to save solved nonogram: {}", e.getMessage());
             }
         }
 
-        return heuristicSolvedPart;
+        return solvedLogic;
     }
 
     public FinalNonogramSolutionDTO saveIfCorrect(NonogramSolutionSaveRequest request) throws IOException {

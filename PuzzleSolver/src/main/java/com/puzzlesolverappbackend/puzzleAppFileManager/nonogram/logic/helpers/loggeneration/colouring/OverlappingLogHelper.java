@@ -21,11 +21,13 @@ public class OverlappingLogHelper {
     ) {
         String type = isRow ? "ROW" : "COLUMN";
         return String.format(
-                "OVERLAP_%s_SEQUENCE: %s=%d\n" +
-                        "initial=%s\n" +
-                        "ranges=%s\n" +
-                        "lengths=%s\n" +
-                        "final=%s\n",
+                """
+                        OVERLAP_%s_SEQUENCE: %s=%d
+                        initial=%s
+                        ranges=%s
+                        lengths=%s
+                        final=%s
+                        """,
                 type,
                 isRow ? "row" : "col",
                 index,

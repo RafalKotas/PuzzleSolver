@@ -8,35 +8,6 @@ import java.util.List;
 public class ActionDependencyMap {
     public static final EnumMap<NonogramSolveAction, List<NonogramSolveAction>> actionDependencies = new EnumMap<>(NonogramSolveAction.class);
 
-    static class PreventingExcessLength {
-
-        // ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART
-        public static final List<NonogramSolveAction> actionsToDoInColumnDuringColouringPart = List.of(
-                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS
-        );
-
-        // COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART
-        public static final List<NonogramSolveAction> actionsToDoInRowDuringColouringPart = List.of(
-                NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS
-        );
-
-        // ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART
-        public static final List<NonogramSolveAction> actionsToDoInColumnDuringPlacingXPart = List.of(
-                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY
-        );
-
-        // COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART
-        public static final List<NonogramSolveAction> actionsToDoInRowDuringPlacingXPart = List.of(
-                NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY
-        );
-
-        // ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART
-        public static final List<NonogramSolveAction> actionsToDoInRowAfterCorrectingOnlyMatchingSequenceRangePart = List.of();
-
-        // COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART
-        public static final List<NonogramSolveAction> actionsToDoInColumnAfterCorrectingOnlyMatchingSequenceRangePart = List.of();
-    }
-
     // TODO test completeness of actions dependencies
     static {
         actionDependencies.put(NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES, List.of(
@@ -326,9 +297,11 @@ public class ActionDependencyMap {
         ));
 
         actionDependencies.put(NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART, List.of(
+                NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW
         ));
 
         actionDependencies.put(NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART, List.of(
+                NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN
         ));
 
         actionDependencies.put(NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW, List.of(

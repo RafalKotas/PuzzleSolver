@@ -26,13 +26,13 @@ public class SymmetricNonogramLoggerInitializer implements CommandLineRunner {
     @Autowired
     CommonService commonService;
 
-    private List<String> nonograms1Dsymmetrical = new ArrayList<>();
-    private List<String> nonograms2Dsymmetrical = new ArrayList<>();
-    private List<String> nonograms3Dsymmetrical = new ArrayList<>();
+    private final List<String> nonograms1Dsymmetrical = new ArrayList<>();
+    private final List<String> nonograms2Dsymmetrical = new ArrayList<>();
+    private final List<String> nonograms3Dsymmetrical = new ArrayList<>();
 
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
         System.out.println("Symmetrical nonograms logger(9)");
 

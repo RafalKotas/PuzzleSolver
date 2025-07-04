@@ -19,9 +19,11 @@ public class MarkAvailableFieldsLogHelper {
             boolean isRow
     ) {
         return String.format(
-                "MARK_AVAILABLE_FIELDS_IN_%s: %s=%d, seq=%d, marker=%s\n" +
-                        "initial=%s\n" +
-                        "final=%s\n",
+                """
+                        MARK_AVAILABLE_FIELDS_IN_%s: %s=%d, seq=%d, marker=%s
+                        initial=%s
+                        final=%s
+                        """,
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",
                 index,

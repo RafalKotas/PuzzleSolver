@@ -1,10 +1,7 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base;
 
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramFileDetails;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +10,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Builder
+@ToString
 public class NonogramRules {
 
     protected List<List<Integer>> rowSequencesLengths;

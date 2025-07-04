@@ -16,11 +16,13 @@ public class SequenceRangeCorrectionWhenMetXLogHelper {
             boolean isRow
     ) {
         return String.format(
-                "CORRECT_%s_SEQUENCES_RANGES_IF_X_ON_WAY: %s=%d\n" +
-                        "initialRanges=%s\n" +
-                        "updatedRanges=%s\n" +
-                        "lengths=%s\n" +
-                        "excluded=%s\n",
+                """
+                        CORRECT_%s_SEQUENCES_RANGES_IF_X_ON_WAY: %s=%d
+                        initialRanges=%s
+                        updatedRanges=%s
+                        lengths=%s
+                        excluded=%s
+                        """,
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",
                 index,

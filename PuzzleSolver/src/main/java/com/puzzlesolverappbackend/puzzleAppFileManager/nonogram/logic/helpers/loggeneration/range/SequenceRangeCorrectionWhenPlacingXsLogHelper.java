@@ -16,12 +16,14 @@ public class SequenceRangeCorrectionWhenPlacingXsLogHelper {
             List<Integer> lengths
     ) {
         return String.format(
-                "ROW_SEQUENCE_CORRECTION_WHEN_PLACING_X: row=%d\n" +
-                        "seq=%d\n" +
-                        "old=%s\n" +
-                        "new=%s\n" +
-                        "state=%s\n" +
-                        "lengths=%s\n",
+                """
+                        ROW_SEQUENCE_CORRECTION_WHEN_PLACING_X: row=%d
+                        seq=%d
+                        old=%s
+                        new=%s
+                        state=%s
+                        lengths=%s
+                        """,
                 rowIdx,
                 seqIdx,
                 allRanges,

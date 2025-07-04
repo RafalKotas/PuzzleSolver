@@ -18,10 +18,12 @@ public class PlaceXsAtUnreachableFieldsLogHelper {
             boolean isRow
     ) {
         return String.format(
-                "PLACE_XS_AT_UNREACHABLE_FIELDS_IN_%s: %s=%d\n" +
-                        "initial=%s\n" +
-                        "ranges=%s\n" +
-                        "final=%s\n",
+                """
+                        PLACE_XS_AT_UNREACHABLE_FIELDS_IN_%s: %s=%d
+                        initial=%s
+                        ranges=%s
+                        final=%s
+                        """,
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",
                 index,

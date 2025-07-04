@@ -21,12 +21,14 @@ public class SequenceRangeCorrectionWhenMetColouredFieldsLogHelper {
             String direction
     ) {
         return String.format(
-                "%s_SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS: %s=%d, dir=%s\n" +
-                        "seq=%d\n" +
-                        "new=%s\n" +
-                        "state=%s\n" +
-                        "lengths=%s\n" +
-                        "ranges=%s\n",
+                """
+                        %s_SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS: %s=%d, dir=%s
+                        seq=%d
+                        new=%s
+                        state=%s
+                        lengths=%s
+                        ranges=%s
+                        """,
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",
                 index,
@@ -67,12 +69,13 @@ public class SequenceRangeCorrectionWhenMetColouredFieldsLogHelper {
         );
 
         return String.format(
-                "Arguments.of(\"%s\",\n" +
-                        "    %s,\n" +
-                        "    %s,\n" +
-                        "    %s,\n" +
-                        "    %s\n" +
-                        "),",
+                """
+                        Arguments.of("%s",
+                            %s,
+                            %s,
+                            %s,
+                            %s
+                        ),""",
                 label,
                 formatList(state),
                 formatNestedList(ranges),

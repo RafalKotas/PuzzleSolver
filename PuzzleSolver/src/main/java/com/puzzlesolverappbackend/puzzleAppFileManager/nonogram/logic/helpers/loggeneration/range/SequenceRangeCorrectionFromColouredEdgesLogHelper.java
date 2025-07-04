@@ -17,11 +17,13 @@ public class SequenceRangeCorrectionFromColouredEdgesLogHelper {
             boolean isRow
     ) {
         return String.format(
-                "%s_CORRECTING_SEQUENCES_RANGES_FROM_COLOURED_EDGES: %s=%d\n" +
-                        "initial=%s\n" +
-                        "final=%s\n" +
-                        "lengths=%s\n" +
-                        "line=%s\n",
+                """
+                        %s_CORRECTING_SEQUENCES_RANGES_FROM_COLOURED_EDGES: %s=%d
+                        initial=%s
+                        final=%s
+                        lengths=%s
+                        line=%s
+                        """,
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",
                 index,
@@ -45,12 +47,14 @@ public class SequenceRangeCorrectionFromColouredEdgesLogHelper {
         List<String> line = LogFormatUtils.parseStringListLine(lines[4].split("=", 2)[1].trim());
 
         return String.format(
-                "Arguments.of(\"%s / %s %d - corrected ranges from coloured edges\",\n" +
-                        "    List.of(%s),\n" +
-                        "    List.of(%s),\n" +
-                        "    List.of(%s),\n" +
-                        "    List.of(%s),\n" +
-                        "    %s\n)",
+                """
+                        Arguments.of("%s / %s %d - corrected ranges from coloured edges",
+                            List.of(%s),
+                            List.of(%s),
+                            List.of(%s),
+                            List.of(%s),
+                            %s
+                        )""",
                 solutionName,
                 isRow ? "Row" : "Column",
                 index,

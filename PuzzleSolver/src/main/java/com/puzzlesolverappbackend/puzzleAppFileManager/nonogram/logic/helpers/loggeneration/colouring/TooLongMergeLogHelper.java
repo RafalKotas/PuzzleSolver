@@ -22,11 +22,13 @@ public class TooLongMergeLogHelper {
         String label = isRow ? "ROW" : "COLUMN";
 
         return String.format(
-                "TOO_LONG_MERGE_%s_SEQUENCE: %s=%d\n" +
-                        "initial=%s\n" +
-                        "ranges=%s\n" +
-                        "lengths=%s\n" +
-                        "final=%s\n",
+                """
+                        TOO_LONG_MERGE_%s_SEQUENCE: %s=%d
+                        initial=%s
+                        ranges=%s
+                        lengths=%s
+                        final=%s
+                        """,
                 label,
                 isRow ? "row" : "col",
                 index,

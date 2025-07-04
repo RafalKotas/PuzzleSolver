@@ -40,8 +40,8 @@ public class LogConverter {
                     Optional.of(SequenceRangeCorrectionFromColouredEdgesLogHelper.convertLogToTestArguments(log, solutionName));
             case "SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY" ->
                     Optional.of(SequenceRangeCorrectionWhenMetXLogHelper.convertLogToTestArguments(log, solutionName, logic));
-//            case "SEQUENCE_RANGE_CORRECTION_BY_MATCHING" ->
-//                    Optional.of(SequenceRangeCorrectionByMatchingLogHelper.convertLogToTestArguments(log, solutionName));
+            //case "SEQUENCE_RANGE_CORRECTION_BY_MATCHING" ->
+            //        Optional.of(SequenceRangeCorrectionByMatchingLogHelper.convertLogToTestArguments(log, solutionName));
             case "PLACE_XS_AROUND_LONGEST_SEQUENCE" ->
                     Optional.of(PlaceXsAroundLongestSequenceLogHelper.convertLogToTestArguments(log, solutionName));
             case "PLACE_XS_AT_UNREACHABLE_FIELDS" ->
@@ -77,8 +77,8 @@ public class LogConverter {
         if (log.startsWith("CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY:")
                 || log.startsWith("CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY:"))
             return "SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY";
-//        if (log.contains("correcting sequence when matching fields to only possible coloured sequences"))
-//            return "SEQUENCE_RANGE_CORRECTION_BY_MATCHING";
+        if (log.contains("correcting sequence when matching fields to only possible coloured sequences"))
+            return "SEQUENCE_RANGE_CORRECTION_BY_MATCHING";
         if (log.startsWith("PLACE_XS_ROW_AROUND_LONGEST_SEQUENCE:")
                 || log.startsWith("PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCE:"))
             return "PLACE_XS_AROUND_LONGEST_SEQUENCE";

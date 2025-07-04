@@ -18,12 +18,14 @@ public class SequenceRangeCorrectionLogHelper {
             boolean isRow
     ) {
         return String.format(
-                "%s_SEQUENCES_RANGES_CORRECTED: %s=%d\n" +
-                        "initial=%s\n" +
-                        "final=%s\n" +
-                        "lengths=%s\n" +
-                        "excludedFields=%s\n" +
-                        "excludedSequences=%s\n",
+                """
+                        %s_SEQUENCES_RANGES_CORRECTED: %s=%d
+                        initial=%s
+                        final=%s
+                        lengths=%s
+                        excludedFields=%s
+                        excludedSequences=%s
+                        """,
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",
                 index,
@@ -58,14 +60,15 @@ public class SequenceRangeCorrectionLogHelper {
         List<Integer> excludedSequences = LogFormatUtils.parseIntegerListLine(excludedSequencesRaw);
 
         return String.format(
-                "Arguments.of(\"%s / %s %d - sequences range correction\",\n" +
-                        "    List.of(%s),\n" +
-                        "    List.of(%s),\n" +
-                        "    List.of(%s),\n" +
-                        "    List.of(%s),\n" +
-                        "    List.of(%s),\n" +
-                        "    %s\n" +
-                        ")",
+                """
+                        Arguments.of("%s / %s %d - sequences range correction",
+                            List.of(%s),
+                            List.of(%s),
+                            List.of(%s),
+                            List.of(%s),
+                            List.of(%s),
+                            %s
+                        )""",
                 solutionName,
                 isRow ? "Row" : "Column",
                 index,

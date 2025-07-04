@@ -18,11 +18,13 @@ public class PlaceXsAroundLongestSequenceLogHelper {
             boolean isRow
     ) {
         return String.format(
-                "PLACE_XS_%s_AROUND_LONGEST_SEQUENCE: %s=%d\n" +
-                        "xs=%s\n" +
-                        "onlyMatching=%b\n" +
-                        "initial=%s\n" +
-                        "final=%s\n",
+                """
+                        PLACE_XS_%s_AROUND_LONGEST_SEQUENCE: %s=%d
+                        xs=%s
+                        onlyMatching=%b
+                        initial=%s
+                        final=%s
+                        """,
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",
                 index,
@@ -50,12 +52,13 @@ public class PlaceXsAroundLongestSequenceLogHelper {
         );
 
         return String.format(
-                "Arguments.of(\"%s\",\n" +
-                        "    %s,\n" +
-                        "    %s,\n" +
-                        "    %s,\n" +
-                        "    %b\n" +
-                        ")",
+                """
+                        Arguments.of("%s",
+                            %s,
+                            %s,
+                            %s,
+                            %b
+                        )""",
                 header,
                 formatList(initialState),
                 formatList(xEdges),

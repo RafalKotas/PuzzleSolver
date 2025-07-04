@@ -31,12 +31,12 @@ public class ArrayUtils {
                 .collect(Collectors.toList());
     }
 
-    public static boolean rangesListEqual(List<List<Integer>> a, List<List<Integer>> b) {
-        if (a.size() != b.size()) return false;
+    public static boolean ranglesListNotEqual(List<List<Integer>> a, List<List<Integer>> b) {
+        if (a.size() != b.size()) return true;
         for (int i = 0; i < a.size(); i++) {
-            if (!a.get(i).equals(b.get(i))) return false;
+            if (!a.get(i).equals(b.get(i))) return true;
         }
-        return true;
+        return false;
     }
 
     public static int sumListElements(List<Integer> list) {

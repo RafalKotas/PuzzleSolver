@@ -23,11 +23,13 @@ public class TrivialFillLogHelper {
         String label = isRow ? "ROW" : "COLUMN";
 
         return String.format(
-                "TRIVIAL_%s_SEQUENCE: %s=%d\n" +
-                        "initial=%s\n" +
-                        "lengths=%s\n" +
-                        "ranges=%s\n" +
-                        "final=%s\n",
+                """
+                        TRIVIAL_%s_SEQUENCE: %s=%d
+                        initial=%s
+                        lengths=%s
+                        ranges=%s
+                        final=%s
+                        """,
                 label,
                 isRow ? "row" : "col",
                 index,

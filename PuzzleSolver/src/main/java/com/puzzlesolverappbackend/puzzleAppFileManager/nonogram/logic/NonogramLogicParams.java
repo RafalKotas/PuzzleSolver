@@ -1,12 +1,10 @@
 package com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic;
 
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramLogic;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramRules;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.base.NonogramState;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.logic.solutions.NonogramSolutionDecision;
 import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramActionDetails;
-import com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.ActionDependencyMap;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -15,9 +13,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.*;
+import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.model.NonogramConstants.X_FIELD;
 import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.isFieldColoured;
-import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.NonogramBoardUtils.isFieldWithX;
 
 @Setter
 @Getter
@@ -28,7 +25,7 @@ import static com.puzzlesolverappbackend.puzzleAppFileManager.nonogram.utils.Non
 public abstract class NonogramLogicParams {
 
     protected final static Logger logger = LoggerFactory.getLogger(NonogramLogic.class);
-    protected boolean SHOW_REPETITIONS = false;
+    public static boolean SHOW_REPETITIONS = false;
     protected String tmpLog;
 
     protected NonogramRules nonogramRules;
@@ -138,107 +135,6 @@ public abstract class NonogramLogicParams {
         return this.fieldsFilled() == this.nonogramAreaInFieldsCount();
     }
 
-    public void colourFieldAtGivenPosition(Field fieldToColour, String mask) {
-        int fieldRowIdx = fieldToColour.getRowIdx();
-        int fieldColIdx = fieldToColour.getColumnIdx();
-        String currentFieldWithMarks = this.nonogramSolutionBoardWithMarks.get(fieldRowIdx).get(fieldColIdx);
-        if (areFieldIndexesValid(fieldToColour)) {
-            this.nonogramSolutionBoard.get(fieldRowIdx).set(fieldColIdx, COLOURED_FIELD);
-            this.nonogramSolutionBoardWithMarks.get(fieldRowIdx).set(fieldColIdx, getUpdatedFieldWithMarks(currentFieldWithMarks, mask));
-        }
-    }
-
-    public void placeXAtGivenField(Field xField, boolean exclude) {
-        int fieldColIdx = xField.getColumnIdx();
-        int fieldRowIdx = xField.getRowIdx();
-
-        if (areFieldIndexesValid(xField)) {
-            this.nonogramSolutionBoard.get(fieldRowIdx).set(fieldColIdx, X_FIELD);
-            this.nonogramSolutionBoardWithMarks.get(fieldRowIdx).set(fieldColIdx, X_FIELD.repeat(4));
-
-            if (exclude) {
-                excludeFieldLogicSpecific(xField);
-            }
-        }
-    }
-
-    protected void excludeFieldLogicSpecific(Field field) {
-
-    }
-
-    public void clearField(Field x_field) {
-        int fieldColIdx = x_field.getColumnIdx();
-        int fieldRowIdx = x_field.getRowIdx();
-        if (areFieldIndexesValid(x_field)) {
-            this.nonogramSolutionBoard.get(fieldRowIdx).set(fieldColIdx, EMPTY_FIELD);
-            this.nonogramSolutionBoardWithMarks.get(fieldRowIdx).set(fieldColIdx, EMPTY_FIELD_MARKED_BOARD);
-        }
-    }
-
-    public void placeXAtGivenFields(List<Field> x_fields) {
-        x_fields.forEach(field -> placeXAtGivenField(field, true));
-    }
-
-    protected void addRowAndColumnToAffectedByIdentifiers(Field field, NonogramSolveAction actionTriggered) {
-        List<NonogramSolveAction> actionsToDo = ActionDependencyMap.actionDependencies.get(actionTriggered);
-
-        int rowIdx = field.getRowIdx();
-        int columnIdx = field.getColumnIdx();
-
-        for (NonogramSolveAction actionToDo : actionsToDo) {
-            if (actionToDo.isRowAction()) {
-                this.actionsToDoList.add(new NonogramActionDetails(rowIdx, actionToDo, actionTriggered, false));
-            } else {
-                this.actionsToDoList.add(new NonogramActionDetails(columnIdx, actionToDo, actionTriggered, false));
-            }
-        }
-    }
-
-    protected void addColumnToAffectedActionsByIdentifiers(int columnIdx, NonogramSolveAction actionTriggered) {
-        List<NonogramSolveAction> actionsToDo = ActionDependencyMap.actionDependencies.get(actionTriggered);
-        for (NonogramSolveAction actionToDo : actionsToDo) {
-            if (isColumnIndexValid(columnIdx)) {
-                this.actionsToDoList.add(new NonogramActionDetails(columnIdx, actionToDo, actionTriggered, false));
-            }
-        }
-    }
-
-    public void addRowToAffectedActionsByIdentifiers(int rowIdx, NonogramSolveAction actionTriggered) {
-        List<NonogramSolveAction> actionsToDo = ActionDependencyMap.actionDependencies.get(actionTriggered);
-        for (NonogramSolveAction actionToDo : actionsToDo) {
-            if (isRowIndexValid(rowIdx)) {
-                this.actionsToDoList.add(new NonogramActionDetails(rowIdx, actionToDo, actionTriggered, false));
-            }
-        }
-    }
-
-    protected boolean areFieldIndexesValid (Field fieldToValidate) {
-        int fieldRowIdx = fieldToValidate.getRowIdx();
-        int fieldColIdx = fieldToValidate.getColumnIdx();
-        return isRowIndexValid(fieldRowIdx) && isColumnIndexValid(fieldColIdx);
-    }
-
-    protected boolean isRowIndexValid (int rowIdx) {
-        return rowIdx >= 0 && rowIdx < this.getNonogramRules().getHeight();
-    }
-
-    protected boolean isColumnIndexValid (int columnIdx) {
-        return columnIdx >= 0 && columnIdx < this.getNonogramRules().getWidth();
-    }
-
-    private String getUpdatedFieldWithMarks(String currentField, String mask) {
-        StringBuilder updatedField = new StringBuilder();
-        for (int i = 0; i < currentField.length(); i++) {
-            if (currentField.charAt(i) == '-') {
-                updatedField.append(mask.charAt(i));
-            } else {
-                updatedField.append(currentField.charAt(i));
-            }
-        }
-
-        return updatedField.toString();
-    }
-
     public List<String> getNonogramBoardColumn(int columnIdx) {
         List<String> solutionBoardColumn = new ArrayList<>();
 
@@ -291,60 +187,6 @@ public abstract class NonogramLogicParams {
         }
         System.out.println(");");
     }
-
-    protected List<Integer> getRowSequenceMaxPossibleRange(int rowIdx, List<Integer> colouredSequencePartRange) {
-        Field fieldToCheckX;
-
-        int columnLeft = colouredSequencePartRange.get(0) - 1;
-        fieldToCheckX = new Field(rowIdx, columnLeft);
-        while (areFieldIndexesValid(fieldToCheckX) && !isFieldWithX(this.getNonogramSolutionBoard(), fieldToCheckX)) {
-            fieldToCheckX = new Field(rowIdx, --columnLeft);
-        }
-        columnLeft++;
-
-        int columnRight = colouredSequencePartRange.get(1) + 1;
-        fieldToCheckX = new Field(rowIdx, columnRight);
-        while (areFieldIndexesValid(fieldToCheckX) && !isFieldWithX(this.getNonogramSolutionBoard(), fieldToCheckX)) {
-            fieldToCheckX = new Field(rowIdx, ++columnRight);
-        }
-        columnRight--;
-
-        return new ArrayList<>(List.of(columnLeft, columnRight));
-    }
-
-    protected List<Integer> getColumnSequenceMaxPossibleRange(int columnIdx, List<Integer> colouredSequencePartRange) {
-        Field fieldToCheckX;
-
-        int rowTop = colouredSequencePartRange.get(0) - 1;
-        fieldToCheckX = new Field(rowTop, columnIdx);
-        while (areFieldIndexesValid(fieldToCheckX) && !isFieldWithX(this.getNonogramSolutionBoard(), fieldToCheckX)) {
-            fieldToCheckX = new Field(--rowTop, columnIdx);
-        }
-        rowTop++;
-
-        int rowBottom = colouredSequencePartRange.get(1) + 1;
-        fieldToCheckX = new Field(rowBottom, columnIdx);
-        while (areFieldIndexesValid(fieldToCheckX) && !isFieldWithX(this.getNonogramSolutionBoard(), fieldToCheckX)) {
-            fieldToCheckX = new Field(++rowBottom, columnIdx);
-        }
-        rowBottom--;
-
-        return new ArrayList<>(List.of(rowTop, rowBottom));
-    }
-
-    protected List<List<Integer>> getColouredSequencesPartsMaxRanges(int rowIdx, List<List<Integer>> colouredSequencesPartsRanges) {
-        List<List<Integer>> colouredSequencesPartsMaxRanges = new ArrayList<>();
-        List<Integer> colouredSequencePartMaxRange;
-
-        // calculate max possible ranges for corresponding coloured sequences
-        for (List<Integer> colouredSequencesPartsRange : colouredSequencesPartsRanges) {
-            colouredSequencePartMaxRange = getRowSequenceMaxPossibleRange(rowIdx, colouredSequencesPartsRange);
-            colouredSequencesPartsMaxRanges.add(colouredSequencePartMaxRange);
-        }
-
-        return colouredSequencesPartsMaxRanges;
-    }
-
 
     public void printSolutionBoard() {
         for (List<String> solutionBoardRow : this.getNonogramSolutionBoard()) {

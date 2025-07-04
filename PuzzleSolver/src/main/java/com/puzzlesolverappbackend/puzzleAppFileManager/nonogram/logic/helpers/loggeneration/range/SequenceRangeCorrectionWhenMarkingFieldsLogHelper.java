@@ -19,10 +19,12 @@ public class SequenceRangeCorrectionWhenMarkingFieldsLogHelper {
             boolean isRow
     ) {
         return String.format(
-                "%s_SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS: %s=%d, seq=%d\n" +
-                        "ranges=%s\n" +
-                        "new=%s\n" +
-                        "lengths=%s\n",
+                """
+                        %s_SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS: %s=%d, seq=%d
+                        ranges=%s
+                        new=%s
+                        lengths=%s
+                        """,
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",
                 index,
