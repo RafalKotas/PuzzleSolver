@@ -73,9 +73,19 @@ export const nonogramLogicReducer: Reducer<NonogramLogicState, NonogramLogicActi
                 }
             }
         case SET_NONOGRAM_RELATED_LOGIC_DATA:
-                return {
-                    ...state,
-                    nonogramRelatedData: action.payload.nonogramRelatedLogicData
+            const payload = action.payload.nonogramRelatedLogicData;
+
+            // forcing new references for nested arrays
+            const deepCopiedBoard = payload.nonogramSolutionBoard.map(row => [...row]);
+            const deepCopiedMarks = payload.nonogramSolutionBoardWithMarks.map(row => [...row]);
+
+            return {
+                ...state,
+                nonogramRelatedData: {
+                    ...payload,
+                    nonogramSolutionBoard: deepCopiedBoard,
+                    nonogramSolutionBoardWithMarks: deepCopiedMarks
+                }
             }
         case RESET_NONOGRAM_BOARD:
             if (state.nonogramRelatedData.nonogramSolutionBoard && state.nonogramRelatedData.nonogramSolutionBoard.length > 0) {
@@ -136,14 +146,39 @@ export const nonogramLogicReducer: Reducer<NonogramLogicState, NonogramLogicActi
       }
 }
 
-export const selectBoardSquare = (state: NonogramLogicState, rowIdx : number, columnIdx : number) =>  {
-    if (state && state.nonogramRelatedData && state.nonogramRelatedData.nonogramSolutionBoard
-            && state.nonogramRelatedData.nonogramSolutionBoard[rowIdx] && state.nonogramRelatedData.nonogramSolutionBoard[rowIdx][columnIdx]) {
-        return state.nonogramRelatedData.nonogramSolutionBoard[rowIdx][columnIdx]
-    } else {
-        return "-"
-    }
-}
+// export const selectBoardSquare = (state: NonogramLogicState, rowIdx: number, columnIdx: number): string => {
+//   return state?.nonogramRelatedData?.nonogramSolutionBoard?.[rowIdx]?.[columnIdx] ?? "-"
+// }
+
+
+export const selectBoardSquare = (
+  state: NonogramLogicState,
+  rowIdx: number,
+  columnIdx: number
+): string => {
+  const board = state?.nonogramRelatedData?.nonogramSolutionBoard;
+
+  if (!board) {
+    console.warn("selectBoardSquare: Brak planszy (`nonogramSolutionBoard` jest null/undefined)");
+    return "-";
+  }
+
+  const row = board[rowIdx];
+  if (!row) {
+    console.warn(`selectBoardSquare: Brak wiersza o indeksie ${rowIdx}`);
+    return "-";
+  }
+
+  const cell = row[columnIdx];
+  if (cell === undefined) {
+    console.warn(`selectBoardSquare: Brak komórki w wierszu ${rowIdx} o indeksie ${columnIdx}`);
+    return "-";
+  }
+
+  console.log(`selectBoardSquare: [${rowIdx}, ${columnIdx}] = ${cell}`);
+  return cell;
+};
+
 
 export const selectBoardSquareMark = (state: NonogramLogicState, rowIdx : number, columnIdx : number) =>  {
     if (state && state.nonogramRelatedData && state.nonogramRelatedData.nonogramSolutionBoard

@@ -17,6 +17,7 @@ interface OwnBoardBigRowProps {
 
 const mapStateToProps = (state: AppState) => ({
     selectedNonogram: state.nonogramDataReducer.selectedNonogram,
+    nonogramSolutionBoard: state.nonogramLogicReducer.nonogramRelatedData.nonogramSolutionBoard,
 
     bigSquareAdditionalBorder: state.nonogramLayoutReducer.bigSquareAdditionalBorder,
 
@@ -36,10 +37,10 @@ type BoardBigRowProps = BoardBigRowPropsFromRedux & OwnBoardBigRowProps
 
 //draws row with height in range [1, 5], consisting of big squares with dimension 5x5 or less
 const BoardBigRow : React.FC<BoardBigRowProps> = ({rowNo, 
-    selectedNonogram, boardWidth, cellOverallSize, bigSquareAdditionalBorder}) => {
+    selectedNonogram, nonogramSolutionBoard, boardWidth, cellOverallSize, bigSquareAdditionalBorder}) => {
     
     let bigRowHeightInCells = Math.min(5, selectedNonogram ? selectedNonogram.height - rowNo : 5)
-    let bigRowHeightPx = bigRowHeightInCells * cellOverallSize + bigSquareAdditionalBorder 
+    let bigRowHeightPx = bigRowHeightInCells * cellOverallSize + bigSquareAdditionalBorder
 
     return (
         <div 

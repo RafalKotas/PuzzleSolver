@@ -63,8 +63,8 @@ export const createObjectToInitSolverData = (rowsSequences : number[][], columns
     return ({
         rowsSequences: rowsSequences,
         columnsSequences: columnsSequences,
-        nonogramSolutionBoardWithMarks: [] as string[][],
         nonogramSolutionBoard: [] as string[][],
+        nonogramSolutionBoardWithMarks: [] as string[][],
         rowsSequencesRanges: [] as number[][][],
         columnsSequencesRanges: [] as number[][][],
         rowsFieldsNotToInclude: [] as number[][],
@@ -73,6 +73,21 @@ export const createObjectToInitSolverData = (rowsSequences : number[][], columns
         columnsSequencesIdsNotToInclude: [] as number[][]
     })
 }
+
+export interface NonogramSolvePayload {
+    nonogramRules: rules,
+    nonogramSolutionBoard: string[][],
+    nonogramSolutionBoardWithMarks: string[][],
+    rowSequences: number[][],
+    columnSequences: number[][],
+    rowsSequencesRanges: number[][][],
+    columnsSequencesRanges: number[][][],
+    rowsFieldsNotToInclude: number[][],
+    columnsFieldsNotToInclude: number[][],
+    rowsSequencesIdsNotToInclude: number[][],
+    columnsSequencesIdsNotToInclude: number[][]
+}
+
 
 // description
 

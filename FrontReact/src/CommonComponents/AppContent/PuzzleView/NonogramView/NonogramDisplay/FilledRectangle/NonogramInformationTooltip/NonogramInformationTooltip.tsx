@@ -47,7 +47,7 @@ const NonogramInformationTooltip : React.FC<NonogramInformationTooltipProps> = (
                             Height: {selectedNonogram.height} <br />
                             Width: {selectedNonogram.width} <br />
                             {
-                                selectedNonogram.source === "logi" &&
+                                ["logi", "logiMix"].includes(selectedNonogram.source) &&
                                 <React.Fragment>
                                     Year: {selectedNonogram.year} <br />
                                     Month: {selectedNonogram.month} <br />
