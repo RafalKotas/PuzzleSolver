@@ -151,8 +151,8 @@ public class NonogramLogicController {
             return new ResponseEntity<>(solution, HttpStatus.OK);
 
         } catch (IOException e) {
-            System.out.println("Exception...");
-            return new ResponseEntity<>(nonogramLogic, HttpStatus.OK);
+            log.error("Exception...");
+            return new ResponseEntity<>(nonogramLogic, HttpStatus.OK); // TODO not response with OK
         }
     }
 

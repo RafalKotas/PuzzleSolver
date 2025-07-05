@@ -23,8 +23,8 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.Bo
 @Slf4j
 public abstract class NonogramLogicParams {
 
-    protected final static Logger logger = LoggerFactory.getLogger(NonogramLogic.class);
-    public static boolean SHOW_REPETITIONS = false;
+    protected static final Logger logger = LoggerFactory.getLogger(NonogramLogicParams.class);
+    public static final boolean SHOW_REPETITIONS = false;
     protected String tmpLog;
 
     protected NonogramRules nonogramRules;
@@ -36,7 +36,7 @@ public abstract class NonogramLogicParams {
     protected List<String> logs = new ArrayList<>();
     protected List<NonogramSolutionDecision> availableChoices;
 
-    public NonogramLogicParams(NonogramRules nonogramRules,
+    protected NonogramLogicParams(NonogramRules nonogramRules,
                                List<List<String>> nonogramSolutionBoard,
                                List<List<String>> nonogramSolutionBoardWithMarks,
                                List<NonogramActionDetails> actionsToDoList,
@@ -156,46 +156,9 @@ public abstract class NonogramLogicParams {
 
     protected void addLog() {
         if (this.tmpLog.isEmpty()) {
-            System.out.println("Trying to add empty log!!!");
+            log.warn("Trying to add empty log!!!");
         } else {
             this.logs.add(this.tmpLog);
-        }
-    }
-
-    public void printSolutionBoardAsCode() {
-        int rowIdx = 0;
-        int columnIdx;
-        System.out.println("List.of(");
-        for (List<String> solutionBoardRow : this.getNonogramSolutionBoard()) {
-            columnIdx = 0;
-            System.out.print("List.of(");
-            for (String boardCell : solutionBoardRow) {
-                System.out.print("\"" + boardCell + "\"");
-                if (columnIdx != solutionBoardRow.size() - 1) {
-                    System.out.print(", ");
-                }
-                columnIdx++;
-            }
-            if (rowIdx != this.getNonogramSolutionBoard().size() - 1) {
-                System.out.println("),");
-            } else {
-                System.out.println(")");
-            }
-
-            rowIdx++;
-        }
-        System.out.println(");");
-    }
-
-    public void printSolutionBoard() {
-        for (List<String> solutionBoardRow : this.getNonogramSolutionBoard()) {
-            System.out.println(solutionBoardRow);
-        }
-    }
-
-    public void printSolutionBoardWithMarks() {
-        for (List<String> solutionBoardRowWithMarks : this.getNonogramSolutionBoardWithMarks()) {
-            System.out.println(solutionBoardRowWithMarks);
         }
     }
 }

@@ -84,17 +84,29 @@ public class NonogramLogicFactory {
     }
 
     private List<List<Integer>> deepCopyIntegers(List<List<Integer>> original) {
-        return original.stream()
-                .map(ArrayList::new)
-                .collect(Collectors.toList());
+        List<List<Integer>> copy = new ArrayList<>();
+
+        for (List<Integer> inner : original) {
+            copy.add(new ArrayList<>(inner));
+        }
+
+        return copy;
     }
 
     private List<List<List<Integer>>> deepCopy3DIntegers(List<List<List<Integer>>> original) {
-        return original.stream()
-                .map(inner -> inner.stream()
-                        .map(deep -> (List<Integer>) new ArrayList<>(deep))
-                        .collect(Collectors.toList()))
-                .collect(Collectors.toList());
+        List<List<List<Integer>>> copy = new ArrayList<>();
+
+        for (List<List<Integer>> innerList : original) {
+            List<List<Integer>> innerCopy = new ArrayList<>();
+
+            for (List<Integer> deepList : innerList) {
+                innerCopy.add(new ArrayList<>(deepList));
+            }
+
+            copy.add(innerCopy);
+        }
+
+        return copy;
     }
 
     public NonogramSolutionNode copyNode(NonogramSolutionNode original) {
@@ -109,7 +121,7 @@ public class NonogramLogicFactory {
     }
 
     private List<NonogramSolutionDecision> deepCopyDecisions(List<NonogramSolutionDecision> originalList) {
-        if (originalList == null) return null;
+        if (originalList == null) return new ArrayList<>();
 
         List<NonogramSolutionDecision> copiedList = new ArrayList<>();
         for (NonogramSolutionDecision decision : originalList) {

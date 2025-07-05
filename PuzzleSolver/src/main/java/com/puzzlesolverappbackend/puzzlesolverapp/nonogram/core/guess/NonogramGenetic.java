@@ -5,9 +5,9 @@ import com.puzzlesolverappbackend.puzzlesolverapp.constants.InitializerConstants
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramConstants.COLOURED_FIELD;
@@ -16,6 +16,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.Bo
 
 @Getter
 @Setter
+@Slf4j
 public class NonogramGenetic {
 
     private boolean solutionFound;
@@ -32,14 +33,14 @@ public class NonogramGenetic {
 
     private List<List<String>> finalSolutionBoard;
 
-    private final int populationCount = 120;
+    private static final int POPULATION_COUNT = 120;
     private List<List<Integer>> populationColumnsMaximumCorrectIndexFromTop;
     private List<List<Integer>> populationColumnsMaximumCorrectIndexFromBottom;
-    private final double mutationProbability = 0.05;
+    private static final double MUTATION_PROBABILITY = 0.05;
 
-    private final int iterationsLimit = 10000;
+    private static final int ITERATIONS_LIMIT = 10000;
 
-    private final int timeSecondsLimit = 100;
+    private static final int TIME_SECONDS_LIMIT = 100;
 
     private Gson gson;
 
@@ -53,9 +54,9 @@ public class NonogramGenetic {
     public void solve() {
         generateInitialPopulation();
         for (int iterationNo = 0; iterationNo < 20; iterationNo++) {
-            generateNextPopulation(iterationNo);
+            generateNextPopulation();
             if (solutionFound) {
-                System.out.println("Solution found!!!, iterationNo: " + iterationNo);
+                log.info("Solution found!!!, iterationNo: {}", iterationNo);
                 break;
             }
         }
@@ -65,217 +66,117 @@ public class NonogramGenetic {
         NonogramLogic populationMember;
         List<String> nonogramBoardRow;
         currentPopulation = new ArrayList<>();
-        int repetitionCount = 0;
 
         populationColumnsMaximumCorrectIndexFromTop = new ArrayList<>();
         populationColumnsMaximumCorrectIndexFromBottom = new ArrayList<>();
 
-        for (int index = 0; index < populationCount; index++) {
+        int generated = 0;
+
+        while (generated < POPULATION_COUNT) {
             populationMember = gson.fromJson(gson.toJson(nonogramObject), NonogramLogic.class);
 
             for (int rowIdx = 0; rowIdx < nonogramObject.getNonogramRules().getHeight(); rowIdx++) {
-                nonogramBoardRow =  generateRandomRowArray(populationMember, rowIdx);
-
+                nonogramBoardRow = generateRandomRowArray(populationMember, rowIdx);
                 populationMember = populationMember.setNonogramBoardRow(rowIdx, nonogramBoardRow);
             }
 
             if (boardInPopulationUnique(populationMember.getNonogramSolutionBoard(), currentPopulation)) {
                 currentPopulation.add(populationMember);
-            } else {
-                repetitionCount++;
-                index--;
+                generated++;
             }
         }
     }
 
-    public void generateNextPopulation(int iterationNo) {
+    public void generateNextPopulation() {
+        initializeNextPopulation();
+        log.info("Current population size: {}", currentPopulation.size());
+
+        this.setSolutionFound(false);
+
+        for (int i = 0; i < POPULATION_COUNT && !isSolutionFound(); i++) {
+            NonogramLogic first = currentPopulation.get(i);
+
+            for (int j = i + 1; j < POPULATION_COUNT && !isSolutionFound(); j++) {
+                NonogramLogic second = currentPopulation.get(j);
+
+                handleCrossover(first, second);
+            }
+        }
+    }
+
+    private void initializeNextPopulation() {
         randomIntGenerator = new Random();
         nextPopulation = new ArrayList<>();
         maxCorrectFieldsInColumnsSums = new ArrayList<>();
+    }
 
-        System.out.println("Current population size: " + currentPopulation.size());
+    private void handleCrossover(NonogramLogic first, NonogramLogic second) {
+        int rowIndex = chooseCrossoverRow(first, second);
 
-        List<Integer> firstMemberColumnsMaximumCorrectIndexFromTop;
-        List<Integer> firstMemberColumnsMaximumCorrectIndexFromBottom;
+        NonogramLogic child1 = gson.fromJson(gson.toJson(first), NonogramLogic.class);
+        NonogramLogic child2 = gson.fromJson(gson.toJson(second), NonogramLogic.class);
 
-        List<Integer> secondMemberColumnsMaximumCorrectIndexFromTop;
-        List<Integer> secondMemberColumnsMaximumCorrectIndexFromBottom;
+        List<String> row1 = first.getNonogramSolutionBoard().get(rowIndex);
+        List<String> row2 = second.getNonogramSolutionBoard().get(rowIndex);
 
-        NonogramLogic firstPopulationMember;
-        NonogramLogic secondPopulationMember;
+        child2.setNonogramBoardRow(rowIndex, row1);
+        child1.setNonogramBoardRow(rowIndex, shouldMutate() ? generateRandomRowArray(child1, rowIndex) : row2);
+        child2.setNonogramBoardRow(rowIndex, shouldMutate() ? generateRandomRowArray(child2, rowIndex) : row1);
 
-        int topMinimum;
-        int bottomMinimum;
-        int choosenSide; // 0 - top, 1 - bottom
-        int chosenRowIndex;
+        evaluateAndInsert(child1, first, "first");
+        evaluateAndInsert(child2, second, "second");
+    }
 
-        List<String> firstMemberRowToSwap;
-        List<String> secondMemberRowToSwap;
-        NonogramLogic firstChild;
-        NonogramLogic secondChild;
+    private int chooseCrossoverRow(NonogramLogic a, NonogramLogic b) {
+        int topMin = Math.min(
+                getMin(generateColumnsMaximumCorrectIndexesFromTop(a)),
+                getMin(generateColumnsMaximumCorrectIndexesFromTop(b))
+        );
+        int bottomMin = Math.min(
+                getMin(generateColumnsMaximumCorrectIndexesFromBottom(a)),
+                getMin(generateColumnsMaximumCorrectIndexesFromBottom(b))
+        );
 
-        List<Integer> firstChildColumnsMaximumCorrectIndexFromTop;
-        List<Integer> firstChildColumnsMaximumCorrectIndexFromBottom;
-        int firstChildMaxPossibleCorrectFieldsSum;
+        boolean chooseTop = randomIntGenerator.nextBoolean();
 
-        List<Integer> secondChildColumnsMaximumCorrectIndexFromTop;
-        List<Integer> secondChildColumnsMaximumCorrectIndexFromBottom;
-        int secondChildMaxPossibleCorrectFieldsSum;
-
-        int crossingCount = 0;
-        this.setSolutionFound(false);
-            // crossing
-        for (int firstPopulationMemberIndex = 0; firstPopulationMemberIndex < populationCount; firstPopulationMemberIndex++) {
-            firstPopulationMember = currentPopulation.get(firstPopulationMemberIndex);
-            for (int secondPopulationMemberIndex = 0; secondPopulationMemberIndex < populationCount; secondPopulationMemberIndex++) {
-                secondPopulationMember = currentPopulation.get(secondPopulationMemberIndex);
-                //System.out.println("Population indexes: " + firstPopulationMemberIndex + " and " + secondPopulationMemberIndex);
-
-                //do crossing - fit function parameters (not same members && cross two members only once)
-                if (firstPopulationMemberIndex < secondPopulationMemberIndex) {
-                    crossingCount++;
-
-                    int firstMemberTopMinimum;
-                    int firstMemberBottomMinimum;
-
-                    firstMemberColumnsMaximumCorrectIndexFromTop = generateColumnsMaximumCorrectIndexesFromTop(firstPopulationMember);
-                    firstMemberColumnsMaximumCorrectIndexFromBottom = generateColumnsMaximumCorrectIndexesFromBottom(firstPopulationMember);
-
-                    // common minimum from maximum possible column field, f.e. [4, 5, 3, 7, 9, 10] -> 3
-                    firstMemberTopMinimum = firstMemberColumnsMaximumCorrectIndexFromTop
-                            .stream()
-                            .mapToInt(v -> v)
-                            .min().orElseThrow(NoSuchElementException::new);
-                    firstMemberBottomMinimum = firstMemberColumnsMaximumCorrectIndexFromBottom
-                            .stream()
-                            .mapToInt(v -> v)
-                            .min().orElseThrow(NoSuchElementException::new);
-
-                    int secondMemberTopMinimum;
-                    int secondMemberBottomMinimum;
-
-                    secondMemberColumnsMaximumCorrectIndexFromTop = generateColumnsMaximumCorrectIndexesFromTop(secondPopulationMember);
-                    secondMemberColumnsMaximumCorrectIndexFromBottom = generateColumnsMaximumCorrectIndexesFromBottom(secondPopulationMember);
-
-                    secondMemberTopMinimum = secondMemberColumnsMaximumCorrectIndexFromTop
-                            .stream()
-                            .mapToInt(v -> v)
-                            .min().orElseThrow(NoSuchElementException::new);
-                    secondMemberBottomMinimum = secondMemberColumnsMaximumCorrectIndexFromBottom
-                            .stream()
-                            .mapToInt(v -> v)
-                            .min().orElseThrow(NoSuchElementException::new);
-
-                    topMinimum = Math.min(firstMemberTopMinimum, secondMemberTopMinimum);
-                    bottomMinimum = Math.min(firstMemberBottomMinimum, secondMemberBottomMinimum);
-
-                    //choose side top(0) or bottom(1)
-                    choosenSide = randomIntGenerator.nextInt(2);
-                    if (choosenSide == 0) {
-                        chosenRowIndex = randomIntGenerator.nextInt(topMinimum + 1);
-                    } else {
-                        //chosenRowIndex = ThreadLocalRandom.current().nextInt(nonogramObject.getHeight() - 1 - bottomMinimum, nonogramObject.getHeight() - 1);
-                        int minimumBottomIndex = nonogramObject.getNonogramRules().getHeight() - 1 - bottomMinimum;
-                        int maximimumBottomIndex = nonogramObject.getNonogramRules().getHeight() - 1;
-                        chosenRowIndex = randomIntGenerator.nextInt(maximimumBottomIndex - minimumBottomIndex + 1) + minimumBottomIndex;
-                    }
-
-
-                    // row chosen, now select rows and do crossing
-                    firstMemberRowToSwap = firstPopulationMember.getNonogramSolutionBoard().get(chosenRowIndex);
-                    secondMemberRowToSwap = secondPopulationMember.getNonogramSolutionBoard().get(chosenRowIndex);
-
-                    //copy population members to change them further
-                    firstChild = gson.fromJson(gson.toJson(firstPopulationMember), NonogramLogic.class);
-                    secondChild = gson.fromJson(gson.toJson(secondPopulationMember), NonogramLogic.class);
-
-                    //insert new rows - create new population members
-                    secondChild.setNonogramBoardRow(chosenRowIndex, firstMemberRowToSwap);
-
-                    int randNumTo10 = randomIntGenerator.nextInt(100) + 1;
-
-                    if (randNumTo10 > 95) {
-                        //mutate
-                        firstChild.setNonogramBoardRow(chosenRowIndex, generateRandomRowArray(firstChild, chosenRowIndex));
-                    } else {
-                        firstChild.setNonogramBoardRow(chosenRowIndex, secondMemberRowToSwap);
-                    }
-
-                    randNumTo10 = randomIntGenerator.nextInt(100) + 1;
-                    if (randNumTo10 > 95) {
-                        //mutate
-                        secondChild.setNonogramBoardRow(chosenRowIndex, generateRandomRowArray(secondChild, chosenRowIndex));
-                    } else {
-                        secondChild.setNonogramBoardRow(chosenRowIndex, firstMemberRowToSwap);
-                    }
-
-                    //
-                    firstChildColumnsMaximumCorrectIndexFromTop = generateColumnsMaximumCorrectIndexesFromTop(firstChild);
-                    firstChildColumnsMaximumCorrectIndexFromBottom = generateColumnsMaximumCorrectIndexesFromBottom(firstPopulationMember);
-
-                    firstChildMaxPossibleCorrectFieldsSum = firstChildColumnsMaximumCorrectIndexFromTop.stream().reduce(0, Integer::sum);
-                    firstChildMaxPossibleCorrectFieldsSum = firstChildColumnsMaximumCorrectIndexFromBottom.stream().reduce(firstChildMaxPossibleCorrectFieldsSum, Integer::sum);
-
-                    secondChildColumnsMaximumCorrectIndexFromTop = generateColumnsMaximumCorrectIndexesFromTop(secondChild);
-                    secondChildColumnsMaximumCorrectIndexFromBottom = generateColumnsMaximumCorrectIndexesFromBottom(secondPopulationMember);
-
-                    secondChildMaxPossibleCorrectFieldsSum = secondChildColumnsMaximumCorrectIndexFromTop.stream().reduce(0, Integer::sum);
-                    secondChildMaxPossibleCorrectFieldsSum = secondChildColumnsMaximumCorrectIndexFromBottom.stream().reduce(secondChildMaxPossibleCorrectFieldsSum, Integer::sum);
-
-                    //first child
-                    if (!nextPopulation.isEmpty()) {
-                        int firstLessOrEqualElementIndex = findFirstLessOrEqualElementIndex(firstChildMaxPossibleCorrectFieldsSum);
-
-                        if (firstLessOrEqualElementIndex != populationCount) {
-                            nextPopulation.add(firstLessOrEqualElementIndex, firstChild);
-                            if (firstChild.subSolutionBoardCorrectComparisonWithSolutionBoard("r" + InitializerConstants.PUZZLE_NAME)) {
-                                setSolutionFound(true);
-                            }
-                            maxCorrectFieldsInColumnsSums.add(firstLessOrEqualElementIndex, firstChildMaxPossibleCorrectFieldsSum);
-                            if (nextPopulation.size() > populationCount) {
-                                nextPopulation = nextPopulation.stream().limit(populationCount).collect(Collectors.toList());
-                                maxCorrectFieldsInColumnsSums = maxCorrectFieldsInColumnsSums.stream().limit(populationCount).collect(Collectors.toList());
-                            }
-                        }
-                    } else {
-                        // just add
-                        nextPopulation.add(firstChild);
-                        maxCorrectFieldsInColumnsSums.add(0, firstChildMaxPossibleCorrectFieldsSum);
-                        System.out.println("added first element to next population/max sums");
-                    }
-
-                    int firstLessOrEqualElementIndex = findFirstLessOrEqualElementIndex(secondChildMaxPossibleCorrectFieldsSum);
-
-                    if (firstLessOrEqualElementIndex != populationCount) {
-                        nextPopulation.add(firstLessOrEqualElementIndex, secondChild);
-                        maxCorrectFieldsInColumnsSums.add(firstLessOrEqualElementIndex, secondChildMaxPossibleCorrectFieldsSum);
-                        if (nextPopulation.size() > populationCount) {
-                            nextPopulation = nextPopulation.stream().limit(populationCount).collect(Collectors.toList());
-                            maxCorrectFieldsInColumnsSums = maxCorrectFieldsInColumnsSums.stream().limit(populationCount).collect(Collectors.toList());
-                        }
-                    }
-                }
-                if (isSolutionFound()) break;
-            }
-            if (isSolutionFound()) break;
-        }
-
-        System.out.println("next population size: " + nextPopulation.size());
-        System.out.println("maxsums size: " + maxCorrectFieldsInColumnsSums.size());
-        System.out.println("MIN: " + maxCorrectFieldsInColumnsSums.get(maxCorrectFieldsInColumnsSums.size() - 1));
-        System.out.println("MAX: " + maxCorrectFieldsInColumnsSums.get(0));
-
-        if (!solutionFound) {
-            selectNewPopulation();
-            System.out.println("iterationNo: " + iterationNo + " solution not found...");
+        if (chooseTop) {
+            return randomIntGenerator.nextInt(topMin + 1);
         } else {
-            System.out.println("Solution found: ");
+            int height = nonogramObject.getNonogramRules().getHeight();
+            int minIdx = height - 1 - bottomMin;
+            return randomIntGenerator.nextInt(height - minIdx) + minIdx;
         }
     }
 
-    public void selectNewPopulation() {
-        this.currentPopulation = new ArrayList<>();
-        this.currentPopulation.addAll(nextPopulation);
+    private int getMin(List<Integer> values) {
+        return values.stream().mapToInt(i -> i).min().orElseThrow(NoSuchElementException::new);
+    }
+
+    private boolean shouldMutate() {
+        return randomIntGenerator.nextInt(100) + 1 > 95;
+    }
+
+    private void evaluateAndInsert(NonogramLogic child, NonogramLogic parent, String label) {
+        List<Integer> top = generateColumnsMaximumCorrectIndexesFromTop(child);
+        List<Integer> bottom = generateColumnsMaximumCorrectIndexesFromBottom(parent);
+        int score = top.stream().mapToInt(Integer::intValue).sum() + bottom.stream().mapToInt(Integer::intValue).sum();
+
+        int idx = findFirstLessOrEqualElementIndex(score);
+        if (idx != POPULATION_COUNT) {
+            nextPopulation.add(idx, child);
+            maxCorrectFieldsInColumnsSums.add(idx, score);
+            if (nextPopulation.size() > POPULATION_COUNT) {
+                nextPopulation = nextPopulation.subList(0, POPULATION_COUNT);
+                maxCorrectFieldsInColumnsSums = maxCorrectFieldsInColumnsSums.subList(0, POPULATION_COUNT);
+            }
+            if ("first".equals(label) && child.subSolutionBoardCorrectComparisonWithSolutionBoard("r" + InitializerConstants.PUZZLE_NAME)) {
+                setSolutionFound(true);
+            }
+        } else if (nextPopulation.isEmpty()) {
+            nextPopulation.add(child);
+            maxCorrectFieldsInColumnsSums.add(score);
+            log.info("added {} element to next population/max sums", label);
+        }
     }
 
     public int findFirstLessOrEqualElementIndex(int elementToFind) {
@@ -286,128 +187,151 @@ public class NonogramGenetic {
         if (firstIndex.isPresent()) {
             return firstIndex.getAsInt();
         } else {
-            return populationCount;
+            return POPULATION_COUNT;
         }
     }
 
     public List<Integer> generateColumnsMaximumCorrectIndexesFromTop(NonogramLogic populationMember) {
+        int width = populationMember.getNonogramRules().getWidth();
+        List<Integer> result = new ArrayList<>(width);
 
-        List<Integer> columnsMaximumCorrectIndexFromTop = new ArrayList<>();
-        List<String> boardColumn;
-        List<Integer> columnSequencesLengths;
+        for (int col = 0; col < width; col++) {
+            List<String> column = getColumn(populationMember.getNonogramSolutionBoard(), col);
+            List<Integer> sequences = populationMember.getNonogramRules().getColumnSequencesLengths().get(col);
 
-        // from top
-        int currentSequenceNo;
-        int currentSequenceLength;
-        int colouredInRow;
-        int fieldsLeft;
-        int fieldsNeeded;
-        int maxProbablyCorrect;
+            int maxCorrect = evaluateColumnFromTop(column, sequences);
+            result.add(maxCorrect);
+        }
 
-        for (int columnIdx = 0; columnIdx < populationMember.getNonogramRules().getWidth(); columnIdx++) {
-            boardColumn = getColumn(populationMember.getNonogramSolutionBoard(), columnIdx);
-            columnSequencesLengths = populationMember.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
+        return result;
+    }
 
-            // from top
-            currentSequenceNo = 0;
-            currentSequenceLength = columnSequencesLengths.get(0);
-            colouredInRow = 0;
-            maxProbablyCorrect = 0;
+    private int evaluateColumnFromTop(List<String> column, List<Integer> sequences) {
+        int seqIdx = 0;
+        int currentLength = sequences.get(seqIdx);
+        int coloured = 0;
+        int maxCorrect = 0;
 
-            for (int rowIdx = 0;  rowIdx < populationMember.getNonogramRules().getHeight(); rowIdx++) {
-                if (boardColumn.get(rowIdx).equals(X_FIELD)) {
-                    if (colouredInRow == currentSequenceLength) {
-                        currentSequenceNo++;
-                        if (currentSequenceNo < columnSequencesLengths.size()) {
-                            currentSequenceLength = columnSequencesLengths.get(currentSequenceNo);
-                        }
-                    } else if (colouredInRow > 0 && colouredInRow < currentSequenceLength) {
-                        maxProbablyCorrect = rowIdx - 1;
-                        break;
+        for (int row = 0; row < column.size(); row++) {
+            String cell = column.get(row);
+
+            if (X_FIELD.equals(cell)) {
+                if (isSequenceComplete(coloured, currentLength)) {
+                    seqIdx++;
+                    if (seqIdx < sequences.size()) {
+                        currentLength = sequences.get(seqIdx);
                     }
-                    colouredInRow = 0;
-                    fieldsLeft = nonogramObject.getNonogramRules().getHeight() - 1 - rowIdx;
-                    fieldsNeeded = calculateFieldsNeeded(currentSequenceNo, columnSequencesLengths, "fromTop");
-                    if (fieldsLeft < fieldsNeeded && rowIdx > 0) {
-                        maxProbablyCorrect = rowIdx - 1;
-                        break;
-                    } else {
-                        maxProbablyCorrect = rowIdx;
-                    }
-                } else {
-                    colouredInRow++;
-                    if (colouredInRow > currentSequenceLength || currentSequenceNo >= columnSequencesLengths.size()) {
-                        maxProbablyCorrect = rowIdx - 1;
-                        break;
-                    } else if (rowIdx == populationMember.getNonogramRules().getHeight() - 1) {
-                        maxProbablyCorrect = rowIdx;
-                    }
+                } else if (coloured > 0) {
+                    return row - 1;
+                }
+
+                coloured = 0;
+
+                if (!hasEnoughSpace(row, seqIdx, sequences, column.size())) {
+                    return row - 1;
+                }
+
+                maxCorrect = row;
+
+            } else {
+                coloured++;
+
+                if (isOverflow(coloured, currentLength, seqIdx, sequences.size())) {
+                    return row - 1;
+                }
+
+                if (row == column.size() - 1) {
+                    maxCorrect = row;
                 }
             }
-
-            columnsMaximumCorrectIndexFromTop.add(maxProbablyCorrect);
         }
-        return columnsMaximumCorrectIndexFromTop;
+
+        return maxCorrect;
+    }
+
+    private boolean isSequenceComplete(int coloured, int currentLength) {
+        return coloured == currentLength;
+    }
+
+    private boolean hasEnoughSpace(int currentRow, int sequenceIndex, List<Integer> sequences, int columnHeight) {
+        int fieldsLeft = columnHeight - 1 - currentRow;
+        int fieldsNeeded = calculateFieldsNeeded(sequenceIndex, sequences, "fromTop");
+        return fieldsLeft >= fieldsNeeded;
+    }
+
+    private boolean isOverflow(int coloured, int currentLength, int seqIdx, int totalSequences) {
+        return coloured > currentLength || seqIdx >= totalSequences;
     }
 
     public List<Integer> generateColumnsMaximumCorrectIndexesFromBottom(NonogramLogic populationMember) {
+        int width = populationMember.getNonogramRules().getWidth();
+        List<Integer> result = new ArrayList<>(width);
 
-        List<Integer> columnsMaximumCorrectIndexFromBottom = new ArrayList<>();
-        List<String> boardColumn;
-        List<Integer> columnSequencesLengths;
+        for (int col = 0; col < width; col++) {
+            List<String> column = getColumn(populationMember.getNonogramSolutionBoard(), col);
+            List<Integer> sequences = populationMember.getNonogramRules().getColumnSequencesLengths().get(col);
 
-        // from top
-        int currentSequenceNo;
-        int currentSequenceLength;
-        int colouredInRow;
-        int fieldsLeft;
-        int fieldsNeeded;
-        int maxProbablyCorrect;
-
-        for (int columnIdx = 0; columnIdx < populationMember.getNonogramRules().getWidth(); columnIdx++) {
-            boardColumn = getColumn(populationMember.getNonogramSolutionBoard(), columnIdx);
-            columnSequencesLengths = populationMember.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
-
-            //from bottom - analogous
-            currentSequenceNo = columnSequencesLengths.size() - 1;
-            currentSequenceLength = columnSequencesLengths.get(currentSequenceNo);
-            colouredInRow = 0;
-            maxProbablyCorrect = 0;
-
-            for (int rowIdx = populationMember.getNonogramRules().getHeight() - 1;  rowIdx >= 0; rowIdx--) {
-                if (boardColumn.get(rowIdx).equals("X")) {
-                    if (colouredInRow == currentSequenceLength) {
-                        currentSequenceNo--;
-                        if (currentSequenceNo >= 0) {
-                            currentSequenceLength = columnSequencesLengths.get(currentSequenceNo);
-                        }
-                    } else if (colouredInRow > 0 && colouredInRow < currentSequenceLength) {
-                        maxProbablyCorrect = nonogramObject.getNonogramRules().getHeight() - (rowIdx + 1);
-                        break;
-                    }
-                    colouredInRow = 0;
-                    fieldsLeft = rowIdx;
-                    fieldsNeeded = calculateFieldsNeeded(currentSequenceNo, columnSequencesLengths, "fromBottom");
-                    if (fieldsLeft < fieldsNeeded && rowIdx > 0) {
-                        maxProbablyCorrect = nonogramObject.getNonogramRules().getHeight() - (rowIdx + 1);
-                        break;
-                    } else {
-                        maxProbablyCorrect = (nonogramObject.getNonogramRules().getHeight() - 1 - rowIdx);
-                    }
-                } else {
-                    colouredInRow++;
-                    if (colouredInRow > currentSequenceLength) {
-                        maxProbablyCorrect = nonogramObject.getNonogramRules().getHeight() - (rowIdx + 1);
-                        break;
-                    }  else if (rowIdx == 0) {
-                        maxProbablyCorrect = nonogramObject.getNonogramRules().getHeight() - (rowIdx + 1);
-                    }
-                }
-            }
-            columnsMaximumCorrectIndexFromBottom.add(maxProbablyCorrect);
+            int maxCorrect = evaluateColumnFromBottom(column, sequences, populationMember.getNonogramRules().getHeight());
+            result.add(maxCorrect);
         }
 
-        return columnsMaximumCorrectIndexFromBottom;
+        return result;
+    }
+
+    private int evaluateColumnFromBottom(List<String> column, List<Integer> sequences, int height) {
+        int seqIdx = sequences.size() - 1;
+        int currentLength = sequences.get(seqIdx);
+        int coloured = 0;
+        int maxCorrect = 0;
+
+        for (int row = height - 1; row >= 0; row--) {
+            String cell = column.get(row);
+
+            if (X_FIELD.equals(cell)) {
+                if (isSequenceComplete(coloured, currentLength)) {
+                    seqIdx--;
+                    if (seqIdx >= 0) {
+                        currentLength = sequences.get(seqIdx);
+                    }
+                } else if (coloured > 0) {
+                    return rowIndexFromBottom(height, row);
+                }
+
+                coloured = 0;
+
+                if (!hasEnoughSpaceFromBottom(row, seqIdx, sequences)) {
+                    return rowIndexFromBottom(height, row);
+                }
+
+                maxCorrect = height - 1 - row;
+
+            } else {
+                coloured++;
+
+                if (isOverflowFromBottom(coloured, currentLength)) {
+                    return rowIndexFromBottom(height, row);
+                }
+
+                if (row == 0) {
+                    maxCorrect = rowIndexFromBottom(height, row);
+                }
+            }
+        }
+
+        return maxCorrect;
+    }
+
+    private int rowIndexFromBottom(int height, int row) {
+        return height - (row + 1);
+    }
+
+    private boolean isOverflowFromBottom(int coloured, int currentLength) {
+        return coloured > currentLength;
+    }
+
+    private boolean hasEnoughSpaceFromBottom(int currentRow, int sequenceIndex, List<Integer> sequences) {
+        int fieldsNeeded = calculateFieldsNeeded(sequenceIndex, sequences, "fromBottom");
+        return currentRow >= fieldsNeeded;
     }
 
     public int calculateFieldsNeeded(int currentSeqNo, List<Integer> sequencesLengths, String direction) {
@@ -443,7 +367,7 @@ public class NonogramGenetic {
         Integer sequenceLength;
         List<Integer> startPointPossibleIndexes;
         int randomStartPointIndex;
-        int choosenStartPointIndex;
+        int chosenStartPointIndex;
         List<Integer> updatedRange;
 
         for (int rowSequence = 0; rowSequence < rowSequencesRanges.size(); rowSequence++) {
@@ -453,22 +377,21 @@ public class NonogramGenetic {
                 startPointPossibleIndexes = generateStartIndexesForSequence(sequenceRange, sequenceLength);
 
                 if (startPointPossibleIndexes.size() != 1) {
-                    //randomStartPointIndex =  randomIntGenerator.nextInt(0, startPointPossibleIndexes.size() - 1);
                     randomStartPointIndex = randomIntGenerator.nextInt(startPointPossibleIndexes.size());
-                    choosenStartPointIndex = startPointPossibleIndexes.get(randomStartPointIndex);
-                } else { //only one possible start index
-                    choosenStartPointIndex = startPointPossibleIndexes.get(0);
+                    chosenStartPointIndex = startPointPossibleIndexes.get(randomStartPointIndex);
+                } else {
+                    chosenStartPointIndex = startPointPossibleIndexes.get(0);
                 }
 
                 updatedRange = new ArrayList<>();
-                updatedRange.add(choosenStartPointIndex);
-                updatedRange.add(choosenStartPointIndex + sequenceLength - 1);
+                updatedRange.add(chosenStartPointIndex);
+                updatedRange.add(chosenStartPointIndex + sequenceLength - 1);
 
                 rowSequencesRanges = setRowSequenceRange(rowSequencesRanges, rowSequence, updatedRange);
 
                 if (rowSequence + 1 < rowSequencesRanges.size()) {
                     updatedRange = new ArrayList<>();
-                    updatedRange.add(choosenStartPointIndex + sequenceLength + 1);
+                    updatedRange.add(chosenStartPointIndex + sequenceLength + 1);
                     updatedRange.add(rowSequencesRanges.get(rowSequence + 1).get(1));
                     rowSequencesRanges = setRowSequenceRange(rowSequencesRanges, rowSequence + 1, updatedRange);
                 }
@@ -520,13 +443,13 @@ public class NonogramGenetic {
     }
 
     public List<Integer> findAllIntegersInRange(List<Integer> range) {
-        List<Integer> IntegersInRange = new ArrayList<>();
+        List<Integer> integersInRange = new ArrayList<>();
 
         for (int startIndex = range.get(0); startIndex <= range.get(1); startIndex++) {
-            IntegersInRange.add(startIndex);
+            integersInRange.add(startIndex);
         }
 
-        return IntegersInRange;
+        return integersInRange;
     }
 
     public boolean boardInPopulationUnique(List<List<String>> boardToCheck, List<NonogramLogic> population) {
