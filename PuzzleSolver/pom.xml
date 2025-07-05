@@ -14,7 +14,7 @@
 	<name>puzzleAppFileManager</name>
 	<description>Manage files for storing puzzle data</description>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>17</java.version>ic
 	</properties>
 	<dependencies>
 		<dependency>
@@ -127,6 +127,48 @@
 					<source>16</source>
 					<target>16</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.9.1.2184</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>sonar</goal>
+						</goals>
+						<configuration>
+							<sonar.login>${sonar.token}</sonar.login>
+							<sonar.projectKey>PuzzleSolver</sonar.projectKey>
+							<sonar.projectName>Puzzle Solver Backend</sonar.projectName>
+							<sonar.host.url>http://localhost:9000</sonar.host.url>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.10</version>
+				<configuration>
+					<excludes>
+						<exclude>com/shape/shape_api/PuzzleAppFileManagerApplication.class</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
