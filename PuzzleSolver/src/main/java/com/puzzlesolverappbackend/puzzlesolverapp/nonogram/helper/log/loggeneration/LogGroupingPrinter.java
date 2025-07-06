@@ -1,6 +1,7 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration;
 
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -10,6 +11,7 @@ import java.util.Map;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogConverter.detectActionTypeFromRawLog;
 
 @UtilityClass
+@Slf4j
 public class LogGroupingPrinter {
 
     public static void printLogsGroupedByDetectedType(List<String> rawLogs, List<String> convertedLogs) {
@@ -27,9 +29,11 @@ public class LogGroupingPrinter {
             String action = entry.getKey();
             List<String> logs = entry.getValue();
 
-            System.out.println("-------------" + action + "-------------------");
-            logs.forEach(System.out::println);
-            System.out.println();
+            log.info("-------------{}-------------------", action);
+            for (String s : logs) {
+                log.info("{}", s);
+            }
+            log.info("");
         }
     }
 }

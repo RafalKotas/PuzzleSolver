@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -150,9 +151,12 @@ public class NonogramLogicController {
 
             return new ResponseEntity<>(solution, HttpStatus.OK);
 
+        } catch (FileNotFoundException e) {
+            log.error("Solution file not found for filename: {}", fileName);
+            return new ResponseEntity<>(nonogramLogic, HttpStatus.NOT_FOUND);
         } catch (IOException e) {
-            log.error("Exception...");
-            return new ResponseEntity<>(nonogramLogic, HttpStatus.OK); // TODO not response with OK
+            log.error("Exception while reading solution file: {}", e.getMessage());
+            return new ResponseEntity<>(nonogramLogic, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

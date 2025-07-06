@@ -57,7 +57,7 @@ public class LogFormatUtils {
                         .split(","))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static List<Integer> parseIntegerListLine(String line) {
@@ -71,7 +71,7 @@ public class LogFormatUtils {
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .map(Integer::parseInt)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static List<List<Integer>> parseNestedListLine(String line) {

@@ -149,7 +149,7 @@ public class NonogramSolver {
         for (String rawLog : rawLogs) {
             NonogramLogic logic = node.getNonogramLogic();
             LogConverter.convertLogByAction(rawLog, solutionFileName, logic, LogConverter.detectActionTypeFromRawLog(rawLog))
-                    .ifPresentOrElse(convertedLogs::add, () -> System.out.println(rawLog));
+                    .ifPresentOrElse(convertedLogs::add, () -> log.info(rawLog));
         }
 
         LogGroupingPrinter.printLogsGroupedByDetectedType(rawLogs, convertedLogs);
@@ -197,11 +197,11 @@ public class NonogramSolver {
     }
 
     private void runDecisionRecursively(NonogramSolutionNode node, NonogramSolutionDecision decision, String fileName, int depth) {
-        NonogramSolutionNode left = copyNodeAndAddDecision(decision, COLOURED_FIELD, node);
+        NonogramSolutionNode left = copyNodeWithDecisionAddedAndSolve(decision, COLOURED_FIELD, node);
         left.colourOrPlaceX();
         left.makeBasicSolverActions();
 
-        NonogramSolutionNode right = copyNodeAndAddDecision(decision, X_FIELD, node);
+        NonogramSolutionNode right = copyNodeWithDecisionAddedAndSolve(decision, X_FIELD, node);
         right.colourOrPlaceX();
         right.makeBasicSolverActions();
 
@@ -210,7 +210,7 @@ public class NonogramSolver {
     }
 
     private int evaluateFilledFields(NonogramSolutionDecision decision, NonogramSolutionNode node, String marker) {
-        NonogramSolutionNode copy = copyNodeAndAddDecision(decision, marker, node);
+        NonogramSolutionNode copy = copyNodeWithDecisionAddedAndSolve(decision, marker, node);
         copy.makeBasicSolverActions();
         return copy.getNonogramLogic().fieldsFilled();
     }
@@ -222,66 +222,79 @@ public class NonogramSolver {
             node.getNonogramLogic().updateCurrentAvailableChoices();
             node.getNonogramLogic().clearLogs();
             this.oneOfTwoDecisionsWrong = false;
-
             Optional<NonogramSolutionDecision> correctDecision = Optional.empty();
 
             for (NonogramSolutionDecision decision : node.getNonogramLogic().getAvailableChoices()) {
-                NonogramSolutionNode left = copyNodeAndAddDecision(decision, COLOURED_FIELD, node);
-                NonogramSolutionNode right = copyNodeAndAddDecision(decision, X_FIELD, node);
+                DecisionOutcome outcome = evaluateDecision(decision, node);
 
-                boolean leftValid = !left.getNonogramLogic().getNonogramState().isInvalidSolution();
-                boolean rightValid = !right.getNonogramLogic().getNonogramState().isInvalidSolution();
-
-                if (!leftValid && !rightValid) {
-                    wrongDecisionsCount = 2;
-                    break;
-                } else if (leftValid && !rightValid) {
-                    correctDecision = Optional.of(decision.withMarker(COLOURED_FIELD));
-                    node = logicFactory.copyNode(left);
-                    this.oneOfTwoDecisionsWrong = true;
-                    wrongDecisionsCount = 1;
-                    break;
-                } else if (!leftValid && rightValid) {
-                    correctDecision = Optional.of(decision.withMarker(X_FIELD));
-                    node = logicFactory.copyNode(right);
-                    this.oneOfTwoDecisionsWrong = true;
-                    wrongDecisionsCount = 1;
+                if (outcome.shouldBreak()) {
+                    correctDecision = outcome.correctDecision();
+                    node = outcome.updatedNode().orElse(node);
+                    this.oneOfTwoDecisionsWrong = outcome.oneOfTwoWrong();
+                    wrongDecisionsCount = outcome.wrongCount();
                     break;
                 } else {
                     wrongDecisionsCount = 0;
                 }
-
             }
 
-            if (treeDepth == 0) {
-                NonogramSolutionNode finalNode = node;
-                correctDecision.ifPresent(dec ->
-                        guessLogs.add(new NonogramGuessActionsLog(dec, finalNode.getNonogramLogic().getLogs()))
-                );
-
-                if (wrongDecisionsCount == -1) {
-                    replaceSolutionNodeWithMoreBeneficialSolution(node);
-                }
-            } else if (node.getNonogramLogic().isSolved()) {
-                replaceSolutionNodeWithMoreBeneficialSolution(node);
-                logIf(LOG_STEPS_SOLVER, "Nonogram solved, recursion depth: {}", treeDepth);
-            }
+            handlePostDecision(treeDepth, node, correctDecision, guessLogs, wrongDecisionsCount);
 
         } while (guessModeContinueDecision("oneOfTwoWrong"));
 
         return wrongDecisionsCount;
     }
 
+    private void handlePostDecision(int treeDepth, NonogramSolutionNode node,
+                                    Optional<NonogramSolutionDecision> correctDecision,
+                                    List<NonogramGuessActionsLog> guessLogs,
+                                    int wrongDecisionsCount) {
+        if (treeDepth == 0) {
+            correctDecision.ifPresent(dec ->
+                    guessLogs.add(new NonogramGuessActionsLog(dec, node.getNonogramLogic().getLogs()))
+            );
+
+            if (wrongDecisionsCount == -1) {
+                replaceSolutionNodeWithMoreBeneficialSolution(node);
+            }
+
+        } else if (node.getNonogramLogic().isSolved()) {
+            replaceSolutionNodeWithMoreBeneficialSolution(node);
+            logIf(LOG_STEPS_SOLVER, "Nonogram solved, recursion depth: {}", treeDepth);
+        }
+    }
+
+    private DecisionOutcome evaluateDecision(NonogramSolutionDecision decision, NonogramSolutionNode node) {
+        NonogramSolutionNode left = copyNodeWithDecisionAddedAndSolve(decision, COLOURED_FIELD, node);
+        NonogramSolutionNode right = copyNodeWithDecisionAddedAndSolve(decision, X_FIELD, node);
+
+        boolean leftValid = !left.getNonogramLogic().getNonogramState().isInvalidSolution();
+        boolean rightValid = !right.getNonogramLogic().getNonogramState().isInvalidSolution();
+
+        if (!leftValid && !rightValid) {
+            return DecisionOutcome.bothWrong();
+        }
+
+        if (leftValid && !rightValid) {
+            return DecisionOutcome.oneCorrect(decision.withMarker(COLOURED_FIELD), left, 1);
+        }
+
+        if (!leftValid) {
+            return DecisionOutcome.oneCorrect(decision.withMarker(X_FIELD), right, 1);
+        }
+
+        return DecisionOutcome.bothValid();
+    }
+
     private void printOverallHeuristicsResult(NonogramSolutionNode nonogramSubsolutionNode) {
             log.info("decisions {}", nonogramSubsolutionNode.getNonogramLogic().getActionsToDoList().size());
-            System.out.println("-".repeat(100));
 
             log.info("Fields filled after fill trivial rows and columns: {}", nonogramSubsolutionNode.getNonogramLogic().fieldsFilled());
             log.info("COMPLETION PERCENTAGE: {}, DECISIONS SIZE: {}", nonogramSubsolutionNode.getNonogramLogic().getCompletionPercentage(), nonogramSubsolutionNode.getNonogramGuessDecisions().size());
             log.info("SOLUTION STEPS: ");
     }
 
-    public NonogramSolutionNode copyNodeAndAddDecision(NonogramSolutionDecision decision, String decisionMarker, NonogramSolutionNode nodeToCopy) {
+    public NonogramSolutionNode copyNodeWithDecisionAddedAndSolve(NonogramSolutionDecision decision, String decisionMarker, NonogramSolutionNode nodeToCopy) {
         NonogramSolutionDecision nodeDecision = new NonogramSolutionDecision(decisionMarker, decision.getDecisionField());
         NonogramSolutionNode nodeToAddDecision = logicFactory.copyNode(nodeToCopy);
         nodeToAddDecision.addDecision(nodeDecision);

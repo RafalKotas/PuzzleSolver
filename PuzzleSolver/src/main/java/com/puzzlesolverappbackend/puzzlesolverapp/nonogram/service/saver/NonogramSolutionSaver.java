@@ -15,9 +15,6 @@ import java.nio.file.Paths;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.constants.SharedConstants.JSON_EXTENSION;
 
-// TODO difficulty 2 : o10375 - not full solved (Expecting empty but was: [ "o10375"])
-// TODO difficulty 2 : o09839 - incorrect
-
 @Service
 @RequiredArgsConstructor
 public class NonogramSolutionSaver {

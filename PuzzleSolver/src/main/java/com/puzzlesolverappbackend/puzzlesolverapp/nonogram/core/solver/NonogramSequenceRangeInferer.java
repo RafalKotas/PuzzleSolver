@@ -68,10 +68,8 @@ public class NonogramSequenceRangeInferer {
         int currentLength = sequences.get(currentSequenceIdx);
 
         for (int colIdx = 0; colIdx < arrayFilled.size(); colIdx++) {
-            if (!writingSequence && currentSequenceIdx < charsNeeded.size() && allowStart) {
-                if (canStartSequence(rowIdx, colIdx, currentLength)) {
-                    writingSequence = true;
-                }
+            if (!writingSequence && currentSequenceIdx < charsNeeded.size() && allowStart && canStartSequence(rowIdx, colIdx, currentLength)) {
+                writingSequence = true;
             }
 
             if (writingSequence) {
@@ -184,19 +182,12 @@ public class NonogramSequenceRangeInferer {
     }
 
     private List<String> createColumnArrayFromSequencesAndChars(int columnIdx, List<Integer> sequencesParam, boolean reverse) {
-
-        List<Integer> sequences = sequencesParam;
-        List<String> charsNeeded = generateSequenceMarks(sequences.size());
-
-        if (reverse) {
-            sequences = reverseList(sequences);
-            charsNeeded = reverseList(charsNeeded);
-        }
+        List<Integer> sequences = reverse ? reverseList(sequencesParam) : sequencesParam;
+        List<String> charsNeeded = reverse ? reverseList(generateSequenceMarks(sequences.size())) : generateSequenceMarks(sequences.size());
 
         int height = this.nonogramSolutionBoardWithMarks.size();
         List<String> arrayFilledFromStart = createEmptyMarkedLine(height);
 
-        boolean canStartSequenceFromIndex;
         boolean writeSequenceMode = false;
         int currentSequenceIdx = 0;
         int sequencesFieldsFilled = 0;
@@ -204,29 +195,26 @@ public class NonogramSequenceRangeInferer {
         int sequenceLength = sequences.get(currentSequenceIdx);
         boolean breakX = true;
 
-        for (int fieldIdx = 0; fieldIdx < height; fieldIdx++ ) {
-
-            if (!writeSequenceMode && currentSequenceIdx < charsNeeded.size() && breakX) {
-                canStartSequenceFromIndex = checkIfCanStartSequenceFromColumnIndex(columnIdx, fieldIdx, sequenceLength);
-                if (canStartSequenceFromIndex) {
-                    writeSequenceMode = true; // start fill fields with sequence char mark
-                }
+        for (int fieldIdx = 0; fieldIdx < height; fieldIdx++) {
+            if (shouldStartSequence(writeSequenceMode, currentSequenceIdx, charsNeeded.size(), breakX)
+                    && checkIfCanStartSequenceFromColumnIndex(columnIdx, fieldIdx, sequenceLength)) {
+                writeSequenceMode = true;
             }
+
             if (writeSequenceMode) {
-
-                arrayFilledFromStart.set(fieldIdx, this.nonogramSolutionBoardWithMarks.get(fieldIdx).get(columnIdx).substring(0, 2) + MARKED_COLUMN_INDICATOR + charToWrite);
-
+                markSequenceField(arrayFilledFromStart, fieldIdx, columnIdx, charToWrite);
                 sequencesFieldsFilled++;
 
                 if (sequencesFieldsFilled == sequenceLength) {
-                    sequencesFieldsFilled = 0;
-                    currentSequenceIdx++;
-                    if (currentSequenceIdx < charsNeeded.size()) {
-                        charToWrite = charsNeeded.get( currentSequenceIdx );
-                        sequenceLength = sequences.get( currentSequenceIdx );
-                    }
                     writeSequenceMode = false;
                     breakX = false;
+                    sequencesFieldsFilled = 0;
+                    currentSequenceIdx++;
+
+                    if (currentSequenceIdx < charsNeeded.size()) {
+                        charToWrite = charsNeeded.get(currentSequenceIdx);
+                        sequenceLength = sequences.get(currentSequenceIdx);
+                    }
                 }
             } else {
                 arrayFilledFromStart.set(fieldIdx, X_FIELD_MARKED_BOARD);
@@ -235,6 +223,15 @@ public class NonogramSequenceRangeInferer {
         }
 
         return arrayFilledFromStart;
+    }
+
+    private boolean shouldStartSequence(boolean writeSequenceMode, int currentIdx, int total, boolean breakX) {
+        return !writeSequenceMode && currentIdx < total && breakX;
+    }
+
+    private void markSequenceField(List<String> line, int fieldIdx, int columnIdx, String markChar) {
+        String base = this.nonogramSolutionBoardWithMarks.get(fieldIdx).get(columnIdx).substring(0, 2);
+        line.set(fieldIdx, base + MARKED_COLUMN_INDICATOR + markChar);
     }
 
     private boolean checkIfCanStartSequenceFromColumnIndex (int columnIdx, int fieldIdx, int sequenceLength) {

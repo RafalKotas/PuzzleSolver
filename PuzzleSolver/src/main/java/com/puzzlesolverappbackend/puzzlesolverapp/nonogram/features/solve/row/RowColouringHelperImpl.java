@@ -139,7 +139,8 @@ public class RowColouringHelperImpl implements RowColouringHelper {
             Field tempX = new Field(rowIdx, mergeStart - 1);
             if (logic.getBoardAccessHelper().isColumnIndexValid(mergeStart - 1) &&
                     isFieldEmpty(logic.getNonogramSolutionBoard(), tempX)) {
-                logic.getRowXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(tempX, false);
+                logic.getRowXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(tempX);
+                logic.getNonogramFieldExclusionHelper().excludeFieldInRow(tempX);
                 logic.correctRowSequencesRangesIfXOnWay(rowIdx, false);
                 logic.getNonogramFieldClearingHelper().clearField(tempX);
             }
@@ -155,6 +156,7 @@ public class RowColouringHelperImpl implements RowColouringHelper {
                 }
             }
 
+            logic.getNonogramFieldExclusionHelper().removeFieldFromExcludedInRow(tempX);
             logic.setRowSequencesRanges(rowIdx, mutableClone2DList(originalRanges));
         }
 
@@ -175,7 +177,8 @@ public class RowColouringHelperImpl implements RowColouringHelper {
             Field tempX = new Field(rowIdx, mergeEnd + 1);
             if (logic.getBoardAccessHelper().isColumnIndexValid(mergeEnd + 1) &&
                     isFieldEmpty(logic.getNonogramSolutionBoard(), tempX)) {
-                logic.getRowXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(tempX, false);
+                logic.getRowXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(tempX);
+                logic.getNonogramFieldExclusionHelper().excludeFieldInRow(tempX);
                 logic.correctRowSequencesRangesIfXOnWay(rowIdx, false);
                 logic.getNonogramFieldClearingHelper().clearField(tempX);
             }
@@ -192,6 +195,7 @@ public class RowColouringHelperImpl implements RowColouringHelper {
             }
 
             logic.setRowSequencesRanges(rowIdx, mutableClone2DList(originalRanges));
+            logic.getNonogramFieldExclusionHelper().removeFieldFromExcludedInRow(tempX);
         }
 
         return anyFieldColoured;

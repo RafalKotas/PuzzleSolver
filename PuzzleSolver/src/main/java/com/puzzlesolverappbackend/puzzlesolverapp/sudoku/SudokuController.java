@@ -41,8 +41,8 @@ public class SudokuController {
                 .toList();
 
         if (fileNamesWithoutExtensionArray.contains(fileName)) {
-            log.error("Sudoku filename: {}", fileName);
-            return new ResponseEntity<>("Save failed. File with same name already exists.", HttpStatus.OK); // TODO - change response code
+            log.error("Sudoku filename conflict: {}", fileName);
+            return new ResponseEntity<>("Save failed. File with the same name already exists.", HttpStatus.CONFLICT);
         }
 
         Gson gson = new Gson();

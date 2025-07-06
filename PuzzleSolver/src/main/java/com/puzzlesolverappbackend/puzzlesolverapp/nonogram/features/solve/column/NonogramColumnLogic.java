@@ -35,13 +35,13 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exc
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NonogramColumnLogic extends NonogramLogicParams implements ColumnActions {
 
-    private final static String CORRECT_COLUMN_SEQ_RANGE_MARKING_FIELD = "correcting column sequence range when marking field";
+    private static final String CORRECT_COLUMN_SEQ_RANGE_MARKING_FIELD = "correcting column sequence range when marking field";
 
-    private final static String FILL_OVERLAPPING_FIELDS = "fill overlapping fields";
+    private static final String FILL_OVERLAPPING_FIELDS = "fill overlapping fields";
 
-    private final static List<Integer> NOT_FOUND_EMPTY_FIELDS_RANGE_VALUE = List.of(-1, -1);
+    private static final List<Integer> NOT_FOUND_EMPTY_FIELDS_RANGE_VALUE = List.of(-1, -1);
 
-    private final static List<Integer> NOT_FOUND_COLOURED_FIELDS_RANGE_VALUE = List.of(-1, -1);
+    private static final List<Integer> NOT_FOUND_COLOURED_FIELDS_RANGE_VALUE = List.of(-1, -1);
 
     protected List<List<List<Integer>>> columnsSequencesRanges;
 
@@ -193,10 +193,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         columnColouringHelper.extendColouredFieldsNearXToMaximumPossibleLengthInColumn(columnIdx);
     }
 
-//    @Override
-//    public void colourFieldsInColumnIfXCausesAssignmentConflict(int columnIdx) {
-//
-//    }
+    // colourFieldsInColumnIfXCausesAssignmentConflict
 
     @Override
     public void placeXsColumnAtUnreachableFields(int columnIdx) {
@@ -285,7 +282,8 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
 
                         Field fieldToPlaceX = new Field(colouredSequenceRowStartIdx - 1, columnIdx);
                         if (fieldToPlaceX.getRowIdx() >= 0 && isFieldEmpty(this.nonogramSolutionBoard, fieldToPlaceX)) {
-                            this.getColumnXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(fieldToPlaceX, true);
+                            this.getColumnXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(fieldToPlaceX);
+                            this.getNonogramFieldExclusionHelper().excludeFieldInColumn(fieldToPlaceX);
                             actionScheduler.scheduleActionsBasedOnField(fieldToPlaceX, NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART);
 
                             this.nonogramState.increaseMadeSteps();
@@ -372,7 +370,8 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
 
                         Field fieldToPlaceX = new Field(colouredSequenceEndRowIndex + 1, columnIdx);
                         if (fieldToPlaceX.getRowIdx() < this.getNonogramRules().getHeight() && isFieldEmpty(this.nonogramSolutionBoard, fieldToPlaceX)) { // TODO - temp condition fieldToPlaceX.getRowIdx() < this.getNonogramRules().getHeight()
-                            this.getColumnXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(fieldToPlaceX, true);
+                            this.getColumnXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(fieldToPlaceX);
+                            this.getNonogramFieldExclusionHelper().excludeFieldInColumn(fieldToPlaceX);
                             actionScheduler.scheduleActionsBasedOnField(fieldToPlaceX, NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART);
                         }
 
@@ -405,7 +404,6 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                 getNonogramSolutionBoardWithMarks(),
                 getNonogramRules().getColumnSequencesLengths(),
                 getColumnsSequencesRanges(),
-                getColumnsSequencesIdsNotToInclude(),
                 this::changeColumnSequenceRange,
                 this::excludeSequenceInColumn,
                 actionScheduler,

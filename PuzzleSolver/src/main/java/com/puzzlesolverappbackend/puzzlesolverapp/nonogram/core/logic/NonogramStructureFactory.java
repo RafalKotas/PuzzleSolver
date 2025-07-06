@@ -1,21 +1,27 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
+@UtilityClass
 public class NonogramStructureFactory {
 
     public static List<List<Integer>> generateEmptyRows(int height) {
-        return IntStream.range(0, height)
-                .mapToObj(i -> new ArrayList<Integer>())
-                .collect(Collectors.toList());
+        List<List<Integer>> rows = new ArrayList<>();
+        for (int i = 0; i < height; i++) {
+            rows.add(new ArrayList<>());
+        }
+        return rows;
     }
 
     public static List<List<Integer>> generateEmptyColumns(int width) {
-        return IntStream.range(0, width)
-                .mapToObj(i -> new ArrayList<Integer>())
-                .collect(Collectors.toList());
+        List<List<Integer>> columns = new ArrayList<>();
+        for (int i = 0; i < width; i++) {
+            columns.add(new ArrayList<>());
+        }
+        return columns;
     }
+
 }

@@ -30,4 +30,16 @@ public class NonogramFieldExclusionHelperRow extends NonogramFieldExclusionHelpe
             Collections.sort(this.rowsFieldsNotToInclude.get(fieldRowIdx));
         }
     }
+
+    public void removeFieldFromExcludedInRow(Field field) {
+        int col = field.getColumnIdx();
+        int row = field.getRowIdx();
+
+        if (this.getBoardAccessHelper().areFieldIndexesValid(field)
+                && rowsFieldsNotToInclude.get(row).contains(col)) {
+
+            List<Integer> colsToRemove = rowsFieldsNotToInclude.get(row);
+            colsToRemove.removeIf(value -> value == col);
+        }
+    }
 }

@@ -21,7 +21,7 @@ public class NonogramFieldPlacingXHelper {
         this.boardAccessHelper = accessHelper;
     }
 
-    public void placeXAtGivenField(Field fieldToPlaceX, boolean exclude) {
+    public void placeXAtGivenField(Field fieldToPlaceX) {
 
         int fieldRowIdx = fieldToPlaceX.getRowIdx();
         int fieldColumnIdx = fieldToPlaceX.getColumnIdx();
@@ -29,14 +29,10 @@ public class NonogramFieldPlacingXHelper {
         if (boardAccessHelper.areFieldIndexesValid(fieldToPlaceX)) {
             this.nonogramSolutionBoard.get(fieldRowIdx).set(fieldColumnIdx, X_FIELD);
             this.nonogramSolutionBoardWithMarks.get(fieldRowIdx).set(fieldColumnIdx, X_FIELD.repeat(4));
-
-//            if (exclude) {
-//                excludeFieldLogicSpecific(fieldToPlaceX);
-//            }
         }
     }
 
     public void placeXAtGivenFields(List<Field> xFields) {
-        xFields.forEach(field -> placeXAtGivenField(field, true));
+        xFields.forEach(this::placeXAtGivenField);
     }
 }

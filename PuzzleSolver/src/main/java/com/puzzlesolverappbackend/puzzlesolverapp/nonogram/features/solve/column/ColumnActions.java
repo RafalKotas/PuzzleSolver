@@ -30,8 +30,7 @@ public interface ColumnActions {
     @SuppressWarnings("unused")
     void extendColouredFieldsNearXToMaximumPossibleLengthInColumn(int columnIdx);
 
-    // @SuppressWarnings("unused")
-    // void colourFieldsInColumnIfXCausesAssignmentConflict(int columnIdx);
+    // colourFieldsInColumnIfXCausesAssignmentConflict
 
     @SuppressWarnings("unused")
     void placeXsColumnAtUnreachableFields(int columnIdx);

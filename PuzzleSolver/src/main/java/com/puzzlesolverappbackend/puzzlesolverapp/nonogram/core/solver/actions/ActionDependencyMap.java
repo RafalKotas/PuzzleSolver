@@ -1,12 +1,16 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.actions;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
+import lombok.experimental.UtilityClass;
 
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
+@UtilityClass
 public class ActionDependencyMap {
-    public static final EnumMap<NonogramSolveAction, List<NonogramSolveAction>> actionDependencies = new EnumMap<>(NonogramSolveAction.class);
+
+    public static final Map<NonogramSolveAction, List<NonogramSolveAction>> actionDependencies = new EnumMap<>(NonogramSolveAction.class);
 
     // TODO test completeness of actions dependencies
     static {

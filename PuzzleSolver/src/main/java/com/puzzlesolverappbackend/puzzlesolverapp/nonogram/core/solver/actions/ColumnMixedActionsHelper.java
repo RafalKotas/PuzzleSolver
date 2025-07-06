@@ -6,7 +6,6 @@ import lombok.experimental.UtilityClass;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldColoured;
@@ -26,7 +25,7 @@ public class ColumnMixedActionsHelper {
                     return field.getRowIdx() >= rangeStart && field.getRowIdx() <= rangeEnd;
                 })
                 .boxed()
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<List<Integer>> getColouredSequencesRangesInColumnInRangeToTop(List<List<String>> solutionBoard, int columnIdx, int potentiallyColouredFieldRowIndex, int maxSequenceLength) {
@@ -123,7 +122,7 @@ public class ColumnMixedActionsHelper {
         return IntStream.range(0, sequenceIds.size())
                 .filter(i -> !wouldMergeTooLongToTop(expectedLengths.get(i), rowIndexBeforeX, colouredSequences))
                 .mapToObj(sequenceIds::get)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // TODO(?) - same as wouldMergeTooLongToTop at RowMixedActionsHelper
@@ -149,7 +148,7 @@ public class ColumnMixedActionsHelper {
         return IntStream.range(0, sequenceIds.size())
                 .filter(i -> !wouldMergeTooLongToBottom(expectedLengths.get(i), colouredRowIndexAfterX, colouredSequences))
                 .mapToObj(sequenceIds::get)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // TODO(?) - same as wouldMergeTooLongToRight at RowMixedActionsHelper

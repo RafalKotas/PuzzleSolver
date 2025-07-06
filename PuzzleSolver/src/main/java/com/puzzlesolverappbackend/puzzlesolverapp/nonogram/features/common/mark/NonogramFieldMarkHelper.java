@@ -31,7 +31,6 @@ public class NonogramFieldMarkHelper {
             List<List<String>> boardWithMarks,
             List<List<Integer>> sequencesLengths,
             List<List<List<Integer>>> sequencesRanges,
-            List<List<Integer>> sequencesExcluded,
             TriConsumer<Integer, Integer, List<Integer>> updateRangeConsumer,
             BiConsumer<Integer, Integer> excludeSequenceConsumer,
             NonogramActionScheduler scheduler,

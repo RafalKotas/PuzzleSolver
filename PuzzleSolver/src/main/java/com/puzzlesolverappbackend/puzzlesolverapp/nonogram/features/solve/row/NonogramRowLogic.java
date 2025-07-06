@@ -32,13 +32,13 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exc
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NonogramRowLogic extends NonogramLogicParams implements RowActions {
 
-    private final static String CORRECTING_ROW_SEQ_RANGE_MARKING_FIELD = "correcting row sequence range when marking field";
+    private static final String CORRECTING_ROW_SEQ_RANGE_MARKING_FIELD = "correcting row sequence range when marking field";
 
-    private final static String FILL_OVERLAPPING_FIELDS = "fill overlapping fields";
+    private static final String FILL_OVERLAPPING_FIELDS = "fill overlapping fields";
 
-    private final static List<Integer> NOT_FOUND_EMPTY_FIELDS_RANGE_VALUE = List.of(-1, -1);
+    private static final List<Integer> NOT_FOUND_EMPTY_FIELDS_RANGE_VALUE = List.of(-1, -1);
 
-    private final static List<Integer> NOT_FOUND_COLOURED_FIELDS_RANGE_VALUE = List.of(-1, -1);
+    private static final List<Integer> NOT_FOUND_COLOURED_FIELDS_RANGE_VALUE = List.of(-1, -1);
 
     protected List<List<List<Integer>>> rowsSequencesRanges;
     protected List<List<Integer>> rowsFieldsNotToInclude;
@@ -201,64 +201,25 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         rowColouringHelper.extendColouredFieldsNearXToMaximumPossibleLengthInRow(rowIdx);
     }
 
-//    @Override
-//    public void colourFieldsInRowIfXCausesAssignmentConflict(int rowIdx) {
-//        List<String> boardRow = this.getNonogramSolutionBoard().get(rowIdx);
-//        List<List<Integer>> oldRowSequencesRanges = cloneAndMakeImmutable2DList(this.getRowsSequencesRanges().get(rowIdx));
-//        List<List<Integer>> colouredFieldsInRowRanges = collectColouredSequencesRanges(this.getNonogramSolutionBoard(),
-//                rowIdx,
-//                true
-//        );
-//
-//        // no X fields between ranges to check if placement is wrong
-//        if (colouredFieldsInRowRanges.size() < 2) return;
-//
-//        for (int i = 0; i < colouredFieldsInRowRanges.size() - 1; i++) {
-//            int leftEnd = colouredFieldsInRowRanges.get(i).get(1);
-//            int rightStart = colouredFieldsInRowRanges.get(i + 1).get(0);
-//
-//            for (int betweenColumnIdx = leftEnd + 1; betweenColumnIdx < rightStart; betweenColumnIdx++) {
-//                if (!Objects.equals(boardRow.get(betweenColumnIdx), EMPTY_FIELD)) continue;
-//
-//                Field fieldToCheck = new Field(rowIdx, betweenColumnIdx);
-//                if (isFieldEmpty(this.getNonogramSolutionBoard(), fieldToCheck)) {
-//                    this.getRowXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(fieldToCheck, false);
-//                    correctRowSequencesRangesIfXOnWay(rowIdx, false);
-//                    clearField(fieldToCheck);
-//                }
-//                List<List<Integer>> updatedRanges = this.getRowsSequencesRanges().get(rowIdx);
-//
-//                boolean conflict = false;
-//
-//                // check if any coloured sequence part not matches into any range
-//                for (List<Integer> colouredRange : colouredFieldsInRowRanges) {
-//                    boolean matchesAny = false;
-//                    for (List<Integer> updatedRange : updatedRanges) {
-//                        if (rangeInsideAnotherRange(colouredRange, updatedRange)) {
-//                            matchesAny = true;
-//                            break;
-//                        }
-//                    }
-//                    if (!matchesAny) {
-//                        conflict = true;
-//                        break;
-//                    }
-//                }
-//
-//                // restore old row ranges
-//                setRowSequencesRanges(rowIdx, mutableClone2DList(oldRowSequencesRanges));
-//
-//                if (conflict) {
-//                    this.getRowColouringHelper().getColouringHelper().colourFieldAtGivenPosition(fieldToCheck, "R---");
-//                    actionScheduler.scheduleActionsBasedOnField(fieldToCheck,
-//                            NonogramSolveAction.COLOUR_FIELDS_IN_ROW_IF_X_CAUSES_ASSIGNMENT_CONFLICT);
-//                    this.nonogramState.increaseMadeSteps();
-//                    tmpLog = "Field at (" + rowIdx + ", " + betweenColumnIdx + ") must be 'O' because 'X' would cause a conflict in sequences.";
-//                    addLog();
-//                }
-//            }
-//        }
-//    }
+    /*
+        ACTION TO IMPLEMENT
+        colourFieldsInRowIfXCausesAssignmentConflict
+        1. get board:
+        - row
+        - sequencesRanges
+        - colouredFieldsSequencesInRowRanges
+        2. If colouredFieldsSequencesInRowRanges.size() < 2 (0 or 1) [END]
+           If no go to 3.
+        3. For every field between:
+         - left coloured fields sequence (1stColoured[1])
+         - and right coloured fields sequence (2ndColoured[0])
+         Place X at one field at once if field is empty
+        4. Temporary correct ranges with correctRowSequencesRangesIfXOnWay(rowIdx, false) method
+        5. Check if now any of coloured fields sequence not match to any of sequences ranges
+            - if yes -> reverse rowSequencesRanges change and place "O" (colour)
+            - if no -> go to 3.
+        6. When iterated through all colouredFieldsSequencesInRowRanges [END]
+     */
 
     @Override
     public void placeXsRowAtUnreachableFields(int rowIdx) {
@@ -363,7 +324,8 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                         }
 
                         Field fieldToPlaceX = new Field(rowIdx, colouredSequenceColStartIdx - 1);
-                        this.getRowXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(fieldToPlaceX, true);
+                        this.getRowXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(fieldToPlaceX);
+                        this.getNonogramFieldExclusionHelper().excludeFieldInRow(fieldToPlaceX);
                         actionScheduler.scheduleActionsBasedOnField(fieldToPlaceX, NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART);
 
                         // moreover - only one id is valid -> can correct sequence range
@@ -445,7 +407,8 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
                         Field fieldToPlaceX = new Field(rowIdx, colouredSequenceEndColumnIndex + 1);
                         if (fieldToPlaceX.getColumnIdx() < this.getNonogramRules().getWidth() && isFieldEmpty(this.nonogramSolutionBoard, fieldToPlaceX)) {
-                            this.getRowXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(fieldToPlaceX, true);
+                            this.getRowXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(fieldToPlaceX);
+                            this.getNonogramFieldExclusionHelper().excludeFieldInRow(fieldToPlaceX);
                             actionScheduler.scheduleActionsBasedOnField(fieldToPlaceX, NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART);
                         }
 
@@ -478,7 +441,6 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 getNonogramSolutionBoardWithMarks(),
                 this.getNonogramRules().getRowSequencesLengths(),
                 getRowsSequencesRanges(),
-                getRowsSequencesIdsNotToInclude(),
                 this::changeRowSequenceRange,
                 this::excludeSequenceInRow,
                 actionScheduler,

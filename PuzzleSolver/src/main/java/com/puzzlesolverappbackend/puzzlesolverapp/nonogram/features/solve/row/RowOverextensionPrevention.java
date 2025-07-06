@@ -5,7 +5,6 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldColoured;
@@ -26,7 +25,7 @@ public interface RowOverextensionPrevention {
                     return field.getColumnIdx() >= rangeStart && field.getColumnIdx() <= rangeEnd;
                 })
                 .boxed()
-                .collect(Collectors.toList());
+                .toList();
     }
 
     static List<List<Integer>> getColouredSequencesRangesInRowInRangeOnLeft(List<List<String>> solutionBoard, int rowIdx, int potentiallyColouredFieldColumnIndex, int maxSequenceLength) {
@@ -123,7 +122,7 @@ public interface RowOverextensionPrevention {
         return IntStream.range(0, sequenceIds.size())
                 .filter(i -> !wouldMergeTooLongToLeft(expectedLengths.get(i), columnIndexBeforeX, colouredSequences))
                 .mapToObj(sequenceIds::get)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // TODO(?) - same as wouldMergeTooLongToTop at ColumnMixedActionsHelper
@@ -149,7 +148,7 @@ public interface RowOverextensionPrevention {
         return IntStream.range(0, sequenceIds.size())
                 .filter(i -> !wouldMergeTooLongToRight(expectedLengths.get(i), colouredColumnIndexAfterX, colouredSequences))
                 .mapToObj(sequenceIds::get)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // TODO - check inversed case o10401 - start from column 18

@@ -216,25 +216,19 @@ public class NonogramGenetic {
             String cell = column.get(row);
 
             if (isX(cell)) {
-                if (coloured > 0 && !isSequenceComplete(coloured, currentLength)) {
+                if (shouldTerminateEarlyOnIncorrectColoured(coloured, currentLength)) {
                     return row - 1;
                 }
 
-                if (isSequenceComplete(coloured, currentLength)) {
-                    seqIdx++;
-                    if (hasMoreSequences(seqIdx, sequences)) {
-                        currentLength = sequences.get(seqIdx);
-                    }
-                }
-
-                coloured = 0;
+                seqIdx = updateSeqIdxIfComplete(coloured, currentLength, seqIdx);
+                currentLength = getCurrentLength(seqIdx, sequences, currentLength);
 
                 if (!hasEnoughSpace(row, seqIdx, sequences, column.size())) {
                     return row - 1;
                 }
 
+                coloured = 0;
                 maxCorrect = row;
-
             } else {
                 coloured++;
 
@@ -249,6 +243,21 @@ public class NonogramGenetic {
         }
 
         return maxCorrect;
+    }
+
+    private boolean shouldTerminateEarlyOnIncorrectColoured(int coloured, int currentLength) {
+        return coloured > 0 && !isSequenceComplete(coloured, currentLength);
+    }
+
+    private int updateSeqIdxIfComplete(int coloured, int currentLength, int seqIdx) {
+        if (isSequenceComplete(coloured, currentLength)) {
+            seqIdx++;
+        }
+        return seqIdx;
+    }
+
+    private int getCurrentLength(int seqIdx, List<Integer> sequences, int fallback) {
+        return hasMoreSequences(seqIdx, sequences) ? sequences.get(seqIdx) : fallback;
     }
 
     private boolean isX(String cell) {
@@ -304,10 +313,8 @@ public class NonogramGenetic {
             if (isX(cell)) {
                 if (isSequenceComplete(coloured, currentLength)) {
                     seqIdx--;
-                    if (hasPreviousSequence(seqIdx)) {
-                        currentLength = sequences.get(seqIdx);
-                    }
-                } else if (coloured > 0 || !hasEnoughSpaceFromBottom(row, seqIdx, sequences)) {
+                    currentLength = getPreviousLength(seqIdx, sequences, currentLength);
+                } else if (shouldTerminateEarlyBottom(coloured, row, seqIdx, sequences)) {
                     return rowIndexFromBottom(height, row);
                 }
 
@@ -327,6 +334,14 @@ public class NonogramGenetic {
         }
 
         return maxCorrect;
+    }
+
+    private boolean shouldTerminateEarlyBottom(int coloured, int row, int seqIdx, List<Integer> sequences) {
+        return coloured > 0 || !hasEnoughSpaceFromBottom(row, seqIdx, sequences);
+    }
+
+    private int getPreviousLength(int seqIdx, List<Integer> sequences, int fallback) {
+        return hasPreviousSequence(seqIdx) ? sequences.get(seqIdx) : fallback;
     }
 
     private boolean hasPreviousSequence(int seqIdx) {

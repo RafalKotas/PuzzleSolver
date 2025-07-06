@@ -11,6 +11,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.config.Gu
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.repository.NonogramRepository;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.NonogramLogicService;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.NonogramService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -23,9 +24,13 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.Non
 
 //@Component
 //@Order(7)
+@Slf4j
 public class NonogramSolveInitializer implements CommandLineRunner {
 
-    private static final boolean saveSolutions = true;
+    private static final boolean SAVE_SOLUTIONS = true;
+
+    public static final String PUZZLE_PATH = InitializerConstants.PUZZLE_RELATIVE_PATH +
+            InitializerConstants.PuzzleMappings.NONOGRAM_PATH_SUFFIX;
 
     @Autowired
     private NonogramRepository nonogramRepository;
@@ -47,8 +52,6 @@ public class NonogramSolveInitializer implements CommandLineRunner {
     Double difficulty;
     Integer height;
     Integer width;
-    public final static String puzzlePath = InitializerConstants.PUZZLE_RELATIVE_PATH +
-            InitializerConstants.PuzzleMappings.NONOGRAM_PATH_SUFFIX;
 
     List<Double> difficultyRange;
     Set<String> sources;
@@ -291,18 +294,18 @@ public class NonogramSolveInitializer implements CommandLineRunner {
                 Pair.of("o10310", 57.0),
                 Pair.of("o07502", 87.0),
                 Pair.of("o07518", 66.0),
-                Pair.of("o08298", -1.0),      // długo nie wiem ile
+                Pair.of("o08298", -1.0),      // don't know how long
                 Pair.of("o11803", 62.0),
                 Pair.of("o07279", 60.0),
                 Pair.of("o08623", 59.0),
                 Pair.of("o09378", 365.0),
                 Pair.of("o07412", 550.0),
-                Pair.of("o10073", -1.0),      // nie wiem ile
+                Pair.of("o10073", -1.0),      // don't know how long
                 Pair.of("o11543", 480.0),     // ~8min
                 Pair.of("o10686", 300.0),     // ~5min
                 Pair.of("o07283", -1.0),      // inf
                 Pair.of("o07396", -1.0),      // inf
-                Pair.of("o11495", -1.0),      // nie wiem ile
+                Pair.of("o11495", -1.0),      // don't know how long
                 Pair.of("o08674", 63.5),
                 Pair.of("o10988", 52.0),
                 Pair.of("o11835", 68.0),
@@ -610,18 +613,18 @@ public class NonogramSolveInitializer implements CommandLineRunner {
         int nonogramNo = 1;
 
 
-        for (Nonogram nonogram : selectedNonogramsList) {
-            difficulty = nonogram.getDifficulty();
-            filename = nonogram.getFilename();
-            height = nonogram.getHeight();
-            month = nonogram.getMonth();
-            source = nonogram.getSource();
-            width = nonogram.getWidth();
-            year = nonogram.getYear();
+        for (Nonogram selectedNonogram : selectedNonogramsList) {
+            difficulty = selectedNonogram.getDifficulty();
+            filename = selectedNonogram.getFilename();
+            height = selectedNonogram.getHeight();
+            month = selectedNonogram.getMonth();
+            source = selectedNonogram.getSource();
+            width = selectedNonogram.getWidth();
+            year = selectedNonogram.getYear();
 
             ObjectMapper objectMapper = new ObjectMapper();
             nonogramFileDetails = objectMapper.readValue(
-                    new File(puzzlePath + filename + JSON_EXTENSION), NonogramFileDetails.class
+                    new File(PUZZLE_PATH + filename + JSON_EXTENSION), NonogramFileDetails.class
             );
 
             nonogramRules = mapNonogramFileDetailsToNonogramRules(nonogramFileDetails);
@@ -633,13 +636,13 @@ public class NonogramSolveInitializer implements CommandLineRunner {
                         filename + JSON_EXTENSION);
                 long finish = System.currentTimeMillis();
                 long timeElapsed = finish - start;
-                double secondsElapsed = (double) timeElapsed / 1000.0;
+                double secondsElapsed = timeElapsed / 1000.0;
 
-                System.out.println(secondsElapsed + "s " + nonogramLogicSolved.getCompletionPercentage() + "%");
+                log.info("{}s {}%", secondsElapsed, nonogramLogicSolved.getCompletionPercentage());
 
                 if (nonogramLogicSolved.getCompletionPercentage() == 100) {
                     solvedCount = solvedCount + 1;
-                    if (saveSolutions) {
+                    if (SAVE_SOLUTIONS) {
                         nonogramService.saveSolutionToFile(filename, nonogramLogicSolved);
                     }
                 }
@@ -649,8 +652,9 @@ public class NonogramSolveInitializer implements CommandLineRunner {
             nonogramNo = nonogramNo + 1;
         }
 
-        System.out.println("Solved count: " + solvedCount);
-        double percentageSolved = Math.round(((double)(solvedCount) / selectedCount) * 10000 ) / 100.0;
-        System.out.println("Percentage solved: " +  percentageSolved);
+        log.info("Solved count: {}", solvedCount);
+        double percentageSolved = selectedCount != 0 ?
+                Math.round(((double)(solvedCount) / selectedCount) * 10000 ) / 100.0 : 0.0;
+        log.info("Percentage solved: {}", percentageSolved);
     }
 }
