@@ -215,14 +215,16 @@ public class NonogramGenetic {
         for (int row = 0; row < column.size(); row++) {
             String cell = column.get(row);
 
-            if (X_FIELD.equals(cell)) {
+            if (isX(cell)) {
+                if (coloured > 0 && !isSequenceComplete(coloured, currentLength)) {
+                    return row - 1;
+                }
+
                 if (isSequenceComplete(coloured, currentLength)) {
                     seqIdx++;
-                    if (seqIdx < sequences.size()) {
+                    if (hasMoreSequences(seqIdx, sequences)) {
                         currentLength = sequences.get(seqIdx);
                     }
-                } else if (coloured > 0) {
-                    return row - 1;
                 }
 
                 coloured = 0;
@@ -240,13 +242,25 @@ public class NonogramGenetic {
                     return row - 1;
                 }
 
-                if (row == column.size() - 1) {
+                if (isLastCellInColumn(row, column.size())) {
                     maxCorrect = row;
                 }
             }
         }
 
         return maxCorrect;
+    }
+
+    private boolean isX(String cell) {
+        return X_FIELD.equals(cell);
+    }
+
+    private boolean hasMoreSequences(int idx, List<Integer> sequences) {
+        return idx < sequences.size();
+    }
+
+    private boolean isLastCellInColumn(int row, int columnHeight) {
+        return row == columnHeight - 1;
     }
 
     private boolean isSequenceComplete(int coloured, int currentLength) {
@@ -287,32 +301,26 @@ public class NonogramGenetic {
         for (int row = height - 1; row >= 0; row--) {
             String cell = column.get(row);
 
-            if (X_FIELD.equals(cell)) {
+            if (isX(cell)) {
                 if (isSequenceComplete(coloured, currentLength)) {
                     seqIdx--;
-                    if (seqIdx >= 0) {
+                    if (hasPreviousSequence(seqIdx)) {
                         currentLength = sequences.get(seqIdx);
                     }
-                } else if (coloured > 0) {
+                } else if (coloured > 0 || !hasEnoughSpaceFromBottom(row, seqIdx, sequences)) {
                     return rowIndexFromBottom(height, row);
                 }
 
                 coloured = 0;
-
-                if (!hasEnoughSpaceFromBottom(row, seqIdx, sequences)) {
-                    return rowIndexFromBottom(height, row);
-                }
-
                 maxCorrect = height - 1 - row;
-
             } else {
                 coloured++;
 
-                if (isOverflowFromBottom(coloured, currentLength)) {
+                if (isOverflow(coloured, currentLength)) {
                     return rowIndexFromBottom(height, row);
                 }
 
-                if (row == 0) {
+                if (isFirstRow(row)) {
                     maxCorrect = rowIndexFromBottom(height, row);
                 }
             }
@@ -321,12 +329,20 @@ public class NonogramGenetic {
         return maxCorrect;
     }
 
-    private int rowIndexFromBottom(int height, int row) {
-        return height - (row + 1);
+    private boolean hasPreviousSequence(int seqIdx) {
+        return seqIdx >= 0;
     }
 
-    private boolean isOverflowFromBottom(int coloured, int currentLength) {
+    private boolean isOverflow(int coloured, int currentLength) {
         return coloured > currentLength;
+    }
+
+    private boolean isFirstRow(int row) {
+        return row == 0;
+    }
+
+    private int rowIndexFromBottom(int height, int row) {
+        return height - 1 - row;
     }
 
     private boolean hasEnoughSpaceFromBottom(int currentRow, int sequenceIndex, List<Integer> sequences) {

@@ -6,12 +6,17 @@ import com.puzzlesolverappbackend.puzzlesolverapp.common.CommonService;
 import com.puzzlesolverappbackend.puzzlesolverapp.common.FileHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.constants.InitializerConstants;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Nonogram;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramFileDetails;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramFiltersResponse;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.dto.NonogramFilterRequest;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramCorrectnessIndicator;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.json.NonogramJsonWriter;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.repository.NonogramRepository;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.specification.NonogramSpecification;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -24,8 +29,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.sumListElements;
-import static com.puzzlesolverappbackend.puzzlesolverapp.constants.SharedConsts.JSON_EXTENSION;
-import static com.puzzlesolverappbackend.puzzlesolverapp.constants.SharedConsts.JSON_EXTENSION_LENGTH;
+import static com.puzzlesolverappbackend.puzzlesolverapp.constants.SharedConstants.JSON_EXTENSION;
+import static com.puzzlesolverappbackend.puzzlesolverapp.constants.SharedConstants.JSON_EXTENSION_LENGTH;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.json.NonogramJsonWriter.saveSolutionBoard;
 
 @Service
@@ -99,6 +104,10 @@ public class NonogramService {
         }
 
         return difficulties;
+    }
+
+    public Page<Nonogram> getNonogramsFiltered(NonogramFilterRequest filters, Pageable pageable) {
+        return nonogramRepository.findAll(NonogramSpecification.withFilters(filters), pageable);
     }
 
     public NonogramFiltersResponse getNonogramFilters() {

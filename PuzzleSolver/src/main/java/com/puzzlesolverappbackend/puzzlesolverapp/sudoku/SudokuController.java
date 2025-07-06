@@ -2,6 +2,7 @@ package com.puzzlesolverappbackend.puzzlesolverapp.sudoku;
 
 import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzlesolverapp.common.CommonService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +15,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import static com.puzzlesolverappbackend.puzzlesolverapp.constants.SharedConsts.JSON_EXTENSION;
-import static com.puzzlesolverappbackend.puzzlesolverapp.constants.SharedConsts.JSON_EXTENSION_LENGTH;
+import static com.puzzlesolverappbackend.puzzlesolverapp.constants.SharedConstants.JSON_EXTENSION;
+import static com.puzzlesolverappbackend.puzzlesolverapp.constants.SharedConstants.JSON_EXTENSION_LENGTH;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/sudoku")
+@Slf4j
 public class SudokuController {
 
     @Autowired
@@ -27,9 +29,7 @@ public class SudokuController {
 
     @PostMapping("/save")
     public ResponseEntity<String> saveSudokuToJsonFile(@RequestParam String fileName, @Valid @RequestBody SudokuFileDetails nfd) throws IOException {
-
-        System.out.println("SAVE SUDOKU START, FILENAME: " + fileName);
-        System.out.println(nfd.toString());
+        log.info("Saving sudoku with filename: {}", fileName);
 
         Set<String> existingFilesNames = commonService
                 .listFilesUsingJavaIO("../../puzzle-solver-app/public/resources/Sudoku/");
@@ -41,7 +41,8 @@ public class SudokuController {
                 .toList();
 
         if (fileNamesWithoutExtensionArray.contains(fileName)) {
-            return new ResponseEntity<>("Save failed. File with same name already exists.", HttpStatus.OK);
+            log.error("Sudoku filename: {}", fileName);
+            return new ResponseEntity<>("Save failed. File with same name already exists.", HttpStatus.OK); // TODO - change response code
         }
 
         Gson gson = new Gson();

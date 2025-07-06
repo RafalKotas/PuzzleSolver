@@ -6,6 +6,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.common.CommonService;
 import com.puzzlesolverappbackend.puzzlesolverapp.constants.InitializerConstants;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -20,6 +21,7 @@ import java.util.Set;
 @Setter
 @Profile("!test")
 @Order(3)
+@Slf4j
 public class HitoriDataInitializer implements CommandLineRunner {
 
     @Autowired
@@ -39,25 +41,25 @@ public class HitoriDataInitializer implements CommandLineRunner {
     int hitorisSaved;
     int hitorisRepeated;
 
-    public final static String puzzlePath = InitializerConstants.PUZZLE_RELATIVE_PATH +
+    public static final String PUZZLE_PATH = InitializerConstants.PUZZLE_RELATIVE_PATH +
             InitializerConstants.PuzzleMappings.HITORI_PATH_SUFFIX;
 
     @Override
     public void run(String... args) throws Exception {
 
-        System.out.println("Hitoris init(3)");
+        log.info("Hitoris init(3)");
 
         hitorisSaved = 0;
         hitorisRepeated = 0;
 
         Set<String> existingHitoriFilesNames = commonService
-                .listFilesUsingJavaIO(puzzlePath);
+                .listFilesUsingJavaIO(PUZZLE_PATH);
 
         for (String hitoriFileName : existingHitoriFilesNames) {
             ObjectMapper objectMapper = new ObjectMapper();
 
             try {
-                HitoriFileDetails hitoriFileDetails = objectMapper.readValue(new File(puzzlePath + hitoriFileName), HitoriFileDetails.class);
+                HitoriFileDetails hitoriFileDetails = objectMapper.readValue(new File(PUZZLE_PATH + hitoriFileName), HitoriFileDetails.class);
 
                 hitoriFileNameWithoutExtension = hitoriFileName.substring(0, hitoriFileName.length() - 5);
                 source = hitoriFileDetails.getSource();
@@ -71,19 +73,18 @@ public class HitoriDataInitializer implements CommandLineRunner {
                 if (hitoriRepository.existsHitoriByGivenParamsFromFile(hitoriFileNameWithoutExtension, source, difficulty, height, width).isPresent()) {
                     hitorisRepeated++;
                 } else {
-                    System.out.println(hitori);
                     hitorisSaved++;
                     hitoriRepository.save(hitori);
                 }
             } catch (JsonParseException jsonParseException) {
-                System.out.println("Wrong file part: " + hitoriFileName);
-                System.out.println(jsonParseException);
+                log.error("Wrong file part: {} ", hitoriFileName);
+                log.error("Exception: {}", jsonParseException.getMessage());
             }
         }
 
         if (InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
-            System.out.println("hitorisSaved count: " + hitorisSaved);
-            System.out.println("hitorisRepeated count: " + hitorisRepeated);
+            log.info("hitori saved count: " + hitorisSaved);
+            log.info("hitori repeated count: " + hitorisRepeated);
         }
     }
 }

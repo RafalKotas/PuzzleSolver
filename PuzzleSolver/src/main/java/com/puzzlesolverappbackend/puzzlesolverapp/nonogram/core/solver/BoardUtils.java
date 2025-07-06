@@ -6,7 +6,6 @@ import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramConstants.*;
@@ -129,9 +128,9 @@ public class BoardUtils {
 
     // === Sequence Marks and Initial States ===
     public static List<String> generateSequenceMarks(int count) {
-        return IntStream.range(0, count)
+        return new ArrayList<>(IntStream.range(0, count)
                 .mapToObj(BoardUtils::indexToSequenceCharMark)
-                .collect(Collectors.toList());
+                .toList());
     }
 
     public static String indexToSequenceCharMark(int index) {
@@ -139,8 +138,8 @@ public class BoardUtils {
     }
 
     public static List<String> createEmptyMarkedLine(int length) {
-        return IntStream.range(0, length)
+        return new ArrayList<>(IntStream.range(0, length)
                 .mapToObj(i -> EMPTY_FIELD_MARKED_BOARD)
-                .collect(Collectors.toList());
+                .toList());
     }
 }

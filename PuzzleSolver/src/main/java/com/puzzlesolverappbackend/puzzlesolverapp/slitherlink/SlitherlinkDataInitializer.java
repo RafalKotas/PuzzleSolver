@@ -7,6 +7,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.constants.InitializerConstants
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
@@ -23,12 +24,13 @@ import java.util.Set;
 @Slf4j
 public class SlitherlinkDataInitializer implements CommandLineRunner {
 
-    private final SlitherlinkRepository SlitherlinkRepository;
+    @Autowired
+    private SlitherlinkRepository slitherlinkRepository;
 
-    final
+    @Autowired
     CommonService commonService;
 
-    Slitherlink Slitherlink;
+    Slitherlink slitherlink;
 
     String slitherlinkFileNameWithoutExtension;
     String source;
@@ -38,43 +40,43 @@ public class SlitherlinkDataInitializer implements CommandLineRunner {
     String year;
     String month;
 
-    int SlitherlinksSaved;
-    int SlitherlinksRepeated;
+    int slitherlinksSaved;
+    int slitherlinksRepeated;
 
-    public final static String puzzlePath = InitializerConstants.PUZZLE_RELATIVE_PATH +
+    public static final String PUZZLE_PATH = InitializerConstants.PUZZLE_RELATIVE_PATH +
             InitializerConstants.PuzzleMappings.SLITHERLINK_PATH_SUFFIX;
 
-    public SlitherlinkDataInitializer(SlitherlinkRepository SlitherlinkRepository, CommonService commonService) {
-        this.SlitherlinkRepository = SlitherlinkRepository;
+    public SlitherlinkDataInitializer(SlitherlinkRepository slitherlinkRepository, CommonService commonService) {
+        this.slitherlinkRepository = slitherlinkRepository;
         this.commonService = commonService;
     }
 
     @Override
     public void run(String... args) throws Exception {
 
-        System.out.println("Slitherlinks init(5)");
+        log.info("Slitherlinks init(5)");
 
-        SlitherlinksSaved = 0;
-        SlitherlinksRepeated = 0;
+        slitherlinksSaved = 0;
+        slitherlinksRepeated = 0;
 
         Set<String> existingSlitherlinkFilesNames = commonService
-                .listFilesUsingJavaIO(puzzlePath);
+                .listFilesUsingJavaIO(PUZZLE_PATH);
 
-        for (String SlitherlinkFileName : existingSlitherlinkFilesNames) {
+        for (String slitherlinkFileName : existingSlitherlinkFilesNames) {
             ObjectMapper objectMapper = new ObjectMapper();
 
             try {
-                SlitherlinkFileDetails SlitherlinkFileDetails = objectMapper.readValue(new File(puzzlePath + SlitherlinkFileName), SlitherlinkFileDetails.class);
+                SlitherlinkFileDetails slitherlinkFileDetails = objectMapper.readValue(new File(PUZZLE_PATH + slitherlinkFileName), SlitherlinkFileDetails.class);
 
-                slitherlinkFileNameWithoutExtension = SlitherlinkFileName.substring(0, SlitherlinkFileName.length() - 5);
-                source = SlitherlinkFileDetails.getSource();
+                slitherlinkFileNameWithoutExtension = slitherlinkFileName.substring(0, slitherlinkFileName.length() - 5);
+                source = slitherlinkFileDetails.getSource();
 
-                difficulty = SlitherlinkFileDetails.getDifficulty();
-                height = SlitherlinkFileDetails.getHeight();
-                width = SlitherlinkFileDetails.getWidth();
+                difficulty = slitherlinkFileDetails.getDifficulty();
+                height = slitherlinkFileDetails.getHeight();
+                width = slitherlinkFileDetails.getWidth();
 
-                year = SlitherlinkFileDetails.getYear();
-                month = SlitherlinkFileDetails.getMonth();
+                year = slitherlinkFileDetails.getYear();
+                month = slitherlinkFileDetails.getMonth();
                 if (source.equals("Logi")) {
                     if (month.length() > 2) {
                         source = "logiMix";
@@ -84,25 +86,25 @@ public class SlitherlinkDataInitializer implements CommandLineRunner {
                     }
                 }
 
-                Slitherlink = new Slitherlink(slitherlinkFileNameWithoutExtension, source, year, month, difficulty, height, width);
+                slitherlink = new Slitherlink(slitherlinkFileNameWithoutExtension, source, year, month, difficulty, height, width);
 
-                if (SlitherlinkRepository.existsSlitherlinkByGivenParamsFromFile(slitherlinkFileNameWithoutExtension, source, year, month, difficulty, height, width).isPresent()) {
-                    SlitherlinksRepeated++;
+                if (slitherlinkRepository.existsSlitherlinkByGivenParamsFromFile(slitherlinkFileNameWithoutExtension, source, year, month, difficulty, height, width).isPresent()) {
+                    slitherlinksRepeated++;
                 } else {
-                    SlitherlinksSaved++;
-                    SlitherlinkRepository.save(Slitherlink);
+                    slitherlinksSaved++;
+                    slitherlinkRepository.save(slitherlink);
                 }
             } catch (JsonParseException jsonParseException) {
-                System.out.println("Wrong file part: " + SlitherlinkFileName);
-                System.out.println(jsonParseException);
+                log.error("Wrong file part: {}", slitherlinkFileName);
+                log.error("Exception: {}", jsonParseException.getMessage());
             }
         }
 
         log.info("Saving slitherlinks to DB part is done.");
 
         if (InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
-            System.out.println("SlitherlinksSaved count: " + SlitherlinksSaved);
-            System.out.println("SlitherlinksRepeated count: " + SlitherlinksRepeated);
+            log.info("Slitherlinks saved count: {}", slitherlinksSaved);
+            log.info("Slitherlinks repeated count: {}", slitherlinksRepeated);
         }
     }
 }

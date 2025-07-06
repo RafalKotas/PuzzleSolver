@@ -46,7 +46,6 @@ public class NonogramFieldMarkHelper {
             int width = isRow ? rules.getWidth() : rules.getHeight();
             List<Integer> lengths = sequencesLengths.get(lineIdx);
             List<List<Integer>> ranges = sequencesRanges.get(lineIdx);
-            List<Integer> excluded = sequencesExcluded.get(lineIdx);
 
             for (int i = 0; i < width; i++) {
                 Field field = isRow ? new Field(lineIdx, i) : new Field(i, lineIdx);

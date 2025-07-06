@@ -37,7 +37,7 @@ public class NonogramLogicService {
 
     private final NonogramSolutionSaver nonogramSolutionSaver;
 
-    private final boolean showRepetitions = false;
+    private static final boolean SHOW_REPETITIONS = false;
 
     public NonogramLogicService(NonogramSolutionSaver nonogramSolutionSaver,
                                 NonogramLogicFactory logicFactory) {
@@ -105,8 +105,8 @@ public class NonogramLogicService {
                             rowToChangeColumnBoard.set(columnIdx, COLOURED_FIELD_MARKED_BOARD);
                             nonogramLogicObject.getNonogramSolutionBoard().set(rowIdx, rowToChangeColumnBoard);
                         }
-                    } else if (this.showRepetitions) {
-                        System.out.println("Column field was coloured before!");
+                    } else if (SHOW_REPETITIONS) {
+                        log.warn("Column field was coloured before!");
                     }
                 }
             }
@@ -166,8 +166,8 @@ public class NonogramLogicService {
                         if (rowToChangeSolutionBoard.get(columnIdx).equals(EMPTY_FIELD_MARKED_BOARD)) {
                             rowToChangeSolutionBoard.set(columnIdx, COLOURED_FIELD_MARKED_BOARD);
                         }
-                    } else if (this.showRepetitions) {
-                        System.out.println("Row field was coloured before!");
+                    } else if (SHOW_REPETITIONS) {
+                        log.warn("Row field was coloured before!");
                     }
                 }
             }
@@ -267,8 +267,8 @@ public class NonogramLogicService {
                         if (nonogramLogicObject.getNonogramSolutionBoardWithMarks().get(rowIdx).get(sequenceColumnIdx).startsWith(EMPTY_PART_MARKED_BOARD)) {
                             markRowBoardField(nonogramLogicObject.getNonogramSolutionBoardWithMarks(), rowIdx, sequenceColumnIdx, sequenceMarker);
                             nonogramLogicObject.getNonogramState().increaseMadeSteps();
-                        } else if (this.showRepetitions) {
-                            System.out.println("Row field was marked before.");
+                        } else if (SHOW_REPETITIONS) {
+                            log.warn("Row field was marked before.");
                         }
                     }
                 }
@@ -371,8 +371,8 @@ public class NonogramLogicService {
                             markColumnBoardField(nonogramLogicObject.getNonogramSolutionBoardWithMarks(), sequenceRowIdx, columnIdx, sequenceMarker);
                             nonogramLogicObject.copyLogicFromNonogramColumnLogic();
                             nonogramLogicObject.getNonogramState().increaseMadeSteps();
-                        } else if (this.showRepetitions) {
-                            System.out.println("Column field was marked before.");
+                        } else if (SHOW_REPETITIONS) {
+                            log.warn("Column field was marked before.");
                         }
                     }
                 }
@@ -462,8 +462,8 @@ public class NonogramLogicService {
                                     nonogramRowLogicDataToChange.getNonogramState().increaseMadeSteps();
 //
 //                                    nonogramRowLogicDataToChange.addRowAndColumnToAffectedByIdentifiers(firstXFieldToExclude, NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES);
-                                } else if (this.showRepetitions) {
-                                    System.out.println("Longest sequence in row firstXColumnIndex added earlier!");
+                                } else if (SHOW_REPETITIONS) {
+                                    log.warn("Longest sequence in row firstXColumnIndex added earlier!");
                                 }
                             }
 
@@ -485,8 +485,8 @@ public class NonogramLogicService {
 //                                        nonogramLogicObject = nonogramLogicObject
 //                                                .addRowFieldToExcluded(colouredFieldInSequence); // TODO - update after any place X in column action
                                     }
-                            } else if (this.showRepetitions) {
-                                System.out.println("Placed Xs around longest sequence in row before!");
+                            } else if (SHOW_REPETITIONS) {
+                                log.warn("Placed Xs around longest sequence in row before!");
                             }
                         }
 
@@ -501,8 +501,8 @@ public class NonogramLogicService {
                                     .placeXAtGivenField(firstXFieldToExclude, true);
 
                             nonogramLogicObject.getNonogramState().increaseMadeSteps();
-                        } else if (this.showRepetitions) {
-                            System.out.println("Longest sequence in row firstXIndex added before!");
+                        } else if (SHOW_REPETITIONS) {
+                            log.warn("Longest sequence in row firstXIndex added before!");
                         }
 
                         lastXFieldToExclude = new Field(rowIdx, lastXColumnIndex);
@@ -511,8 +511,8 @@ public class NonogramLogicService {
                                     .placeXAtGivenField(lastXFieldToExclude, true);
                             nonogramLogicObject.copyLogicFromNonogramRowLogic();
                             nonogramLogicObject.getNonogramState().increaseMadeSteps();
-                        } else if (this.showRepetitions) {
-                            System.out.println("Longest sequence in row lastXIndex added before!");
+                        } else if (SHOW_REPETITIONS) {
+                            log.warn("Longest sequence in row lastXIndex added before!");
                         }
                     }
                 }
@@ -610,8 +610,8 @@ public class NonogramLogicService {
                                             //.addRowFieldToExcluded(fieldToExclude); TODO - update after any place X in column action
                                             .addColumnFieldToExcluded(fieldToExclude);
                                     nonogramLogicObject.getNonogramState().increaseMadeSteps();
-                                } else if (this.showRepetitions) {
-                                    System.out.println("Longest sequence in column firstXIndex added before!");
+                                } else if (SHOW_REPETITIONS) {
+                                    log.warn("Longest sequence in column firstXIndex added before!");
                                 }
                             }
 
@@ -623,8 +623,8 @@ public class NonogramLogicService {
                                             //.addRowFieldToExcluded(fieldToExclude); TODO - update after any place X in column action
                                             .addColumnFieldToExcluded(fieldToExclude);
                                     nonogramLogicObject.getNonogramState().increaseMadeSteps();
-                                } else if (this.showRepetitions) {
-                                    System.out.println("Longest sequence in column lastXIndex added before!");
+                                } else if (SHOW_REPETITIONS) {
+                                    log.warn("Longest sequence in column lastXIndex added before!");
                                 }
                             }
 
@@ -633,8 +633,8 @@ public class NonogramLogicService {
                                     fieldToExclude = new Field(sequenceRowIdx, columnIdx);
                                     nonogramLogicDataToChange = nonogramLogicDataToChange.addColumnFieldToExcluded(fieldToExclude);
                                     nonogramLogicObject.getNonogramState().increaseMadeSteps();
-                                } else if (this.showRepetitions) {
-                                    System.out.println("Field not to include in column has been inserted before");
+                                } else if (SHOW_REPETITIONS) {
+                                    log.warn("Field not to include in column has been inserted before");
                                 }
                             }
                         }
@@ -650,8 +650,8 @@ public class NonogramLogicService {
                                     .addColumnFieldToExcluded(fieldToExclude);
                                     //.addRowFieldToExcluded(fieldToExclude); TODO - update after any place X in column action
                             nonogramLogicObject.getNonogramState().increaseMadeSteps();
-                        } else if (this.showRepetitions) {
-                            System.out.println("Sequence with maximum length in area firstXIndex placed before!");
+                        } else if (SHOW_REPETITIONS) {
+                            log.warn("Sequence with maximum length in area firstXIndex placed before!");
                         }
                         if (nonogramLogicDataToChange.getNonogramSolutionBoard().get(lastXIndex).get(columnIdx).equals(EMPTY_FIELD)) {
                             fieldToExclude = new Field(lastXIndex, columnIdx);
@@ -660,8 +660,8 @@ public class NonogramLogicService {
                                     .addColumnFieldToExcluded(fieldToExclude);
                                     //.addRowFieldToExcluded(fieldToExclude); TODO - update after any place X in column action
                             nonogramLogicObject.getNonogramState().increaseMadeSteps();
-                        } else if (this.showRepetitions) {
-                            System.out.println("Sequence with maximum length in area lastXIndex placed before!");
+                        } else if (SHOW_REPETITIONS) {
+                            log.warn("Sequence with maximum length in area lastXIndex placed before!");
                         }
                     }
                 }
@@ -703,8 +703,8 @@ public class NonogramLogicService {
                             //.addRowFieldToExcluded(fieldToExclude); TODO - update after any place X in column action
                             .addColumnFieldToExcluded(fieldToExclude);
                     nonogramLogicObject.getNonogramState().increaseMadeSteps();
-                } else if (this.showRepetitions) {
-                    System.out.println("X at unreachable field in row placed before!");
+                } else if (SHOW_REPETITIONS) {
+                    log.warn("X at unreachable field in row placed before!");
                 }
             }
         }
@@ -745,8 +745,8 @@ public class NonogramLogicService {
                             //.addRowFieldToExcluded(fieldToExclude) // TODO - update after any place X in column action
                             .addColumnFieldToExcluded(fieldToExclude);
                     nonogramLogicObject.getNonogramState().increaseMadeSteps();
-                } else if (this.showRepetitions) {
-                    System.out.println("X at unreachable field in column placed before!");
+                } else if (SHOW_REPETITIONS) {
+                    log.warn("X at unreachable field in column placed before!");
                 }
             }
         }
@@ -1310,21 +1310,6 @@ public class NonogramLogicService {
         }
 
         return false;
-    }
-
-
-    public static List<Integer> filterSequencesRangesIncludingAnotherAndReturnCorrespondingLengths(List<List<Integer>> ranges,
-                                                                                                         List<Integer> rangeToInclude,
-                                                                                                         List<Integer> lengths) {
-        List<Integer> filteredLengths = new ArrayList<>();
-
-        for (int rangeNo = 0; rangeNo < ranges.size(); rangeNo++) {
-            if (rangeInsideAnotherRange(rangeToInclude, ranges.get(rangeNo)) && lengths.get(rangeNo) >= rangeLength(rangeToInclude)) {
-                filteredLengths.add(lengths.get(rangeNo));
-            }
-        }
-
-        return filteredLengths;
     }
 
     public NonogramLogic runSolverWithCorrectnessCheck(NonogramLogic logic, String fileName) {

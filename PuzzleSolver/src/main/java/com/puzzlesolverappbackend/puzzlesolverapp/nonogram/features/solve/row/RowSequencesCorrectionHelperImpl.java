@@ -29,7 +29,7 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
 
         List<List<Integer>> afterRangesSnapshot = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
 
-        if (ranglesListNotEqual(beforeRangesSnapshot, afterRangesSnapshot)) {
+        if (rangesListNotEqual(beforeRangesSnapshot, afterRangesSnapshot)) {
             nonogramRowLogic.getLogService().setTmpLog(SequenceRangeCorrectionLogHelper.generateLog(
                     rowIdx,
                     beforeRangesSnapshot,

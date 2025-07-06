@@ -36,7 +36,7 @@ public class NonogramFieldPlacingXHelper {
         }
     }
 
-    public void placeXAtGivenFields(List<Field> x_fields) {
-        x_fields.forEach(field -> placeXAtGivenField(field, true));
+    public void placeXAtGivenFields(List<Field> xFields) {
+        xFields.forEach(field -> placeXAtGivenField(field, true));
     }
 }

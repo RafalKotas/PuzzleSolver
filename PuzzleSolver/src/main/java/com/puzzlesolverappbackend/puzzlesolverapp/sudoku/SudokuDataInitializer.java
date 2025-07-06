@@ -6,6 +6,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.constants.InitializerConstants
 import jdk.security.jarsigner.JarSignerException;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
@@ -19,12 +20,12 @@ import java.util.Set;
 @Setter
 @Profile("!test")
 @Order(6)
+@Slf4j
 public class SudokuDataInitializer implements CommandLineRunner {
 
     private final SudokuRepository sudokuRepository;
 
-    final
-    CommonService commonService;
+    private final CommonService commonService;
 
     Sudoku sudoku;
 
@@ -38,7 +39,7 @@ public class SudokuDataInitializer implements CommandLineRunner {
     int sudokusSaved;
     int sudokusRepeated;
 
-    public final static String puzzlePath = InitializerConstants.PUZZLE_RELATIVE_PATH +
+    public static final String PUZZLE_PATH = InitializerConstants.PUZZLE_RELATIVE_PATH +
             InitializerConstants.PuzzleMappings.SUDOKU_PATH_SUFFIX;
 
     public SudokuDataInitializer(SudokuRepository sudokuRepository, CommonService commonService) {
@@ -48,20 +49,19 @@ public class SudokuDataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
-        System.out.println("Sudokus init(6)");
+        log.info("Sudoku init(6)");
 
         sudokusSaved = 0;
         sudokusRepeated = 0;
 
         Set<String> existingSudokuFilesNames = commonService
-                .listFilesUsingJavaIO(puzzlePath);
+                .listFilesUsingJavaIO(PUZZLE_PATH);
 
         for (String sudokuFileName : existingSudokuFilesNames) {
             ObjectMapper objectMapper = new ObjectMapper();
 
             try {
-                SudokuFileDetails sudokuFileDetails = objectMapper.readValue(new File(puzzlePath + sudokuFileName), SudokuFileDetails.class);
+                SudokuFileDetails sudokuFileDetails = objectMapper.readValue(new File(PUZZLE_PATH + sudokuFileName), SudokuFileDetails.class);
 
                 sudokuFileNameWithoutExtension = sudokuFileName.substring(0, sudokuFileName.length() - 5);
                 source = sudokuFileDetails.getSource();
@@ -89,14 +89,16 @@ public class SudokuDataInitializer implements CommandLineRunner {
                     sudokuRepository.save(sudoku);
                 }
             } catch (JarSignerException jsonParseException) {
-                System.out.println("Wrong file part: " + sudokuFileName);
-                System.out.println(jsonParseException);
+                log.error("Wrong file part: {}", sudokuFileName);
+                log.error("Exception: {}", jsonParseException.getMessage());
             }
         }
 
+        log.info("Saving sudokus to DB part is done.");
+
         if (InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
-            System.out.println("SudokusSaved count: " + sudokusSaved);
-            System.out.println("SudokusRepeated count: " + sudokusRepeated);
+            log.info("Sudoku saved: {}", sudokusSaved);
+            log.info("Sudoku repeated: {}", sudokusRepeated);
         }
     }
 }

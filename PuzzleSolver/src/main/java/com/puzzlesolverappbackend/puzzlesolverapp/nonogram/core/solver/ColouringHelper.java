@@ -5,16 +5,18 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAc
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.colouring.NonogramFieldColouringHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.NonogramColumnLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.NonogramRowLogic;
+import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.rangeInsideAnotherRange;
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.rangeLength;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.*;
 
+
+@UtilityClass
 public final class ColouringHelper {
 
     public static List<Integer> calculateOverlappingRange(List<Integer> range, int sequenceLength) {
@@ -23,9 +25,9 @@ public final class ColouringHelper {
 
         if (start > end) return List.of();
 
-        return IntStream.rangeClosed(start, end)
+        return new ArrayList<>(IntStream.rangeClosed(start, end)
                 .boxed()
-                .collect(Collectors.toList());
+                .toList());
     }
 
     public static List<Integer> findPossibleSequenceLengths(List<List<Integer>> ranges, List<Integer> colouredRange, List<Integer> lengths) {

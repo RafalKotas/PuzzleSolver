@@ -29,7 +29,7 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
 
         List<List<Integer>> afterRangesSnapshot = logic.getColumnsSequencesRanges().get(columnIdx);
 
-        if (ranglesListNotEqual(beforeRangesSnapshot, afterRangesSnapshot)) {
+        if (rangesListNotEqual(beforeRangesSnapshot, afterRangesSnapshot)) {
             logic.getLogService().setTmpLog(SequenceRangeCorrectionLogHelper.generateLog(
                     columnIdx,
                     beforeRangesSnapshot,
@@ -120,36 +120,45 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
         var lengths = logic.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
 
         boolean changed = false;
+
+        int rowIdx = 0;
+        int rowCount = logic.getNonogramRules().getHeight();
         int seqId = 0;
-        int seqLength = lengths.get(seqId);
 
-        for (int rowIdx = 0; rowIdx < logic.getNonogramRules().getHeight(); rowIdx++) {
+        while (rowIdx < rowCount && seqId < lengths.size()) {
             Field field = new Field(rowIdx, columnIdx);
-            if (!isFieldColoured(logic.getNonogramSolutionBoard(), field)) continue;
 
-            List<Integer> oldRange = ranges.get(seqId);
-            List<Integer> updatedRange = RangeCorrectionHelper.updatedSequenceRangeWhenMetColouredField(
-                    oldRange.get(0), oldRange.get(1), rowIdx, seqLength, true);
+            if (isFieldColoured(logic.getNonogramSolutionBoard(), field)) {
+                List<Integer> oldRange = ranges.get(seqId);
+                int seqLength = lengths.get(seqId);
 
-            if (!updatedRange.equals(oldRange)) {
-                logic.getLogService().setTmpLog(SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.generateLog(
-                        columnIdx, seqId, ranges, updatedRange, logic.getBoardAccessHelper().getColumnCopy(columnIdx),
-                        lengths, false, "fromTop"
-                ));
-                logic.getLogService().addLog();
-                logic.updateColumnSequenceRange(columnIdx, seqId, updatedRange);
+                List<Integer> updatedRange = RangeCorrectionHelper.updatedSequenceRangeWhenMetColouredField(
+                        oldRange.get(0), oldRange.get(1), rowIdx, seqLength, true);
 
-                if (rangeLength(updatedRange) == seqLength &&
-                        logic.getBoardAccessHelper().isColumnRangeColoured(columnIdx, updatedRange)) {
-                    logic.excludeSequenceInColumn(columnIdx, seqId);
+                if (!updatedRange.equals(oldRange)) {
+                    logic.getLogService().setTmpLog(
+                            SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.generateLog(
+                                    columnIdx, seqId, ranges, updatedRange,
+                                    logic.getBoardAccessHelper().getColumnCopy(columnIdx),
+                                    lengths, false, "fromTop"
+                            )
+                    );
+                    logic.getLogService().addLog();
+                    logic.updateColumnSequenceRange(columnIdx, seqId, updatedRange);
+
+                    if (rangeLength(updatedRange) == seqLength &&
+                            logic.getBoardAccessHelper().isColumnRangeColoured(columnIdx, updatedRange)) {
+                        logic.excludeSequenceInColumn(columnIdx, seqId);
+                    }
+
+                    changed = true;
                 }
 
-                changed = true;
+                rowIdx = Math.max(rowIdx + 1, updatedRange.get(1));
+                seqId++;
+            } else {
+                rowIdx++;
             }
-
-            rowIdx += seqLength;
-            if (++seqId >= lengths.size()) break;
-            seqLength = lengths.get(seqId);
         }
 
         if (changed) {

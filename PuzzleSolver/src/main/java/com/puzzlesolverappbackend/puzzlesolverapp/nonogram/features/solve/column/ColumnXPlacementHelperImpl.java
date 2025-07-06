@@ -31,9 +31,8 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
 
     private final NonogramFieldPlacingXHelper nonogramFieldPlacingXHelper;
 
-    private final static List<Integer> NOT_FOUND_EMPTY_FIELDS_RANGE_VALUE = List.of(-1, -1);
-
-    private final static List<Integer> NOT_FOUND_COLOURED_FIELDS_RANGE_VALUE = List.of(-1, -1);
+    private static final List<Integer> NOT_FOUND_EMPTY_FIELDS_RANGE_VALUE = List.of(-1, -1);
+    private static final List<Integer> NOT_FOUND_COLOURED_FIELDS_RANGE_VALUE = List.of(-1, -1);
 
     public ColumnXPlacementHelperImpl(NonogramColumnLogic nonogramColumnLogic) {
         logic = nonogramColumnLogic;

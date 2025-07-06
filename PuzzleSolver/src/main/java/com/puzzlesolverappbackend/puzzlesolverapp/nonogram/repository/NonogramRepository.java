@@ -1,8 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.repository;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Nonogram;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, JpaSpecificationExecutor {
+public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, JpaSpecificationExecutor<Nonogram> {
 
     @Query(value = "SELECT distinct(npd.source)" +
             " FROM nonogram npd",
@@ -72,28 +70,6 @@ public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, Jp
                                                             @Param("difficulty") Double difficulty,
                                                             @Param("height") Integer height,
                                                             @Param("width") Integer width);
-
-    // all available - page
-    @Query(value = "SELECT *" +
-            " FROM nonogram npd" +
-            " WHERE (npd.source IN :sources" +
-            " AND npd.year IN :years" +
-            " AND npd.month IN :months" +
-            " AND npd.difficulty BETWEEN :minDifficulty and :maxDifficulty" +
-            " AND npd.difficulty BETWEEN :minWidth and :maxWidth" +
-            " AND npd.height BETWEEN :minHeight and :maxHeight)",
-            nativeQuery = true)
-    Page<Nonogram> getNonogramsUsingFilters(
-                                        @Param("sources") Collection<String> sources,
-                                        @Param("years") Collection<String> years,
-                                        @Param("months") Collection<String> months,
-                                        @Param("minDifficulty") Double minDifficulty,
-                                        @Param("maxDifficulty") Double maxDifficulty,
-                                        @Param("minHeight") Integer minHeight,
-                                        @Param("maxHeight") Integer maxHeight,
-                                        @Param("minWidth") Integer minWidth,
-                                        @Param("maxWidth") Integer maxWidth,
-                               Pageable pageable);
 
     @Query("SELECT n.filename FROM Nonogram n WHERE n.difficulty = :difficulty AND source LIKE '%logi%' ORDER BY n.height * n.width ASC")
     List<String> findLogiNonogramsNamesByDifficultySortedByArea(@Param("difficulty") double difficulty);

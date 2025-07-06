@@ -21,26 +21,10 @@ public class NonogramActionScheduler {
         int rowIdx = field.getRowIdx();
         int columnIdx = field.getColumnIdx();
 
-        if (actionsToDo == null) {
-            System.out.println("abc");
-        }
-
         for (NonogramSolveAction actionToDo : actionsToDo) {
             if (actionToDo.isRowAction()) {
                 actionsToDoList.add(new NonogramActionDetails(rowIdx, actionToDo, actionTriggered, false));
             } else {
-                actionsToDoList.add(new NonogramActionDetails(columnIdx, actionToDo, actionTriggered, false));
-            }
-        }
-    }
-
-    public void scheduleActionsBasedOnColumn(int columnIdx, NonogramSolveAction actionTriggered, NonogramBoardAccessHelper boardAccessHelper) {
-        List<NonogramSolveAction> actionsToDo = ActionDependencyMap.actionDependencies.get(actionTriggered);
-
-        if (!boardAccessHelper.isColumnIndexValid(columnIdx)) return;
-
-        for (NonogramSolveAction actionToDo : actionsToDo) {
-            if (!actionToDo.isRowAction()) {
                 actionsToDoList.add(new NonogramActionDetails(columnIdx, actionToDo, actionTriggered, false));
             }
         }

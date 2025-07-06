@@ -1,7 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solutions;
 
 
-import com.google.gson.Gson;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogicFactory;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramSolution;
@@ -69,10 +68,5 @@ public class NonogramSolutionNode {
 
         NonogramLogic logicAfterActionsMade = this.getNonogramLogic().deepCopy();
         this.nodeLogs = logicAfterActionsMade.getLogs();
-    }
-
-    private NonogramLogic copyNonogramLogic() {
-        Gson gson = new Gson();
-        return gson.fromJson(gson.toJson(this.getNonogramLogic()), NonogramLogic.class);
     }
 }

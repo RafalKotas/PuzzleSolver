@@ -24,7 +24,6 @@ public class NonogramSolution {
             JsonElement jsonElement = JsonParser.parseReader(reader);
             return gson.fromJson(jsonElement, NonogramSolution.class);
         } catch (IOException e) {
-            //e.printStackTrace();
             return null;
         }
     }

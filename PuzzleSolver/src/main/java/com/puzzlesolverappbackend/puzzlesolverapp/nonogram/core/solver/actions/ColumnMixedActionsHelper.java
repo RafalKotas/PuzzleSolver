@@ -15,7 +15,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.Bo
 @UtilityClass
 public class ColumnMixedActionsHelper {
 
-    private final static int DISTANCE_WITH_ONE_EMPTY_FIELD_TO_POSSIBLE_COLOURED = 2;
+    private static final int DISTANCE_WITH_ONE_EMPTY_FIELD_TO_POSSIBLE_COLOURED = 2;
 
     public static List<Integer> sequencesIdsInColumnIncludingField(List<List<Integer>> columnSequencesRanges, Field field) {
 

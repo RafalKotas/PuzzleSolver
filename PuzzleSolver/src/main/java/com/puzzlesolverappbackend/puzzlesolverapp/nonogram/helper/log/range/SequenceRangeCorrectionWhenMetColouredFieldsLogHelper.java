@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class SequenceRangeCorrectionWhenMetColouredFieldsLogHelper {
 
+    private static final String LIST_OF_PREFIX = "List.of(";
+
     public static String generateLog(
             int index,
             int seqIdx,
@@ -48,7 +50,6 @@ public class SequenceRangeCorrectionWhenMetColouredFieldsLogHelper {
         String headerLine = lines[0];
         boolean isRow = headerLine.startsWith("ROW_");
         int index = extractIntFromLine(headerLine, isRow ? "row=" : "col=");
-        String direction = extractValueFromLine(headerLine, "dir=");
 
         // --- Content ---
         int seqIdx = extractIntFromLine(lines[1], "seq=");
@@ -118,14 +119,14 @@ public class SequenceRangeCorrectionWhenMetColouredFieldsLogHelper {
     }
 
     private static String formatList(List<?> list) {
-        return "List.of(" + list.stream()
+        return LIST_OF_PREFIX + list.stream()
                 .map(e -> (e instanceof String) ? "\"" + e + "\"" : e.toString())
                 .collect(Collectors.joining(", ")) + ")";
     }
 
     private static String formatNestedList(List<List<Integer>> list) {
-        return "List.of(" + list.stream()
-                .map(inner -> "List.of(" + inner.stream().map(Object::toString).collect(Collectors.joining(", ")) + ")")
+        return LIST_OF_PREFIX + list.stream()
+                .map(inner -> LIST_OF_PREFIX + inner.stream().map(Object::toString).collect(Collectors.joining(", ")) + ")")
                 .collect(Collectors.joining(", ")) + ")";
     }
 }

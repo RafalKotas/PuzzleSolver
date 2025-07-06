@@ -26,7 +26,7 @@ import java.util.Set;
 @Slf4j
 public class ArchitectPuzzlesInitializer implements CommandLineRunner {
 
-    protected final static Logger logger = LoggerFactory.getLogger(ArchitectPuzzlesInitializer.class);
+    protected static final Logger logger = LoggerFactory.getLogger(ArchitectPuzzlesInitializer.class);
 
     @Autowired
     private ArchitectRepository architectRepository;
@@ -47,25 +47,25 @@ public class ArchitectPuzzlesInitializer implements CommandLineRunner {
     int architectsSaved;
     int architectsRepeated;
 
-    public final static String puzzlePath = InitializerConstants.PUZZLE_RELATIVE_PATH +
+    public static final String PUZZLE_PATH = InitializerConstants.PUZZLE_RELATIVE_PATH +
             InitializerConstants.PuzzleMappings.ARCHITECT_PATH_SUFFIX;
 
     @Override
     public void run(String... args) throws Exception {
 
-        System.out.println("Architects init(2)");
+        log.info("Architects init(2)");
 
         architectsSaved = 0;
         architectsRepeated = 0;
 
         Set<String> existingArchitectFilesNames = commonService
-                .listFilesUsingJavaIO(puzzlePath);
+                .listFilesUsingJavaIO(PUZZLE_PATH);
 
         for (String architectFileName : existingArchitectFilesNames) {
             ObjectMapper objectMapper = new ObjectMapper();
 
             try {
-                ArchitectFileDetails architectFileDetails = objectMapper.readValue(new File(puzzlePath + architectFileName), ArchitectFileDetails.class);
+                ArchitectFileDetails architectFileDetails = objectMapper.readValue(new File(PUZZLE_PATH + architectFileName), ArchitectFileDetails.class);
 
                 architectFileNameWithoutExtension = architectFileName.substring(0, architectFileName.length() - 5);
                 source = architectFileDetails.getSource();
@@ -92,14 +92,14 @@ public class ArchitectPuzzlesInitializer implements CommandLineRunner {
                     architectRepository.save(architect);
                 }
             } catch (JsonParseException jsonParseException) {
-                System.out.println("Wrong file part: " + architectFileName);
-                System.out.println(jsonParseException);
+                log.info("Wrong file part: {}", architectFileName);
+                log.info("Exception: {}", jsonParseException.getMessage());
             }
         }
 
         if (InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
-            System.out.println("architectsSaved count: " + architectsSaved);
-            System.out.println("architectsRepeated count: " + architectsRepeated);
+            log.info("Architects saved: {}", architectsSaved);
+            log.info("Architects repeated: {}", architectsRepeated);
         }
 
         log.info("Saving architects to DB part is done.");

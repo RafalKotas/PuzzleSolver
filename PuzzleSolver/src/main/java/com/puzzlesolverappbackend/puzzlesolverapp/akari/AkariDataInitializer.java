@@ -6,6 +6,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.common.CommonService;
 import com.puzzlesolverappbackend.puzzlesolverapp.constants.InitializerConstants;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -20,6 +21,7 @@ import java.util.Set;
 @Setter
 @Profile("!test")
 @Order(1)
+@Slf4j
 public class AkariDataInitializer implements CommandLineRunner {
 
     @Autowired
@@ -36,28 +38,29 @@ public class AkariDataInitializer implements CommandLineRunner {
     Integer height;
     Integer width;
 
-    int akarisSaved;
-    int akarisRepeated;
+    int akariSaved;
+    int akariRepeated;
 
-    public final static String puzzlePath = InitializerConstants.PUZZLE_RELATIVE_PATH +
+    public static final String PUZZLE_PATH = InitializerConstants.PUZZLE_RELATIVE_PATH +
             InitializerConstants.PuzzleMappings.AKARI_PATH_SUFFIX;
 
     @Override
     public void run(String... args) throws Exception {
 
-        System.out.println("Akaris init(1)");
 
-        akarisSaved = 0;
-        akarisRepeated = 0;
+        log.info("Akari init(1)");
+
+        akariSaved = 0;
+        akariRepeated = 0;
 
         Set<String> existingAkariFilesNames = commonService
-                .listFilesUsingJavaIO(puzzlePath);
+                .listFilesUsingJavaIO(PUZZLE_PATH);
 
         for (String akariFileName : existingAkariFilesNames) {
             ObjectMapper objectMapper = new ObjectMapper();
 
             try {
-                AkariFileDetails akariFileDetails = objectMapper.readValue(new File(puzzlePath + akariFileName), AkariFileDetails.class);
+                AkariFileDetails akariFileDetails = objectMapper.readValue(new File(PUZZLE_PATH + akariFileName), AkariFileDetails.class);
 
                 akariFileNameWithoutExtension = akariFileName.substring(0, akariFileName.length() - 5);
                 source = akariFileDetails.getSource();
@@ -69,21 +72,21 @@ public class AkariDataInitializer implements CommandLineRunner {
                 akari = new Akari(akariFileNameWithoutExtension, source, difficulty, height, width);
 
                 if (akariRepository.existsAkariByGivenParamsFromFile(akariFileNameWithoutExtension, source, difficulty, height, width).isPresent()) {
-                    akarisRepeated++;
+                    akariRepeated++;
                 } else {
-                    System.out.println(akari);
-                    akarisSaved++;
+                    log.info("New akari saved: {}", akari);
+                    akariSaved++;
                     akariRepository.save(akari);
                 }
             } catch (JsonParseException jsonParseException) {
-                System.out.println("Wrong file part: " + akariFileName);
-                System.out.println(jsonParseException);
+                log.error("Wrong file part: {}", akariFileName);
+                log.error("Error {}", jsonParseException.getMessage());
             }
         }
 
         if (InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
-            System.out.println("akarisSaved count: " + akarisSaved);
-            System.out.println("akarisRepeated count: " + akarisRepeated);
+            log.info("akari saved: {}", akariSaved);
+            log.info("akari repeated: {}", akariRepeated);
         }
     }
 }

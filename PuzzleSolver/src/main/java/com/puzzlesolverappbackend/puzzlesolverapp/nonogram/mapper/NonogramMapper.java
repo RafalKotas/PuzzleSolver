@@ -3,8 +3,10 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.mapper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.dto.NonogramLogicResponse;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.dto.NonogramSolutionSaveRequest;
+import lombok.experimental.UtilityClass;
 
-public class NonogramMapper {
+@UtilityClass
+public final class NonogramMapper {
 
     public static NonogramSolutionSaveRequest toSaveRequest(NonogramLogic logic, String filename) {
         NonogramSolutionSaveRequest request = new NonogramSolutionSaveRequest();

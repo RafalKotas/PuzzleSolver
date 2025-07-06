@@ -22,4 +22,8 @@ public class NonogramSolutionDecision {
                 ", c" + decisionField.getColumnIdx() +
                 '}';
     }
+
+    public NonogramSolutionDecision withMarker(String newMarker) {
+        return new NonogramSolutionDecision(newMarker, this.decisionField);
+    }
 }

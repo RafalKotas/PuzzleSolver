@@ -1,7 +1,9 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.common;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.constants.InitializerConstants;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class FileHelper {
 
     private static final String SOLUTION_PREFIX = "r";

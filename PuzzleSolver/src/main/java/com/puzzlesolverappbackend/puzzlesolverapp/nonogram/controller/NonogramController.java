@@ -4,6 +4,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.common.CommonService;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Nonogram;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramFileDetails;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramFiltersResponse;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.dto.NonogramFilterRequest;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.repository.NonogramRepository;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.NonogramService;
 import lombok.extern.slf4j.Slf4j;
@@ -46,21 +47,16 @@ public class NonogramController {
     }
 
     @GetMapping("/getNonogramsUsingFilters")
-    public ResponseEntity<List<Nonogram>> getNonogramsUsingFilters(@RequestParam(name="page", defaultValue = DEFAULT_PAGE) int page,
-                                                                   @RequestParam(name="itemsOnPage", defaultValue = DEFAULT_ITEMS_ON_PAGE_COUNT) int itemsOnPage,
-                                                                   @RequestParam List<String> sources,
-                                                                   @RequestParam List<String> years,
-                                                                   @RequestParam List<String> months,
-                                                                   @RequestParam Double minDifficulty, @RequestParam Double maxDifficulty,
-                                                                   @RequestParam Integer minHeight, @RequestParam Integer maxHeight,
-                                                                   @RequestParam Integer minWidth, @RequestParam Integer maxWidth) {
-        Pageable nonogramsPageable = PageRequest.of(page, itemsOnPage);
-
-        Page<Nonogram> nonogramsMatching = nonogramRepository.getNonogramsUsingFilters(sources, years, months, minDifficulty, maxDifficulty,
-                minHeight, maxHeight, minWidth, maxWidth, nonogramsPageable);
-
-        return new ResponseEntity<>(nonogramsMatching.getContent(), HttpStatus.OK);
+    public ResponseEntity<List<Nonogram>> getFilteredNonograms(
+            @ModelAttribute NonogramFilterRequest filters,
+            @RequestParam(name="page", defaultValue = DEFAULT_PAGE) int page,
+            @RequestParam(name="itemsOnPage", defaultValue = DEFAULT_ITEMS_ON_PAGE_COUNT) int itemsOnPage
+    ) {
+        Pageable pageable = PageRequest.of(page, itemsOnPage);
+        Page<Nonogram> resultPage = nonogramService.getNonogramsFiltered(filters, pageable);
+        return ResponseEntity.ok(resultPage.getContent());
     }
+
 
     @GetMapping("/getFilters")
     public ResponseEntity<NonogramFiltersResponse> getNonogramFilters() {
