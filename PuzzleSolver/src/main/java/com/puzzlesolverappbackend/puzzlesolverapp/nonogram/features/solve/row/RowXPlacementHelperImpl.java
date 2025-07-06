@@ -241,7 +241,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper {
                 cursor++;
             }
 
-            if (cursor >= width || !isFieldColoured(logic.getNonogramSolutionBoard(), new Field(rowIdx, cursor))) {
+            if (cursor >= width || !isFieldWithX(logic.getNonogramSolutionBoard(), new Field(rowIdx, cursor))) {
                 colIdx = cursor;
                 continue;
             }
