@@ -5,6 +5,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils;
 import com.puzzlesolverappbackend.puzzlesolverapp.common.CommonService;
 import com.puzzlesolverappbackend.puzzlesolverapp.common.FileHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.constants.InitializerConstants;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.exception.NonogramFileReadException;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Nonogram;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramFileDetails;
@@ -26,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.sumListElements;
 import static com.puzzlesolverappbackend.puzzlesolverapp.constants.SharedConstants.JSON_EXTENSION;
@@ -37,15 +37,15 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.json.No
 @Slf4j
 public class NonogramService {
 
-    private static final String nonogramsPath = InitializerConstants.PUZZLE_RELATIVE_PATH + InitializerConstants.PuzzleMappings.NONOGRAM_PATH_SUFFIX;
+    private static final String NONOGRAMS_PATH = InitializerConstants.PUZZLE_RELATIVE_PATH + InitializerConstants.PuzzleMappings.NONOGRAM_PATH_SUFFIX;
 
-    private final static int DEFAULT_MIN_DIMENSION = 5;
+    private static final int DEFAULT_MIN_DIMENSION = 5;
 
-    private final static int DEFAULT_MAX_DIMENSION = 10;
+    private static final int DEFAULT_MAX_DIMENSION = 10;
 
-    private final static double DEFAULT_MIN_DIFFICULTY = 1.0;
+    private static final double DEFAULT_MIN_DIFFICULTY = 1.0;
 
-    private final static double DEFAULT_MAX_DIFFICULTY = 2.0;
+    private static final double DEFAULT_MAX_DIFFICULTY = 2.0;
 
     private final CommonService commonService;
     private final NonogramRepository nonogramRepository;
@@ -56,27 +56,27 @@ public class NonogramService {
     }
 
     public List<String> getNonogramSources() {
-      return nonogramRepository.selectNonogramSources().stream().sorted().collect(Collectors.toList());
+      return nonogramRepository.selectNonogramSources().stream().sorted().toList();
     }
 
     public List<String> getNonogramYears() {
-        return nonogramRepository.selectNonogramYears().stream().sorted().collect(Collectors.toList());
+        return nonogramRepository.selectNonogramYears().stream().sorted().toList();
     }
 
     public List<String> getNonogramMonths() {
-        return nonogramRepository.selectNonogramMonths().stream().sorted().collect(Collectors.toList());
+        return nonogramRepository.selectNonogramMonths().stream().sorted().toList();
     }
 
     public List<Double> getNonogramDifficulties() {
-        return nonogramRepository.selectNonogramDifficulties().stream().sorted().collect(Collectors.toList());
+        return nonogramRepository.selectNonogramDifficulties().stream().sorted().toList();
     }
 
     public List<Integer> getNonogramHeights() {
-        return nonogramRepository.selectNonogramHeights().stream().sorted().collect(Collectors.toList());
+        return nonogramRepository.selectNonogramHeights().stream().sorted().toList();
     }
 
     public List<Integer> getNonogramWidths() {
-        return nonogramRepository.selectNonogramWidths().stream().sorted().collect(Collectors.toList());
+        return nonogramRepository.selectNonogramWidths().stream().sorted().toList();
     }
 
     public List<Integer> inferDimensionRange(List<Integer> integerList) {
@@ -167,7 +167,7 @@ public class NonogramService {
     public String saveCreatedNonogramToFile(String fileName, NonogramFileDetails nonogramFileDetails) {
         nonogramFileDetails.setFilename(fileName + JSON_EXTENSION);
 
-        Set<String> existingFilesNames = commonService.listFilesUsingJavaIO(nonogramsPath);
+        Set<String> existingFilesNames = commonService.listFilesUsingJavaIO(NONOGRAMS_PATH);
 
         String[] fileNamesWithoutExtension = existingFilesNames.toArray(String[]::new);
         List<String> fileNamesWithoutExtensionArray = Arrays.stream(fileNamesWithoutExtension
@@ -181,7 +181,7 @@ public class NonogramService {
         }
 
         try {
-            NonogramJsonWriter.writeToFile(nonogramFileDetails, nonogramsPath + fileName + JSON_EXTENSION);
+            NonogramJsonWriter.writeToFile(nonogramFileDetails, NONOGRAMS_PATH + fileName + JSON_EXTENSION);
             log.info("Successfully saved nonogram: {}", fileName);
             return "Save success!";
         } catch (IOException e) {
@@ -198,8 +198,8 @@ public class NonogramService {
         try (FileReader reader = new FileReader(filePath)) {
             return gson.fromJson(reader, NonogramFileDetails.class);
         } catch (IOException e) {
-            log.error("Error reading file: {}", filePath, e);
-            return null;
+            // TODO - return empty object(?)
+            throw new NonogramFileReadException("Could not find nonogram solution file: " + filePath , e);
         }
     }
 

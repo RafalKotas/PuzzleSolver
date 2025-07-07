@@ -5,10 +5,11 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggenerat
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @UtilityClass
 public class SequenceRangeCorrectionWhenMarkingFieldsLogHelper {
+
+    private static final String LIST_STRING_FORMAT = "    List.of(%s),%n";
 
     public static String generateLog(
             int index,
@@ -50,13 +51,13 @@ public class SequenceRangeCorrectionWhenMarkingFieldsLogHelper {
 
         List<String> lineState = isRow
                 ? logic.getNonogramSolutionBoard().get(index)
-                : logic.getNonogramSolutionBoard().stream().map(row -> row.get(index)).collect(Collectors.toList());
+                : logic.getNonogramSolutionBoard().stream().map(row -> row.get(index)).toList();
 
         return String.format(
                 "Arguments.of(\"%s / %dx%d / %s / %s %d - seq %d\",%n" +
-                        "    List.of(%s),%n" +
-                        "    List.of(%s),%n" +
-                        "    List.of(%s),%n" +
+                        LIST_STRING_FORMAT +
+                        LIST_STRING_FORMAT +
+                        LIST_STRING_FORMAT +
                         "    List.of(%s))",
                 fileName,
                 logic.getNonogramRules().getWidth(),

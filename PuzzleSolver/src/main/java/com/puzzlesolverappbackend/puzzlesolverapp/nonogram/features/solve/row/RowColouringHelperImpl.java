@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.*;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogicParams.SHOW_REPETITIONS;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldColoured;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldEmpty;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.TooLongMergeFieldHelper.collectColouredSequencesRanges;
@@ -85,7 +86,7 @@ public class RowColouringHelperImpl implements RowColouringHelper {
                 anyFieldColoured = true;
                 logic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_ROW);
                 logic.getNonogramState().increaseMadeSteps();
-            } else if (NonogramRowLogic.SHOW_REPETITIONS) {
+            } else if (SHOW_REPETITIONS) {
                 log.warn("Row field was coloured earlier (overlap).");
             }
         }

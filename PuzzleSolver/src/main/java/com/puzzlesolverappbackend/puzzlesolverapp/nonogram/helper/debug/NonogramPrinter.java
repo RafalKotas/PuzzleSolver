@@ -14,7 +14,7 @@ public class NonogramPrinter implements NonogramLogicPrinter {
 
     private final NonogramLogic logic;
 
-    private final String LOG_NONOGRAM_PROPS_FORMAT = "%3d %s";
+    private static final String LOG_NONOGRAM_PROPS_FORMAT = "%3d %s";
 
     public NonogramPrinter(NonogramLogic logic) {
         this.logic = logic;

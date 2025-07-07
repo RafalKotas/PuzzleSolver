@@ -91,31 +91,25 @@ public class SequenceRangeCorrectionWhenMetColouredFieldsLogHelper {
         return Integer.parseInt(line.substring(line.indexOf(key) + key.length()).split("[,\\s]")[0]);
     }
 
-    private static String extractValueFromLine(String line, String key) {
-        int start = line.indexOf(key) + key.length();
-        int end = line.indexOf(",", start);
-        return (end == -1) ? line.substring(start).trim() : line.substring(start, end).trim();
-    }
-
     private static List<Integer> parseListOfInts(String input) {
         return Arrays.stream(input.replaceAll("[\\[\\]]", "").split(","))
                 .filter(s -> !s.isBlank())
                 .map(String::trim)
                 .map(Integer::parseInt)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static List<List<Integer>> parseListOfListOfInts(String input) {
         String[] parts = input.replaceAll("\\[\\[|\\]\\]", "").split("\\],\\s*\\[");
         return Arrays.stream(parts)
                 .map(part -> parseListOfInts("[" + part + "]"))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static List<String> parseListOfStrings(String input) {
         return Arrays.stream(input.replaceAll("[\\[\\]]", "").split(","))
                 .map(String::trim)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static String formatList(List<?> list) {

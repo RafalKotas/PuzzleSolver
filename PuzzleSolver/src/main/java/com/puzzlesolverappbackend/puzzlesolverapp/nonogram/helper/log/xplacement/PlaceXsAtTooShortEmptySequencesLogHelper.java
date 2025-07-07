@@ -9,6 +9,8 @@ import java.util.List;
 @UtilityClass
 public class PlaceXsAtTooShortEmptySequencesLogHelper {
 
+    private static final String LIST_STRING_FORMAT = "    List.of(%s),%n";
+
     public static String generateLog(
             int index,
             List<String> initialState,
@@ -49,23 +51,23 @@ public class PlaceXsAtTooShortEmptySequencesLogHelper {
         String[] splittedExcludedLine = lines[4].split("=");
         List<Integer> excluded = LogFormatUtils.parseIntegerListLine(splittedExcludedLine.length == 1 ? "" : splittedExcludedLine[1].trim());
 
-        return String.format(
-                "Arguments.of(\"%s / %dx%d / %s %d - place Xs in too short empty sequences\",\n" +
-                        "    List.of(%s),\n" + // initial
-                        "    List.of(%s),\n" + // final
-                        "    List.of(%s),\n" + // lengths
-                        "    List.of(%s),\n" + // excluded
-                        "    %s\n" +           // isRow
-                        ")",
+        return String.format("""
+                Arguments.of("%s / %dx%d / %s %d - place Xs in too short empty sequences",
+                %s
+                %s
+                %s
+                %s
+                %s
+                )""",
                 solutionName,
                 logic.getNonogramRules().getWidth(),
                 logic.getNonogramRules().getHeight(),
                 isRow ? "Row" : "Column",
                 index,
-                initialState.toString(),
-                finalState.toString(),
-                lengths.toString(),
-                excluded.toString(),
+                String.format(LIST_STRING_FORMAT, initialState),
+                String.format(LIST_STRING_FORMAT, finalState),
+                String.format(LIST_STRING_FORMAT, lengths),
+                String.format(LIST_STRING_FORMAT, excluded),
                 isRow
         );
     }

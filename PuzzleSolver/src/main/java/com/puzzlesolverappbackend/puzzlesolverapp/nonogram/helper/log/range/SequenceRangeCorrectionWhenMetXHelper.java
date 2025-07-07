@@ -1,11 +1,13 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
+import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldWithX;
 
+@UtilityClass
 public class SequenceRangeCorrectionWhenMetXHelper {
 
     public static List<Integer> calculateCorrectedRangeWithoutX(

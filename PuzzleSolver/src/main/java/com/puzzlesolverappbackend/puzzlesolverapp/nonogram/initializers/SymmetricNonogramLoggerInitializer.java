@@ -7,6 +7,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLo
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramFileDetails;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRules;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.config.GuessMode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 
@@ -19,8 +20,9 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.Non
 
 //@Component
 //@Order(9)
+@Slf4j
 public class SymmetricNonogramLoggerInitializer implements CommandLineRunner {
-    public final static String puzzlePath = InitializerConstants.PUZZLE_RELATIVE_PATH +
+    public static final String PUZZLE_PATH = InitializerConstants.PUZZLE_RELATIVE_PATH +
             InitializerConstants.PuzzleMappings.NONOGRAM_PATH_SUFFIX;
 
     @Autowired
@@ -34,17 +36,17 @@ public class SymmetricNonogramLoggerInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        System.out.println("Symmetrical nonograms logger(9)");
+        log.info("Symmetrical nonograms logger(9)");
 
         Set<String> existingFilesNames = commonService
-                .listFilesUsingJavaIO(puzzlePath);
+                .listFilesUsingJavaIO(PUZZLE_PATH);
 
         ObjectMapper objectMapper = new ObjectMapper();
 
         for (String nonogramFileName : existingFilesNames) {
 
             try {
-                NonogramFileDetails nonogramFileDetails = objectMapper.readValue(new File(puzzlePath + nonogramFileName), NonogramFileDetails.class);
+                NonogramFileDetails nonogramFileDetails = objectMapper.readValue(new File(PUZZLE_PATH + nonogramFileName), NonogramFileDetails.class);
                 NonogramRules nonogramRules = mapNonogramFileDetailsToNonogramRules(nonogramFileDetails);
                 NonogramLogic nonogramLogic = new NonogramLogic(nonogramRules, GuessMode.DISABLED);
 
@@ -62,14 +64,14 @@ public class SymmetricNonogramLoggerInitializer implements CommandLineRunner {
                         break;
                 }
             } catch (Exception e) {
-                System.out.printf("Can't parse file with name %s\n", nonogramFileName);
+                log.error("Can't parse file with name: {}", nonogramFileName, e);
             }
 
         }
 
-        System.out.println("Nonograms 4 axis symmetrical filenames: ");
+        log.info("Nonograms 4 axis symmetrical filenames: ");
         for (String nonogramSym : nonograms3Dsymmetrical) {
-            System.out.println(nonogramSym);
+            log.info("{}", nonogramSym);
         }
     }
 }

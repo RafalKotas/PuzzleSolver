@@ -6,7 +6,6 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAc
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldColoured;
@@ -213,7 +212,7 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
 
         List<List<Integer>> beforeSnapshot = ranges.stream()
                 .map(range -> List.of(range.get(0), range.get(1)))
-                .collect(Collectors.toList());
+                .toList();
 
         for (int seqIdx = 0; seqIdx < ranges.size(); seqIdx++) {
             if (excluded.contains(seqIdx)) continue;

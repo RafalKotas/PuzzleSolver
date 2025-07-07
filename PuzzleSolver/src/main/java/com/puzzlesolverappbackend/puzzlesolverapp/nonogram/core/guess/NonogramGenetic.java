@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.security.SecureRandom;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -47,7 +48,7 @@ public class NonogramGenetic {
     public NonogramGenetic(NonogramLogic nonogramObject) {
         gson = new Gson();
         this.nonogramObject = gson.fromJson(gson.toJson(nonogramObject), NonogramLogic.class);
-        this.randomIntGenerator = new Random();
+        this.randomIntGenerator = new SecureRandom();
         this.solutionFound = false;
     }
 
@@ -105,7 +106,7 @@ public class NonogramGenetic {
     }
 
     private void initializeNextPopulation() {
-        randomIntGenerator = new Random();
+        randomIntGenerator = new SecureRandom();
         nextPopulation = new ArrayList<>();
         maxCorrectFieldsInColumnsSums = new ArrayList<>();
     }

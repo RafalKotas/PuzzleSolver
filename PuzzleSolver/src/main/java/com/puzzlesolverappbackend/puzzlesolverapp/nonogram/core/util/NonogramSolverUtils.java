@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramFullSolutionData;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileReader;
 import java.nio.file.Path;
@@ -14,6 +15,7 @@ import java.util.List;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramConstants.COLOURED_FIELD;
 
 @UtilityClass
+@Slf4j
 public class NonogramSolverUtils {
 
     public static boolean isBoardConsistentWithSequences(List<List<String>> board, List<List<Integer>> rowSeq, List<List<Integer>> colSeq) {
@@ -114,7 +116,7 @@ public class NonogramSolverUtils {
         try (FileReader reader = new FileReader(solutionPath.toFile())) {
             return new Gson().fromJson(JsonParser.parseReader(reader), NonogramFullSolutionData.class);
         } catch (Exception e) {
-            System.out.println("Error reading solution file: " + solutionPath);
+            log.error("Error reading solution file: {}", solutionPath);
             return null;
         }
     }

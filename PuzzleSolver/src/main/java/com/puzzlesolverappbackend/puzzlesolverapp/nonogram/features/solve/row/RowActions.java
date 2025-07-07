@@ -9,7 +9,7 @@ public interface RowActions {
     void colourOverlappingFieldsInRow(int rowIdx);
     void colourFieldsIfInRowXWouldForceTooLongColouredFieldsSequence(int rowIdx);
     void extendColouredFieldsNearXToMaximumPossibleLengthInRow(int rowIdx);
-    //void colourFieldsInRowIfXCausesAssignmentConflict(int rowIdx);
+    //  colour fields in row if X causes assignment conflict
     void placeXsRowAtUnreachableFields(int rowIdx);
     void placeXsAroundLongestSequencesInRow(int rowIdx);
     void placeXsRowAtTooShortEmptySequences(int rowIdx);

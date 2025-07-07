@@ -1,12 +1,14 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service;
 
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Setter
+@Slf4j
 public class NonogramLogService {
 
     private final List<String> logs = new ArrayList<>();
@@ -15,7 +17,7 @@ public class NonogramLogService {
 
     public void addLog() {
         if (tmpLog == null || tmpLog.isEmpty()) {
-            System.out.println("Trying to add empty log!!!");
+            log.warn("Trying to add empty log!!!");
         } else {
             logs.add(tmpLog);
             tmpLog = ""; // Clear after adding

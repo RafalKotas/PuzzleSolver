@@ -126,11 +126,11 @@ public class NonogramSolveInitializer implements CommandLineRunner {
                 Pair.of("o11816", 13.477)
         );
 
-        List<String> filesWithTimeOkDifficulty3Logi = List.of();
+        List<String> filesWithTimeOkDifficultyThreeLogi = List.of();
 
         List<String> filesTooLongSolving = new ArrayList<>();
 
-        List<Pair<String, Double>> filesWithTimeTooLongSolving_Difficulty4Logi = List.of(
+        List<Pair<String, Double>> filesWithTimeTooLongSolvingDifficultyFourLogi = List.of(
                 Pair.of("o11512", 0.446),
                 Pair.of("o08178", 0.105),
                 Pair.of("o10668", 0.105),
@@ -290,7 +290,7 @@ public class NonogramSolveInitializer implements CommandLineRunner {
 
         List<String> filesWithTimeOkDifficulty4Logi = List.of();
 
-        List<Pair<String, Double>> filesWithTimeTooLongSolving_Difficulty5Logi = Arrays.asList(
+        List<Pair<String, Double>> filesWithTimeTooLongSolvingDifficultyFiveLogi = Arrays.asList(
                 Pair.of("o10310", 57.0),
                 Pair.of("o07502", 87.0),
                 Pair.of("o07518", 66.0),
@@ -322,10 +322,10 @@ public class NonogramSolveInitializer implements CommandLineRunner {
                 Pair.of("o07460", 118.0)
         );
 
-        List<String> filesWithTimeOkDifficulty5Logi = List.of();
+        List<String> filesWithTimeOkDifficultyFiveLogi = List.of();
 
         // katana non-solved heuristically in first version
-        List<Pair<String, Double>> filesWithTimeTooLongSolving_Katana15x15 = Arrays.asList(
+        List<Pair<String, Double>> filesWithTimeTooLongSolvingKatanaFifteenSquare = Arrays.asList(
                 Pair.of("Miś(Bear)(auth_aPeer)", 86.0),
                 Pair.of("Snejinka(auth_satt3047)", 67.0),
                 Pair.of("Pattern15x15_1(auth_wiki)", 28.0), // Recursion or sth need, Completion 0.89
@@ -411,9 +411,9 @@ public class NonogramSolveInitializer implements CommandLineRunner {
                 Pair.of("Clover(auth_cyndidee)", 93.0) // Completion 100.0 - Recursion
         );
 
-        List<Pair<String, Double>> filesWithTimeOk_Katana15x15 = List.of();
+        List<Pair<String, Double>> filesWithTimeOkKatanaFifteenSquare = List.of();
 
-        List<Pair<String, Double>> filesWithTimeTooLongSolvingKatana20x20 = List.of(
+        List<Pair<String, Double>> filesWithTimeTooLongSolvingKatanaTwentySquare = List.of(
                 Pair.of("Doggy(Chiot)(auth_Liaaaaaaaaaa)", 2.054),
                 Pair.of("Halberd(auth_Aurelius)", 2.321),
                 Pair.of("White_cross(auth_Sanchez_Solver)", 0.605),
@@ -434,7 +434,7 @@ public class NonogramSolveInitializer implements CommandLineRunner {
                 Pair.of("Pattern(auth_greenmusic)", 0.774)
         );
 
-        List<Pair<String, Double>> filesWithTimeOkKatana20x20 = List.of(
+        List<Pair<String, Double>> filesWithTimeOkKatanaTwentySquare = List.of(
                 Pair.of("Doily(auth_Ricarix)", 141.034),
                 Pair.of("Knight(auth_DrTimer)", 84.636),
                 Pair.of("Pocket_bouquet(auth_inush)", 184.109),
@@ -601,9 +601,7 @@ public class NonogramSolveInitializer implements CommandLineRunner {
                 Pair.of("Pattern_10_Hard(gypsyfyed333(pub)(auth_Kimberly_Edens)", 1.602)
         );
 
-        List<Pair<String, Double>> filesWithTimeOk_Katana20x20 = List.of();
-
-        System.out.println("Selected nonograms count: " + selectedCount);
+        log.info("Selected nonograms count: {}", selectedCount);
 
         NonogramFileDetails nonogramFileDetails;
         NonogramRules nonogramRules;

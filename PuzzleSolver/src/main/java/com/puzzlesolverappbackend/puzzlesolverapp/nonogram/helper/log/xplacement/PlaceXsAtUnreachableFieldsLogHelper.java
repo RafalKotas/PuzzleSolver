@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class PlaceXsAtUnreachableFieldsLogHelper {
 
+    private static final String LIST_OF_START_WITH_OPENING_BRACKET = "List.of(";
+
     public static String generateLog(
             int index,
             List<String> initialState,
@@ -65,12 +67,12 @@ public class PlaceXsAtUnreachableFieldsLogHelper {
     private static List<String> parseList(String line) {
         return Arrays.stream(line.replaceAll("[\\[\\]\"]", "").split(","))
                 .map(String::trim)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static List<List<Integer>> parseNestedListFromListOfString(String input) {
         String trimmed = input.trim();
-        if (trimmed.startsWith("List.of(")) {
+        if (trimmed.startsWith(LIST_OF_START_WITH_OPENING_BRACKET)) {
             trimmed = trimmed.substring(8, trimmed.length() - 1); // usuń List.of( ... )
         }
 
@@ -85,13 +87,13 @@ public class PlaceXsAtUnreachableFieldsLogHelper {
     }
 
     private static String formatAsList(List<String> list) {
-        return "List.of(" + list.stream().map(s -> "\"" + s + "\"").collect(Collectors.joining(", ")) + ")";
+        return LIST_OF_START_WITH_OPENING_BRACKET + list.stream().map(s -> "\"" + s + "\"").collect(Collectors.joining(", ")) + ")";
     }
 
     private static String formatAsNestedList(List<List<Integer>> nestedList) {
-        return "List.of(" +
+        return LIST_OF_START_WITH_OPENING_BRACKET +
                 nestedList.stream()
-                        .map(inner -> "List.of(" + inner.stream().map(String::valueOf).collect(Collectors.joining(", ")) + ")")
+                        .map(inner -> LIST_OF_START_WITH_OPENING_BRACKET + inner.stream().map(String::valueOf).collect(Collectors.joining(", ")) + ")")
                         .collect(Collectors.joining(", ")) +
                 ")";
     }

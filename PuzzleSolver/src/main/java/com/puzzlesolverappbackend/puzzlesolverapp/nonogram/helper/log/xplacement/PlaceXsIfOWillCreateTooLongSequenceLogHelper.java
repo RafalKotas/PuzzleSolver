@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class PlaceXsIfOWillCreateTooLongSequenceLogHelper {
 
+    private static final String LIST_STRING_FORMAT = "    List.of(%s),%n";
+
     public static String generateLog(
             int index,
             List<String> before,
@@ -51,10 +53,10 @@ public class PlaceXsIfOWillCreateTooLongSequenceLogHelper {
 
         return String.format(
                 "Arguments.of(\"%s / %dx%d / %s %d - X if O too long\",%n" +
-                        "    List.of(%s),%n" +   // before
-                        "    List.of(%s),%n" +   // after
-                        "    List.of(%s),%n" +   // lengths
-                        "    List.of(%s),%n" +   // ranges
+                        LIST_STRING_FORMAT +   // before
+                        LIST_STRING_FORMAT +   // after
+                        LIST_STRING_FORMAT +   // lengths
+                        LIST_STRING_FORMAT +   // ranges
                         "    %s%n" +             // isRow
                         ")",
                 solutionName,

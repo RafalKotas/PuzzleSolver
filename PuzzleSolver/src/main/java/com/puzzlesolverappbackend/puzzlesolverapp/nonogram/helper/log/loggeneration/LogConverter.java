@@ -40,8 +40,7 @@ public class LogConverter {
                     Optional.of(SequenceRangeCorrectionFromColouredEdgesLogHelper.convertLogToTestArguments(log, solutionName));
             case "SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY" ->
                     Optional.of(SequenceRangeCorrectionWhenMetXLogHelper.convertLogToTestArguments(log, solutionName, logic));
-            //case "SEQUENCE_RANGE_CORRECTION_BY_MATCHING" ->
-            //        Optional.of(SequenceRangeCorrectionByMatchingLogHelper.convertLogToTestArguments(log, solutionName));
+            // SEQUENCE_RANGE_CORRECTION_BY_MATCHING  SequenceRangeCorrectionByMatchingLogHelper ...
             case "PLACE_XS_AROUND_LONGEST_SEQUENCE" ->
                     Optional.of(PlaceXsAroundLongestSequenceLogHelper.convertLogToTestArguments(log, solutionName));
             case "PLACE_XS_AT_UNREACHABLE_FIELDS" ->

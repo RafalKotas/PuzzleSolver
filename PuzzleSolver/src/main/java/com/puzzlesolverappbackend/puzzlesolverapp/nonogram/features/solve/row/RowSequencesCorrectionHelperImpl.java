@@ -6,7 +6,6 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAc
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldColoured;
@@ -207,7 +206,7 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
 
         List<List<Integer>> beforeSnapshot = ranges.stream()
                 .map(r -> List.of(r.get(0), r.get(1)))
-                .collect(Collectors.toList());
+                .toList();
 
         for (int seqIdx = 0; seqIdx < ranges.size(); seqIdx++) {
             if (excluded.contains(seqIdx)) continue;
@@ -248,6 +247,8 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
         List<List<Integer>> rowSequencesRanges =  nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
         List<Integer> rowSequencesLengths =  nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
         List<List<Integer>> colouredRanges = collectColouredSequencesRanges(nonogramRowLogic.getNonogramSolutionBoard(), rowIdx, true);
+
+        List<List<Integer>> rangesBefore = deepCopy(rowSequencesRanges);
 
         boolean hasChangedGlobal = false;
         boolean hasChanged;
@@ -384,9 +385,22 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
         } while (hasChanged);
 
         if (hasChangedGlobal) {
+            List<List<Integer>> rangesAfter = deepCopy(rowSequencesRanges);
+
+            String tmpLog = SequenceRangeCorrectionFromColouredEdgesLogHelper.generateLog(
+                    rowIdx,
+                    rangesBefore,
+                    rangesAfter,
+                    rowSequencesLengths,
+                    nonogramRowLogic.getNonogramSolutionBoard().get(rowIdx),
+                    true // isRow
+            );
+            nonogramRowLogic.getLogService().setTmpLog(tmpLog);
+            nonogramRowLogic.getLogService().addLog();
+
+            nonogramRowLogic.getNonogramState().increaseMadeSteps();
             Field rowField = new Field(rowIdx, 0);
             nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(rowField, NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES);
-            nonogramRowLogic.getNonogramState().increaseMadeSteps();
         }
     }
 
@@ -432,6 +446,7 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
             nonogramRowLogic.getLogService().setTmpLog(tmpLog);
             nonogramRowLogic.getLogService().addLog();
 
+            nonogramRowLogic.getNonogramState().increaseMadeSteps();
             Field rowField = new Field(rowIdx, 0);
             nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(rowField, NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE);
         }

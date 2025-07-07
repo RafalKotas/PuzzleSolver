@@ -2,12 +2,14 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.debug;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldEmpty;
 
+@Slf4j
 @UtilityClass
 public class NonogramDebugUtils {
 
@@ -500,16 +502,16 @@ public class NonogramDebugUtils {
             }
         }
 
-        System.out.println("List<Field> fieldsToCheck = List.of(");
+        log.info("List<Field> fieldsToCheck = List.of(");
         for (int i = 0; i < fieldDeclarations.size(); i++) {
-            System.out.print("    " + fieldDeclarations.get(i));
+            log.info("    {}", fieldDeclarations.get(i));
             if (i < fieldDeclarations.size() - 1) {
-                System.out.println(",");
+                log.info(",");
             } else {
-                System.out.println();
+                log.info("");
             }
         }
-        System.out.println(");");
+        log.info(");");
     }
 
     /**

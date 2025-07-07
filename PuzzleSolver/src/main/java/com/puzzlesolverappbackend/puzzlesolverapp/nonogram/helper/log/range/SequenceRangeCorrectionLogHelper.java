@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class SequenceRangeCorrectionLogHelper {
 
+    private static final String LIST_OF_START_WITH_OPENING_BRACKET = "List.of(";
+
     public static String generateLog(
             int index,
             List<List<Integer>> initialRanges,
@@ -31,11 +33,11 @@ public class SequenceRangeCorrectionLogHelper {
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",
                 index,
-                "List.of(" + initialRanges.stream()
-                        .map(range -> "List.of(" + range.stream().map(String::valueOf).collect(Collectors.joining(", ")) + ")")
+                LIST_OF_START_WITH_OPENING_BRACKET + initialRanges.stream()
+                        .map(range -> LIST_OF_START_WITH_OPENING_BRACKET + range.stream().map(String::valueOf).collect(Collectors.joining(", ")) + ")")
                         .collect(Collectors.joining(", ")) + ")",
-                "List.of(" + finalRanges.stream()
-                        .map(range -> "List.of(" + range.stream().map(String::valueOf).collect(Collectors.joining(", ")) + ")")
+                LIST_OF_START_WITH_OPENING_BRACKET + finalRanges.stream()
+                        .map(range -> LIST_OF_START_WITH_OPENING_BRACKET + range.stream().map(String::valueOf).collect(Collectors.joining(", ")) + ")")
                         .collect(Collectors.joining(", ")) + ")",
                 LogFormatUtils.formatList(sequenceLengths),
                 LogFormatUtils.formatList(fieldsNotToInclude),

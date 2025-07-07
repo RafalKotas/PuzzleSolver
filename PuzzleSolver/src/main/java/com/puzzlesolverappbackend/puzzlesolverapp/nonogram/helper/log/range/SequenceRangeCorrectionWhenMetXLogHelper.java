@@ -2,10 +2,14 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils;
+import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
+@UtilityClass
 public class SequenceRangeCorrectionWhenMetXLogHelper {
+
+    private static final String LIST_STRING_FORMAT = "    List.of(%s),%n";
 
     public static String generateLog(
             int index,
@@ -43,14 +47,14 @@ public class SequenceRangeCorrectionWhenMetXLogHelper {
         List<List<Integer>> initialRanges = LogFormatUtils.parseNestedListLine(lines[1].split("=")[1].trim());
         List<List<Integer>> updatedRanges = LogFormatUtils.parseNestedListLine(lines[2].split("=")[1].trim());
         List<Integer> lengths = LogFormatUtils.parseIntegerListLine(lines[3].split("=")[1].trim());
-        List<Integer> excluded = LogFormatUtils.safeParseIntegerListLine(lines[4]);
+        List<String> excluded = LogFormatUtils.safeParseStringListLine(lines[4]);
 
         return String.format(
                 "Arguments.of(\"%s / %dx%d / %s %d - ranges correction if X on way\",%n" +
-                        "    List.of(%s),%n" +   // initial
-                        "    List.of(%s),%n" +   // updated
-                        "    List.of(%s),%n" +   // lengths
-                        "    List.of(%s),%n" +   // excluded
+                        LIST_STRING_FORMAT +   // initial
+                        LIST_STRING_FORMAT +   // updated
+                        LIST_STRING_FORMAT +   // lengths
+                        LIST_STRING_FORMAT +   // excluded
                         "    %s%n" +             // isRow
                         ")",
                 fileName,

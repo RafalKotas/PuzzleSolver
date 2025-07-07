@@ -28,7 +28,12 @@ public class ColumnMixedActionsHelper {
                 .toList();
     }
 
-    public List<List<Integer>> getColouredSequencesRangesInColumnInRangeToTop(List<List<String>> solutionBoard, int columnIdx, int potentiallyColouredFieldRowIndex, int maxSequenceLength) {
+    public List<List<Integer>> getColouredSequencesRangesInColumnInRangeToTop(
+            List<List<String>> solutionBoard,
+            int columnIdx,
+            int potentiallyColouredFieldRowIndex,
+            int maxSequenceLength) {
+
         List<List<Integer>> colouredSequencesRangesInColumnNotFurtherThanMaxSequenceLength = new ArrayList<>();
         List<Integer> colouredSequenceRangeInColumn;
 

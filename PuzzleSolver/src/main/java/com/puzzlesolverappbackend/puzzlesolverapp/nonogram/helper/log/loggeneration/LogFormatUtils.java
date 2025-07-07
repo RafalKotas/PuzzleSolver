@@ -52,16 +52,17 @@ public class LogFormatUtils {
     }
 
     public static List<String> parseStringListLine(String line) {
-        return Arrays.stream(line.replaceAll(".*=", "")
-                        .replaceAll(BRACKETS_REGEX, "")
-                        .split(","))
+        String content = line.contains("=") ? line.substring(line.indexOf('=') + 1) : line;
+
+        return Arrays.stream(content.replaceAll(BRACKETS_REGEX, "").split(","))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .toList();
     }
 
     public static List<Integer> parseIntegerListLine(String line) {
-        String content = line.replaceAll(".*=", "").replaceAll(BRACKETS_REGEX, "").trim();
+        String content = line.contains("=") ? line.substring(line.indexOf('=') + 1) : line;
+        content = content.replaceAll(BRACKETS_REGEX, "").trim();
 
         if (content.isEmpty()) {
             return new ArrayList<>();
@@ -116,10 +117,13 @@ public class LogFormatUtils {
                 .collect(Collectors.toList());
     }
 
-    public static List<Integer> safeParseIntegerListLine(String line) {
-        if (!line.contains("=") || line.split("=").length < 2 || line.split("=")[1].trim().isEmpty()) {
-            return List.of();
-        }
-        return parseIntegerListLine(line.split("=")[1].trim());
+    public static List<String> safeParseStringListLine(String line) {
+        String content = line.contains("=") ? line.substring(line.indexOf('=') + 1) : line;
+
+        return Arrays.stream(content.replaceAll(BRACKETS_REGEX, "").split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .toList();
     }
+
 }

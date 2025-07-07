@@ -353,7 +353,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper {
             logic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
             logic.getNonogramState().increaseMadeSteps();
         } else if (NonogramLogicParams.SHOW_REPETITIONS) {
-            System.out.println("X because \"O\" will create too long sequence in row placed earlier!");
+            log.info("X because \"O\" will create too long sequence in row placed earlier!");
         }
     }
 
@@ -372,7 +372,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper {
             logic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
             logic.getNonogramState().increaseMadeSteps();
         } else if (NonogramLogicParams.SHOW_REPETITIONS) {
-            System.out.println("X because \"O\" will create too long sequence in row placed earlier!");
+            log.info("X because \"O\" will create too long sequence in row placed earlier!");
         }
     }
 

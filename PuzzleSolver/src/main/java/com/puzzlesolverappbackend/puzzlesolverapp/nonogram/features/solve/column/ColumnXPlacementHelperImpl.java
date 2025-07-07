@@ -62,7 +62,7 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
                     logic.getActionScheduler().scheduleActionsBasedOnField(fieldToExclude, NonogramSolveAction.PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS);
                     logic.getNonogramState().increaseMadeSteps();
                 } else if (NonogramLogicParams.SHOW_REPETITIONS) {
-                    System.out.println("X at unreachable field in column placed earlier!");
+                    log.warn("X at unreachable field in column placed earlier!");
                 }
             }
         }
@@ -355,7 +355,7 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
             logic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
             logic.getNonogramState().increaseMadeSteps();
         } else if (NonogramLogicParams.SHOW_REPETITIONS) {
-            System.out.println("X because \"O\" will create too long sequence in column placed earlier!");
+            log.info("X because \"O\" will create too long sequence in column placed earlier!");
         }
     }
 
@@ -374,7 +374,7 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
             logic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
             logic.getNonogramState().increaseMadeSteps();
         } else if (NonogramLogicParams.SHOW_REPETITIONS) {
-            System.out.println("X because \"O\" will create too long sequence in column placed earlier!");
+            log.info("X because \"O\" will create too long sequence in column placed earlier!");
         }
     }
 

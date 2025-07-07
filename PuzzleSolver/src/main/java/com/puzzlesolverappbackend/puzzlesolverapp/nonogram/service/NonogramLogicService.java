@@ -631,29 +631,26 @@ public class NonogramLogicService {
                         }
 
                     }
-                } else if (!columnSequencesIndexesIncludingSequenceRange.isEmpty()) {
-                    //check if length of sequence == Max(foundSequences_lengths)
-                    if (sequenceLength == Collections.max(columnSequencesLengthsIncludingSequenceRange)) {
-                        if (nonogramLogicDataToChange.getNonogramSolutionBoard().get(firstXIndex).get(columnIdx).equals(EMPTY_FIELD)) {
-                            fieldToExclude = new Field(firstXIndex, columnIdx);
-                            nonogramLogicDataToChange = nonogramLogicDataToChange
-                                    .placeXAtGivenPosition(fieldToExclude)
-                                    .addColumnFieldToExcluded(fieldToExclude);
-                                    //.addRowFieldToExcluded(fieldToExclude); TODO - update after any place X in column action
-                            nonogramLogicObject.getNonogramState().increaseMadeSteps();
-                        } else if (SHOW_REPETITIONS) {
-                            log.warn("Sequence with maximum length in area firstXIndex placed before!");
-                        }
-                        if (nonogramLogicDataToChange.getNonogramSolutionBoard().get(lastXIndex).get(columnIdx).equals(EMPTY_FIELD)) {
-                            fieldToExclude = new Field(lastXIndex, columnIdx);
-                            nonogramLogicDataToChange = nonogramLogicDataToChange
-                                    .placeXAtGivenPosition(fieldToExclude)
-                                    .addColumnFieldToExcluded(fieldToExclude);
-                                    //.addRowFieldToExcluded(fieldToExclude); TODO - update after any place X in column action
-                            nonogramLogicObject.getNonogramState().increaseMadeSteps();
-                        } else if (SHOW_REPETITIONS) {
-                            log.warn("Sequence with maximum length in area lastXIndex placed before!");
-                        }
+                } else if (!columnSequencesIndexesIncludingSequenceRange.isEmpty() && sequenceLength == Collections.max(columnSequencesLengthsIncludingSequenceRange)) {
+                    if (nonogramLogicDataToChange.getNonogramSolutionBoard().get(firstXIndex).get(columnIdx).equals(EMPTY_FIELD)) {
+                        fieldToExclude = new Field(firstXIndex, columnIdx);
+                        nonogramLogicDataToChange = nonogramLogicDataToChange
+                                .placeXAtGivenPosition(fieldToExclude)
+                                .addColumnFieldToExcluded(fieldToExclude);
+                        //.addRowFieldToExcluded(fieldToExclude); TODO - update after any place X in column action
+                        nonogramLogicObject.getNonogramState().increaseMadeSteps();
+                    } else if (SHOW_REPETITIONS) {
+                        log.warn("Sequence with maximum length in area firstXIndex placed before!");
+                    }
+                    if (nonogramLogicDataToChange.getNonogramSolutionBoard().get(lastXIndex).get(columnIdx).equals(EMPTY_FIELD)) {
+                        fieldToExclude = new Field(lastXIndex, columnIdx);
+                        nonogramLogicDataToChange = nonogramLogicDataToChange
+                                .placeXAtGivenPosition(fieldToExclude)
+                                .addColumnFieldToExcluded(fieldToExclude);
+                        //.addRowFieldToExcluded(fieldToExclude); TODO - update after any place X in column action
+                        nonogramLogicObject.getNonogramState().increaseMadeSteps();
+                    } else if (SHOW_REPETITIONS) {
+                        log.warn("Sequence with maximum length in area lastXIndex placed before!");
                     }
                 }
             }

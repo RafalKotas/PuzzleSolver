@@ -20,7 +20,6 @@ import java.io.Reader;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.FileHelper.nonogramSolutionSavePathForFilename;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @Slf4j
 @RequiredArgsConstructor

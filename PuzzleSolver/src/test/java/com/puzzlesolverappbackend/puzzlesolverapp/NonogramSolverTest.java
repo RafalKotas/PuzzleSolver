@@ -77,9 +77,9 @@ class NonogramSolverTest {
 
                 if (!result.nonogramIsFullyAndCorrectSolved()) {
                     notSolvedMap.computeIfAbsent(difficulty, d -> new ArrayList<>()).add(filename);
-                    System.out.println(filename + " - NOT SOLVED (difficulty " + difficulty + ")");
+                    log.warn("{} - NOT SOLVED (difficulty {})", filename, difficulty);
                 } else {
-                    System.out.println(filename + " - SOLVED! (difficulty " + difficulty + ")");
+                    log.info("{} - SOLVED! (difficulty {})", filename, difficulty);
                 }
             }
         }
@@ -94,11 +94,11 @@ class NonogramSolverTest {
             Type type = new TypeToken<Map<Double, List<String>>>() {}.getType();
             previous = gson.fromJson(reader, type);
         } catch (IOException e) {
-            System.out.println("No previous record found, treating as first run.");
+            log.info("No previous record found, treating as first run.");
             previous = new HashMap<>();
         }
 
-        System.out.println("=== REGRESSION CHECK ===");
+        log.info("=== REGRESSION CHECK ===");
         for (Map.Entry<Double, List<String>> entry : currentNotSolved.entrySet()) {
             Double difficulty = entry.getKey();
             List<String> currentList = entry.getValue();
@@ -108,7 +108,7 @@ class NonogramSolverTest {
             previousList.forEach(newlyBroken::remove);
 
             if (!newlyBroken.isEmpty()) {
-                System.out.printf("Difficulty %.1f - newly unsolved: %s%n", difficulty, newlyBroken);
+                log.warn("Difficulty {} - newly unsolved: {}", difficulty, newlyBroken);
             }
         }
 
@@ -117,7 +117,7 @@ class NonogramSolverTest {
         try (Writer writer = new FileWriter(recordPath)) {
             gson.toJson(currentNotSolved, writer);
         } catch (IOException e) {
-            System.err.println("Failed to save current regression state: " + e.getMessage());
+            log.error("Failed to save current regression state: {}", e.getMessage());
         }
     }
 
