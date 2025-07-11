@@ -121,37 +121,51 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
 
         int seqId = 0;
         int seqLength = lengths.get(seqId);
+        int colIdx = 0;
 
-        for (int colIdx = 0; colIdx < nonogramRowLogic.getNonogramRules().getWidth(); colIdx++) {
+        while (colIdx < nonogramRowLogic.getNonogramRules().getWidth() && seqId < lengths.size()) {
             Field field = new Field(rowIdx, colIdx);
-            if (!isFieldColoured(nonogramRowLogic.getNonogramSolutionBoard(), field)) continue;
+            if (isFieldColoured(nonogramRowLogic.getNonogramSolutionBoard(), field)) {
+                List<Integer> oldRange = ranges.get(seqId);
+                List<Integer> updatedRange = RangeCorrectionHelper.updatedSequenceRangeWhenMetColouredField(
+                        oldRange.get(0), oldRange.get(1), colIdx, seqLength, true
+                );
 
-            List<Integer> oldRange = ranges.get(seqId);
-            List<Integer> updatedRange = RangeCorrectionHelper.updatedSequenceRangeWhenMetColouredField(
-                    oldRange.get(0), oldRange.get(1), colIdx, seqLength, true);
+                if (!updatedRange.equals(oldRange)) {
+                    nonogramRowLogic.getLogService().setTmpLog(
+                            SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.generateLog(
+                                    rowIdx, seqId, ranges, updatedRange,
+                                    nonogramRowLogic.getNonogramSolutionBoard().get(rowIdx),
+                                    lengths,  "fromLeft"
+                            )
+                    );
+                    nonogramRowLogic.getLogService().addLog();
+                    nonogramRowLogic.updateRowSequenceRange(rowIdx, seqId, updatedRange);
 
-            if (!updatedRange.equals(oldRange)) {
-                nonogramRowLogic.getLogService().setTmpLog(SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.generateLog(
-                        rowIdx, seqId, ranges, updatedRange, nonogramRowLogic.getNonogramSolutionBoard().get(rowIdx), lengths, true, "fromLeft"
-                ));
-                nonogramRowLogic.getLogService().addLog();
-                nonogramRowLogic.updateRowSequenceRange(rowIdx, seqId, updatedRange);
+                    if (rangeLength(updatedRange) == seqLength &&
+                            nonogramRowLogic.getBoardAccessHelper().isRowRangeColoured(rowIdx, updatedRange)) {
+                        nonogramRowLogic.excludeSequenceInRow(rowIdx, seqId);
+                    }
 
-                if (rangeLength(updatedRange) == seqLength && nonogramRowLogic.getBoardAccessHelper().isRowRangeColoured(rowIdx, updatedRange)) {
-                    nonogramRowLogic.excludeSequenceInRow(rowIdx, seqId);
+                    changed = true;
                 }
 
-                changed = true;
+                colIdx += seqLength;
+                seqId++;
+                if (seqId < lengths.size()) {
+                    seqLength = lengths.get(seqId);
+                }
+            } else {
+                colIdx++;
             }
-
-            colIdx += seqLength;
-            if (++seqId >= lengths.size()) break;
-            seqLength = lengths.get(seqId);
         }
 
         if (changed) {
             nonogramRowLogic.getNonogramState().increaseMadeSteps();
-            nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(new Field(rowIdx, 0), NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS);
+            nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(
+                    new Field(rowIdx, 0),
+                    NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS
+            );
         }
     }
 
@@ -162,37 +176,52 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
 
         int seqId = lengths.size() - 1;
         int seqLength = lengths.get(seqId);
+        int colIdx = nonogramRowLogic.getNonogramRules().getWidth() - 1;
 
-        for (int colIdx = nonogramRowLogic.getNonogramRules().getWidth() - 1; colIdx >= 0; colIdx--) {
+        while (colIdx >= 0 && seqId >= 0) {
             Field field = new Field(rowIdx, colIdx);
-            if (!isFieldColoured(nonogramRowLogic.getNonogramSolutionBoard(), field)) continue;
 
-            List<Integer> oldRange = ranges.get(seqId);
-            List<Integer> updatedRange = RangeCorrectionHelper.updatedSequenceRangeWhenMetColouredField(
-                    oldRange.get(0), oldRange.get(1), colIdx, seqLength, false);
+            if (isFieldColoured(nonogramRowLogic.getNonogramSolutionBoard(), field)) {
+                List<Integer> oldRange = ranges.get(seqId);
+                List<Integer> updatedRange = RangeCorrectionHelper.updatedSequenceRangeWhenMetColouredField(
+                        oldRange.get(0), oldRange.get(1), colIdx, seqLength, false
+                );
 
-            if (!updatedRange.equals(oldRange)) {
-                nonogramRowLogic.getLogService().setTmpLog(SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.generateLog(
-                        rowIdx, seqId, ranges, updatedRange, nonogramRowLogic.getNonogramSolutionBoard().get(rowIdx), lengths, true, "fromRight"
-                ));
-                nonogramRowLogic.getLogService().addLog();
-                nonogramRowLogic.updateRowSequenceRange(rowIdx, seqId, updatedRange);
+                if (!updatedRange.equals(oldRange)) {
+                    nonogramRowLogic.getLogService().setTmpLog(
+                            SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.generateLog(
+                                    rowIdx, seqId, ranges, updatedRange,
+                                    nonogramRowLogic.getNonogramSolutionBoard().get(rowIdx),
+                                    lengths, "fromRight"
+                            )
+                    );
+                    nonogramRowLogic.getLogService().addLog();
+                    nonogramRowLogic.updateRowSequenceRange(rowIdx, seqId, updatedRange);
 
-                if (rangeLength(updatedRange) == seqLength && nonogramRowLogic.getBoardAccessHelper().isRowRangeColoured(rowIdx, updatedRange)) {
-                    nonogramRowLogic.excludeSequenceInRow(rowIdx, seqId);
+                    if (rangeLength(updatedRange) == seqLength &&
+                            nonogramRowLogic.getBoardAccessHelper().isRowRangeColoured(rowIdx, updatedRange)) {
+                        nonogramRowLogic.excludeSequenceInRow(rowIdx, seqId);
+                    }
+
+                    changed = true;
                 }
 
-                changed = true;
+                colIdx -= seqLength;
+                seqId--;
+                if (seqId >= 0) {
+                    seqLength = lengths.get(seqId);
+                }
+            } else {
+                colIdx--;
             }
-
-            colIdx -= seqLength;
-            if (--seqId < 0) break;
-            seqLength = lengths.get(seqId);
         }
 
         if (changed) {
             nonogramRowLogic.getNonogramState().increaseMadeSteps();
-            nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(new Field(rowIdx, 0), NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS);
+            nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(
+                    new Field(rowIdx, 0),
+                    NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS
+            );
         }
     }
 

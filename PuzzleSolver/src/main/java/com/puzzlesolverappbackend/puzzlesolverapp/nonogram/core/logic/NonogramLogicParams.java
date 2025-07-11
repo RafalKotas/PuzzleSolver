@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramConstants.X_FIELD;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldColoured;
@@ -135,23 +137,15 @@ public abstract class NonogramLogicParams {
     }
 
     public List<String> getNonogramBoardColumn(int columnIdx) {
-        List<String> solutionBoardColumn = new ArrayList<>();
-
-        for (int rowIdx = 0; rowIdx < this.getNonogramRules().getHeight(); rowIdx++) {
-            solutionBoardColumn.add(this.nonogramSolutionBoard.get(rowIdx).get(columnIdx));
-        }
-
-        return solutionBoardColumn;
+        return IntStream.range(0, this.getNonogramRules().getHeight())
+                .mapToObj(rowIdx -> this.nonogramSolutionBoard.get(rowIdx).get(columnIdx))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public List<String> getNonogramBoardColumnWithMarks(int columnIdx) {
-        List<String> solutionBoardColumnWithMarks = new ArrayList<>();
-
-        for (int rowIdx = 0; rowIdx < this.getNonogramRules().getHeight(); rowIdx++) {
-            solutionBoardColumnWithMarks.add(this.nonogramSolutionBoardWithMarks.get(rowIdx).get(columnIdx));
-        }
-
-        return solutionBoardColumnWithMarks;
+        return IntStream.range(0, this.getNonogramRules().getHeight())
+                .mapToObj(rowIdx -> this.nonogramSolutionBoardWithMarks.get(rowIdx).get(columnIdx))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     protected void addLog() {

@@ -10,7 +10,11 @@ import java.util.Map;
 @UtilityClass
 public class ActionDependencyMap {
 
-    public static final Map<NonogramSolveAction, List<NonogramSolveAction>> actionDependencies = new EnumMap<>(NonogramSolveAction.class);
+    private static final Map<NonogramSolveAction, List<NonogramSolveAction>> actionDependencies = new EnumMap<>(NonogramSolveAction.class);
+
+    public static List<NonogramSolveAction> getDependenciesFor(NonogramSolveAction action) {
+        return actionDependencies.getOrDefault(action, List.of());
+    }
 
     // TODO test completeness of actions dependencies
     static {

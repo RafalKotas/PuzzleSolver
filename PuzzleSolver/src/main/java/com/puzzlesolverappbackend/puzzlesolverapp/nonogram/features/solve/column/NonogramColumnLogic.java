@@ -9,7 +9,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramA
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramBoardAccessHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.clearing.NonogramFieldClearingHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark.NonogramFieldMarkHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark.*;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.NonogramLogService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -396,21 +396,23 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
 
     @Override
     public void markAvailableFieldsInColumn(int columnIdx) {
-        NonogramFieldMarkHelper.markAvailableFieldsInLine(
-                columnIdx,
-                false, // isRow == false → column
-                getNonogramRules(),
-                getNonogramSolutionBoard(),
-                getNonogramSolutionBoardWithMarks(),
-                getNonogramRules().getColumnSequencesLengths(),
-                getColumnsSequencesRanges(),
-                this::changeColumnSequenceRange,
-                this::excludeSequenceInColumn,
-                actionScheduler,
-                nonogramState,
-                this::addLog,
-                this::setTmpLog
+        MarkContext markContext = new MarkContext(
+                new BoardContext(columnIdx,
+                        false,
+                        getNonogramRules(),
+                        getNonogramSolutionBoard(),
+                        getNonogramSolutionBoardWithMarks()),
+                new SequencesContext(getNonogramRules().getColumnSequencesLengths(),
+                        this.getColumnsSequencesRanges(),
+                        this::changeColumnSequenceRange,
+                        this::excludeSequenceInColumn),
+                new MarkOperationContext(actionScheduler,
+                        nonogramState,
+                        this::addLog,
+                        this::setTmpLog)
         );
+
+        NonogramFieldMarkHelper.markAvailableFieldsInLine(markContext);
     }
 
     public void excludeSequenceInColumn(int columnIdx, int seqIdx) {

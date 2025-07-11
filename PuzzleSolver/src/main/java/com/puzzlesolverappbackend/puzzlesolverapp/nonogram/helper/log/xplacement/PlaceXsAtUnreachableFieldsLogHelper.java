@@ -73,7 +73,7 @@ public class PlaceXsAtUnreachableFieldsLogHelper {
     private static List<List<Integer>> parseNestedListFromListOfString(String input) {
         String trimmed = input.trim();
         if (trimmed.startsWith(LIST_OF_START_WITH_OPENING_BRACKET)) {
-            trimmed = trimmed.substring(8, trimmed.length() - 1); // usuń List.of( ... )
+            trimmed = trimmed.substring(8, trimmed.length() - 1); // remove List.of( ... )
         }
 
         return Arrays.stream(trimmed.split("List.of\\("))
@@ -82,8 +82,8 @@ public class PlaceXsAtUnreachableFieldsLogHelper {
                 .map(inner -> Arrays.stream(inner.split(","))
                         .map(String::trim)
                         .map(Integer::parseInt)
-                        .collect(Collectors.toList()))
-                .collect(Collectors.toList());
+                        .toList())
+                .toList();
     }
 
     private static String formatAsList(List<String> list) {

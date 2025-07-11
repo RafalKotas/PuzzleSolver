@@ -49,7 +49,7 @@ public class NonogramLogicController {
     public ResponseEntity<NonogramLogic> fillOverlappingColumnsSequencesRange(@Valid @RequestBody NonogramLogic nonogramLogic,
                                                                               @PathVariable("columnBegin") int columnBegin,
                                                                               @PathVariable("columnEnd") int columnEnd) {
-        NonogramLogic solutionPart = nonogramLogicService.fillOverLappingFieldsInColumnsRange(nonogramLogic, columnBegin, columnEnd);
+        NonogramLogic solutionPart = nonogramLogicService.fillOverlappingFieldsInColumnsRange(nonogramLogic, columnBegin, columnEnd);
         return new ResponseEntity<>(solutionPart, HttpStatus.OK);
     }
 

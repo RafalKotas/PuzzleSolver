@@ -106,24 +106,16 @@ public class LogFormatUtils {
 
     public static List<List<Integer>> parseNestedListLineWrappedInListOf(String input) {
         String trimmed = input.trim();
+
         if (trimmed.startsWith(LIST_OF_PREFIX)) {
-            trimmed = trimmed.substring(8, trimmed.length() - 1); // usuń "List.of(" i końcowe ")"
+            trimmed = trimmed.substring(8, trimmed.length() - 1); // remove "List.of(" and final ")"
         }
+
         return Arrays.stream(trimmed.split("\\),\\s*List.of\\("))
                 .map(s -> Arrays.stream(s.replaceAll("[\\[\\]()]", "").split(","))
                         .map(String::trim)
                         .map(Integer::parseInt)
-                        .collect(Collectors.toList()))
-                .collect(Collectors.toList());
-    }
-
-    public static List<String> safeParseStringListLine(String line) {
-        String content = line.contains("=") ? line.substring(line.indexOf('=') + 1) : line;
-
-        return Arrays.stream(content.replaceAll(BRACKETS_REGEX, "").split(","))
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
+                        .toList())
                 .toList();
     }
-
 }

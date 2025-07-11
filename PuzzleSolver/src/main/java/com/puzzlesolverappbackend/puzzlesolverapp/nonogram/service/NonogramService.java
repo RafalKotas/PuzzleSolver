@@ -210,7 +210,7 @@ public class NonogramService {
 
             saveSolutionBoard(nonogramSolutionLogic, filePath.getPath());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new NonogramFileReadException("Could not save nonogram solution to file: " + filename , e);
         }
     }
 }

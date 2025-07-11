@@ -9,7 +9,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramA
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramBoardAccessHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.clearing.NonogramFieldClearingHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark.NonogramFieldMarkHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark.*;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.NonogramLogService;
 import lombok.Getter;
 import lombok.Setter;
@@ -167,7 +167,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
     }
 
     @Override
-    public void correctRowSequencesRangesWhenMetColouredField (int rowIdx) {
+    public void correctRowSequencesRangesWhenMetColouredField(int rowIdx) {
         rowSequencesCorrectionHelper.correctRowSequencesRangesWhenMetColouredField(rowIdx);
     }
 
@@ -433,25 +433,27 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
     @Override
     public void markAvailableFieldsInRow(int rowIdx) {
-        NonogramFieldMarkHelper.markAvailableFieldsInLine(
-                rowIdx,
-                true, // isRow
-                getNonogramRules(),
-                getNonogramSolutionBoard(),
-                getNonogramSolutionBoardWithMarks(),
-                this.getNonogramRules().getRowSequencesLengths(),
-                getRowsSequencesRanges(),
-                this::changeRowSequenceRange,
-                this::excludeSequenceInRow,
-                actionScheduler,
-                nonogramState,
-                this::addLog,
-                this::setTmpLog
+        MarkContext markContext = new MarkContext(
+                new BoardContext(rowIdx, true,
+                        getNonogramRules(),
+                        getNonogramSolutionBoard(),
+                        getNonogramSolutionBoardWithMarks()),
+                new SequencesContext(getNonogramRules().getRowSequencesLengths(),
+                        getRowsSequencesRanges(),
+                        this::changeRowSequenceRange,
+                        this::excludeSequenceInRow),
+                new MarkOperationContext(actionScheduler,
+                        nonogramState,
+                        this::addLog,
+                        this::setTmpLog)
         );
+
+        NonogramFieldMarkHelper.markAvailableFieldsInLine(markContext);
     }
 
     public void excludeSequenceInRow(int rowIdx, int seqIdx) {
-        if (!this.getBoardAccessHelper().isRowIndexValid(rowIdx) || this.rowsSequencesIdsNotToInclude.get(rowIdx).contains(seqIdx)) return;
+        if (!this.getBoardAccessHelper().isRowIndexValid(rowIdx) || this.rowsSequencesIdsNotToInclude.get(rowIdx).contains(seqIdx))
+            return;
 
         String marker = indexToSequenceCharMark(seqIdx);
         List<Integer> rowSeqRange = this.getRowsSequencesRanges().get(rowIdx).get(seqIdx);
@@ -526,10 +528,6 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
     public String generateColourStepDescription(int rowIndex, int columnIndex, String actionType) {
         return String.format("ROW %d, COLUMN %d - field colouring - %s.", rowIndex, columnIndex, actionType);
-    }
-
-    public String generatePlacingXStepDescription(int rowIndex, int columnIndex, String actionType) {
-        return String.format("ROW %d, COLUMN %d - X placing - %s.", rowIndex, columnIndex, actionType);
     }
 
     public String generateCorrectingRowSequenceRangeStepDescription(int rowIndex, int sequenceIndex, List<Integer> oldRange, List<Integer> correctedRange, String actionType) {

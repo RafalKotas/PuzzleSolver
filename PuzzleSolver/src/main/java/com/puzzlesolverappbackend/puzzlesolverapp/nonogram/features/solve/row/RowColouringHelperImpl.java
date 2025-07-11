@@ -239,41 +239,50 @@ public class RowColouringHelperImpl implements RowColouringHelper {
         List<String> rowBefore = logic.getBoardAccessHelper().getRowCopy(rowIdx);
         boolean anyGlobalFieldColoured = false;
 
-        for (int colIdx = logic.getNonogramRules().getWidth() - 1; colIdx >= 0; colIdx--) {
+        int colIdx = logic.getNonogramRules().getWidth() - 1;
+        while (colIdx >= 0) {
             Field currentField = new Field(rowIdx, colIdx);
 
-            if (isFieldColoured(logic.getNonogramSolutionBoard(), currentField)) {
-                List<Integer> colouredRange =  ColouringHelper.findColouredSequenceRangeLeft(logic.getNonogramSolutionBoard(), rowIdx, colIdx);
-                List<Integer> possibleLengths = ColouringHelper.findPossibleSequenceLengths(
-                        logic.getRowsSequencesRanges().get(rowIdx),
-                        colouredRange,
-                        logic.getNonogramRules().getRowSequencesLengths().get(rowIdx)
+            if (!isFieldColoured(logic.getNonogramSolutionBoard(), currentField)) {
+                colIdx--;
+                continue;
+            }
+
+            List<Integer> colouredRange = ColouringHelper.findColouredSequenceRangeLeft(
+                    logic.getNonogramSolutionBoard(), rowIdx, colIdx
+            );
+
+            List<Integer> possibleLengths = ColouringHelper.findPossibleSequenceLengths(
+                    logic.getRowsSequencesRanges().get(rowIdx),
+                    colouredRange,
+                    logic.getNonogramRules().getRowSequencesLengths().get(rowIdx)
+            );
+
+            if (possibleLengths.isEmpty()) {
+                logic.getNonogramState().invalidateSolution();
+                break;
+            }
+
+            int minSequenceLength = Collections.min(possibleLengths);
+            int distFromX = ColouringHelper.findDistanceFromRightX(
+                    logic.getNonogramSolutionBoard(), rowIdx, colouredRange, minSequenceLength
+            );
+
+            if (distFromX > 0) {
+                int minExtensionIdx = colouredRange.get(0) + distFromX - minSequenceLength;
+                boolean extended = ColouringHelper.extendToLeft(
+                        logic,
+                        colouringHelper,
+                        logic.getActionScheduler(),
+                        rowIdx,
+                        colouredRange.get(0) - 1,
+                        minExtensionIdx
                 );
 
-                if (possibleLengths.isEmpty()) {
-                    logic.getNonogramState().invalidateSolution();
-                    break;
-                }
-
-                int minSequenceLength = Collections.min(possibleLengths);
-                int distFromX = ColouringHelper.findDistanceFromRightX(logic.getNonogramSolutionBoard(), rowIdx, colouredRange, minSequenceLength);
-
-                if (distFromX > 0) {
-                    int minExtensionIdx = colouredRange.get(0) + distFromX - minSequenceLength;
-                    boolean extended = ColouringHelper.extendToLeft(
-                            logic,
-                            colouringHelper,
-                            logic.getActionScheduler(),
-                            rowIdx,
-                            colouredRange.get(0) - 1,
-                            minExtensionIdx
-                    );
-
-                    anyGlobalFieldColoured |= extended;
-                }
-
-                colIdx = colouredRange.get(0) - 1;
+                anyGlobalFieldColoured |= extended;
             }
+
+            colIdx = colouredRange.get(0) - 1;
         }
 
         if (anyGlobalFieldColoured) {
@@ -295,45 +304,52 @@ public class RowColouringHelperImpl implements RowColouringHelper {
         List<String> rowBefore = logic.getBoardAccessHelper().getRowCopy(rowIdx);
         boolean anyGlobalFieldColoured = false;
 
-        for (int colIdx = 0; colIdx < logic.getNonogramRules().getWidth(); colIdx++) {
+        int colIdx = 0;
+        int width = logic.getNonogramRules().getWidth();
+
+        while (colIdx < width) {
             Field currentField = new Field(rowIdx, colIdx);
 
-            if (isFieldColoured(logic.getNonogramSolutionBoard(), currentField)) {
-                List<Integer> colouredRange = ColouringHelper.findColouredSequenceRangeRight(logic.getNonogramSolutionBoard(), rowIdx, colIdx);
-                List<Integer> possibleLengths = ColouringHelper.findPossibleSequenceLengths(
-                        logic.getRowsSequencesRanges().get(rowIdx),
-                        colouredRange,
-                        logic.getNonogramRules().getRowSequencesLengths().get(rowIdx)
-                );
-
-                if (possibleLengths.isEmpty()) {
-                    logic.getNonogramState().invalidateSolution();
-                    break;
-                }
-
-                int minSequenceLength = Collections.min(possibleLengths);
-                int distanceFromX = ColouringHelper.findDistanceFromLeftX(
-                        logic.getNonogramSolutionBoard(),
-                        rowIdx,
-                        colouredRange,
-                        minSequenceLength
-                );
-
-                if (distanceFromX > 0) {
-                    int maxExtensionIdx = colouredRange.get(1) - distanceFromX + minSequenceLength;
-                    boolean extended = ColouringHelper.extendToRight(
-                            logic,
-                            colouringHelper,
-                            logic.getActionScheduler(),
-                            rowIdx,
-                            colouredRange.get(1) + 1,
-                            maxExtensionIdx);
-
-                    anyGlobalFieldColoured |= extended;
-                }
-
-                colIdx = colouredRange.get(1) + 1;
+            if (!isFieldColoured(logic.getNonogramSolutionBoard(), currentField)) {
+                colIdx++;
+                continue;
             }
+
+            List<Integer> colouredRange = ColouringHelper.findColouredSequenceRangeRight(
+                    logic.getNonogramSolutionBoard(), rowIdx, colIdx
+            );
+
+            List<Integer> possibleLengths = ColouringHelper.findPossibleSequenceLengths(
+                    logic.getRowsSequencesRanges().get(rowIdx),
+                    colouredRange,
+                    logic.getNonogramRules().getRowSequencesLengths().get(rowIdx)
+            );
+
+            if (possibleLengths.isEmpty()) {
+                logic.getNonogramState().invalidateSolution();
+                break;
+            }
+
+            int minSequenceLength = Collections.min(possibleLengths);
+            int distanceFromX = ColouringHelper.findDistanceFromLeftX(
+                    logic.getNonogramSolutionBoard(), rowIdx, colouredRange, minSequenceLength
+            );
+
+            if (distanceFromX > 0) {
+                int maxExtensionIdx = colouredRange.get(1) - distanceFromX + minSequenceLength;
+                boolean extended = ColouringHelper.extendToRight(
+                        logic,
+                        colouringHelper,
+                        logic.getActionScheduler(),
+                        rowIdx,
+                        colouredRange.get(1) + 1,
+                        maxExtensionIdx
+                );
+
+                anyGlobalFieldColoured |= extended;
+            }
+
+            colIdx = colouredRange.get(1) + 1;
         }
 
         if (anyGlobalFieldColoured) {

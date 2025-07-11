@@ -19,17 +19,18 @@ public class SequenceRangeCorrectionWhenMetColouredFieldsLogHelper {
             List<Integer> newRange,
             List<String> state,
             List<Integer> sequenceLengths,
-            boolean isRow,
             String direction
     ) {
+        boolean isRow = direction.equals("toLeft") || direction.equals("toRight");
+
         return String.format(
                 """
-                        %s_SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS: %s=%d, dir=%s
-                        seq=%d
-                        new=%s
-                        state=%s
-                        lengths=%s
-                        ranges=%s
+                        %s_SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS: %s=%d, dir=%s%n
+                        seq=%d%n
+                        new=%s%n
+                        state=%s%n
+                        lengths=%s%n
+                        ranges=%s%n
                         """,
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",

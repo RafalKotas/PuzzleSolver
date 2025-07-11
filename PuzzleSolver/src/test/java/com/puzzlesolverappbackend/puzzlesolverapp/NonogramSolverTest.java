@@ -48,7 +48,7 @@ class NonogramSolverTest {
     void shouldSolveAllLogiNonogramsHeuristically() {
         Map<Double, List<String>> notSolvedByDifficulty = new HashMap<>();
 
-        for (double difficulty : List.of(1.0/*, 2.0, 3.0*/)) {
+        for (double difficulty : List.of(1.0, 2.0/*, 3.0*/)) {
             solveNonogramsAtDifficulty(difficulty, notSolvedByDifficulty);
         }
 

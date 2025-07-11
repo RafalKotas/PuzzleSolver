@@ -24,7 +24,7 @@ public class ExcludedSequenceLogHelper {
         String indexLabel = isRow ? "row" : "col";
 
         return String.format(
-                "%s: %s=%d seq=%d\nstate=%s\nlengths=%s\nranges=%s\n",
+                "%s: %s=%d seq=%d%nstate=%s%nlengths=%s%nranges=%s%n",
                 label,
                 indexLabel,
                 index,

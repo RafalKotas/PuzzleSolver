@@ -1,19 +1,13 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramState;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRules;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramActionScheduler;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.marking.MarkAvailableFieldsLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.SequenceRangeCorrectionWhenMarkingFieldsLogHelper;
 import lombok.experimental.UtilityClass;
-import org.apache.logging.log4j.util.BiConsumer;
-import org.apache.logging.log4j.util.TriConsumer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.rangeInsideAnotherRange;
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.rangeLength;
@@ -23,108 +17,148 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.Bo
 @UtilityClass
 public class NonogramFieldMarkHelper {
 
-    public static void markAvailableFieldsInLine(
-            int lineIdx,
-            boolean isRow,
-            NonogramRules rules,
-            List<List<String>> solutionBoard,
-            List<List<String>> boardWithMarks,
-            List<List<Integer>> sequencesLengths,
-            List<List<List<Integer>>> sequencesRanges,
-            TriConsumer<Integer, Integer, List<Integer>> updateRangeConsumer,
-            BiConsumer<Integer, Integer> excludeSequenceConsumer,
-            NonogramActionScheduler scheduler,
-            NonogramState state,
-            Runnable addLogRunnable,
-            Consumer<String> setTmpLogConsumer
-    ) {
+    /**
+     * Iteratively scans a single row or column and attempts to mark all fully identified sequences.
+     * <p>
+     * The method continues as long as any progress is made (i.e., any sequence is successfully marked).
+     * It uses coloured fields on the board to detect completed sequences and match them with
+     * declared sequence ranges and lengths.
+     *
+     * @param ctx The marking context containing board state, rules, and sequences metadata.
+     */
+    public static void markAvailableFieldsInLine(MarkContext ctx) {
+        BoardContext board = ctx.getBoard();
+
         boolean progress;
         do {
             progress = false;
+            int lineSize = board.isRow() ? board.getRules().getWidth() : board.getRules().getHeight();
 
-            int width = isRow ? rules.getWidth() : rules.getHeight();
-            List<Integer> lengths = sequencesLengths.get(lineIdx);
-            List<List<Integer>> ranges = sequencesRanges.get(lineIdx);
+            for (int i = 0; i < lineSize; i++) {
+                Field field = resolveField(board, i);
 
-            for (int i = 0; i < width; i++) {
-                Field field = isRow ? new Field(lineIdx, i) : new Field(i, lineIdx);
-                if (!isFieldColoured(solutionBoard, field)) continue;
-
-                List<Integer> colouredRange = findColouredSequenceRange(solutionBoard, field, isRow, rules);
-                int colouredLength = rangeLength(colouredRange);
-
-                int matchCount = 0;
-                int matchedIdx = -1;
-
-                for (int seqIdx = 0; seqIdx < lengths.size(); seqIdx++) {
-                    List<Integer> range = ranges.get(seqIdx);
-                    if (rangeInsideAnotherRange(colouredRange, range) && colouredLength <= lengths.get(seqIdx)) {
-                        matchCount++;
-                        matchedIdx = seqIdx;
-                    }
-                }
-
-                if (matchCount == 1) {
-                    String marker = indexToSequenceCharMark(matchedIdx);
-                    List<String> before = isRow
-                            ? new ArrayList<>(boardWithMarks.get(lineIdx))
-                            : getColumnCopy(boardWithMarks, lineIdx);
-
-
-                    for (int j = colouredRange.get(0); j <= colouredRange.get(1); j++) {
-                        int row = isRow ? lineIdx : j;
-                        int col = isRow ? j : lineIdx;
-                        String cell = boardWithMarks.get(row).get(col);
-                        boolean isEmptyMark = isRow
-                                ? cell.startsWith(EMPTY_FIELD, 1)
-                                : cell.charAt(3) == EMPTY_FIELD.charAt(0);
-
-                        if (isEmptyMark) {
-                            markField(boardWithMarks, row, col, marker, isRow);
-                            state.increaseMadeSteps();
-                            progress = true;
-                        }
-                    }
-
-                    List<String> after = isRow
-                            ? new ArrayList<>(boardWithMarks.get(lineIdx))
-                            : getColumnCopy(boardWithMarks, lineIdx);
-                    if (!before.equals(after)) {
-                        String log = MarkAvailableFieldsLogHelper.generateLog(
-                                lineIdx, before, after, matchedIdx, marker, isRow
-                        );
-                        setTmpLogConsumer.accept(log); // <-- poprawione
-                        addLogRunnable.run();
-                    }
-
-                    List<Integer> oldRange = ranges.get(matchedIdx);
-                    List<Integer> newRange = calculateNewMarkedRange(
-                            oldRange, colouredRange, lengths.get(matchedIdx)
-                    );
-
-                    if (!oldRange.equals(newRange)) {
-                        String log = SequenceRangeCorrectionWhenMarkingFieldsLogHelper.generateLog(
-                                lineIdx, matchedIdx, ranges, newRange, lengths, isRow
-                        );
-                        setTmpLogConsumer.accept(log);
-                        addLogRunnable.run();
-
-                        updateRangeConsumer.accept(lineIdx, matchedIdx, newRange);
-                        progress = true;
-
-                        if (rangeLength(newRange) == lengths.get(matchedIdx)) {
-                            excludeSequenceConsumer.accept(lineIdx, matchedIdx);
-                        }
-
-                        Field triggerField = isRow ? new Field(lineIdx, 0) : new Field(0, lineIdx);
-                        scheduler.scheduleActionsBasedOnField(triggerField, isRow
-                                ? NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW
-                                : NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN);
-                    }
+                if (isFieldColoured(board.getSolutionBoard(), field)) {
+                    boolean changed = tryMarkField(ctx, field);
+                    progress |= changed;
                 }
             }
-
         } while (progress);
+    }
+
+    /**
+     * Resolves a {@link Field} object based on the current line index and direction (row or column).
+     * <p>
+     * Used in the context of iterating over a single row or column depending on the board orientation.
+     *
+     * @param board The board context providing direction and index.
+     * @param i     The position in the current line (column if row-wise, row if column-wise).
+     * @return The resolved field in 2D board coordinates.
+     */
+    private static Field resolveField(BoardContext board, int i) {
+        return board.isRow()
+                ? new Field(board.getLineIdx(), i)
+                : new Field(i, board.getLineIdx());
+    }
+
+    /**
+     * Attempts to identify and mark a matching sequence for a given coloured field.
+     * <p>
+     * It finds the full coloured range around the field, checks whether this range matches
+     * any sequence based on length and allowed range, and if so, applies marking to it.
+     *
+     * @param ctx   The full solving context with board and sequence data.
+     * @param field The field from which to attempt sequence recognition.
+     * @return {@code true} if a sequence was successfully matched and marked, {@code false} otherwise.
+     */
+    private static boolean tryMarkField(MarkContext ctx, Field field) {
+        BoardContext board = ctx.getBoard();
+        SequencesContext sequences = ctx.getSequences();
+
+        List<Integer> colouredRange = findColouredSequenceRange(
+                board.getSolutionBoard(),
+                field,
+                board.isRow(),
+                board.getRules()
+        );
+
+        int lineIdx = board.getLineIdx();
+        List<Integer> sequenceLengths = sequences.getSequencesLengths().get(lineIdx);
+        List<List<Integer>> sequenceRanges = sequences.getSequencesRanges().get(lineIdx);
+
+        int matchIdx = findMatchingSequenceIdx(colouredRange, sequenceLengths, sequenceRanges);
+        return matchIdx != -1 && markMatchedSequence(ctx, colouredRange, matchIdx);
+    }
+
+    private static int findMatchingSequenceIdx(
+            List<Integer> colouredRange,
+            List<Integer> lengths,
+            List<List<Integer>> ranges
+    ) {
+        int matchCount = 0;
+        int matchedIdx = -1;
+
+        for (int seqIdx = 0; seqIdx < lengths.size(); seqIdx++) {
+            if (rangeInsideAnotherRange(colouredRange, ranges.get(seqIdx)) &&
+                    rangeLength(colouredRange) <= lengths.get(seqIdx)) {
+                matchCount++;
+                matchedIdx = seqIdx;
+            }
+        }
+
+        return matchCount == 1 ? matchedIdx : -1;
+    }
+
+    private static boolean markMatchedSequence(MarkContext ctx, List<Integer> colouredRange, int matchedIdx) {
+        BoardContext board = ctx.getBoard();
+        SequencesContext sequences = ctx.getSequences();
+        MarkOperationContext ops = ctx.getOps();
+
+        String marker = indexToSequenceCharMark(matchedIdx);
+        List<String> before = copyLine(board.getBoardWithMarks(), board);
+
+        boolean changed = markAllFieldsInRange(board, ops, colouredRange, marker);
+
+        List<String> after = copyLine(board.getBoardWithMarks(), board);
+        if (!before.equals(after)) {
+            logMarkChange(board, ops, matchedIdx, marker, before, after);
+        }
+
+        return updateRangeIfNecessary(board, sequences, ops, matchedIdx, colouredRange) || changed;
+    }
+
+    private static List<String> copyLine(List<List<String>> boardWithMarks, BoardContext board) {
+        return board.isRow()
+                ? new ArrayList<>(boardWithMarks.get(board.getLineIdx()))
+                : getColumnCopy(boardWithMarks, board.getLineIdx());
+    }
+
+    private static List<String> getColumnCopy(List<List<String>> board, int columnIdx) {
+        List<String> column = new ArrayList<>();
+        for (List<String> row : board) {
+            column.add(row.get(columnIdx));
+        }
+        return column;
+    }
+
+    private static boolean markAllFieldsInRange(BoardContext board, MarkOperationContext ops,
+                                                List<Integer> range, String marker) {
+        boolean changed = false;
+        for (int j = range.get(0); j <= range.get(1); j++) {
+            int row = board.isRow() ? board.getLineIdx() : j;
+            int col = board.isRow() ? j : board.getLineIdx();
+            String cell = board.getBoardWithMarks().get(row).get(col);
+
+            boolean isEmptyMark = board.isRow()
+                    ? cell.startsWith(EMPTY_FIELD, 1)
+                    : cell.charAt(3) == EMPTY_FIELD.charAt(0);
+
+            if (isEmptyMark) {
+                markField(board.getBoardWithMarks(), row, col, marker, board.isRow());
+                ops.getState().increaseMadeSteps();
+                changed = true;
+            }
+        }
+        return changed;
     }
 
     private static void markField(List<List<String>> boardWithMarks, int row, int col, String marker, boolean isRow) {
@@ -133,6 +167,47 @@ public class NonogramFieldMarkHelper {
         } else {
             markColumnBoardField(boardWithMarks, row, col, marker);
         }
+    }
+
+    private static void logMarkChange(BoardContext board, MarkOperationContext ops,
+                                      int seqIdx, String marker, List<String> before, List<String> after) {
+        String log = MarkAvailableFieldsLogHelper.generateLog(
+                board.getLineIdx(), before, after, seqIdx, marker, board.isRow()
+        );
+        ops.getSetTmpLogConsumer().accept(log);
+        ops.getAddLogRunnable().run();
+    }
+
+    private static boolean updateRangeIfNecessary(BoardContext board, SequencesContext sequences,
+                                                  MarkOperationContext ops, int seqIdx, List<Integer> colouredRange) {
+        List<Integer> oldRange = sequences.getSequencesRanges().get(board.getLineIdx()).get(seqIdx);
+        int seqLength = sequences.getSequencesLengths().get(board.getLineIdx()).get(seqIdx);
+
+        List<Integer> newRange = calculateNewMarkedRange(oldRange, colouredRange, seqLength);
+        if (oldRange.equals(newRange)) return false;
+
+        String log = SequenceRangeCorrectionWhenMarkingFieldsLogHelper.generateLog(
+                board.getLineIdx(), seqIdx, sequences.getSequencesRanges().get(board.getLineIdx()),
+                newRange, sequences.getSequencesLengths().get(board.getLineIdx()), board.isRow()
+        );
+        ops.getSetTmpLogConsumer().accept(log);
+        ops.getAddLogRunnable().run();
+
+        sequences.getUpdateRangeConsumer().accept(board.getLineIdx(), seqIdx, newRange);
+
+        if (rangeLength(newRange) == seqLength) {
+            sequences.getExcludeSequenceConsumer().accept(board.getLineIdx(), seqIdx);
+        }
+
+        Field trigger = board.isRow()
+                ? new Field(board.getLineIdx(), 0)
+                : new Field(0, board.getLineIdx());
+
+        ops.getScheduler().scheduleActionsBasedOnField(trigger,
+                board.isRow() ? NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW
+                        : NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN);
+
+        return true;
     }
 
     public static void markRowBoardField(List<List<String>> boardWithMarks, int rowIdx, int columnIdx, String rowSeqMark) {
@@ -145,26 +220,5 @@ public class NonogramFieldMarkHelper {
         String currentField = boardWithMarks.get(rowIdx).get(columnIdx);
         String updatedField = currentField.substring(0, 2) + MARKED_COLUMN_INDICATOR + columnSeqMark;
         boardWithMarks.get(rowIdx).set(columnIdx, updatedField);
-    }
-
-    private static List<String> getColumnCopy(List<List<String>> board, int columnIdx) {
-        List<String> column = new ArrayList<>();
-        for (List<String> row : board) {
-            column.add(row.get(columnIdx));
-        }
-        return column;
-    }
-
-    public static String getUpdatedFieldWithMarks(String currentField, String mask) {
-        StringBuilder updatedField = new StringBuilder();
-        for (int i = 0; i < currentField.length(); i++) {
-            if (currentField.charAt(i) == '-') {
-                updatedField.append(mask.charAt(i));
-            } else {
-                updatedField.append(currentField.charAt(i));
-            }
-        }
-
-        return updatedField.toString();
     }
 }

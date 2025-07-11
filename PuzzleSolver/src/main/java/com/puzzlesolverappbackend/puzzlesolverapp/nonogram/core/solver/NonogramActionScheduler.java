@@ -16,7 +16,7 @@ public class NonogramActionScheduler {
     }
 
     public void scheduleActionsBasedOnField(Field field, NonogramSolveAction actionTriggered) {
-        List<NonogramSolveAction> actionsToDo = ActionDependencyMap.actionDependencies.get(actionTriggered);
+        List<NonogramSolveAction> actionsToDo = ActionDependencyMap.getDependenciesFor(actionTriggered);
 
         int rowIdx = field.getRowIdx();
         int columnIdx = field.getColumnIdx();

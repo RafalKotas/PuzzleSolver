@@ -239,11 +239,17 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper {
         List<String> columnBefore = logic.getBoardAccessHelper().getColumnCopy(columnIdx);
         boolean anyGlobalFieldColoured = false;
 
-        for (int rowIdx = logic.getNonogramRules().getHeight() - 1; rowIdx >= 0; rowIdx--) {
+        int rowIdx = logic.getNonogramRules().getHeight() - 1;
+
+        while (rowIdx >= 0) {
             Field currentField = new Field(rowIdx, columnIdx);
+            boolean shouldDecrement = true;
 
             if (isFieldColoured(logic.getNonogramSolutionBoard(), currentField)) {
-                List<Integer> colouredRange = ColouringHelper.findColouredSequenceRangeTop(logic.getNonogramSolutionBoard(), columnIdx, rowIdx);
+                List<Integer> colouredRange = ColouringHelper.findColouredSequenceRangeTop(
+                        logic.getNonogramSolutionBoard(), columnIdx, rowIdx
+                );
+
                 List<Integer> possibleSequenceLengths = ColouringHelper.findPossibleSequenceLengths(
                         logic.getColumnsSequencesRanges().get(columnIdx),
                         colouredRange,
@@ -256,7 +262,9 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper {
                 }
 
                 int minSequenceLength = Collections.min(possibleSequenceLengths);
-                int distanceFromX = ColouringHelper.findDistanceFromBottomX(logic.getNonogramSolutionBoard(), columnIdx, colouredRange, minSequenceLength);
+                int distanceFromX = ColouringHelper.findDistanceFromBottomX(
+                        logic.getNonogramSolutionBoard(), columnIdx, colouredRange, minSequenceLength
+                );
 
                 if (distanceFromX > 0) {
                     int minExtensionIdx = colouredRange.get(0) + distanceFromX - minSequenceLength;
@@ -268,11 +276,15 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper {
                             colouredRange.get(0) - 1,
                             minExtensionIdx
                     );
-
                     anyGlobalFieldColoured |= extended;
                 }
 
                 rowIdx = colouredRange.get(0) - 1;
+                shouldDecrement = false;
+            }
+
+            if (shouldDecrement) {
+                rowIdx--;
             }
         }
 
@@ -295,11 +307,18 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper {
         List<String> columnBefore = logic.getBoardAccessHelper().getColumnCopy(columnIdx);
         boolean anyGlobalFieldColoured = false;
 
-        for (int rowIdx = 0; rowIdx < logic.getNonogramRules().getHeight(); rowIdx++) {
+        int rowIdx = 0;
+        int height = logic.getNonogramRules().getHeight();
+
+        while (rowIdx < height) {
             Field currentField = new Field(rowIdx, columnIdx);
+            boolean shouldAdvance = true;
 
             if (isFieldColoured(logic.getNonogramSolutionBoard(), currentField)) {
-                List<Integer> colouredRange = ColouringHelper.findColouredSequenceRangeBottom(logic.getNonogramSolutionBoard(), columnIdx, rowIdx);
+                List<Integer> colouredRange = ColouringHelper.findColouredSequenceRangeBottom(
+                        logic.getNonogramSolutionBoard(), columnIdx, rowIdx
+                );
+
                 List<Integer> possibleSequenceLengths = ColouringHelper.findPossibleSequenceLengths(
                         logic.getColumnsSequencesRanges().get(columnIdx),
                         colouredRange,
@@ -313,10 +332,8 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper {
 
                 int minSequenceLength = Collections.min(possibleSequenceLengths);
                 int distanceFromX = ColouringHelper.findDistanceFromTopX(
-                        logic.getNonogramSolutionBoard(),
-                        columnIdx,
-                        colouredRange,
-                        minSequenceLength);
+                        logic.getNonogramSolutionBoard(), columnIdx, colouredRange, minSequenceLength
+                );
 
                 if (distanceFromX > 0) {
                     int maxExtensionIdx = colouredRange.get(1) - distanceFromX + minSequenceLength;
@@ -333,6 +350,11 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper {
                 }
 
                 rowIdx = colouredRange.get(1) + 1;
+                shouldAdvance = false;
+            }
+
+            if (shouldAdvance) {
+                rowIdx++;
             }
         }
 
@@ -350,6 +372,4 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper {
             logic.getLogService().addLog();
         }
     }
-
 }
-

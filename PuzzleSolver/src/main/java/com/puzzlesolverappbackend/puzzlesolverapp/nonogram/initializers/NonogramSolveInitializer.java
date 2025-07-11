@@ -80,14 +80,14 @@ public class NonogramSolveInitializer implements CommandLineRunner {
         int selectedCount = 0;
         int solvedCount = 0;
 
-        List<Pair<String, Double>> filesWithTimeTooLongSolvingDifficulty2Logi = List.of(
+        List<Pair<String, Double>> filesWithTimeTooLongSolvingDifficultyTwoLogi = List.of(
                 Pair.of("o09976", 11.787),
                 Pair.of("o04678", 32.250)
         );
 
-        List<String> filesWithTimeOkDifficulty2Logi = List.of();
+        List<String> filesWithTimeOkDifficultyTwoLogi = List.of();
 
-        List<Pair<String, Double>> filesWithTimeTooLongSolvingDifficulty3Logi = List.of(
+        List<Pair<String, Double>> filesWithTimeTooLongSolvingDifficultyThreeLogi = List.of(
                 Pair.of("o08214", 17.388),
                 Pair.of("o05862", 164.811),
                 Pair.of("o10335", 48.767),
@@ -288,7 +288,7 @@ public class NonogramSolveInitializer implements CommandLineRunner {
                 Pair.of("o12099", 16.131)
         );
 
-        List<String> filesWithTimeOkDifficulty4Logi = List.of();
+        List<String> filesWithTimeOkDifficultyFourLogi = List.of();
 
         List<Pair<String, Double>> filesWithTimeTooLongSolvingDifficultyFiveLogi = Arrays.asList(
                 Pair.of("o10310", 57.0),

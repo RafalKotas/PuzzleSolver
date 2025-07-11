@@ -34,47 +34,41 @@ public class ColumnMixedActionsHelper {
             int potentiallyColouredFieldRowIndex,
             int maxSequenceLength) {
 
-        List<List<Integer>> colouredSequencesRangesInColumnNotFurtherThanMaxSequenceLength = new ArrayList<>();
-        List<Integer> colouredSequenceRangeInColumn;
-
-        List<Integer> possibleColouredSequencesEndIndexesRange = Arrays.asList(Math.max(potentiallyColouredFieldRowIndex - maxSequenceLength, 0),
-                potentiallyColouredFieldRowIndex - DISTANCE_WITH_ONE_EMPTY_FIELD_TO_POSSIBLE_COLOURED);
+        List<List<Integer>> colouredSequencesRanges = new ArrayList<>();
+        int minRowIdx = Math.max(potentiallyColouredFieldRowIndex - maxSequenceLength, 0);
+        int maxRowIdx = potentiallyColouredFieldRowIndex - DISTANCE_WITH_ONE_EMPTY_FIELD_TO_POSSIBLE_COLOURED;
 
         boolean fieldWithXFound = false;
-        int currentRowIdx = possibleColouredSequencesEndIndexesRange.get(1);
-        int potentiallyColouredSequenceRowIdx;
+        int currentRowIdx = maxRowIdx;
 
-        while (currentRowIdx >= possibleColouredSequencesEndIndexesRange.get(0)) {
+        while (currentRowIdx >= minRowIdx && !fieldWithXFound) {
 
-            if (isFieldColoured(solutionBoard, new Field(currentRowIdx, columnIdx))) {
-                potentiallyColouredSequenceRowIdx = currentRowIdx;
-                while (potentiallyColouredSequenceRowIdx >= 0 && isFieldColoured(solutionBoard, new Field(potentiallyColouredSequenceRowIdx, columnIdx))) {
-                    potentiallyColouredSequenceRowIdx--;
-                }
-                colouredSequenceRangeInColumn = new ArrayList<>(Arrays.asList(currentRowIdx, potentiallyColouredSequenceRowIdx + 1));
-                colouredSequencesRangesInColumnNotFurtherThanMaxSequenceLength.add(colouredSequenceRangeInColumn);
+            Field field = new Field(currentRowIdx, columnIdx);
 
-                currentRowIdx = potentiallyColouredSequenceRowIdx - 1; // field with this columnIdx is not coloured ("X"/"-")
+            if (isFieldColoured(solutionBoard, field)) {
+                int startIdx = currentRowIdx;
+                int endIdx = currentRowIdx;
 
-                if (potentiallyColouredSequenceRowIdx < 0) {
-                    break;
+                while (endIdx >= 0 && isFieldColoured(solutionBoard, new Field(endIdx, columnIdx))) {
+                    endIdx--;
                 }
 
-                if (currentRowIdx == -1 || isFieldWithX(solutionBoard, new Field(currentRowIdx, columnIdx))) { // TODO - temp condition currentRowIdx == -1
+                colouredSequencesRanges.add(List.of(startIdx, endIdx + 1));
+                currentRowIdx = endIdx - 1;
+
+                if (currentRowIdx < minRowIdx || isFieldWithX(solutionBoard, new Field(currentRowIdx, columnIdx))) {
                     fieldWithXFound = true;
                 }
-            } else if (isFieldWithX(solutionBoard, new Field(currentRowIdx, columnIdx))) {
-                fieldWithXFound = true;
-            }
 
-            if (fieldWithXFound) {
-                break;
+            } else {
+                if (isFieldWithX(solutionBoard, field)) {
+                    fieldWithXFound = true;
+                }
+                currentRowIdx--;
             }
-
-            currentRowIdx--;
         }
 
-        return colouredSequencesRangesInColumnNotFurtherThanMaxSequenceLength;
+        return colouredSequencesRanges;
     }
 
     public static List<List<Integer>> getColouredSequencesRangesInColumnInRangeToBottom(List<List<String>> solutionBoard, int columnIdx, int potentiallyColouredFieldColumnIndex, int maxSequenceLength) {
