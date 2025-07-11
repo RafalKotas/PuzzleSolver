@@ -221,6 +221,21 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
         }
     }
 
+    /**
+     * Places Xs in all empty fields between X-marked fields in a column,
+     * if no sequence can possibly fit in the range except those that are too long.
+     * <p>
+     * Steps:
+     * <ol>
+     *   <li>Get all ranges of empty fields between pairs of Xs in the column.</li>
+     *   <li>Filter out ranges that are too short to hold any valid sequence (i.e., endRow == startRow + 1).</li>
+     *   <li>For each such range, check if only too-long sequences could fit.</li>
+     *   <li>If so, mark Xs in the entire range.</li>
+     *   <li>If any changes were made, generate and store a log entry.</li>
+     * </ol>
+     *
+     * @param columnIdx index of the column to process
+     */
     @Override
     public void placeXsColumnAtTooShortEmptySequences(int columnIdx) {
         int height = logic.getNonogramRules().getHeight();
@@ -230,61 +245,110 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
 
         List<String> columnBefore = logic.getBoardAccessHelper().getColumnCopy(columnIdx);
 
-        int rowIdx = 0;
-        while (rowIdx < height - 1) {
-            if (!isFieldWithX(logic.getNonogramSolutionBoard(), new Field(rowIdx, columnIdx))) {
-                rowIdx++;
-                continue;
+        List<List<Integer>> candidateRanges = findEmptyRangesBetweenXs(columnIdx, height);
+
+        for (List<Integer> range : candidateRanges) {
+            if (onlyTooLongSequencesFitInRange(sequenceRanges, sequenceLengths, excludedSequenceIds, range)) {
+                markXsInRange(range, columnIdx);
             }
-
-            int startRowX = rowIdx;
-            int cursor = rowIdx + 1;
-            while (cursor < height && isFieldEmpty(logic.getNonogramSolutionBoard(), new Field(cursor, columnIdx))) {
-                cursor++;
-            }
-
-            if (cursor >= height || !isFieldWithX(logic.getNonogramSolutionBoard(), new Field(cursor, columnIdx))) {
-                rowIdx = cursor;
-                continue;
-            }
-
-            int endRowX = cursor;
-            if (endRowX <= startRowX + 1) {
-                rowIdx = cursor;
-                continue;
-            }
-
-            List<Integer> emptyRange = List.of(startRowX + 1, endRowX - 1);
-
-            if (onlyTooLongSequencesFitInRange(sequenceRanges, sequenceLengths, excludedSequenceIds, emptyRange)) {
-                for (int rowInRange = emptyRange.get(0); rowInRange <= emptyRange.get(1); rowInRange++) {
-                    Field field = new Field(rowInRange, columnIdx);
-                    if (!isFieldEmpty(logic.getNonogramSolutionBoard(), field)) continue;
-
-                    nonogramFieldPlacingXHelper.placeXAtGivenField(field);
-                    logic.getNonogramFieldExclusionHelper().excludeFieldInColumn(field);
-                    logic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES);
-                    logic.getNonogramState().increaseMadeSteps();
-                }
-            }
-
-            rowIdx = endRowX;
         }
 
         List<String> columnAfter = logic.getBoardAccessHelper().getColumnCopy(columnIdx);
         if (!columnBefore.equals(columnAfter)) {
             logic.getLogService().setTmpLog(PlaceXsAtTooShortEmptySequencesLogHelper.generateLog(
-                    columnIdx,
-                    columnBefore,
-                    columnAfter,
-                    sequenceLengths,
-                    excludedSequenceIds,
-                    false // isRow
-            ));
+                    columnIdx, columnBefore, columnAfter, sequenceLengths, excludedSequenceIds, false));
             logic.getLogService().addLog();
         }
     }
 
+    /**
+     * Finds ranges of empty fields in a column that are located between two X-marked fields.
+     * <p>
+     * Iterates through the column from top to bottom, and:
+     * <ol>
+     *   <li>Searches for a row that contains an X (start boundary).</li>
+     *   <li>Skips over empty fields until a non-empty field or another X is found (end boundary).</li>
+     *   <li>If a valid pair of Xs is found and at least one empty field lies between them,
+     *       creates a range representing those empty fields.</li>
+     * </ol>
+     * Only ranges of length at least 1 are returned.
+     *
+     * @param columnIdx the index of the column to search
+     * @param height the total number of rows in the board
+     * @return a list of empty ranges (each as [startRow, endRow]) between two Xs
+     */
+    private List<List<Integer>> findEmptyRangesBetweenXs(int columnIdx, int height) {
+        List<List<Integer>> emptyRanges = new ArrayList<>();
+        int rowIdx = 0;
+
+        while (rowIdx < height - 1) {
+            rowIdx = findStartRowWithX(rowIdx, columnIdx, height);
+            if (rowIdx >= height - 1) break;
+
+            int endRowX = findEndRowWithXAfterEmpty(rowIdx + 1, columnIdx, height);
+            if (endRowX != -1 && endRowX > rowIdx + 1) {
+                emptyRanges.add(List.of(rowIdx + 1, endRowX - 1));
+                rowIdx = endRowX;
+            } else {
+                rowIdx = (endRowX == -1) ? height : endRowX;
+            }
+        }
+
+        return emptyRanges;
+    }
+
+    /**
+     * Finds the next row index starting from {@code startIdx} (inclusive)
+     * that contains an X in the specified column.
+     *
+     * @param startIdx the row index to start the search from
+     * @param colIdx   the column index to check
+     * @param height   the total height of the board
+     * @return the index of the next row containing an X, or {@code height} if none is found
+     */
+    private int findStartRowWithX(int startIdx, int colIdx, int height) {
+        while (startIdx < height && !isFieldWithX(logic.getNonogramSolutionBoard(), new Field(startIdx, colIdx))) {
+            startIdx++;
+        }
+        return startIdx;
+    }
+
+    /**
+     * Starting from {@code startIdx}, skips over empty fields in the specified column
+     * and returns the index of the next row that contains an X.
+     *
+     * @param startIdx the row index to start scanning from (after the initial X)
+     * @param colIdx   the column index to check
+     * @param height   the total height of the board
+     * @return the index of the row with the next X, or {@code -1} if not found
+     */
+    private int findEndRowWithXAfterEmpty(int startIdx, int colIdx, int height) {
+        int cursor = startIdx;
+        while (cursor < height && isFieldEmpty(logic.getNonogramSolutionBoard(), new Field(cursor, colIdx))) {
+            cursor++;
+        }
+
+        if (cursor >= height || !isFieldWithX(logic.getNonogramSolutionBoard(), new Field(cursor, colIdx))) {
+            return -1;
+        }
+
+        return cursor;
+    }
+
+    /**
+     * Determines if all non-excluded sequences that fit into the given empty range
+     * are too long to actually fit.
+     * <p>
+     * A sequence is considered "fitting" if its range fully contains the empty range.
+     * Among fitting sequences, all must have a length greater than the range length
+     * for this method to return {@code true}.
+     *
+     * @param sequenceRanges     list of start/end ranges for each sequence
+     * @param sequenceLengths    list of sequence lengths for the column
+     * @param excludedSequenceIds sequence indexes to exclude from consideration
+     * @param emptyRange         the range of empty fields to evaluate
+     * @return {@code true} if only too-long sequences can fit in the empty range; otherwise {@code false}
+     */
     private boolean onlyTooLongSequencesFitInRange(
             List<List<Integer>> sequenceRanges,
             List<Integer> sequenceLengths,
@@ -308,6 +372,31 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
         }
 
         return !fittingSequences.isEmpty() && fittingSequences.equals(tooLongSequences);
+    }
+
+    /**
+     * Marks all empty fields in the given column range with Xs.
+     * <p>
+     * Also:
+     * <ul>
+     *   <li>Excludes each field from further consideration in the column.</li>
+     *   <li>Schedules solving actions based on the marked field.</li>
+     *   <li>Increments the made steps counter.</li>
+     * </ul>
+     *
+     * @param emptyRange the range of rows (inclusive) in which to place Xs
+     * @param colIdx     the column index where Xs should be placed
+     */
+    private void markXsInRange(List<Integer> emptyRange, int colIdx) {
+        for (int row = emptyRange.get(0); row <= emptyRange.get(1); row++) {
+            Field field = new Field(row, colIdx);
+            if (!isFieldEmpty(logic.getNonogramSolutionBoard(), field)) continue;
+
+            nonogramFieldPlacingXHelper.placeXAtGivenField(field);
+            logic.getNonogramFieldExclusionHelper().excludeFieldInColumn(field);
+            logic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES);
+            logic.getNonogramState().increaseMadeSteps();
+        }
     }
 
     @Override

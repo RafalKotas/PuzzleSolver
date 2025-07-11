@@ -9,6 +9,8 @@ import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldColoured;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldWithX;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.MixedActionsHelper.wouldMergeTooLongBackward;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.MixedActionsHelper.wouldMergeTooLongForward;
 
 /**
  * prevent extending coloured sequence to excess length in row
@@ -120,53 +122,16 @@ public interface RowOverextensionPrevention {
 
     static List<Integer> findValidSequencesIdsMergingToLeft(List<Integer> sequenceIds, List<Integer> expectedLengths, int columnIndexBeforeX, List<List<Integer>> colouredSequences) {
         return IntStream.range(0, sequenceIds.size())
-                .filter(i -> !wouldMergeTooLongToLeft(expectedLengths.get(i), columnIndexBeforeX, colouredSequences))
+                .filter(i -> !wouldMergeTooLongBackward(expectedLengths.get(i), columnIndexBeforeX, colouredSequences))
                 .mapToObj(sequenceIds::get)
                 .toList();
-    }
-
-    // TODO(?) - same as wouldMergeTooLongToTop at ColumnMixedActionsHelper
-    static boolean wouldMergeTooLongToLeft(int expectedLength, int columnIndexBeforeX, List<List<Integer>> colouredSequences) {
-        int contactIndex = columnIndexBeforeX - expectedLength + 1;
-
-        return colouredSequences.stream().anyMatch(colouredSequenceRange -> {
-            int colouredSequenceStart = colouredSequenceRange.get(0);
-            int colouredSequenceEnd = colouredSequenceRange.get(1);
-
-            if (contactIndex <= colouredSequenceEnd + 1) {
-                int firstPathEndIndex = contactIndex - 1;
-                int firstPartLength = Math.max(0, firstPathEndIndex  - colouredSequenceStart + 1);
-                int secondPartLength = columnIndexBeforeX - contactIndex + 1;
-                return firstPartLength + secondPartLength > expectedLength;
-            }
-            return false;
-        });
     }
 
     static List<Integer> findValidSequencesIdsMergingToRight(List<Integer> sequenceIds, List<Integer> expectedLengths, int colouredColumnIndexAfterX, List<List<Integer>> colouredSequences) {
 
         return IntStream.range(0, sequenceIds.size())
-                .filter(i -> !wouldMergeTooLongToRight(expectedLengths.get(i), colouredColumnIndexAfterX, colouredSequences))
+                .filter(i -> !wouldMergeTooLongForward(expectedLengths.get(i), colouredColumnIndexAfterX, colouredSequences))
                 .mapToObj(sequenceIds::get)
                 .toList();
-    }
-
-    // TODO - check inversed case o10401 - start from column 18
-    // TODO(?) - same as wouldMergeTooLongToBottom at ColumnMixedActionsHelper
-    static boolean wouldMergeTooLongToRight(int expectedLength, int colouredColumnIndexAfterX, List<List<Integer>> colouredSequences) {
-        int contactIndex = colouredColumnIndexAfterX + expectedLength - 1;
-
-        return colouredSequences.stream().anyMatch(colouredSequenceRange -> {
-            int colouredSequenceStart = colouredSequenceRange.get(0);
-            int colouredSequenceEnd = colouredSequenceRange.get(1);
-
-            if (contactIndex >= colouredSequenceStart - 1) {
-                int firstPartLength = contactIndex - colouredColumnIndexAfterX + 1;
-                int secondPartStartIndex = contactIndex + 1;
-                int secondPartLength = contactIndex == colouredSequenceEnd ? 0 : Math.max(0, colouredSequenceEnd - secondPartStartIndex + 1);
-                return firstPartLength + secondPartLength > expectedLength;
-            }
-            return false;
-        });
     }
 }
