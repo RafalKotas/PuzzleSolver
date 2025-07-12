@@ -1,19 +1,17 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Min;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class NonogramFileDetails {
 
     private List<List<Integer>> rowSequences;
@@ -25,21 +23,6 @@ public class NonogramFileDetails {
     private int height;
     @Min(1)
     private int width;
-
-    @Override
-    public String toString() {
-        return "NonogramFileDetails{" +
-                "rowSequences=" + rowSequences +
-                ", columnSequences=" + columnSequences +
-                ", filename='" + filename + '\'' +
-                ", height=" + height +
-                ", width=" + width +
-                ", source='" + source + '\'' +
-                ", year='" + year + '\'' +
-                ", month='" + month + '\'' +
-                ", difficulty=" + difficulty +
-                '}';
-    }
 
     private String source;
     private String year;

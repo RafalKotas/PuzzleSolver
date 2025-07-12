@@ -1,18 +1,16 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.sudoku;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class SudokuFileDetails {
 
     private String source;
@@ -24,17 +22,5 @@ public class SudokuFileDetails {
     private String month;
 
     private List<List<Integer>> board;
-
-    @Override
-    public String toString() {
-        return "SudokuFileDetails{" +
-                "source='" + source + '\'' +
-                ", difficulty=" + difficulty +
-                ", filled=" + filled +
-                ", year='" + year + '\'' +
-                ", month='" + month + '\'' +
-                ", board=" + board +
-                '}';
-    }
 }
 

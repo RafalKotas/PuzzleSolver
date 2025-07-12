@@ -1,18 +1,16 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.slitherlink;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class SlitherlinkFileDetails {
 
     private String source;

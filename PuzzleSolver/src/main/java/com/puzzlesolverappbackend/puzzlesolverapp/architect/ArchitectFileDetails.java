@@ -1,19 +1,17 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.architect;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Min;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class ArchitectFileDetails {
 
     private List<Integer> tanksInRows;
