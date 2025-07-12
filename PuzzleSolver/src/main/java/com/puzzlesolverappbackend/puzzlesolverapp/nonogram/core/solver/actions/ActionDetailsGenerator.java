@@ -10,7 +10,7 @@ import java.util.List;
 @UtilityClass
 public class ActionDetailsGenerator {
 
-    public static List<NonogramActionDetails> generateAllPossibleSingleActionDetails(int height, int width) {
+    static List<NonogramActionDetails> generateAllPossibleSingleActionDetails(int height, int width) {
         List<NonogramActionDetails> result = new ArrayList<>();
         int index = 0;
 
