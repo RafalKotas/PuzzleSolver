@@ -1,6 +1,9 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.sudoku;
 
-import jakarta.persistence.*;
+import com.puzzlesolverappbackend.puzzlesolverapp.common.BasePuzzleEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.persistence.metamodel.StaticMetamodel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,17 +17,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @Getter
-public class Sudoku {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "filename")
-    private String filename;
-
-    @Column(name = "source")
-    private String source;
+public class Sudoku extends BasePuzzleEntity {
 
     @Column(name = "year")
     private String year;
@@ -32,18 +25,14 @@ public class Sudoku {
     @Column(name = "month")
     private String month;
 
-    @Column(name = "difficulty")
-    private Double difficulty;
-
     @Column(name = "filled")
     private Integer filled;
 
-    public Sudoku(String architectFileName, String source, String year, String month, Double difficulty, Integer filled) {
-        this.filename = architectFileName;
-        this.source = source;
+    public Sudoku(String filename, String source, String year, String month,
+                  Double difficulty, Integer filled) {
+        super(filename, source, difficulty);
         this.year = year;
         this.month = month;
-        this.difficulty = difficulty;
         this.filled = filled;
     }
 }
