@@ -12,10 +12,10 @@ import lombok.ToString;
 @Entity
 @Table(name = "slitherlink")
 @StaticMetamodel(Slitherlink.class)
-@ToString
 @NoArgsConstructor
 @Setter
 @Getter
+@ToString(callSuper = true)
 public class Slitherlink extends TimedPuzzleEntity {
 
     public Slitherlink(String filename, String source, String year, String month,

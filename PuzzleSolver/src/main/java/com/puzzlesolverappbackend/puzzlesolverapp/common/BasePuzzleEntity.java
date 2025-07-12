@@ -1,16 +1,14 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.common;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @MappedSuperclass
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@ToString
 public abstract class BasePuzzleEntity {
 
     @Id

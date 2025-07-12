@@ -13,10 +13,10 @@ import lombok.ToString;
 @Entity
 @Table(name = "sudoku")
 @StaticMetamodel(Sudoku.class)
-@ToString
 @NoArgsConstructor
 @Setter
 @Getter
+@ToString(callSuper = true)
 public class Sudoku extends BasePuzzleEntity {
 
     @Column(name = "year")

@@ -2,14 +2,14 @@ package com.puzzlesolverappbackend.puzzlesolverapp.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @MappedSuperclass
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
+@ToString(callSuper = true)
 public abstract class SizedPuzzleEntity extends BasePuzzleEntity {
 
     @Column(name = "height")

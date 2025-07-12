@@ -12,10 +12,10 @@ import lombok.ToString;
 @Entity
 @Table(name = "nonogram")
 @StaticMetamodel(Nonogram.class)
-@ToString
 @NoArgsConstructor
 @Setter
 @Getter
+@ToString(callSuper = true)
 public class Nonogram extends TimedPuzzleEntity {
 
     public Nonogram(String filename, String source, String year, String month,

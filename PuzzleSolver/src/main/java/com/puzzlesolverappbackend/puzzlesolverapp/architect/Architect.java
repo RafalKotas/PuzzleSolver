@@ -12,10 +12,10 @@ import lombok.ToString;
 @Entity
 @Table(name = "architect")
 @StaticMetamodel(Architect.class)
-@ToString
 @NoArgsConstructor
 @Setter
 @Getter
+@ToString(callSuper = true)
 public class Architect extends TimedPuzzleEntity {
 
     public Architect(String filename, String source, String year, String month,

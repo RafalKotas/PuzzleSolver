@@ -12,10 +12,10 @@ import lombok.ToString;
 @Entity
 @Table(name = "akari")
 @StaticMetamodel(Akari.class)
-@ToString
 @NoArgsConstructor
 @Setter
 @Getter
+@ToString(callSuper = true)
 public class Akari extends SizedPuzzleEntity {
 
     public Akari(String filename, String source, Double difficulty,
