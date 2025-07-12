@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRules.mapNonogramFileDetailsToNonogramRules;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.utils.NonogramSymmetryHelper.getSymmetryGrade;
 
 //@Component
 //@Order(9)
@@ -50,7 +51,7 @@ public class SymmetricNonogramLoggerInitializer implements CommandLineRunner {
                 NonogramRules nonogramRules = mapNonogramFileDetailsToNonogramRules(nonogramFileDetails);
                 NonogramLogic nonogramLogic = new NonogramLogic(nonogramRules, GuessMode.DISABLED);
 
-                switch(nonogramLogic.nonogramSymmetricalGrade()) {
+                switch(getSymmetryGrade(nonogramLogic)) {
                     case "4 axis":
                         nonograms3Dsymmetrical.add(nonogramFileName);
                         break;

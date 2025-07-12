@@ -21,6 +21,7 @@ import java.util.*;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.constants.SharedConstants.JSON_EXTENSION;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRules.mapNonogramFileDetailsToNonogramRules;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.utils.NonogramStatsUtils.getCompletionPercentage;
 
 //@Component
 //@Order(7)
@@ -636,9 +637,9 @@ public class NonogramSolveInitializer implements CommandLineRunner {
                 long timeElapsed = finish - start;
                 double secondsElapsed = timeElapsed / 1000.0;
 
-                log.info("{}s {}%", secondsElapsed, nonogramLogicSolved.getCompletionPercentage());
+                log.info("{}s {}%", secondsElapsed, getCompletionPercentage(nonogramLogicSolved));
 
-                if (nonogramLogicSolved.getCompletionPercentage() == 100) {
+                if (getCompletionPercentage(nonogramLogicSolved) == 100) {
                     solvedCount = solvedCount + 1;
                     if (SAVE_SOLUTIONS) {
                         nonogramService.saveSolutionToFile(filename, nonogramLogicSolved);

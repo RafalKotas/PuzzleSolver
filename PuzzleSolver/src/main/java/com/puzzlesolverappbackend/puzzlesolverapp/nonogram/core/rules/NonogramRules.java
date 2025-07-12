@@ -3,7 +3,6 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramFileDetails;
 import lombok.*;
 
-import java.util.Collections;
 import java.util.List;
 
 @Setter
@@ -24,15 +23,6 @@ public class NonogramRules {
         this.columnSequencesLengths = columnSequencesLengths;
         this.height = height;
         this.width = width;
-    }
-
-    public static NonogramRules buildInitialEmptyNonogramRules() {
-        return NonogramRules.builder()
-                .rowSequencesLengths(Collections.emptyList())
-                .columnSequencesLengths(Collections.emptyList())
-                .height(0)
-                .width(0)
-                .build();
     }
 
     public static NonogramRules mapNonogramFileDetailsToNonogramRules(NonogramFileDetails nonogramFileDetails) {

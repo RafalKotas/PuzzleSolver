@@ -3,6 +3,7 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums;
 import java.util.List;
 
 public enum NonogramSolveAction {
+    UNKNOWN,
     CORRECT_ROW_SEQUENCES_RANGES,
     CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
     CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY,

@@ -3,7 +3,6 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.annotations.Expose;
-import com.puzzlesolverappbackend.puzzlesolverapp.common.LogicFunctions;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramActionDetails;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramBoardTemplate;
@@ -42,6 +41,8 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.util.Nono
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.util.NonogramSolverUtils.actualRangesDoNotContainCorrectRanges;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exclusion.ExcludedSequenceLogHelper.generateExcludedSequenceLog;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.utils.NonogramStatsUtils.areaInFields;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.utils.NonogramStatsUtils.fieldsFilled;
 
 
 @Data
@@ -204,7 +205,7 @@ public class NonogramLogic extends NonogramLogicParams {
         copy.setColumnsSequencesRanges(deepCopyIntegerListListList(original.getColumnsSequencesRanges()));
 
         copy.setActionsToDoList(original.getActionsToDoList());
-        copy.setLogs(original.getLogs());
+        copy.setLogs(new ArrayList<>(original.getLogs()));
         copy.setNonogramState(new NonogramState(original.getNonogramState().getNewStepsMade(),
                 original.getNonogramState().isInvalidSolution()));
 
@@ -231,7 +232,6 @@ public class NonogramLogic extends NonogramLogicParams {
         this.setFieldClearingHelper(clearingHelper);
         this.setActionScheduler(scheduler);
     }
-
 
     private List<List<String>> deepCopyBoard(List<List<String>> board) {
         List<List<String>> copy = new ArrayList<>();
@@ -1122,46 +1122,6 @@ public class NonogramLogic extends NonogramLogicParams {
         return this;
     }
 
-    public boolean isNonogramRowSymmetrical() {
-        return areOriginalAndReversedListIdentical( this.nonogramRules.getRowSequencesLengths() );
-    }
-
-    public boolean isNonogramColumnSymmetrical() {
-        return areOriginalAndReversedListIdentical( this.getNonogramRules().getColumnSequencesLengths() );
-    }
-
-    public static boolean areOriginalAndReversedListIdentical(List<List<Integer>> listOfIntegers) {
-
-        List<List<Integer>> reversedList = new ArrayList<>(listOfIntegers);
-        Collections.reverse(reversedList);
-
-        return reversedList.equals(listOfIntegers);
-    }
-
-    public boolean isNonogram1DSymmetrical() {
-        return LogicFunctions.xor(isNonogramRowSymmetrical(), isNonogramColumnSymmetrical());
-    }
-
-    public boolean isNonogram2DSymmetrical() {
-        return isNonogramRowSymmetrical() && isNonogramColumnSymmetrical() && !areRowsSequencesIdenticalWithColumnsSequences();
-    }
-
-    public boolean isNonogram3DSymmetrical() {
-        return isNonogramRowSymmetrical() && isNonogramColumnSymmetrical() && areRowsSequencesIdenticalWithColumnsSequences();
-    }
-
-    public String nonogramSymmetricalGrade() {
-        if (isNonogram3DSymmetrical()) {
-            return "4 axis";
-        } else if (isNonogram2DSymmetrical()) {
-            return "2 axis";
-        } else if (isNonogram1DSymmetrical()) {
-            return "1 axis";
-        } else {
-            return "None";
-        }
-    }
-
     public boolean areRowsSequencesIdenticalWithColumnsSequences() {
         if (this.getNonogramRules().getRowSequencesLengths().size() != this.getNonogramRules().getColumnSequencesLengths().size()) {
             return false;
@@ -1180,7 +1140,7 @@ public class NonogramLogic extends NonogramLogicParams {
     }
 
     public boolean nonogramIsFullyAndCorrectSolved() {
-        if (fieldsFilled() != super.nonogramAreaInFieldsCount()) {
+        if (fieldsFilled(this) != areaInFields(this)) {
             return false;
         }
 

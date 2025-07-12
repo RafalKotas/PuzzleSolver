@@ -6,6 +6,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.common.CommonService;
 import com.puzzlesolverappbackend.puzzlesolverapp.common.FileHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.constants.InitializerConstants;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.exception.NonogramFileReadException;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.exception.NonogramFileSaveException;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Nonogram;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramFileDetails;
@@ -210,7 +211,7 @@ public class NonogramService {
 
             saveSolutionBoard(nonogramSolutionLogic, filePath.getPath());
         } catch (IOException e) {
-            throw new NonogramFileReadException("Could not save nonogram solution to file: " + filename , e);
+            throw new NonogramFileSaveException("Could not save nonogram solution to file: " + filename , e);
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.controller;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.common.CommonService;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Nonogram;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramFileDetails;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramFiltersResponse;
@@ -8,7 +7,6 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.dto.NonogramFilterReq
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.repository.NonogramRepository;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.NonogramService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,14 +22,14 @@ import java.util.List;
 @RequestMapping("/api/nonogram")
 public class NonogramController {
 
-    @Autowired
-    private CommonService commonService;
+    private final NonogramService nonogramService;
+    private final NonogramRepository nonogramRepository;
 
-    @Autowired
-    private NonogramService nonogramService;
-
-    @Autowired
-    private NonogramRepository nonogramRepository;
+    public NonogramController(NonogramService nonogramService,
+                              NonogramRepository nonogramRepository) {
+        this.nonogramService = nonogramService;
+        this.nonogramRepository = nonogramRepository;
+    }
 
     private static final String DEFAULT_PAGE = "0";
 

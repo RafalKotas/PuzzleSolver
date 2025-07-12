@@ -319,9 +319,9 @@ public class ActionDependencyMap {
         ));
 
         actionDependencies.put(NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN, List.of(
-               NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES,
-               NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_COLUMN,
-               NonogramSolveAction.PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS
+                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES,
+                NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_COLUMN,
+                NonogramSolveAction.PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS
         ));
 
         actionDependencies.put(NonogramSolveAction.COLOUR_FIELD_IN_TRIVIAL_ROW, List.of(

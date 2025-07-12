@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.utils.NonogramStatsUtils.*;
+
 @Getter
 @Setter
 @Slf4j
@@ -70,10 +72,10 @@ public class NonogramPrinter implements NonogramLogicPrinter {
                 "'O' placed", "'O' total", "'O' percent"));
 
         log.info(String.format("%-12s %-12s %-12s | %-12s %-12s %-12s",
-                logic.fieldsWithXPlaced(), logic.fieldsToPlaceXTotal(), logic.fieldsWithXPlacedPercent(),
-                logic.fieldsColoured(), logic.fieldsToColourTotal(), logic.fieldsColouredPercent()));
+                fieldsWithXPlaced(logic), fieldsToPlaceXTotal(logic), fieldsWithXPlacedPercent(logic),
+                fieldsColoured(logic), fieldsToColourTotal(logic), fieldsColouredPercent(logic)));
 
-        log.info("Overall completion percentage: {}%", logic.getCompletionPercentage());
+        log.info("Overall completion percentage: {}%", getCompletionPercentage(logic));
         log.info("Possible fields to make decision: {}", logic.getAvailableChoices());
         printLogs();
     }

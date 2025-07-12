@@ -28,6 +28,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Non
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark.NonogramFieldMarkHelper.markColumnBoardField;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark.NonogramFieldMarkHelper.markRowBoardField;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.utils.NonogramStatsUtils.isSolved;
 
 @Service
 @Slf4j
@@ -1364,7 +1365,7 @@ public class NonogramLogicService {
 
         NonogramLogic solvedLogic = solver.runSolutionAtNode(rootNode);
 
-        if (solvedLogic.isSolved()) {
+        if (isSolved(solvedLogic)) {
             try {
                 NonogramSolutionSaveRequest request = NonogramMapper.toSaveRequest(solvedLogic, fileName);
                 saveIfCorrect(request);
