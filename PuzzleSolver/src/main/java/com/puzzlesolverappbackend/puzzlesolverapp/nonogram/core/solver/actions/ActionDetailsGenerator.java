@@ -14,7 +14,23 @@ public class ActionDetailsGenerator {
         List<NonogramActionDetails> result = new ArrayList<>();
         int index = 0;
 
-        // Wiersze
+        List<NonogramActionDetails> rowActions = generateRowActionDetails(height);
+        for (NonogramActionDetails action : rowActions) {
+            action.setIndex(index++);
+            result.add(action);
+        }
+
+        List<NonogramActionDetails> columnActions = generateColumnActionDetails(width);
+        for (NonogramActionDetails action : columnActions) {
+            action.setIndex(index++);
+            result.add(action);
+        }
+
+        return result;
+    }
+
+    static List<NonogramActionDetails> generateRowActionDetails(int height) {
+        List<NonogramActionDetails> result = new ArrayList<>();
         for (int rowIdx = 0; rowIdx < height; rowIdx++) {
             for (NonogramSolveAction action : List.of(
                     NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES,
@@ -29,19 +45,22 @@ public class ActionDetailsGenerator {
                     NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES,
                     NonogramSolveAction.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES,
                     NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE,
+                    NonogramSolveAction.PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE,
                     NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH,
                     NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW
             )) {
                 NonogramActionDetails detail = new NonogramActionDetails();
-                detail.setIndex(index++);
                 detail.setActionName(action);
                 detail.setTriggeringActionName(null);
                 detail.setChangedState(false);
                 result.add(detail);
             }
         }
+        return result;
+    }
 
-        // Kolumny
+    static List<NonogramActionDetails> generateColumnActionDetails(int width) {
+        List<NonogramActionDetails> result = new ArrayList<>();
         for (int colIdx = 0; colIdx < width; colIdx++) {
             for (NonogramSolveAction action : List.of(
                     NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES,
@@ -61,15 +80,12 @@ public class ActionDetailsGenerator {
                     NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN
             )) {
                 NonogramActionDetails detail = new NonogramActionDetails();
-                detail.setIndex(index++);
                 detail.setActionName(action);
                 detail.setTriggeringActionName(null);
                 detail.setChangedState(false);
                 result.add(detail);
             }
         }
-
         return result;
     }
-
 }
