@@ -18,7 +18,7 @@ public abstract class SizedPuzzleEntity extends BasePuzzleEntity {
     @Column(name = "width")
     protected Integer width;
 
-    public SizedPuzzleEntity(String filename, String source, Double difficulty,
+    protected SizedPuzzleEntity(String filename, String source, Double difficulty,
                              Integer height, Integer width) {
         super(filename, source, difficulty);
         this.height = height;

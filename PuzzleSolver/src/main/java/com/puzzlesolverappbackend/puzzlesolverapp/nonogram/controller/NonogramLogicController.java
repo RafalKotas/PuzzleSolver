@@ -1,6 +1,7 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogicFactory;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.dto.*;
@@ -138,24 +139,29 @@ public class NonogramLogicController {
         }
     }
 
-    @SuppressWarnings("unused")
     @PostMapping("/compareWithSolution")
-    public ResponseEntity<NonogramLogic> compareWithSolution(@Valid @RequestBody NonogramLogic nonogramLogic, @RequestParam String fileName) {
+    public ResponseEntity<NonogramLogic> compareWithSolution(
+            @Valid @RequestBody NonogramLogic nonogramLogic,
+            @RequestParam String fileName) {
+
         Gson gson = new Gson();
-
         try (Reader reader = new FileReader(nonogramSolutionSavePathForFilename(fileName))) {
-
-            // Convert JSON File to Java Object
-            NonogramLogic solution = gson.fromJson(reader, NonogramLogic.class);
-
+            NonogramLogic solution = parseSolutionFromReader(gson, reader);
             return new ResponseEntity<>(solution, HttpStatus.OK);
-
         } catch (FileNotFoundException e) {
             log.error("Solution file not found for filename: {}", fileName);
             return new ResponseEntity<>(nonogramLogic, HttpStatus.NOT_FOUND);
         } catch (IOException e) {
-            log.error("Exception while reading solution file: {}", e.getMessage());
+            log.error("Exception while reading solution file '{}': {}", fileName, e.getMessage());
             return new ResponseEntity<>(nonogramLogic, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private NonogramLogic parseSolutionFromReader(Gson gson, Reader reader) throws IOException {
+        try {
+            return gson.fromJson(reader, NonogramLogic.class);
+        } catch (JsonSyntaxException e) {
+            throw new IOException("Invalid JSON format", e);
         }
     }
 

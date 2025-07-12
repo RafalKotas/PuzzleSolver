@@ -26,7 +26,7 @@ public abstract class BasePuzzleEntity {
     @Column(name = "difficulty")
     protected Double difficulty;
 
-    public BasePuzzleEntity(String filename, String source, Double difficulty) {
+    protected BasePuzzleEntity(String filename, String source, Double difficulty) {
         this.filename = filename;
         this.source = source;
         this.difficulty = difficulty;

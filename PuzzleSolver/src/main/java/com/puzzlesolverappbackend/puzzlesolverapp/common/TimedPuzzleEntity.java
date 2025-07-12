@@ -18,7 +18,7 @@ public abstract class TimedPuzzleEntity extends SizedPuzzleEntity {
     @Column(name = "month")
     protected String month;
 
-    public TimedPuzzleEntity(String filename, String source, String year, String month,
+    protected TimedPuzzleEntity(String filename, String source, String year, String month,
                              Double difficulty, Integer height, Integer width) {
         super(filename, source, difficulty, height, width);
         this.year = year;
