@@ -10,7 +10,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ActionDetailsGeneratorTest {
+class ActionDetailsGeneratorTest {
 
     @Test
     void generateAllPossibleSingleActionDetails_shouldReturnCorrectSizeAndValues() {
@@ -25,7 +25,7 @@ public class ActionDetailsGeneratorTest {
         assertThat(result)
                 .isNotEmpty()
                 .allSatisfy(detail -> {
-                    assertThat(detail.getIndex()).isNotNull();
+                    assertThat(detail.getIndex()).isNotNegative();
                     assertThat(detail.getActionName()).isNotNull();
                     assertThat(detail.isChangedState()).isFalse();
                 });
