@@ -23,6 +23,8 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.constants.SharedConstan
 @Slf4j
 public class SudokuController {
 
+    protected String directory = "../../puzzle-solver-app/public/resources/Sudoku/";
+
     @Autowired
     CommonService commonService;
 
@@ -31,12 +33,12 @@ public class SudokuController {
         log.info("Saving sudoku with filename: {}", fileName);
 
         Set<String> existingFilesNames = commonService
-                .listFilesUsingJavaIO("../../puzzle-solver-app/public/resources/Sudoku/");
+                .listFilesUsingJavaIO(directory);
 
         String[] fileNamesWithoutExtension = existingFilesNames.toArray(String[]::new);
         List<String> fileNamesWithoutExtensionArray = Arrays.stream(fileNamesWithoutExtension
                 .clone())
-                .map(fN -> fN.substring(0, fN.length() - JSON_EXTENSION_LENGTH))
+                .map(fN -> fN.substring(0, fileNameLengthWithoutJsonExtension(fN)))
                 .toList();
 
         if (fileNamesWithoutExtensionArray.contains(fileName)) {
@@ -48,13 +50,21 @@ public class SudokuController {
 
         FileWriter sudokuFileWriter;
         try {
-            sudokuFileWriter = new FileWriter("../../puzzle-solver-app/public/resources/Sudoku/" + fileName + JSON_EXTENSION);
+            sudokuFileWriter = new FileWriter(sudokuFileFullPath(fileName));
             gson.toJson(nfd, sudokuFileWriter);
             sudokuFileWriter.close();
             return new ResponseEntity<>("Save success!", HttpStatus.OK);
         } catch (IOException e) {
             throw new IOException("Can't save sudoku to file");
         }
+    }
+
+    private int fileNameLengthWithoutJsonExtension(String fileName) {
+        return fileName.length() - JSON_EXTENSION_LENGTH;
+    }
+
+    private String sudokuFileFullPath(String fileName) {
+        return directory + fileName + JSON_EXTENSION;
     }
 }
 
