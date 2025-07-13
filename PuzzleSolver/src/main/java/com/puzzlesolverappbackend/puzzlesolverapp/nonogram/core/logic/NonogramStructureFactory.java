@@ -23,5 +23,4 @@ public class NonogramStructureFactory {
         }
         return columns;
     }
-
 }
