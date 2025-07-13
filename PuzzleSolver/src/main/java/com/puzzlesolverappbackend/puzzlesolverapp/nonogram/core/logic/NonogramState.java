@@ -1,12 +1,12 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
-@Setter
 public class NonogramState {
 
     private int newStepsMade;

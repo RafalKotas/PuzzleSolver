@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramState.buildInitialEmptyNonogramState;
+
 @Component
 public class NonogramLogicFactory {
 
@@ -40,7 +42,7 @@ public class NonogramLogicFactory {
                 NonogramLogic.generateInitialActionsToDo(rules)
         );
 
-        logic.setNonogramState(new NonogramState());
+        logic.setNonogramState(buildInitialEmptyNonogramState());
 
         logic.initializeHelpers();
 
@@ -61,12 +63,12 @@ public class NonogramLogicFactory {
         logic.setColumnsSequencesIdsNotToInclude(deepCopyIntegers(original.getColumnsSequencesIdsNotToInclude()));
 
         logic.setActionsToDoList(
-                original.getActionsToDoList().stream()
+                new ArrayList<>(original.getActionsToDoList().stream()
                         .map(NonogramActionDetails::copy)
-                        .toList()
+                        .toList())
         );
 
-        logic.setNonogramState(new NonogramState());
+        logic.setNonogramState(buildInitialEmptyNonogramState());
 
         logic.initializeHelpers();
 
