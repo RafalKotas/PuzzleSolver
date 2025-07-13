@@ -2,10 +2,12 @@ package com.puzzlesolverappbackend.puzzlesolverapp.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @MappedSuperclass
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
