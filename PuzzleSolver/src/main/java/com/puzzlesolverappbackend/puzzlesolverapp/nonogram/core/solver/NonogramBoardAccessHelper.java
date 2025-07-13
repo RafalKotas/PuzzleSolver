@@ -42,18 +42,18 @@ public class NonogramBoardAccessHelper {
         return logic.getNonogramSolutionBoard().get(rowIdx).get(colIdx);
     }
 
+    public boolean areFieldIndexesValid (Field fieldToValidate) {
+        int fieldRowIdx = fieldToValidate.getRowIdx();
+        int fieldColIdx = fieldToValidate.getColumnIdx();
+        return isRowIndexValid(fieldRowIdx) && isColumnIndexValid(fieldColIdx);
+    }
+
     public boolean isRowIndexValid(int rowIdx) {
         return rowIdx >= 0 && rowIdx < logic.getNonogramSolutionBoard().size();
     }
 
     public boolean isColumnIndexValid (int columnIdx) {
         return columnIdx >= 0 && (!logic.getNonogramSolutionBoard().isEmpty() && columnIdx < logic.getNonogramSolutionBoard().get(0).size());
-    }
-
-    public boolean areFieldIndexesValid (Field fieldToValidate) {
-        int fieldRowIdx = fieldToValidate.getRowIdx();
-        int fieldColIdx = fieldToValidate.getColumnIdx();
-        return isRowIndexValid(fieldRowIdx) && isColumnIndexValid(fieldColIdx);
     }
 
     public boolean isRowRangeColoured(int rowIdx, List<Integer> columnRange) {
