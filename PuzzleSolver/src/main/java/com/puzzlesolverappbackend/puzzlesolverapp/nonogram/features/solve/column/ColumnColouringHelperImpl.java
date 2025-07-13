@@ -97,8 +97,16 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper {
         return anyFieldColoured;
     }
 
-
-
+    /**
+     * Attempts to color fields in a given column if placing an X before or after
+     * a colored sequence would result in a merged sequence that exceeds the allowed sequence lengths.
+     * <p>
+     * This method simulates placing Xs temporarily at merge points between colored blocks and checks
+     * whether such merges would violate Nonogram constraints. If placing X would make the merged
+     * sequence invalid, a coloring action is triggered at that field instead.
+     *
+     * @param columnIdx the index of the column to be evaluated and potentially modified
+     */
     @Override
     public void colourFieldsInColumnIfXWouldForceTooLongColouredFieldsSequence(int columnIdx) {
         List<String> columnBefore = logic.getBoardAccessHelper().getColumnCopy(columnIdx);
@@ -126,6 +134,21 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper {
         }
     }
 
+    /**
+     * Handles coloring logic at the top (above) merge points between consecutive colored sequences in a column.
+     * <p>
+     * For each adjacent pair of colored sequences, it checks if merging them would create a block
+     * that violates sequence constraints. If so, a field directly before the first sequence is colored
+     * to prevent invalid merging.
+     * <p>
+     * The method also temporarily places and clears an X to simulate its effect on possible ranges.
+     *
+     * @param columnIdx      the index of the column being evaluated
+     * @param seqLens        list of required sequence lengths for the column
+     * @param originalRanges original column sequence ranges before mutation
+     * @param colouredSeqs   list of currently identified colored sequences in the column
+     * @return true if any field was colored as a result of this analysis; false otherwise
+     */
     private boolean handleTopMergeScenarios(int columnIdx, List<Integer> seqLens,
                                             List<List<Integer>> originalRanges, List<List<Integer>> colouredSeqs) {
         boolean anyFieldColoured = false;
@@ -165,6 +188,18 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper {
         return anyFieldColoured;
     }
 
+    /**
+     * Handles coloring logic at the bottom (below) merge points between consecutive colored sequences in a column.
+     * <p>
+     * This method mirrors {@code handleTopMergeScenarios}, but focuses on the field after the second sequence.
+     * It places an X, evaluates whether a merge would be invalid, and, if necessary, colors the field to prevent merging.
+     *
+     * @param columnIdx      the index of the column being evaluated
+     * @param seqLens        list of required sequence lengths for the column
+     * @param originalRanges original column sequence ranges before mutation
+     * @param colouredSeqs   list of currently identified colored sequences in the column
+     * @return true if any field was colored as a result of this analysis; false otherwise
+     */
     private boolean handleBottomMergeScenarios(int columnIdx, List<Integer> seqLens,
                                                List<List<Integer>> originalRanges, List<List<Integer>> colouredSeqs) {
         boolean anyFieldColoured = false;
@@ -204,6 +239,24 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper {
         return anyFieldColoured;
     }
 
+    /**
+     * Determines whether a hypothetically merged sequence would violate Nonogram constraints
+     * for the given column.
+     * <p>
+     * For each possible matching sequence index (ID), the method checks whether a sequence of the
+     * required length could physically overlap the merge point. If no sequence can do so,
+     * the merge is deemed invalid.
+     * <p>
+     * Additionally, it verifies if the merged sequence is fully contained within a declared range
+     * but shorter than expected, which would also be invalid.
+     *
+     * @param columnIdx    index of the column being analyzed
+     * @param colouredPart the original colored segment that initiated the merge
+     * @param mergedRange  range representing the full extent of the merged sequence
+     * @param mergePoint   the point where the two sequences meet
+     * @param seqLens      list of target sequence lengths for the column
+     * @return true if the merged sequence would break any constraints; false otherwise
+     */
     private boolean mergedSequenceViolatesConstraints(int columnIdx, List<Integer> colouredPart,
                                                       List<Integer> mergedRange, int mergePoint,
                                                       List<Integer> seqLens) {
