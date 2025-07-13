@@ -6,6 +6,8 @@ import com.puzzlesolverappbackend.puzzlesolverapp.constants.InitializerConstants
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Nonogram;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramFileDetails;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.repository.NonogramRepository;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -27,49 +29,25 @@ import java.util.stream.Stream;
 @Component
 @Profile("!test")
 @Order(4)
+@Getter
+@Setter
 @Slf4j
 public class NonogramsDataInitializer implements CommandLineRunner {
 
     private static final int JSON_EXTENSION_LENGTH = 5;
-
     private static final double SEQUENCES_IN_ONE_SECTION_COUNT = 5.0;
 
     private final NonogramRepository nonogramRepository;
-
     private final CommonService commonService;
 
-    private final List<String> fileConstantProperties = List.of(
-            "filename",
-            "source",
-            "year",
-            "month",
-            "difficulty",
-            "height",
-            "width",
-            "rowSequences",
-            "columnSequences");
-
-    Nonogram nonogram;
-
-    String nonogramFileNameWithoutExtension;
-    String source;
-    String year;
-    String month;
-    Double difficulty;
-    Integer height;
-    Integer width;
-
-    int newNonogramsSaved;
-    int nonogramsRepeated;
+    private final List<String> requiredPropertyOrder = List.of(
+            "filename", "source", "year", "month", "difficulty", "height", "width", "rowSequences", "columnSequences"
+    );
 
     protected static final List<List<String>> sourceMonthCombinations = new ArrayList<>();
+    protected static final List<String> filesToCorrect = new ArrayList<>();
 
-    protected static final List<String> filesToCorrect= new ArrayList<>();
-
-    int filesCount = 0;
-    int filesOK = 0;
-
-    public static final String PUZZLE_PATH = InitializerConstants.PUZZLE_RELATIVE_PATH +
+    protected String puzzlePath = InitializerConstants.PUZZLE_RELATIVE_PATH +
             InitializerConstants.PuzzleMappings.NONOGRAM_PATH_SUFFIX;
 
     public NonogramsDataInitializer(NonogramRepository nonogramRepository, CommonService commonService) {
@@ -78,166 +56,125 @@ public class NonogramsDataInitializer implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
-
-        newNonogramsSaved = 0;
-        nonogramsRepeated = 0;
-
+    public void run(String... args) throws IOException {
         log.info("Nonograms init(4)");
 
-        Set<String> existingFilesNames = commonService
-                .listFilesUsingJavaIO(PUZZLE_PATH);
+        int filesCount = 0;
+        int filesOK = 0;
+        int nonogramsSaved = 0;
+        int nonogramsRepeated = 0;
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        try (Stream<Path> files = Files.list(Paths.get(PUZZLE_PATH))) {
+        try (Stream<Path> files = Files.list(Paths.get(puzzlePath))) {
             for (Path filePath : files.toList()) {
-                parseNonogramFile(filePath);
+                try {
+                    List<String> fileLines = Files.readAllLines(filePath);
+                    NonogramFileDetails fileDetails = objectMapper.readValue(
+                            new File(puzzlePath + filePath.getFileName()), NonogramFileDetails.class
+                    );
+                    boolean isOK = analyzeFileCorrectness(fileLines, filePath, fileDetails);
+                    filesCount++;
+                    if (isOK) filesOK++;
+                } catch (IOException e) {
+                    log.error("IOException while parsing file '{}': {}", filePath.getFileName(), e.getMessage());
+                    filesToCorrect.add(filePath.getFileName().toString().replace(".json", ""));
+                }
             }
-        } catch (IOException e) {
-            throw new IOException("Can't read file(s) from directory " + PUZZLE_PATH, e);
         }
 
+        log.info("Files OK: {}, filesCount: {}, to Correct: {}", filesOK, filesCount, filesCount - filesOK);
+        filesToCorrect.forEach(file -> log.info("\"{}\" ", file));
 
-        log.info("Files OK: {}, filesCount: {}, to Correct: {}", filesOK, filesCount, (filesCount - filesOK));
-
-        for (String fileToCorrect : filesToCorrect) {
-            log.info("\"{}\" ", fileToCorrect);
-        }
-
-        for (String nonogramFileName : existingFilesNames) {
+        Set<String> existingFiles = commonService.listFilesUsingJavaIO(puzzlePath);
+        for (String nonogramFileName : existingFiles) {
             try {
-                NonogramFileDetails nonogramFileDetails = objectMapper.readValue(new File(PUZZLE_PATH + nonogramFileName), NonogramFileDetails.class);
+                NonogramFileDetails details = objectMapper.readValue(new File(puzzlePath + nonogramFileName), NonogramFileDetails.class);
+                String nameWithoutExtension = nonogramFileName.substring(0, nonogramFileName.length() - JSON_EXTENSION_LENGTH);
 
-                nonogramFileNameWithoutExtension = nonogramFileName.substring(0, nonogramFileName.length() - JSON_EXTENSION_LENGTH);
-                source = nonogramFileDetails.getSource();
-                year = nonogramFileDetails.getYear();
-                month = nonogramFileDetails.getMonth();
+                List<String> combination = List.of(details.getSource(), details.getMonth());
+                if (!sourceMonthCombinations.contains(combination)) {
+                    sourceMonthCombinations.add(combination);
+                }
 
-                difficulty = nonogramFileDetails.getDifficulty();
-                height = nonogramFileDetails.getHeight();
-                width = nonogramFileDetails.getWidth();
+                Nonogram nonogram = new Nonogram(
+                        nameWithoutExtension,
+                        details.getSource(),
+                        details.getYear(),
+                        details.getMonth(),
+                        details.getDifficulty(),
+                        details.getHeight(),
+                        details.getWidth()
+                );
 
-                List<String> sourceMonthCombination = new ArrayList<>();
-                sourceMonthCombination.add(source);
-                sourceMonthCombination.add(month);
-                addToSourceMonthCombinationsIfNotExist(sourceMonthCombination);
+                boolean exists = nonogramRepository.existsNonogramByGivenParamsFromFile(
+                        nameWithoutExtension, details.getSource(), details.getYear(), details.getMonth(),
+                        details.getDifficulty(), details.getHeight(), details.getWidth()
+                ).isPresent();
 
-                nonogram = new Nonogram(nonogramFileNameWithoutExtension, source, year, month, difficulty, height, width);
-
-
-                saveNewNonogramsToDatabaseWithNewAndOldPuzzlesCount();
-            } catch(Exception e) {
-                log.error("Parse Exception for filename: {}\n", nonogramFileName);
+                if (exists) {
+                    nonogramsRepeated++;
+                } else {
+                    nonogramRepository.save(nonogram);
+                    nonogramsSaved++;
+                    log.info("New nonogram saved: {}", nonogramFileName);
+                }
+            } catch (IOException e) {
+                log.error("Wrong file part: {} ", nonogramFileName);
+                log.error("Exception: {}", e.getMessage());
             }
+        }
+
+        if (InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
+            log.info("New nonograms saved: {}", nonogramsSaved);
+            log.info("Nonograms repeated: {}", nonogramsRepeated);
         }
 
         log.info("Saving nonograms to DB part is done.");
-
-        printStatsIfEnabled();
     }
 
-    private void saveNewNonogramsToDatabaseWithNewAndOldPuzzlesCount() {
+    private boolean analyzeFileCorrectness(List<String> lines, Path filePath, NonogramFileDetails details) {
+        String filename = filePath.getFileName().toString();
+        String nameWithoutExtension = filename.substring(0, filename.length() - JSON_EXTENSION_LENGTH);
 
-        if (nonogramRepository.existsNonogramByGivenParamsFromFile(nonogramFileNameWithoutExtension, source, year, month, difficulty,
-                height, width).isPresent()) {
-            nonogramsRepeated++;
-        } else {
-            log.info("Saving nonogram with name {}", nonogram.getFilename());
-            nonogramRepository.save(nonogram);
-            newNonogramsSaved++;
+        List<String> propsInOrder = extractProperties(lines);
+        int requiredLines = calculateRequiredLines(propsInOrder, details);
+
+        boolean lineCountCorrect = lines.size() == requiredLines;
+        boolean orderCorrect = propsInOrder.stream()
+                .filter(requiredPropertyOrder::contains)
+                .toList()
+                .equals(requiredPropertyOrder);
+
+        if (!lineCountCorrect) {
+            log.error("File {} does not have required line count ({})", filename, requiredLines);
+            filesToCorrect.add(nameWithoutExtension);
+        } else if (!orderCorrect) {
+            log.error("File {} has incorrect property order", filename);
+            filesToCorrect.add(nameWithoutExtension);
         }
+
+        return lineCountCorrect && orderCorrect;
     }
 
-    private void printStatsIfEnabled() {
-        if (InitializerConstants.PRINT_PUZZLE_STATUS_INFO) {
-            log.info("newNonogramsSaved count: {}", newNonogramsSaved);
-            log.info("nonogramsRepeated count: {}", nonogramsRepeated);
+    private List<String> extractProperties(List<String> lines) {
+        Pattern pattern = Pattern.compile("\"[a-zA-Z]*\"\\s*:");
+        List<String> props = new ArrayList<>();
+
+        for (String line : lines) {
+            Matcher matcher = pattern.matcher(line);
+            if (matcher.find()) {
+                String prop = matcher.group().replace("\"", "").replace(":", "").trim();
+                props.add(prop);
+            }
         }
+        return props;
     }
 
-    private void addToSourceMonthCombinationsIfNotExist(List<String> sourceMonthCombination) {
-        boolean sourceMonthCombinationExist = sourceMonthCombinations
-                .stream()
-                .anyMatch(combination -> combination.size() == 2 &&
-                        combination.get(0).equals(sourceMonthCombination.get(0)) &&
-                        combination.get(1).equals(sourceMonthCombination.get(1)));
-
-        if (!sourceMonthCombinationExist) {
-            sourceMonthCombinations.add(sourceMonthCombination);
-        }
-    }
-
-    private void parseNonogramFile(Path filePath) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<String> fileLines;
-
-        try {
-            fileLines = Files.readAllLines(filePath);
-            NonogramFileDetails nonogramFileDetails = objectMapper.readValue(
-                    new File(PUZZLE_PATH + filePath.getFileName()),
-                    NonogramFileDetails.class
-            );
-            analyzeNonogramFileCorrectness(fileLines, filePath, nonogramFileDetails);
-            filesCount++;
-        } catch (IOException e) {
-            log.error("IOException while parsing file '{}': {}", filePath.getFileName(), e.getMessage(), e);
-            throw e;
-        }
-    }
-
-    private void analyzeNonogramFileCorrectness(List<String> fileLines, Path filePath, NonogramFileDetails nonogramFileDetails) {
-        String fullFilename = filePath.getFileName().toString();
-        String fileNameWithoutExtension = fullFilename.substring(0, fullFilename.length() - JSON_EXTENSION_LENGTH);
-
-        List<String> nonogramPropsInOrder = getNonogramPropsFromFile(fileLines);
-
-        int minimumLinesRequired = calculateMinimumNonogramFileLinesNeeded(nonogramPropsInOrder, nonogramFileDetails);
-
-        boolean requiredMinimumLinesCondition = fileLines.size() == minimumLinesRequired;
-        boolean arePropsInRequiredOrder = verifyIfPropsInRequiredOrder(nonogramPropsInOrder);
-
-        if (!requiredMinimumLinesCondition) {
-            log.error("File {} not has minimum required lines({})", fullFilename, minimumLinesRequired);
-            filesToCorrect.add(fileNameWithoutExtension);
-        } else if (!arePropsInRequiredOrder) {
-            log.error("File {} props are not in correct order", fullFilename);
-            filesToCorrect.add(fileNameWithoutExtension);
-        } else {
-            filesOK++;
-        }
-    }
-
-    private List<String> getNonogramPropsFromFile(List<String> fileLines) {
-        Pattern propertyPattern = Pattern.compile("\"[a-zA-Z]*\" :");
-
-        return fileLines.stream()
-                .filter(fileLine -> propertyPattern.matcher(fileLine).find())
-                .map(propertyLine -> {
-                    Matcher matcher = propertyPattern.matcher(propertyLine);
-                    matcher.find();
-                    return matcher.group();
-                })
-                .map(property -> property.replace("\"", "")
-                        .replace(" ", "")
-                        .replace(":", ""))
-                .toList();
-    }
-
-    private int calculateMinimumNonogramFileLinesNeeded(List<String> nonogramPropsInOrder, NonogramFileDetails nonogramFileDetails) {
-        int fixedLinesCount = 4;
-
-        int linesForRowsSequences = (int) Math.ceil(nonogramFileDetails.getHeight() / SEQUENCES_IN_ONE_SECTION_COUNT);
-        int linesForColumnsSequences = (int) Math.ceil(nonogramFileDetails.getWidth() / SEQUENCES_IN_ONE_SECTION_COUNT);
-
-        return fixedLinesCount + nonogramPropsInOrder.size() + linesForRowsSequences + linesForColumnsSequences;
-    }
-
-    private boolean verifyIfPropsInRequiredOrder(List<String> propsFromFile) {
-        List<String> propertiesToCheck = propsFromFile.stream()
-                .filter(fileConstantProperties::contains)
-                .toList();
-
-        return propertiesToCheck.equals(fileConstantProperties);
+    private int calculateRequiredLines(List<String> props, NonogramFileDetails details) {
+        int fixedLines = 4;
+        int rowsSeqLines = (int) Math.ceil(details.getHeight() / SEQUENCES_IN_ONE_SECTION_COUNT);
+        int colsSeqLines = (int) Math.ceil(details.getWidth() / SEQUENCES_IN_ONE_SECTION_COUNT);
+        return fixedLines + props.size() + rowsSeqLines + colsSeqLines;
     }
 }
