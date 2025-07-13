@@ -149,10 +149,6 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         this.getColumnsSequencesRanges().set(columnIdx, ranges);
     }
 
-    public void setColumnSequencesLengths(int columnIdx, List<Integer> lengths) {
-        this.getNonogramRules().getColumnSequencesLengths().set(columnIdx, lengths);
-    }
-
     @Override
     public void correctColumnSequencesRanges(int columnIdx) {
         columnSequencesCorrectionHelper.correctColumnSequencesRanges(columnIdx);
