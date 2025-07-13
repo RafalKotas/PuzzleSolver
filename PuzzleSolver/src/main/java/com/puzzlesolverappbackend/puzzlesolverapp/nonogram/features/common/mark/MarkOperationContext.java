@@ -4,18 +4,15 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramSt
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramActionScheduler;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.function.Consumer;
 
 @AllArgsConstructor
 @Getter
-@Setter
 public class MarkOperationContext {
     private final NonogramActionScheduler scheduler;
     private final NonogramState state;
     private final Runnable addLogRunnable;
     private final Consumer<String> setTmpLogConsumer;
-
 }
 
