@@ -63,7 +63,7 @@ public class NonogramLogicFactory {
         logic.setActionsToDoList(
                 original.getActionsToDoList().stream()
                         .map(NonogramActionDetails::copy)
-                        .collect(Collectors.toList())
+                        .toList()
         );
 
         logic.setNonogramState(new NonogramState());
