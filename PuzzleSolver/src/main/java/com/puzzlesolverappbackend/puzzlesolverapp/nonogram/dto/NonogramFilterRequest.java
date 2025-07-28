@@ -1,12 +1,12 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.Collection;
 
 @AllArgsConstructor
-@Data
+@Getter
 public class NonogramFilterRequest {
     private Collection<String> sources;
     private Collection<String> years;
