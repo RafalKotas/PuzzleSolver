@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.IntUnaryOperator;
+import java.util.function.Predicate;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.*;
@@ -518,82 +520,54 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper {
     }
 
     private List<Integer> getEmptyFieldsRangeFromXToFirstColouredFieldFromLeft(Field xField) {
-        List<Integer> range = new ArrayList<>();
-        Field field = new Field(xField.getRowIdx(), xField.getColumnIdx() + 1);
-
-        while (logic.getBoardAccessHelper().areFieldIndexesValid(field) &&
-                isFieldEmpty(logic.getNonogramSolutionBoard(), field)) {
-            if (range.isEmpty()) {
-                range.add(field.getColumnIdx());
-            } else if (range.size() == 1) {
-                range.add(field.getColumnIdx());
-            } else {
-                range.set(1, field.getColumnIdx());
-            }
-            field.setColumnIdx(field.getColumnIdx() + 1);
-        }
-
-        if (range.isEmpty()) return List.of(-1, -1);
-        if (range.size() == 1) range.add(range.get(0));
-        return range;
+        return getFieldRange(
+                new Field(xField.getRowIdx(), xField.getColumnIdx() + 1),
+                i -> i + 1,
+                f -> isFieldEmpty(logic.getNonogramSolutionBoard(), f)
+        );
     }
 
     private List<Integer> getEmptyFieldsRangeFromXToFirstColouredFieldToLeft(Field xField) {
-        List<Integer> range = new ArrayList<>();
-        Field field = new Field(xField.getRowIdx(), xField.getColumnIdx() - 1);
-
-        while (logic.getBoardAccessHelper().areFieldIndexesValid(field) &&
-                isFieldEmpty(logic.getNonogramSolutionBoard(), field)) {
-            if (range.isEmpty()) {
-                range.add(field.getColumnIdx());
-            } else if (range.size() == 1) {
-                range.add(0, field.getColumnIdx());
-            } else {
-                range.set(0, field.getColumnIdx());
-            }
-            field.setColumnIdx(field.getColumnIdx() - 1);
-        }
-
-        if (range.isEmpty()) return List.of(-1, -1);
-        if (range.size() == 1) range.add(range.get(0));
-        return range;
+        return getFieldRange(
+                new Field(xField.getRowIdx(), xField.getColumnIdx() - 1),
+                i -> i - 1,
+                f -> isFieldEmpty(logic.getNonogramSolutionBoard(), f)
+        );
     }
 
     private List<Integer> getColouredFieldsRangeNearEmptySequenceFromLeft(Field startField) {
-        List<Integer> range = new ArrayList<>();
-        Field field = new Field(startField.getRowIdx(), startField.getColumnIdx());
-
-        while (logic.getBoardAccessHelper().areFieldIndexesValid(field) &&
-                isFieldColoured(logic.getNonogramSolutionBoard(), field)) {
-            if (range.isEmpty()) {
-                range.add(field.getColumnIdx());
-            } else if (range.size() == 1) {
-                range.add(field.getColumnIdx());
-            } else {
-                range.set(1, field.getColumnIdx());
-            }
-            field.setColumnIdx(field.getColumnIdx() + 1);
-        }
-
-        if (range.isEmpty()) return List.of(-1, -1);
-        if (range.size() == 1) range.add(range.get(0));
-        return range;
+        return getFieldRange(
+                new Field(startField.getRowIdx(), startField.getColumnIdx()),
+                i -> i + 1,
+                f -> isFieldColoured(logic.getNonogramSolutionBoard(), f)
+        );
     }
 
     private List<Integer> getColouredFieldsRangeNearEmptySequenceToLeft(Field startField) {
+        return getFieldRange(
+                new Field(startField.getRowIdx(), startField.getColumnIdx()),
+                i -> i - 1,
+                f -> isFieldColoured(logic.getNonogramSolutionBoard(), f)
+        );
+    }
+
+    private List<Integer> getFieldRange(Field startField,
+                                        IntUnaryOperator directionFn,
+                                        Predicate<Field> matchCondition) {
         List<Integer> range = new ArrayList<>();
         Field field = new Field(startField.getRowIdx(), startField.getColumnIdx());
 
-        while (logic.getBoardAccessHelper().areFieldIndexesValid(field) &&
-                isFieldColoured(logic.getNonogramSolutionBoard(), field)) {
+        while (logic.getBoardAccessHelper().areFieldIndexesValid(field)
+                && matchCondition.test(field)) {
             if (range.isEmpty()) {
                 range.add(field.getColumnIdx());
             } else if (range.size() == 1) {
-                range.add(0, field.getColumnIdx());
+                range.add(field.getColumnIdx());
             } else {
-                range.set(0, field.getColumnIdx());
+                range.set(directionFn.applyAsInt(0) > 0 ? 1 : 0, field.getColumnIdx());
             }
-            field.setColumnIdx(field.getColumnIdx() - 1);
+
+            field.setColumnIdx(directionFn.applyAsInt(field.getColumnIdx()));
         }
 
         if (range.isEmpty()) return List.of(-1, -1);
