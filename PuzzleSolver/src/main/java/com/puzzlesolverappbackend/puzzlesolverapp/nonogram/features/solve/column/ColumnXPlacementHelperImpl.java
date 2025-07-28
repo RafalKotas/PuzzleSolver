@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.*;
@@ -35,7 +36,7 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
     private static final List<Integer> NOT_FOUND_COLOURED_FIELDS_RANGE_VALUE = List.of(-1, -1);
 
     public ColumnXPlacementHelperImpl(NonogramColumnLogic nonogramColumnLogic) {
-        logic = nonogramColumnLogic;
+        logic = new NonogramColumnLogic(nonogramColumnLogic);
         this.nonogramFieldPlacingXHelper = new NonogramFieldPlacingXHelper(
                 logic.getNonogramSolutionBoard(),
                 logic.getNonogramSolutionBoardWithMarks(),
@@ -43,6 +44,19 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
         );
     }
 
+    /**
+     * Places Xs in all fields of a given column that cannot belong to any currently valid sequence range.
+     * <p>
+     * For each cell in the column, the method checks if its row index is included in any of the sequence ranges.
+     * If the field is not reachable and currently empty, an X is placed in it, the field is excluded from
+     * future processing, and appropriate actions are scheduled.
+     * </p>
+     * <p>
+     * If changes to the column state were made, a log entry describing the action is recorded.
+     * </p>
+     *
+     * @param columnIdx index of the column to process for unreachable field exclusion
+     */
     @Override
     public void placeXsColumnAtUnreachableFields(int columnIdx) {
         List<String> initialState = logic.getBoardAccessHelper().getColumnCopy(columnIdx);
@@ -80,6 +94,22 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
         }
     }
 
+    /**
+     * Scans the specified column to identify coloured (filled) sequences and evaluates their alignment
+     * with the expected sequence constraints.
+     * <p>
+     * For each continuous coloured segment found on the board, the method attempts to:
+     * <ul>
+     *     <li>Determine the full range of the coloured segment,</li>
+     *     <li>Match it against known valid ranges and sequence lengths,</li>
+     *     <li>If exactly one matching sequence exists and the length matches, place Xs around the segment and update its range,</li>
+     *     <li>If multiple sequences exist and the segment matches the longest, place Xs around it without updating the range.</li>
+     * </ul>
+     * <p>
+     * The method also logs all relevant actions and state changes for debugging or user feedback.
+     *
+     * @param columnIdx index of the column to be processed for placing Xs around longest matching coloured sequences
+     */
     @Override
     public void placeXsAroundLongestSequencesInColumn(int columnIdx) {
         int height = logic.getNonogramRules().getHeight();
@@ -97,22 +127,39 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
         }
     }
 
+    /**
+     * Finds the full range of a continuous coloured (filled) sequence in the given column, starting from a specific row.
+     * <p>
+     * The method expands upward and downward from the provided start row index until it reaches the first
+     * uncoloured (non-'O') cell or the edge of the board. It returns the bounds (inclusive) of the detected sequence.
+     *
+     * @param startRowIdx the row index where the coloured sequence is assumed to begin
+     * @param columnIdx the index of the column to search in
+     * @return a list containing two integers representing the start and end row indices of the coloured sequence
+     */
     private List<Integer> findColouredSequenceRangeInColumn(int startRowIdx, int columnIdx) {
-        int start = startRowIdx;
         int end = startRowIdx;
-
-        while (start > 0 && isFieldColoured(logic.getNonogramSolutionBoard(), new Field(start - 1, columnIdx))) {
-            start--;
-        }
 
         while (end + 1 < logic.getNonogramRules().getHeight() &&
                 isFieldColoured(logic.getNonogramSolutionBoard(), new Field(end + 1, columnIdx))) {
             end++;
         }
 
-        return List.of(start, end);
+        return List.of(startRowIdx, end);
     }
 
+    /**
+     * Processes a detected coloured sequence in the specified column and attempts to place Xs around it
+     * based on how well it matches expected column sequences.
+     * <p>
+     * If exactly one matching sequence range contains the coloured segment and the lengths match,
+     * the method calls {@code placeXsAndUpdateSingleSequence} to place Xs and update logic.
+     * If multiple sequences match the length of the segment and it equals the maximum expected length,
+     * it places Xs around the longest without updating logic ({@code placeXsAroundLongestSequence}).
+     *
+     * @param columnIdx the index of the column containing the coloured sequence
+     * @param colouredRange a list of two integers indicating the start and end of the coloured segment
+     */
     private void processColouredSequenceRangeInColumn(int columnIdx, List<Integer> colouredRange) {
         List<List<Integer>> columnRanges = logic.getColumnsSequencesRanges().get(columnIdx);
         List<Integer> columnLengths = logic.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
@@ -122,23 +169,35 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
         List<Integer> matchingIndices = new ArrayList<>();
         List<Integer> matchingLengths = new ArrayList<>();
 
-        for (int i = 0; i < columnRanges.size(); i++) {
-            if (rangeInsideAnotherRange(colouredRange, columnRanges.get(i))
-                    && lengthOnBoard <= columnLengths.get(i)) {
-                matchingIndices.add(i);
-                matchingLengths.add(columnLengths.get(i));
+        for (int seqIdx = 0; seqIdx < columnRanges.size(); seqIdx++) {
+            if (rangeInsideAnotherRange(colouredRange, columnRanges.get(seqIdx))
+                    && lengthOnBoard <= columnLengths.get(seqIdx)) {
+                matchingIndices.add(seqIdx);
+                matchingLengths.add(columnLengths.get(seqIdx));
             }
         }
 
         List<Integer> edgeXs = List.of(colouredRange.get(0) - 1, colouredRange.get(1) + 1);
 
-        if (matchingIndices.size() == 1 && lengthOnBoard == matchingLengths.get(0)) {
+        if (!logic.getColumnsSequencesIdsNotToInclude().get(columnIdx).contains(matchingIndices.get(0)) &&
+                matchingIndices.size() == 1 && lengthOnBoard == matchingLengths.get(0)) {
             placeXsAndUpdateSingleSequence(columnIdx, edgeXs, matchingIndices.get(0));
         } else if (matchingLengths.size() > 1 && lengthOnBoard == Collections.max(matchingLengths)) {
             placeXsAroundLongestSequence(columnIdx, edgeXs, false);
         }
     }
 
+    /**
+     * Places Xs around a coloured sequence that exactly matches a single expected sequence and updates the sequence range.
+     * <p>
+     * This method is invoked when there is only one matching sequence whose length equals the length of a detected
+     * coloured segment. It places Xs at both ends of the segment, updates the logic's sequence range, and excludes
+     * the fields in the sequence from further consideration.
+     *
+     * @param columnIdx the index of the column being processed
+     * @param xEdges a list containing two integers: the row indices where Xs should be placed (before and after the sequence)
+     * @param seqIdx the index of the matching sequence to update and exclude
+     */
     private void placeXsAndUpdateSingleSequence(int columnIdx, List<Integer> xEdges, int seqIdx) {
         placeXsAroundLongestSequence(columnIdx, xEdges, true);
 
@@ -148,6 +207,17 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
         updateLogicAfterXsPlacement(columnIdx, seqIdx, updatedRange);
     }
 
+    /**
+     * Places Xs at the edges of a coloured sequence in a column and records the action if any X is placed.
+     * <p>
+     * For each edge index (above and below the coloured segment), this method checks if it is a valid and empty cell.
+     * If so, it places an X, excludes the field, schedules corresponding actions, and increments step count.
+     * The change is logged if at least one X is placed.
+     *
+     * @param columnIdx the index of the column being processed
+     * @param xEdges a list of two row indices indicating where to place Xs (typically one before and one after a coloured segment)
+     * @param onlyMatching whether the X placement corresponds to a unique sequence match (affects logging semantics)
+     */
     private void placeXsAroundLongestSequence(int columnIdx, List<Integer> xEdges, boolean onlyMatching) {
         List<String> columnBefore = logic.getBoardAccessHelper().getColumnCopy(columnIdx);
         boolean anyXPlaced = false;
@@ -185,6 +255,15 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
         }
     }
 
+    /**
+     * Excludes all coloured fields within a given range in the specified column from further logic processing.
+     * <p>
+     * This method is typically used after placing Xs at both ends of a coloured sequence to mark all fields
+     * within the sequence as processed. Each excluded field increments the logic's step counter.
+     *
+     * @param columnIdx the index of the column being processed
+     * @param range the range of row indices (inclusive) representing the coloured sequence
+     */
     private void excludeColouredFieldsBetweenXs(int columnIdx, List<Integer> range) {
         for (int rowIdx = range.get(0); rowIdx <= range.get(1); rowIdx++) {
             logic.getNonogramFieldExclusionHelper().excludeFieldInColumn(new Field(rowIdx, columnIdx));
@@ -192,6 +271,16 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
         }
     }
 
+    /**
+     * Updates the internal logic after Xs have been placed around a coloured sequence.
+     * <p>
+     * If the new sequence range differs from the previously stored one, it is updated and logged.
+     * The sequence is also excluded from further solving, and actions are scheduled for adjacent cells.
+     *
+     * @param columnIdx the index of the column being processed
+     * @param seqIdx the index of the sequence being updated
+     * @param newRange the new detected range for the sequence after placing Xs
+     */
     private void updateLogicAfterXsPlacement(int columnIdx, int seqIdx, List<Integer> newRange) {
         List<Integer> oldRange = logic.getColumnsSequencesRanges().get(columnIdx).get(seqIdx);
         if (!newRange.equals(oldRange)) {
@@ -390,8 +479,6 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
     private void markXsInRange(List<Integer> emptyRange, int colIdx) {
         for (int row = emptyRange.get(0); row <= emptyRange.get(1); row++) {
             Field field = new Field(row, colIdx);
-            if (!isFieldEmpty(logic.getNonogramSolutionBoard(), field)) continue;
-
             nonogramFieldPlacingXHelper.placeXAtGivenField(field);
             logic.getNonogramFieldExclusionHelper().excludeFieldInColumn(field);
             logic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES);
@@ -450,7 +537,9 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
 
     private void checkAndPlaceXAfter(List<List<Integer>> colouredRanges, List<Integer> rangeWithExtra, int idx, int colIdx) {
         int nextRow = rangeWithExtra.get(1);
-        if (nextRow == logic.getNonogramRules().getHeight()) return;
+        if (nextRow == logic.getNonogramRules().getHeight()) {
+            return;
+        }
 
         Field field = new Field(nextRow, colIdx);
         List<Integer> merged = (idx < colouredRanges.size() - 1)
@@ -499,107 +588,78 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
         int step = fromTop ? 1 : -1;
 
         for (int rowIdx = start; fromTop ? rowIdx < end : rowIdx > end; rowIdx += step) {
-            Field xField = new Field(rowIdx, columnIdx);
-            if (!isFieldWithX(logic.getNonogramSolutionBoard(), xField)) continue;
-
-            List<Integer> emptyRange = fromTop
-                    ? getEmptyFieldsRangeFromXToFirstColouredFieldFromTop(xField)
-                    : getEmptyFieldsRangeFromXToFirstColouredFieldToTop(xField);
-
-            if (emptyRange.equals(NOT_FOUND_EMPTY_FIELDS_RANGE_VALUE)) continue;
-
-            Field colouredStart = fromTop
-                    ? new Field(emptyRange.get(1) + 1, columnIdx)
-                    : new Field(emptyRange.get(0) - 1, columnIdx);
-
-            List<Integer> colouredRange = fromTop
-                    ? getColouredFieldsRangeNearEmptySequenceFromTop(colouredStart)
-                    : getColouredFieldsRangeNearEmptySequenceToTop(colouredStart);
-
-            if (colouredRange.equals(NOT_FOUND_COLOURED_FIELDS_RANGE_VALUE)) continue;
-
-            evaluateAndMaybePlaceX(columnIdx, emptyRange, colouredRange, fromTop);
+            tryPlaceXNearExtremeInDirection(columnIdx, rowIdx, fromTop);
         }
     }
 
-    private List<Integer> getEmptyFieldsRangeFromXToFirstColouredFieldFromTop(Field xField) {
-        List<Integer> range = new ArrayList<>();
-        Field field = new Field(xField.getRowIdx() + 1, xField.getColumnIdx());
+    private void tryPlaceXNearExtremeInDirection(int columnIdx, int rowIdx, boolean isFromTop) {
+        Field xField = new Field(rowIdx, columnIdx);
+        if (!isFieldWithX(logic.getNonogramSolutionBoard(), xField)) return;
 
-        while (logic.getBoardAccessHelper().areFieldIndexesValid(field) &&
-                isFieldEmpty(logic.getNonogramSolutionBoard(), field)) {
-            if (range.isEmpty()) {
-                range.add(field.getRowIdx());
-            } else {
-                if (range.size() == 1) range.add(field.getRowIdx());
-                else range.set(1, field.getRowIdx());
-            }
-            field.setRowIdx(field.getRowIdx() + 1);
-        }
+        List<Integer> emptyRange = isFromTop
+                ? getEmptyFieldsRangeFromXToFirstColouredFieldToBottom(xField)
+                : getEmptyFieldsRangeFromXToFirstColouredFieldToTop(xField);
 
-        if (range.isEmpty()) return List.of(-1, -1);
-        if (range.size() == 1) range.add(range.get(0));
-        return range;
+        if (emptyRange.equals(NOT_FOUND_EMPTY_FIELDS_RANGE_VALUE)) return;
+
+        Field colouredStart = isFromTop
+                ? new Field(emptyRange.get(1) + 1, columnIdx)
+                : new Field(emptyRange.get(0) - 1, columnIdx);
+
+        List<Integer> colouredRange = isFromTop
+                ? getColouredFieldsRangeNearEmptySequenceToBottom(colouredStart)
+                : getColouredFieldsRangeNearEmptySequenceToTop(colouredStart);
+
+        if (colouredRange.equals(NOT_FOUND_COLOURED_FIELDS_RANGE_VALUE)) return;
+
+        evaluateAndMaybePlaceX(columnIdx, emptyRange, colouredRange, isFromTop);
+    }
+
+    private List<Integer> getEmptyFieldsRangeFromXToFirstColouredFieldToBottom(Field xField) {
+        return findFieldRange(new Field(xField.getRowIdx() + 1, xField.getColumnIdx()), true,
+                f -> isFieldEmpty(logic.getNonogramSolutionBoard(), f));
     }
 
     private List<Integer> getEmptyFieldsRangeFromXToFirstColouredFieldToTop(Field xField) {
-        List<Integer> range = new ArrayList<>();
-        Field field = new Field(xField.getRowIdx() - 1, xField.getColumnIdx());
-
-        while (logic.getBoardAccessHelper().areFieldIndexesValid(field) &&
-                isFieldEmpty(logic.getNonogramSolutionBoard(), field)) {
-            if (range.isEmpty()) {
-                range.add(field.getRowIdx());
-            } else {
-                if (range.size() == 1) range.add(0, field.getRowIdx());
-                else range.set(0, field.getRowIdx());
-            }
-            field.setRowIdx(field.getRowIdx() - 1);
-        }
-
-        if (range.isEmpty()) return List.of(-1, -1);
-        if (range.size() == 1) range.add(range.get(0));
-        return range;
+        return findFieldRange(new Field(xField.getRowIdx() - 1, xField.getColumnIdx()), false,
+                f -> isFieldEmpty(logic.getNonogramSolutionBoard(), f));
     }
 
-    private List<Integer> getColouredFieldsRangeNearEmptySequenceFromTop(Field startField) {
-        List<Integer> range = new ArrayList<>();
-        Field field = new Field(startField.getRowIdx(), startField.getColumnIdx());
-
-        while (logic.getBoardAccessHelper().areFieldIndexesValid(field) &&
-                isFieldColoured(logic.getNonogramSolutionBoard(), field)) {
-            if (range.isEmpty()) {
-                range.add(field.getRowIdx());
-            } else {
-                if (range.size() == 1) range.add(field.getRowIdx());
-                else range.set(1, field.getRowIdx());
-            }
-            field.setRowIdx(field.getRowIdx() + 1);
-        }
-
-        if (range.isEmpty()) return List.of(-1, -1);
-        if (range.size() == 1) range.add(range.get(0));
-        return range;
+    private List<Integer> getColouredFieldsRangeNearEmptySequenceToBottom(Field startField) {
+        return findFieldRange(startField, true,
+                f -> isFieldColoured(logic.getNonogramSolutionBoard(), f));
     }
 
     private List<Integer> getColouredFieldsRangeNearEmptySequenceToTop(Field startField) {
+        return findFieldRange(startField, false,
+                f -> isFieldColoured(logic.getNonogramSolutionBoard(), f));
+    }
+
+    private List<Integer> findFieldRange(Field startField, boolean isForward, Predicate<Field> condition) {
         List<Integer> range = new ArrayList<>();
         Field field = new Field(startField.getRowIdx(), startField.getColumnIdx());
 
-        while (logic.getBoardAccessHelper().areFieldIndexesValid(field) &&
-                isFieldColoured(logic.getNonogramSolutionBoard(), field)) {
-            if (range.isEmpty()) {
-                range.add(field.getRowIdx());
-            } else {
-                if (range.size() == 1) range.add(0, field.getRowIdx());
-                else range.set(0, field.getRowIdx());
-            }
-            field.setRowIdx(field.getRowIdx() - 1);
+        while (logic.getBoardAccessHelper().areFieldIndexesValid(field) && condition.test(field)) {
+            updateRange(range, field.getRowIdx(), isForward);
+            field.setRowIdx(field.getRowIdx() + (isForward ? 1 : -1));
         }
 
         if (range.isEmpty()) return List.of(-1, -1);
         if (range.size() == 1) range.add(range.get(0));
+
         return range;
+    }
+
+    private void updateRange(List<Integer> range, int rowIdx, boolean isForward) {
+        if (range.isEmpty()) {
+            range.add(rowIdx);
+        } else if (range.size() == 1) {
+            if (isForward) range.add(rowIdx);
+            else range.add(0, rowIdx);
+        } else {
+            if (isForward) range.set(1, rowIdx);
+            else range.set(0, rowIdx);
+        }
     }
 
     private void evaluateAndMaybePlaceX(int columnIdx, List<Integer> emptyRange, List<Integer> colouredRange, boolean isFromTop) {
@@ -620,8 +680,8 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
                     ? List.of(emptyRange.get(0), emptyRange.get(0) + len - 1)
                     : List.of(emptyRange.get(1) - len + 1, emptyRange.get(1));
 
-            boolean fitsInsideEmpty = rangeLength(possibleRange) < emptyLen && rangeInsideAnotherRange(possibleRange, range);
-            boolean mergedAcceptable = rangeLength(possibleRange) >= emptyLen && totalLen <= len && rangeInsideAnotherRange(possibleRange, range);
+            boolean fitsInsideEmpty = possibleRangeLengthFitsInEmptyRange(possibleRange, emptyLen, range);
+            boolean mergedAcceptable = mergedSequenceLengthIsAcceptable(possibleRange, emptyLen, totalLen, len, range);
 
             if (fitsInsideEmpty || mergedAcceptable) fitting.add(i);
         }
@@ -630,12 +690,22 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
             int xRow = isFromTop ? emptyRange.get(0) : emptyRange.get(1);
             Field field = new Field(xRow, columnIdx);
 
-            if (isFieldEmpty(logic.getNonogramSolutionBoard(), field)) {
-                nonogramFieldPlacingXHelper.placeXAtGivenField(field);
-                logic.getNonogramFieldExclusionHelper().excludeFieldInColumn(field);
-                logic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_COLUMN_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE);
-                logic.getNonogramState().increaseMadeSteps();
-            }
+            nonogramFieldPlacingXHelper.placeXAtGivenField(field);
+            logic.getNonogramFieldExclusionHelper().excludeFieldInColumn(field);
+            logic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_COLUMN_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE);
+            logic.getNonogramState().increaseMadeSteps();
         }
+    }
+
+    private boolean possibleRangeLengthFitsInEmptyRange(List<Integer> possibleRange, int emptyLen, List<Integer> range) {
+        return rangeLength(possibleRange) < emptyLen && rangeInsideAnotherRange(possibleRange, range);
+    }
+
+    private boolean mergedSequenceLengthIsAcceptable(List<Integer> possibleRange,
+                                                     int emptyLen,
+                                                     int totalLength,
+                                                     int length,
+                                                     List<Integer> range) {
+        return rangeLength(possibleRange) >= emptyLen && totalLength <= length && rangeInsideAnotherRange(possibleRange, range);
     }
 }

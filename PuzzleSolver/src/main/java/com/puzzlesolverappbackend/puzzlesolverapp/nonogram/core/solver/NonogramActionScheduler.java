@@ -4,9 +4,11 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramActionDetails;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.actions.ActionDependencyMap;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 public class NonogramActionScheduler {
 
     private final List<NonogramActionDetails> actionsToDoList;
@@ -29,5 +31,4 @@ public class NonogramActionScheduler {
             }
         }
     }
-
 }

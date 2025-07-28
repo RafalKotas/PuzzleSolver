@@ -145,6 +145,43 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         this.logService = new NonogramLogService();
     }
 
+    public NonogramColumnLogic(NonogramColumnLogic original) {
+        super(
+                original.getNonogramRules(),
+                original.getNonogramSolutionBoard(),
+                original.getNonogramSolutionBoardWithMarks(),
+                original.getActionsToDoList(),
+                original.getNonogramState(),
+                original.getLogs()
+        );
+
+        this.columnsSequencesRanges = original.getColumnsSequencesRanges();
+        this.columnsSequencesIdsNotToInclude = original.getColumnsSequencesIdsNotToInclude();
+        this.columnsFieldsNotToInclude = original.getColumnsFieldsNotToInclude();
+
+        this.nonogramSolutionBoard = original.getNonogramSolutionBoard();
+        this.nonogramSolutionBoardWithMarks = original.getNonogramSolutionBoardWithMarks();
+
+        this.actionsToDoList = original.getActionsToDoList();
+
+        this.actionScheduler = new NonogramActionScheduler(this.getActionsToDoList());
+        this.boardAccessHelper = new NonogramBoardAccessHelper(this.getNonogramSolutionBoard());
+        this.columnColouringHelper = original.getColumnColouringHelper();
+        this.columnXPlacementHelper = original.getColumnXPlacementHelper();
+        this.columnSequencesCorrectionHelper = new ColumnSequencesCorrectionHelperImpl(this);
+        this.nonogramFieldClearingHelper = new NonogramFieldClearingHelper(
+                this.getNonogramSolutionBoard(),
+                this.getNonogramSolutionBoardWithMarks(),
+                this.getBoardAccessHelper()
+        );
+        this.nonogramFieldExclusionHelper = new NonogramFieldExclusionHelperColumn(
+                this.columnsFieldsNotToInclude,
+                boardAccessHelper
+        );
+
+        this.logService = new NonogramLogService();
+    }
+
     public void setColumnSequencesRanges(int columnIdx, List<List<Integer>> ranges) {
         this.getColumnsSequencesRanges().set(columnIdx, ranges);
     }
