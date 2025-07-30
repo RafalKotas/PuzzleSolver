@@ -1,12 +1,15 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.dto;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+// TODO - toString
 @NoArgsConstructor
+@Getter
+@Setter
 public class FinalNonogramSolutionDTO {
     private List<List<String>> finalBoard;
     private List<List<List<Integer>>> derivedRowRanges;
