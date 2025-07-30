@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.common;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
@@ -13,7 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class ArrayUtilsTest {
 
     @Test
-    void constructorIsPrivateAndThrowsException() throws Exception {
+    @DisplayName("ArrayUtils constructor should throw UnsupportedOperationException - reflect instantiation")
+    void constructor_throwsException_whenInstantiatedReflectively() throws Exception {
         // given
         Constructor<ArrayUtils> constructor = ArrayUtils.class.getDeclaredConstructor();
         constructor.setAccessible(true);

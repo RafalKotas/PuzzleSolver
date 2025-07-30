@@ -2,12 +2,14 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.dto;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRules;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
 public class NonogramSolvePayload {
 
     private NonogramRules nonogramRules;
@@ -21,8 +23,5 @@ public class NonogramSolvePayload {
     private List<List<Integer>> columnsFieldsNotToInclude;
     private List<List<Integer>> rowsSequencesIdsNotToInclude;
     private List<List<Integer>> columnsSequencesIdsNotToInclude;
-
-    public NonogramSolvePayload() {
-    }
 }
 

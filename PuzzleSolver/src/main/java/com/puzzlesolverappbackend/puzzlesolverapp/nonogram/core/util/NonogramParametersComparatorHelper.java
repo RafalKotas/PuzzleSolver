@@ -1,44 +1,12 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.util;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import lombok.experimental.UtilityClass;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
 @UtilityClass
 public class NonogramParametersComparatorHelper {
-
-    public static boolean sequencesRangesAfterActionsMadeDiffers(NonogramLogic logicBeforeActionsMade, NonogramLogic logicAfterActionsMade) {
-        boolean sequencesRangesAfterActionsMadeDiffersInRows = sequencesRangesAfterActionsMadeDiffersInSection(
-                logicBeforeActionsMade.getRowsSequencesRanges(),
-                logicAfterActionsMade.getRowsSequencesRanges()
-        );
-        boolean sequencesRangesAfterActionsMadeDiffersInColumns = sequencesRangesAfterActionsMadeDiffersInSection(
-                logicBeforeActionsMade.getColumnsSequencesRanges(),
-                logicAfterActionsMade.getColumnsSequencesRanges()
-        );
-        return sequencesRangesAfterActionsMadeDiffersInRows || sequencesRangesAfterActionsMadeDiffersInColumns;
-    }
-
-    public static boolean sequencesRangesAfterActionsMadeDiffersInSection(List<List<List<Integer>>> sequencesRangesBefore, List<List<List<Integer>>> sequencesRangesAfter) {
-
-        Iterator<List<List<Integer>>> logicBeforeActionsMadeRowsSequencesRangesIterator = sequencesRangesBefore.iterator();
-        Iterator<List<List<Integer>>> logicAfterActionsMadeRowsSequencesRangesIterator = sequencesRangesAfter.iterator();
-
-        while(logicBeforeActionsMadeRowsSequencesRangesIterator.hasNext() && logicAfterActionsMadeRowsSequencesRangesIterator.hasNext()) {
-
-            List<List<Integer>> logicBeforeActionsMadeRowSequencesRanges = logicBeforeActionsMadeRowsSequencesRangesIterator.next();
-            List<List<Integer>> logicAfterActionsMadeRowSequencesRanges = logicAfterActionsMadeRowsSequencesRangesIterator.next();
-
-            if (!sequencesRangesEqual(logicBeforeActionsMadeRowSequencesRanges, logicAfterActionsMadeRowSequencesRanges)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     public static boolean sequencesRangesEqual(List<List<Integer>> firstSequencesRanges, List<List<Integer>> secondSequencesRanges) {
         if (firstSequencesRanges.size() != secondSequencesRanges.size()) {

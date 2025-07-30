@@ -2,15 +2,13 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.utils;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogicParams;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
+import lombok.experimental.UtilityClass;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldColoured;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldWithX;
 
+@UtilityClass
 public final class NonogramStatsUtils {
-
-    private NonogramStatsUtils() {
-        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
-    }
 
     public static double fieldsWithXPlacedPercent(NonogramLogicParams logic) {
         return getPercent(fieldsWithXPlaced(logic), fieldsToPlaceXTotal(logic));

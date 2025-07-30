@@ -7,6 +7,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 class JsonFormatter {
+
     public static String format(JsonElement jsonElement) {
         StringBuilder sb = new StringBuilder();
         format(jsonElement, sb, "");

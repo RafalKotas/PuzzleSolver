@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
@@ -11,17 +12,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class NonogramStructureFactoryTest {
 
     @Test
-    void privateConstructorThrowsExpectedExceptionAndIsCovered() throws Exception {
+    @DisplayName("NonogramStructureFactory constructor should throw UnsupportedOperationException - reflect instantiation")
+    void constructor_throwsException_whenInstantiatedReflectively() throws Exception {
         // given
-        Constructor<NonogramStructureFactory> constructor =
-                NonogramStructureFactory.class.getDeclaredConstructor();
+        Constructor<NonogramStructureFactory> constructor = NonogramStructureFactory.class.getDeclaredConstructor();
         constructor.setAccessible(true);
 
         // when
-        InvocationTargetException ex = assertThrows(
-                InvocationTargetException.class,
-                constructor::newInstance
-        );
+        InvocationTargetException ex = assertThrows(InvocationTargetException.class, constructor::newInstance);
 
         // then
         Throwable cause = ex.getCause();

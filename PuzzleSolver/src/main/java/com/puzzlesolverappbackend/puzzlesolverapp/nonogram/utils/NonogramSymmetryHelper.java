@@ -1,12 +1,12 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.utils;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
+import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
+@UtilityClass
 public final class NonogramSymmetryHelper {
-
-    private NonogramSymmetryHelper() {}
 
     public static boolean isRowSymmetrical(NonogramLogic logic) {
         return areOriginalAndReversedListIdentical(logic.getNonogramRules().getRowSequencesLengths());

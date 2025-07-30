@@ -3,12 +3,28 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ColouringHelperTest {
+
+    @Test
+    @DisplayName("ColouringHelper constructor should throw UnsupportedOperationException - reflect instantiation")
+    void constructor_throwsException_whenInstantiatedReflectively() throws Exception {
+        // given
+        Constructor<ColouringHelper> constructor = ColouringHelper.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+
+        // when
+        InvocationTargetException exception = assertThrows(InvocationTargetException.class, constructor::newInstance);
+
+        // then
+        Throwable cause = exception.getCause();
+        assertInstanceOf(UnsupportedOperationException.class, cause);
+    }
 
     @DisplayName("calculateOverlappingRange should return empty list for range [0, 5] and sequenceLength = 1 o06005 - row 0")
     @Test

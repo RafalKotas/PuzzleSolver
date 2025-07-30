@@ -1,6 +1,7 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.common;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.constants.InitializerConstants;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
@@ -11,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FileHelperTest {
 
     @Test
+    @DisplayName("FileHelper constructor should throw UnsupportedOperationException - reflect instantiation")
     void constructor_throwsException_whenInstantiatedReflectively() throws Exception {
         // given
         Constructor<FileHelper> constructor = FileHelper.class.getDeclaredConstructor();

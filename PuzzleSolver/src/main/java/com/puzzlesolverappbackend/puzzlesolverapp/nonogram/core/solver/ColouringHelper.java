@@ -9,6 +9,7 @@ import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.*;
 import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.rangeInsideAnotherRange;
@@ -41,22 +42,31 @@ public final class ColouringHelper {
         return result;
     }
 
-
-
+    // TODO: Skip if whole column is already filled
     public static List<Integer> findColouredSequenceRangeTop(List<List<String>> board, int columnIdx, int startRowIdx) {
         int start = startRowIdx;
-        while (start - 1 >= 0 && isFieldColoured(board, new Field(start - 1, columnIdx))) {
-            start--;
+        while (start > 0) {
+            int above = start - 1;
+            if (isFieldColoured(board, new Field(above, columnIdx))) {
+                start--;
+            } else {
+                break;
+            }
         }
         return List.of(start, startRowIdx);
     }
 
     public static List<Integer> findColouredSequenceRangeBottom(List<List<String>> board, int columnIdx, int startRowIdx) {
-        int endRowIdx = startRowIdx;
-        while (endRowIdx + 1 < board.size() && isFieldColoured(board, new Field(endRowIdx + 1, columnIdx))) {
-            endRowIdx++;
+        int end = startRowIdx;
+        while (end < board.size() - 1) {
+            int below = end + 1;
+            if (isFieldColoured(board, new Field(below, columnIdx))) {
+                end++;
+            } else {
+                break;
+            }
         }
-        return List.of(startRowIdx, endRowIdx);
+        return List.of(startRowIdx, end);
     }
 
     public static int findDistanceFromTopX(List<List<String>> board, int columnIdx, List<Integer> colouredRange, int maxDist) {
@@ -85,58 +95,108 @@ public final class ColouringHelper {
         return 0;
     }
 
-    public static boolean extendToTop(
-            NonogramColumnLogic logic,
-            NonogramFieldColouringHelper colouringHelper,
-            NonogramActionScheduler scheduler,
-            int columnIdx,
-            int fromInclusive,
-            int toInclusive
+    private static boolean extend(
+            IntPredicate terminationCondition,
+            IntUnaryOperator stepFn,
+            IntFunction<Field> fieldSupplier,
+            Predicate<Field> isEmptyPredicate,
+            Consumer<Field> colouringAction,
+            Consumer<Field> schedulingAction,
+            Runnable onStepMade,
+            Runnable onInvalidation,
+            int startIdx
     ) {
         boolean anyFieldColoured = false;
 
-        for (int rowIdx = fromInclusive; rowIdx >= toInclusive && rowIdx >= 0; rowIdx--) {
-            Field field = new Field(rowIdx, columnIdx);
+        for (int idx = startIdx; terminationCondition.test(idx); idx = stepFn.applyAsInt(idx)) {
+            Field field = fieldSupplier.apply(idx);
             try {
-                if (isFieldEmpty(logic.getNonogramSolutionBoard(), field)) {
-                    colouringHelper.colourFieldAtGivenPosition(field, "--C-");
-                    scheduler.scheduleActionsBasedOnField(field, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN);
-                    logic.getNonogramState().increaseMadeSteps();
+                if (isEmptyPredicate.test(field)) {
+                    colouringAction.accept(field);
+                    schedulingAction.accept(field);
+                    onStepMade.run();
                     anyFieldColoured = true;
                 }
             } catch (IndexOutOfBoundsException e) {
-                logic.getNonogramState().invalidateSolution();
+                onInvalidation.run();
             }
         }
 
         return anyFieldColoured;
     }
 
-    public static boolean extendToBottom(
-            NonogramColumnLogic logic,
-            NonogramFieldColouringHelper colouringHelper,
-            NonogramActionScheduler scheduler,
-            int columnIdx,
-            int fromInclusive,
-            int toInclusive
-    ) {
-        boolean anyFieldColoured = false;
+    public static boolean extendToTop(NonogramColumnLogic logic,
+                                      NonogramFieldColouringHelper colouringHelper,
+                                      NonogramActionScheduler scheduler,
+                                      int columnIdx, int fromInclusive, int toInclusive) {
 
-        for (int rowIdx = fromInclusive; rowIdx <= toInclusive && rowIdx < logic.getNonogramRules().getHeight(); rowIdx++) {
-            Field field = new Field(rowIdx, columnIdx);
-            try {
-                if (isFieldEmpty(logic.getNonogramSolutionBoard(), field)) {
-                    colouringHelper.colourFieldAtGivenPosition(field, "--C-");
-                    scheduler.scheduleActionsBasedOnField(field, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN);
-                    logic.getNonogramState().increaseMadeSteps();
-                    anyFieldColoured = true;
-                }
-            } catch (IndexOutOfBoundsException e) {
-                logic.getNonogramState().invalidateSolution();
-            }
-        }
+        return extend(
+                rowIdx -> rowIdx >= toInclusive && rowIdx >= 0,
+                rowIdx -> rowIdx - 1,
+                rowIdx -> new Field(rowIdx, columnIdx),
+                f -> isFieldEmpty(logic.getNonogramSolutionBoard(), f),
+                f -> colouringHelper.colourFieldAtGivenPosition(f, "--C-"),
+                f -> scheduler.scheduleActionsBasedOnField(f, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN),
+                () -> logic.getNonogramState().increaseMadeSteps(),
+                () -> logic.getNonogramState().invalidateSolution(),
+                fromInclusive
+        );
+    }
 
-        return anyFieldColoured;
+    public static boolean extendToBottom(NonogramColumnLogic logic,
+                                         NonogramFieldColouringHelper colouringHelper,
+                                         NonogramActionScheduler scheduler,
+                                         int columnIdx, int fromInclusive, int toInclusive) {
+
+        int height = logic.getNonogramRules().getHeight();
+        return extend(
+                rowIdx -> rowIdx <= toInclusive && rowIdx < height,
+                rowIdx -> rowIdx + 1,
+                rowIdx -> new Field(rowIdx, columnIdx),
+                f -> isFieldEmpty(logic.getNonogramSolutionBoard(), f),
+                f -> colouringHelper.colourFieldAtGivenPosition(f, "--C-"),
+                f -> scheduler.scheduleActionsBasedOnField(f, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN),
+                () -> logic.getNonogramState().increaseMadeSteps(),
+                () -> logic.getNonogramState().invalidateSolution(),
+                fromInclusive
+        );
+    }
+
+    public static boolean extendToRight(NonogramRowLogic logic,
+                                        NonogramFieldColouringHelper colouringHelper,
+                                        NonogramActionScheduler scheduler,
+                                        int rowIdx, int fromInclusive, int toInclusive) {
+
+        int width = logic.getNonogramRules().getWidth();
+        return extend(
+                colIdx -> colIdx <= toInclusive && colIdx < width,
+                colIdx -> colIdx + 1,
+                colIdx -> new Field(rowIdx, colIdx),
+                f -> isFieldEmpty(logic.getNonogramSolutionBoard(), f),
+                f -> colouringHelper.colourFieldAtGivenPosition(f, "R---"),
+                f -> scheduler.scheduleActionsBasedOnField(f, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW),
+                () -> logic.getNonogramState().increaseMadeSteps(),
+                () -> logic.getNonogramState().invalidateSolution(),
+                fromInclusive
+        );
+    }
+
+    public static boolean extendToLeft(NonogramRowLogic logic,
+                                       NonogramFieldColouringHelper colouringHelper,
+                                       NonogramActionScheduler scheduler,
+                                       int rowIdx, int fromInclusive, int toInclusive) {
+
+        return extend(
+                colIdx -> colIdx >= toInclusive && colIdx >= 0,
+                colIdx -> colIdx - 1,
+                colIdx -> new Field(rowIdx, colIdx),
+                f -> isFieldEmpty(logic.getNonogramSolutionBoard(), f),
+                f -> colouringHelper.colourFieldAtGivenPosition(f, "R---"),
+                f -> scheduler.scheduleActionsBasedOnField(f, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW),
+                () -> logic.getNonogramState().increaseMadeSteps(),
+                () -> logic.getNonogramState().invalidateSolution(),
+                fromInclusive
+        );
     }
 
     public static int findDistanceFromLeftX(List<List<String>> board, int rowIdx, List<Integer> colouredRange, int maxDist) {
@@ -163,59 +223,6 @@ public final class ColouringHelper {
             }
         }
         return 0;
-    }
-
-    public static boolean extendToLeft(
-            NonogramRowLogic logic,
-            NonogramFieldColouringHelper colouringHelper,
-            NonogramActionScheduler scheduler,
-            int rowIdx,
-            int fromInclusive,
-            int toInclusive
-    ) {
-        boolean anyFieldColoured = false;
-
-        for (int columnIdx = fromInclusive; columnIdx >= toInclusive && columnIdx >= 0; columnIdx--) {
-            Field field = new Field(rowIdx, columnIdx);
-            try {
-                if (isFieldEmpty(logic.getNonogramSolutionBoard(), field)) {
-                    colouringHelper.colourFieldAtGivenPosition(field, "--C-");
-                    scheduler.scheduleActionsBasedOnField(field, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW);
-                    logic.getNonogramState().increaseMadeSteps();
-                    anyFieldColoured = true;
-                }
-            } catch (IndexOutOfBoundsException e) {
-                logic.getNonogramState().invalidateSolution();
-            }
-        }
-        return anyFieldColoured;
-    }
-
-    public static boolean extendToRight(
-            NonogramRowLogic logic,
-            NonogramFieldColouringHelper colouringHelper,
-            NonogramActionScheduler scheduler,
-            int rowIdx,
-            int fromInclusive,
-            int toInclusive
-    ) {
-        boolean anyFieldColoured = false;
-
-        for (int columnIdx = fromInclusive; columnIdx <= toInclusive && columnIdx < logic.getNonogramRules().getWidth(); columnIdx++) {
-            Field field = new Field(rowIdx, columnIdx);
-            try {
-                if (isFieldEmpty(logic.getNonogramSolutionBoard(), field)) {
-                    colouringHelper.colourFieldAtGivenPosition(field, "R---");
-                    scheduler.scheduleActionsBasedOnField(field, NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW);
-                    logic.getNonogramState().increaseMadeSteps();
-                    anyFieldColoured = true;
-                }
-            } catch (IndexOutOfBoundsException e) {
-                logic.getNonogramState().invalidateSolution();
-            }
-        }
-
-        return anyFieldColoured;
     }
 
     public static List<Integer> findColouredSequenceRangeLeft(List<List<String>> board, int rowIdx, int startColIdx) {
