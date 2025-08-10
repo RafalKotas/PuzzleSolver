@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.*;
@@ -26,7 +27,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.Nonogr
 @Slf4j
 @Getter
 @Setter
-public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
+public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, RefreshableColumnHelper {
 
     private final NonogramColumnLogic logic;
 
@@ -616,50 +617,53 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
     }
 
     private List<Integer> getEmptyFieldsRangeFromXToFirstColouredFieldToBottom(Field xField) {
-        return findFieldRange(new Field(xField.getRowIdx() + 1, xField.getColumnIdx()), true,
-                f -> isFieldEmpty(logic.getNonogramSolutionBoard(), f));
+        return getFieldRange(
+                new Field(xField.getRowIdx() + 1, xField.getColumnIdx()),
+                i -> i + 1,
+                f -> isFieldEmpty(logic.getNonogramSolutionBoard(), f)
+        );
     }
 
     private List<Integer> getEmptyFieldsRangeFromXToFirstColouredFieldToTop(Field xField) {
-        return findFieldRange(new Field(xField.getRowIdx() - 1, xField.getColumnIdx()), false,
-                f -> isFieldEmpty(logic.getNonogramSolutionBoard(), f));
+        return getFieldRange(
+                new Field(xField.getRowIdx() - 1, xField.getColumnIdx()),
+                i -> i - 1,
+                f -> isFieldEmpty(logic.getNonogramSolutionBoard(), f)
+        );
     }
 
     private List<Integer> getColouredFieldsRangeNearEmptySequenceToBottom(Field startField) {
-        return findFieldRange(startField, true,
-                f -> isFieldColoured(logic.getNonogramSolutionBoard(), f));
+        return getFieldRange(
+                new Field(startField.getRowIdx(), startField.getColumnIdx()),
+                i -> i + 1,
+                f -> isFieldColoured(logic.getNonogramSolutionBoard(), f)
+        );
     }
 
     private List<Integer> getColouredFieldsRangeNearEmptySequenceToTop(Field startField) {
-        return findFieldRange(startField, false,
-                f -> isFieldColoured(logic.getNonogramSolutionBoard(), f));
+        return getFieldRange(
+                new Field(startField.getRowIdx(), startField.getColumnIdx()),
+                i -> i - 1,
+                f -> isFieldColoured(logic.getNonogramSolutionBoard(), f)
+        );
     }
 
-    private List<Integer> findFieldRange(Field startField, boolean isForward, Predicate<Field> condition) {
-        List<Integer> range = new ArrayList<>();
-        Field field = new Field(startField.getRowIdx(), startField.getColumnIdx());
+    private List<Integer> getFieldRange(Field startField,
+                                        IntUnaryOperator directionFn,
+                                        Predicate<Field> matchCondition) {
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
 
-        while (logic.getBoardAccessHelper().areFieldIndexesValid(field) && condition.test(field)) {
-            updateRange(range, field.getRowIdx(), isForward);
-            field.setRowIdx(field.getRowIdx() + (isForward ? 1 : -1));
+        Field f = new Field(startField.getRowIdx(), startField.getColumnIdx());
+        while (logic.getBoardAccessHelper().areFieldIndexesValid(f) && matchCondition.test(f)) {
+            int r = f.getRowIdx();
+            if (r < min) min = r;
+            if (r > max) max = r;
+            f.setRowIdx(directionFn.applyAsInt(r));
         }
 
-        if (range.isEmpty()) return List.of(-1, -1);
-        if (range.size() == 1) range.add(range.get(0));
-
-        return range;
-    }
-
-    private void updateRange(List<Integer> range, int rowIdx, boolean isForward) {
-        if (range.isEmpty()) {
-            range.add(rowIdx);
-        } else if (range.size() == 1) {
-            if (isForward) range.add(rowIdx);
-            else range.add(0, rowIdx);
-        } else {
-            if (isForward) range.set(1, rowIdx);
-            else range.set(0, rowIdx);
-        }
+        if (min == Integer.MAX_VALUE && max == Integer.MIN_VALUE) return List.of(-1, -1);
+        return List.of(min, max);
     }
 
     private void evaluateAndMaybePlaceX(int columnIdx, List<Integer> emptyRange, List<Integer> colouredRange, boolean isFromTop) {
@@ -707,5 +711,11 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper {
                                                      int length,
                                                      List<Integer> range) {
         return rangeLength(possibleRange) >= emptyLen && totalLength <= length && rangeInsideAnotherRange(possibleRange, range);
+    }
+
+    @Override
+    public void refreshFrom(NonogramColumnLogic logicToCopy) {
+        logic.setColumnsSequencesRanges(logicToCopy.getColumnsSequencesRanges());
+        logic.setColumnsFieldsNotToInclude(logicToCopy.getColumnsFieldsNotToInclude());
     }
 }

@@ -554,25 +554,19 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper {
     private List<Integer> getFieldRange(Field startField,
                                         IntUnaryOperator directionFn,
                                         Predicate<Field> matchCondition) {
-        List<Integer> range = new ArrayList<>();
-        Field field = new Field(startField.getRowIdx(), startField.getColumnIdx());
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
 
-        while (logic.getBoardAccessHelper().areFieldIndexesValid(field)
-                && matchCondition.test(field)) {
-            if (range.isEmpty()) {
-                range.add(field.getColumnIdx());
-            } else if (range.size() == 1) {
-                range.add(field.getColumnIdx());
-            } else {
-                range.set(directionFn.applyAsInt(0) > 0 ? 1 : 0, field.getColumnIdx());
-            }
-
-            field.setColumnIdx(directionFn.applyAsInt(field.getColumnIdx()));
+        Field f = new Field(startField.getRowIdx(), startField.getColumnIdx());
+        while (logic.getBoardAccessHelper().areFieldIndexesValid(f) && matchCondition.test(f)) {
+            int c = f.getColumnIdx();
+            if (c < min) min = c;
+            if (c > max) max = c;
+            f.setColumnIdx(directionFn.applyAsInt(c));
         }
 
-        if (range.isEmpty()) return List.of(-1, -1);
-        if (range.size() == 1) range.add(range.get(0));
-        return range;
+        if (min == Integer.MAX_VALUE && max == Integer.MIN_VALUE) return List.of(-1, -1);
+        return List.of(min, max);
     }
 
     private void evaluateAndMaybePlaceX(int rowIdx, List<Integer> emptyRange, List<Integer> colouredRange, boolean isFromLeft) {
