@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.rangeLength;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.util.NonogramParametersComparatorHelper.rangesNotEqual;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark.NonogramFieldMarkHelper.markRowBoardField;
@@ -31,14 +32,6 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exc
 @Slf4j
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NonogramRowLogic extends NonogramLogicParams implements RowActions {
-
-    private static final String CORRECTING_ROW_SEQ_RANGE_MARKING_FIELD = "correcting row sequence range when marking field";
-
-    private static final String FILL_OVERLAPPING_FIELDS = "fill overlapping fields";
-
-    private static final List<Integer> NOT_FOUND_EMPTY_FIELDS_RANGE_VALUE = List.of(-1, -1);
-
-    private static final List<Integer> NOT_FOUND_COLOURED_FIELDS_RANGE_VALUE = List.of(-1, -1);
 
     protected List<List<List<Integer>>> rowsSequencesRanges;
     protected List<List<Integer>> rowsFieldsNotToInclude;
@@ -122,40 +115,40 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         this.logService = new NonogramLogService();
     }
 
-    public NonogramRowLogic(NonogramLogic logic, NonogramBoardAccessHelper accessHelper) {
-        super(
-                logic.getNonogramRules(),
-                logic.getNonogramSolutionBoard(),
-                logic.getNonogramSolutionBoardWithMarks(),
-                logic.getActionsToDoList(),
-                logic.getNonogramState(),
-                logic.getLogs()
-        );
-
-        this.rowsSequencesRanges = logic.getRowsSequencesRanges();
-        this.rowsSequencesIdsNotToInclude = logic.getRowsSequencesIdsNotToInclude();
-        this.rowsFieldsNotToInclude = logic.getRowsFieldsNotToInclude();
-
-        this.nonogramSolutionBoardWithMarks = logic.getNonogramSolutionBoardWithMarks();
-        this.nonogramSolutionBoard = logic.getNonogramSolutionBoard();
-
-        this.actionsToDoList = logic.getActionsToDoList();
-
-        this.actionScheduler = new NonogramActionScheduler(this.getActionsToDoList());
-        this.boardAccessHelper = accessHelper;
-        this.rowColouringHelper = new RowColouringHelperImpl(this);
-        this.rowXPlacementHelper = new RowXPlacementHelperImpl(this);
-        this.rowSequencesCorrectionHelper = new RowSequencesCorrectionHelperImpl(this);
-        this.nonogramFieldClearingHelper = new NonogramFieldClearingHelper(this.getNonogramSolutionBoard(),
-                this.getNonogramSolutionBoardWithMarks(),
-                this.getBoardAccessHelper());
-        this.nonogramFieldExclusionHelper = new NonogramFieldExclusionHelperRow(
-                this.rowsFieldsNotToInclude,
-                boardAccessHelper
-        );
-
-        this.logService = new NonogramLogService();
-    }
+//    public NonogramRowLogic(NonogramLogic logic, NonogramBoardAccessHelper accessHelper) {
+//        super(
+//                logic.getNonogramRules(),
+//                logic.getNonogramSolutionBoard(),
+//                logic.getNonogramSolutionBoardWithMarks(),
+//                logic.getActionsToDoList(),
+//                logic.getNonogramState(),
+//                logic.getLogs()
+//        );
+//
+//        this.rowsSequencesRanges = logic.getRowsSequencesRanges();
+//        this.rowsSequencesIdsNotToInclude = logic.getRowsSequencesIdsNotToInclude();
+//        this.rowsFieldsNotToInclude = logic.getRowsFieldsNotToInclude();
+//
+//        this.nonogramSolutionBoardWithMarks = logic.getNonogramSolutionBoardWithMarks();
+//        this.nonogramSolutionBoard = logic.getNonogramSolutionBoard();
+//
+//        this.actionsToDoList = logic.getActionsToDoList();
+//
+//        this.actionScheduler = new NonogramActionScheduler(this.getActionsToDoList());
+//        this.boardAccessHelper = accessHelper;
+//        this.rowColouringHelper = new RowColouringHelperImpl(this);
+//        this.rowXPlacementHelper = new RowXPlacementHelperImpl(this);
+//        this.rowSequencesCorrectionHelper = new RowSequencesCorrectionHelperImpl(this);
+//        this.nonogramFieldClearingHelper = new NonogramFieldClearingHelper(this.getNonogramSolutionBoard(),
+//                this.getNonogramSolutionBoardWithMarks(),
+//                this.getBoardAccessHelper());
+//        this.nonogramFieldExclusionHelper = new NonogramFieldExclusionHelperRow(
+//                this.rowsFieldsNotToInclude,
+//                boardAccessHelper
+//        );
+//
+//        this.logService = new NonogramLogService();
+//    }
 
     public void setRowSequencesRanges(int rowIdx, List<List<Integer>> rowSequencesRanges) {
         this.getRowsSequencesRanges().set(rowIdx, rowSequencesRanges);
@@ -420,13 +413,18 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                             List<Integer> oldRange = rowSequencesRanges.get(matchingSeqId);
                             List<Integer> updatedRange = new ArrayList<>(Arrays.asList(potentiallyColouredFieldColumnIndex, colouredSequenceEndColumnIndex));
 
-                            this.updateRowSequenceRange(rowIdx, matchingSeqId, updatedRange);
-                            Field rowField = new Field(rowIdx, 0);
-                            actionScheduler.scheduleActionsBasedOnField(rowField, NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART);
+                            if (rangesNotEqual(oldRange, updatedRange)) {
+                                this.updateRowSequenceRange(rowIdx, matchingSeqId, updatedRange);
+                                if (sequenceShouldBeExcluded(rowIdx, matchingSeqId)) {
+                                    excludeSequenceInRow(rowIdx, matchingSeqId);
+                                }
+                                Field rowField = new Field(rowIdx, 0);
+                                actionScheduler.scheduleActionsBasedOnField(rowField, NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART);
 
-                            this.nonogramState.increaseMadeSteps();
-                            tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, matchingSeqId, oldRange, updatedRange, "update only matching sequence part preventing excess length to right");
-                            addLog();
+                                this.nonogramState.increaseMadeSteps();
+                                tmpLog = generateCorrectingRowSequenceRangeStepDescription(rowIdx, matchingSeqId, oldRange, updatedRange, "update only matching sequence part preventing excess length to right");
+                                addLog();
+                            }
                         }
                     }
                 }
@@ -523,6 +521,14 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         }
 
         return maximumColumnIndex - 1;
+    }
+
+    private boolean sequenceShouldBeExcluded(int rowIdx, int sequenceIdx) {
+        int sequenceLength = nonogramRules.getRowSequencesLengths().get(rowIdx).get(sequenceIdx);
+        List<Integer> sequenceRange = rowsSequencesRanges.get(rowIdx).get(sequenceIdx);
+
+        return rangeLength(sequenceRange) == sequenceLength
+                && allFieldsAreColouredInColumnRange(rowIdx, sequenceRange, nonogramSolutionBoard);
     }
 
     public void changeRowSequenceRange(int rowIndex, int sequenceIndex, List<Integer> updatedRange) {

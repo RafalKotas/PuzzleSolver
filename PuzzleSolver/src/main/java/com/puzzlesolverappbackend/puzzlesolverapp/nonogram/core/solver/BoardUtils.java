@@ -21,11 +21,19 @@ public class BoardUtils {
     }
 
     public static boolean allFieldsAreColouredInColumnRange(int rowIdx, List<Integer> range, List<List<String>> board) {
-        int startCol = range.get(0);
-        int endCol = range.get(1);
+        int startColumnIdx = range.get(0);
+        int endColumnIdx = range.get(1);
 
-        return IntStream.rangeClosed(startCol, endCol)
-                .allMatch(col -> isFieldColoured(board, new Field(rowIdx, col)));
+        return IntStream.rangeClosed(startColumnIdx, endColumnIdx)
+                .allMatch(columnIdx -> isFieldColoured(board, new Field(rowIdx, columnIdx)));
+    }
+
+    public static boolean allFieldsAreColouredInRowRange(int colIdx, List<Integer> range, List<List<String>> board) {
+        int startRow = range.get(0);
+        int endRow = range.get(1);
+
+        return IntStream.rangeClosed(startRow, endRow)
+                .allMatch(rowIdx -> isFieldColoured(board, new Field(rowIdx, colIdx)));
     }
 
     public static boolean isFieldColoured(List<List<String>> board, Field field) {
