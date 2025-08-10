@@ -336,6 +336,9 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
                             if (rangesNotEqual(oldRange, updatedRange)) {
                                 this.updateRowSequenceRange(rowIdx, matchingSeqId, updatedRange);
+                                if (sequenceShouldBeExcluded(rowIdx, matchingSeqId)) {
+                                    excludeSequenceInRow(rowIdx, matchingSeqId);
+                                }
                                 Field rowField = new Field(rowIdx, 0);
                                 actionScheduler.scheduleActionsBasedOnField(rowField, NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART);
 

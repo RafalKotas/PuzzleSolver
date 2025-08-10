@@ -20,6 +20,14 @@ public class BoardUtils {
                 .toList();
     }
 
+    public static boolean allFieldsAreColouredInColumnRange(int rowIdx, List<Integer> range, List<List<String>> board) {
+        int startCol = range.get(0);
+        int endCol = range.get(1);
+
+        return IntStream.rangeClosed(startCol, endCol)
+                .allMatch(col -> isFieldColoured(board, new Field(rowIdx, col)));
+    }
+
     public static boolean isFieldColoured(List<List<String>> board, Field field) {
         return board.get(field.getRowIdx()).get(field.getColumnIdx()).equals(COLOURED_FIELD);
     }
