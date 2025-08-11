@@ -744,7 +744,7 @@ public class NonogramLogic extends NonogramLogicParams {
         if (!errors.isEmpty()) {
             log.error("Validation failed at action {}: {}", actionIndex, currentActionDetails);
             errors.forEach(log::error);
-            getNonogramState().setInvalidSolution(true);
+            getNonogramState().invalidateSolution();
             return false;
         }
 
