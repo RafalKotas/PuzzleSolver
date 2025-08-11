@@ -4,7 +4,6 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -15,8 +14,6 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve
 
 @UtilityClass
 public class ColumnMixedActionsHelper {
-
-    private static final int DISTANCE_WITH_ONE_EMPTY_FIELD_TO_POSSIBLE_COLOURED = 2;
 
     public static List<Integer> sequencesIdsInColumnIncludingField(List<List<Integer>> columnSequencesRanges, Field field) {
 
@@ -36,98 +33,88 @@ public class ColumnMixedActionsHelper {
             int potentiallyColouredFieldRowIndex,
             int maxSequenceLength) {
 
-        List<List<Integer>> colouredSequencesRanges = new ArrayList<>();
-        int minRowIdx = Math.max(potentiallyColouredFieldRowIndex - maxSequenceLength, 0);
-        int maxRowIdx = potentiallyColouredFieldRowIndex - DISTANCE_WITH_ONE_EMPTY_FIELD_TO_POSSIBLE_COLOURED;
+        List<List<Integer>> ranges = new ArrayList<>();
 
-        boolean fieldWithXFound = false;
-        int currentRowIdx = maxRowIdx;
+        int minRow = Math.max(potentiallyColouredFieldRowIndex - maxSequenceLength, 0);
+        int currentRowIdx = potentiallyColouredFieldRowIndex;
 
-        while (currentRowIdx >= minRowIdx && !fieldWithXFound) {
+        do {
+            Field currentField = new Field(currentRowIdx, columnIdx);
 
-            Field field = new Field(currentRowIdx, columnIdx);
+            if (isFieldWithX(solutionBoard, currentField)) break;
 
-            if (isFieldColoured(solutionBoard, field)) {
-                int startIdx = currentRowIdx;
-                int endIdx = currentRowIdx;
+            if (isFieldColoured(solutionBoard, currentField)) {
+                int bottomSequenceRowIdx = currentRowIdx;
 
-                while (endIdx >= 0 && isFieldColoured(solutionBoard, new Field(endIdx, columnIdx))) {
-                    endIdx--;
+                int topSequenceRowIdx = currentRowIdx;
+                int prev = topSequenceRowIdx - 1;
+                while (prev >= 0 && isFieldColoured(solutionBoard, new Field(prev, columnIdx))) {
+                    topSequenceRowIdx = prev;
+                    prev = topSequenceRowIdx - 1;
                 }
 
-                colouredSequencesRanges.add(List.of(startIdx, endIdx + 1));
-                currentRowIdx = endIdx - 1;
-
-                if (currentRowIdx < minRowIdx || isFieldWithX(solutionBoard, new Field(currentRowIdx, columnIdx))) {
-                    fieldWithXFound = true;
-                }
-
+                ranges.add(0, List.of(topSequenceRowIdx, bottomSequenceRowIdx));
+                currentRowIdx = topSequenceRowIdx - 1;
             } else {
-                if (isFieldWithX(solutionBoard, field)) {
-                    fieldWithXFound = true;
-                }
                 currentRowIdx--;
             }
-        }
 
-        return colouredSequencesRanges;
+        } while (currentRowIdx >= minRow);
+
+        return ranges;
     }
 
-    public static List<List<Integer>> getColouredSequencesRangesInColumnInRangeToBottom(List<List<String>> solutionBoard, int columnIdx, int potentiallyColouredFieldColumnIndex, int maxSequenceLength) {
+    public static List<List<Integer>> getColouredSequencesRangesInColumnInRangeToBottom(
+            List<List<String>> solutionBoard,
+            int columnIdx,
+            int potentiallyColouredFieldRowIndex,
+            int maxSequenceLength
+    ) {
+        List<List<Integer>> ranges = new ArrayList<>();
+
         int height = solutionBoard.size();
+        int maxRow = Math.min(potentiallyColouredFieldRowIndex + maxSequenceLength, height - 1);
+        int currentRowIdx = potentiallyColouredFieldRowIndex;
 
-        List<List<Integer>> colouredSequencesRangesInColumnNotFurtherThanMaxSequenceLength = new ArrayList<>();
-        List<Integer> colouredSequenceRangeInColumnInRange;
+        do {
+            Field currentField = new Field(currentRowIdx, columnIdx);
 
-        List<Integer> possibleColouredSequencesStartIndexesRange = Arrays.asList(potentiallyColouredFieldColumnIndex + DISTANCE_WITH_ONE_EMPTY_FIELD_TO_POSSIBLE_COLOURED,
-                potentiallyColouredFieldColumnIndex + maxSequenceLength);
+            if (isFieldWithX(solutionBoard, currentField)) break;
 
-        boolean fieldWithXFound = false;
-        int currentRowIdx = possibleColouredSequencesStartIndexesRange.get(0);
-        int potentiallyColouredSequenceRowIdx;
+            if (isFieldColoured(solutionBoard, currentField)) {
+                int bottomSequenceRowIdx = currentRowIdx;
 
-        while (currentRowIdx < height && currentRowIdx <= possibleColouredSequencesStartIndexesRange.get(1)) {
-
-            if (isFieldColoured(solutionBoard, new Field(currentRowIdx, columnIdx))) {
-                potentiallyColouredSequenceRowIdx = currentRowIdx;
-                while (potentiallyColouredSequenceRowIdx < height && isFieldColoured(solutionBoard, new Field(potentiallyColouredSequenceRowIdx, columnIdx))) {
-                    potentiallyColouredSequenceRowIdx++;
-                }
-                colouredSequenceRangeInColumnInRange = new ArrayList<>(Arrays.asList(currentRowIdx, potentiallyColouredSequenceRowIdx - 1));
-                colouredSequencesRangesInColumnNotFurtherThanMaxSequenceLength.add(colouredSequenceRangeInColumnInRange);
-
-                currentRowIdx = potentiallyColouredSequenceRowIdx + 1; // field with this rowIdx is not coloured ("X"/"-")
-
-                if (currentRowIdx > height - 1) {
-                    break;
+                int topSequenceRowIdx = currentRowIdx;
+                int next = bottomSequenceRowIdx + 1;
+                while (next < height && isFieldColoured(solutionBoard, new Field(next, columnIdx))) {
+                    bottomSequenceRowIdx = next;
+                    next = bottomSequenceRowIdx + 1;
                 }
 
-                if (isFieldWithX(solutionBoard, new Field(currentRowIdx, columnIdx))) {
-                    fieldWithXFound = true;
-                }
-            } else if (isFieldWithX(solutionBoard, new Field(currentRowIdx, columnIdx))) {
-                fieldWithXFound = true;
+                ranges.add(List.of(topSequenceRowIdx, bottomSequenceRowIdx));
+                currentRowIdx = bottomSequenceRowIdx + 1;
+            } else {
+                currentRowIdx++;
             }
+        } while (currentRowIdx <= maxRow);
 
-            if (fieldWithXFound) {
-                break;
-            }
-
-            currentRowIdx++;
-        }
-
-        return colouredSequencesRangesInColumnNotFurtherThanMaxSequenceLength;
+        return ranges;
     }
 
-    public static List<Integer> findValidSequencesIdsMergingToTop(List<Integer> sequenceIds, List<Integer> expectedLengths, int rowIndexBeforeX, List<List<Integer>> colouredSequences) {
+    public static List<Integer> findValidSequencesIdsMergingToTop(List<Integer> sequenceIds,
+                                                                  List<Integer> expectedLengths,
+                                                                  int rowIndexBeforeX,
+                                                                  List<List<Integer>> colouredSequences) {
         return IntStream.range(0, sequenceIds.size())
                 .filter(i -> !wouldMergeTooLongBackward(expectedLengths.get(i), rowIndexBeforeX, colouredSequences))
                 .mapToObj(sequenceIds::get)
                 .toList();
     }
 
-    public static List<Integer> findValidSequencesIdsMergingToBottom(List<Integer> sequenceIds, List<Integer> expectedLengths, int colouredRowIndexAfterX, List<List<Integer>> colouredSequences) {
-
+    public static List<Integer> findValidSequencesIdsMergingToBottom(List<Integer> sequenceIds,
+                                                                     List<Integer> expectedLengths,
+                                                                     int colouredRowIndexAfterX,
+                                                                     List<List<Integer>> colouredSequences) {
         return IntStream.range(0, sequenceIds.size())
                 .filter(i -> !wouldMergeTooLongForward(expectedLengths.get(i), colouredRowIndexAfterX, colouredSequences))
                 .mapToObj(sequenceIds::get)
