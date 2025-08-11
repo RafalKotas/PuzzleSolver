@@ -5,11 +5,11 @@ import lombok.*;
 
 import java.util.List;
 
-@Setter
-@Getter
+@AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Builder
-@ToString
 public class NonogramRules {
 
     protected List<List<Integer>> rowSequencesLengths;
@@ -17,13 +17,6 @@ public class NonogramRules {
 
     protected int height;
     protected int width;
-
-    public NonogramRules(List<List<Integer>> rowSequencesLengths, List<List<Integer>> columnSequencesLengths, int height, int width) {
-        this.rowSequencesLengths = rowSequencesLengths;
-        this.columnSequencesLengths = columnSequencesLengths;
-        this.height = height;
-        this.width = width;
-    }
 
     public static NonogramRules mapNonogramFileDetailsToNonogramRules(NonogramFileDetails nonogramFileDetails) {
         return NonogramRules.builder()
