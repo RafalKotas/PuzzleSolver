@@ -48,10 +48,10 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper {
 
     @Override
     public void placeXsRowAtUnreachableFields(int rowIdx) {
-        List<String> initialState = logic.getBoardAccessHelper().getRowCopy(rowIdx);
-        List<List<Integer>> initialRanges = cloneAndMakeImmutable2DList(logic.getRowsSequencesRanges().get(rowIdx));
-
         List<List<Integer>> rowSequencesRanges = logic.getRowsSequencesRanges().get(rowIdx);
+
+        List<String> initialState = logic.getBoardAccessHelper().getRowCopy(rowIdx);
+        List<List<Integer>> initialRanges = cloneAndMakeImmutable2DList(rowSequencesRanges);
 
         for (int columnIdx = 0; columnIdx < logic.getNonogramRules().getWidth(); columnIdx++) {
             List<Integer> fieldAsRange = List.of(columnIdx, columnIdx);
@@ -86,9 +86,9 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper {
     @Override
     public void placeXsAroundLongestSequencesInRow(int rowIdx) {
         int width = logic.getNonogramRules().getWidth();
-        int columnIdx = 0;
+        int columnIdx = 1;
 
-        while (columnIdx < width) {
+        while (columnIdx < width - 1) {
             Field field = new Field(rowIdx, columnIdx);
 
             if (isFieldColoured(logic.getNonogramSolutionBoard(), field)) {
@@ -104,14 +104,20 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper {
     private List<Integer> findColouredSequenceRangeInRow(int startColumnIdx, int rowIdx) {
         int start = startColumnIdx;
         int end = startColumnIdx;
+        int width = logic.getNonogramRules().getWidth();
 
-        while (start > 0 && isFieldColoured(logic.getNonogramSolutionBoard(), new Field(rowIdx, start - 1))) {
-            start--;
+        int left = start - 1;
+        while (left >= 0) {
+            if (!isFieldColoured(logic.getNonogramSolutionBoard(), new Field(rowIdx, left))) break;
+            start = left;
+            left--;
         }
 
-        while (end + 1 < logic.getNonogramRules().getWidth()
-                && isFieldColoured(logic.getNonogramSolutionBoard(), new Field(rowIdx, end + 1))) {
-            end++;
+        int right = end + 1;
+        while (right < width) {
+            if (!isFieldColoured(logic.getNonogramSolutionBoard(), new Field(rowIdx, right))) break;
+            end = right;
+            right++;
         }
 
         return List.of(start, end);
@@ -126,6 +132,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper {
         List<Integer> matchingLengths = new ArrayList<>();
 
         for (int i = 0; i < rowRanges.size(); i++) {
+
             if (rangeInsideAnotherRange(colouredRange, rowRanges.get(i))
                     && lengthOnBoard <= rowLengths.get(i)) {
                 matchingIndices.add(i);
@@ -207,18 +214,8 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper {
                     rowIdx, seqIdx, allRanges, newRange, rowState, lengths
             ));
             logic.getLogService().addLog();
-        }
 
-        logic.excludeSequenceInRow(rowIdx, seqIdx);
-
-        Field leftEdge = new Field(rowIdx, newRange.get(0) - 1);
-        Field rightEdge = new Field(rowIdx, newRange.get(1) + 1);
-
-        if (logic.getBoardAccessHelper().isColumnIndexValid(leftEdge.getColumnIdx())) {
-            logic.getActionScheduler().scheduleActionsBasedOnField(leftEdge, NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES);
-        }
-        if (logic.getBoardAccessHelper().isColumnIndexValid(rightEdge.getColumnIdx())) {
-            logic.getActionScheduler().scheduleActionsBasedOnField(rightEdge, NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES);
+            logic.excludeSequenceInRow(rowIdx, seqIdx);
         }
     }
 

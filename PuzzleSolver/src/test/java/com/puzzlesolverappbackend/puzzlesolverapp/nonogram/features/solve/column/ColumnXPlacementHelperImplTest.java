@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldWithX;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ColumnXPlacementHelperImplTest {
@@ -33,8 +34,8 @@ class ColumnXPlacementHelperImplTest {
         assertNotNull(helper.getNonogramFieldPlacingXHelper(), "NonogramFieldPlacingXHelper should be initialized");
     }
 
-    @DisplayName("o10155 - should place X in unreachable fields (column 4)")
     @Test
+    @DisplayName("o10155 - should place X in unreachable fields (column 4)")
     void shouldPlaceXInUnreachableFieldsInColumn() {
         // given
         int height = 20;
@@ -83,8 +84,8 @@ class ColumnXPlacementHelperImplTest {
         assertEquals("X", logic.getNonogramSolutionBoard().get(19).get(targetColumnIdx));
     }
 
-    @DisplayName("o10155 - should not place any X if all empty fields are reachable (column 0)")
     @Test
+    @DisplayName("o10155 - should not place any X if all empty fields are reachable (column 0)")
     void shouldNotPlaceXIfAllEmptyFieldsAreReachable() {
         // given
         int height = 20;
@@ -127,8 +128,8 @@ class ColumnXPlacementHelperImplTest {
         assertEquals(stepsBefore, logic.getNonogramState().getNewStepsMade());
     }
 
-    @DisplayName("o10155 - should place Xs around a coloured sequence and update range when matching a single sequence (column 7)")
     @Test
+    @DisplayName("o10155 - should place Xs around a coloured sequence and update range when matching a single sequence (column 7)")
     void shouldPlaceXsAroundSingleMatchingSequenceAndUpdateRange() {
         // given
         int height = 20;
@@ -179,8 +180,8 @@ class ColumnXPlacementHelperImplTest {
         assertEquals(stepsBefore + 2 + 7 + 1 + 5, logic.getNonogramState().getNewStepsMade());
     }
 
-    @DisplayName("o10155 - should place Xs around a coloured sequence and update changed range if it differs from old (column 6)")
     @Test
+    @DisplayName("o10155 - should place Xs around a coloured sequence and update changed range if it differs from old (column 6)")
     void shouldUpdateSequenceRangeIfChanged() {
         // given
         int height = 20;
@@ -587,8 +588,8 @@ class ColumnXPlacementHelperImplTest {
         assertEquals(stepsBefore, logic.getNonogramState().getNewStepsMade());
     }
 
-    @DisplayName("o10155 - should skip placing X when xEdges contains invalid row index (column 7)")
     @Test
+    @DisplayName("o10155 - should skip placing X when xEdges contains invalid row index (column 7)")
     void shouldSkipPlacingXWhenRowIndexIsInvalid() {
         // given
         int height = 20;
@@ -637,8 +638,8 @@ class ColumnXPlacementHelperImplTest {
         assertEquals(stepsBefore + 7 + 5 + 4, logic.getNonogramState().getNewStepsMade());
     }
 
-    @DisplayName("o06005 - should NOT place Xs if coloured range is inside expected, but too long (column 7)")
     @Test
+    @DisplayName("o06005 - should NOT place Xs if coloured range is inside expected, but too long (column 7)")
     void shouldNotPlaceXsIfLengthTooLongEvenIfInsideRange_TF() {
         // given
         int height = 10;
@@ -1278,5 +1279,74 @@ class ColumnXPlacementHelperImplTest {
         List<String> columnAfter = logic.getNonogramBoardColumn(columnIdx);
         assertEquals(columnBefore, columnAfter);
         assertEquals(stepsBefore, logic.getNonogramState().getNewStepsMade());
+    }
+
+    @DisplayName("refreshFrom: should copy columnsSequencesRanges & columnsFieldsNotToInclude for column 0 (o06005)")
+    @Test
+    void shouldRefreshFromAnotherLogicInstance_minimalDiffOnSingleColumn() {
+        // given
+        int height = 10;
+        int width = 10;
+        NonogramRules rules = new NonogramRules(
+                buildConstantSeqs(height, 0),
+                buildConstantSeqs(width, 0),
+                height, width
+        );
+
+        NonogramLogic logicForHelper = new NonogramLogic(rules, GuessMode.DISABLED);
+        NonogramColumnLogic columnLogicForHelper = new NonogramColumnLogic(logicForHelper);
+
+        NonogramLogic logicToCopySrc = new NonogramLogic(rules, GuessMode.DISABLED);
+        NonogramColumnLogic columnLogicToCopy = new NonogramColumnLogic(logicToCopySrc);
+
+        var helperRanges = deepCopy(columnLogicForHelper.getColumnsSequencesRanges());
+        helperRanges.set(0, new ArrayList<>(List.of(new ArrayList<>(List.of(0, 9)))));
+        columnLogicForHelper.setColumnsSequencesRanges(helperRanges);
+
+        var helperFields = deepCopy1D(columnLogicForHelper.getColumnsFieldsNotToInclude());
+        helperFields.set(0, new ArrayList<>());
+        columnLogicForHelper.setColumnsFieldsNotToInclude(helperFields);
+
+        var copyRanges = deepCopy(columnLogicToCopy.getColumnsSequencesRanges());
+        copyRanges.set(0, new ArrayList<>(List.of(new ArrayList<>(List.of(1, 9)))));
+        columnLogicToCopy.setColumnsSequencesRanges(copyRanges);
+
+        var copyFields = deepCopy1D(columnLogicToCopy.getColumnsFieldsNotToInclude());
+        copyFields.set(0, new ArrayList<>(List.of(3)));
+        columnLogicToCopy.setColumnsFieldsNotToInclude(copyFields);
+
+        ColumnXPlacementHelperImpl helper = new ColumnXPlacementHelperImpl(columnLogicForHelper);
+
+        assertThat(helper.getLogic().getColumnsSequencesRanges().get(0)).isEqualTo(List.of(List.of(0, 9)));
+        assertThat(helper.getLogic().getColumnsFieldsNotToInclude().get(0)).isEmpty();
+
+        // when
+        helper.refreshFrom(columnLogicToCopy);
+
+        // then
+        assertThat(helper.getLogic().getColumnsSequencesRanges().get(0)).isEqualTo(List.of(List.of(1, 9)));
+        assertThat(helper.getLogic().getColumnsFieldsNotToInclude().get(0)).containsExactly(3);
+    }
+
+    private static List<List<Integer>> buildConstantSeqs(int count, int val) {
+        List<List<Integer>> out = new ArrayList<>(count);
+        for (int i = 0; i < count; i++) out.add(List.of(val));
+        return out;
+    }
+
+    private static List<List<List<Integer>>> deepCopy(List<List<List<Integer>>> src) {
+        List<List<List<Integer>>> copy = new ArrayList<>(src.size());
+        for (var col : src) {
+            List<List<Integer>> inner = new ArrayList<>(col.size());
+            for (var range : col) inner.add(new ArrayList<>(range));
+            copy.add(inner);
+        }
+        return copy;
+    }
+
+    private static List<List<Integer>> deepCopy1D(List<List<Integer>> src) {
+        List<List<Integer>> copy = new ArrayList<>(src.size());
+        for (var lst : src) copy.add(new ArrayList<>(lst));
+        return copy;
     }
 }
