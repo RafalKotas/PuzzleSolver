@@ -13,6 +13,7 @@ public class LogFormatUtils {
     private static final String BRACKETS_REGEX = "[\\[\\]]";
     private static final String LIST_OF_PREFIX = "List.of(";
 
+    // 1+
     public static String formatList(String input) {
         return Arrays.stream(input.replaceAll(BRACKETS_REGEX, "").split(","))
                 .map(String::trim)
@@ -20,6 +21,7 @@ public class LogFormatUtils {
                 .collect(Collectors.joining(", "));
     }
 
+    // 2+
     public static String formatNestedList(String input) {
         String[] parts = input.replaceAll("\\[\\[|\\]\\]", "").split("\\],\\s*\\[");
         return Arrays.stream(parts)
@@ -27,30 +29,35 @@ public class LogFormatUtils {
                 .collect(Collectors.joining(", "));
     }
 
+    // 3+
     public static String formatList(List<?> list) {
         return list.stream()
                 .map(e -> (e instanceof Number) ? e.toString() : "\"" + e + "\"")
                 .collect(Collectors.joining(", "));
     }
 
+    // 4+
     public static String formatNestedList(List<? extends List<?>> nestedList) {
         return nestedList.stream()
                 .map(inner -> LIST_OF_PREFIX + formatList(inner) + ")")
                 .collect(Collectors.joining(", "));
     }
 
+    // 5+
     public static String toQuotedStringList(List<String> list) {
         return list.stream()
                 .map(s -> "\"" + s + "\"")
                 .collect(Collectors.joining(", "));
     }
 
+    // 6+
     public static String toRangeStringList(List<List<Integer>> ranges) {
         return ranges.stream()
                 .map(inner -> LIST_OF_PREFIX + inner.stream().map(String::valueOf).collect(Collectors.joining(", ")) + ")")
                 .collect(Collectors.joining(", "));
     }
 
+    // 7+
     public static List<String> parseStringListLine(String line) {
         String content = line.contains("=") ? line.substring(line.indexOf('=') + 1) : line;
 
@@ -60,6 +67,7 @@ public class LogFormatUtils {
                 .toList();
     }
 
+    // 8+
     public static List<Integer> parseIntegerListLine(String line) {
         String content = line.contains("=") ? line.substring(line.indexOf('=') + 1) : line;
         content = content.replaceAll(BRACKETS_REGEX, "").trim();
@@ -75,6 +83,7 @@ public class LogFormatUtils {
                 .toList();
     }
 
+    // TODO - SequenceRangeCorrectionLogHelper 9
     public static List<List<Integer>> parseNestedListLine(String line) {
         if (line == null || line.isBlank()) return List.of();
 
@@ -104,6 +113,7 @@ public class LogFormatUtils {
         return result;
     }
 
+    // 10 +
     public static List<List<Integer>> parseNestedListLineWrappedInListOf(String input) {
         String trimmed = input.trim();
 

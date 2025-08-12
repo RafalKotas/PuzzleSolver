@@ -72,6 +72,9 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
     private final NonogramFieldExclusionHelperColumn nonogramFieldExclusionHelper;
 
     @JsonIgnore
+    private final List<RefreshableColumnHelper> refreshables = new ArrayList<>();
+
+    @JsonIgnore
     private final NonogramLogService logService;
 
     public NonogramColumnLogic(NonogramLogic nonogramLogic) {

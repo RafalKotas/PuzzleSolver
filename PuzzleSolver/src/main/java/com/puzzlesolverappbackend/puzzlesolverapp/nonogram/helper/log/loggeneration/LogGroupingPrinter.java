@@ -19,6 +19,9 @@ public class LogGroupingPrinter {
 
         for (int i = 0; i < rawLogs.size(); i++) {
             String rawLog = rawLogs.get(i);
+            if (i >= convertedLogs.size()) {
+                System.out.println("tu się wyjebie");
+            }
             String converted = convertedLogs.get(i);
             String actionType = detectActionTypeFromRawLog(rawLog);
 
