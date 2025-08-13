@@ -24,7 +24,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.Bo
 @Slf4j
 @Getter
 @Setter
-public class ColumnColouringHelperImpl implements ColumnColouringHelper {
+public class ColumnColouringHelperImpl implements ColumnColouringHelper, RefreshableColumnHelper {
 
     private final NonogramColumnLogic logic;
 
@@ -68,6 +68,8 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper {
             );
             logic.getLogService().setTmpLog(tmpLog);
             logic.getLogService().addLog();
+        } else {
+            //System.out.println("Nothing Coloured");
         }
     }
 
@@ -424,5 +426,11 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper {
             ));
             logic.getLogService().addLog();
         }
+    }
+
+    @Override
+    public void refreshFrom(NonogramColumnLogic logicToCopy) {
+        logic.setColumnsSequencesRanges(logicToCopy.getColumnsSequencesRanges());
+        logic.setColumnsFieldsNotToInclude(logicToCopy.getColumnsFieldsNotToInclude());
     }
 }

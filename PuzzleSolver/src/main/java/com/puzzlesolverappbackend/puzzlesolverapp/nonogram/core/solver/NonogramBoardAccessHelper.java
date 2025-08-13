@@ -2,6 +2,8 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.NonogramColumnLogic;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.RefreshableColumnHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +11,7 @@ import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldColoured;
 
-public class NonogramBoardAccessHelper {
+public class NonogramBoardAccessHelper implements RefreshableColumnHelper {
 
     private final NonogramLogic logic;
 
@@ -36,10 +38,6 @@ public class NonogramBoardAccessHelper {
 
     public List<String> getRowCopy(int rowIdx) {
         return new ArrayList<>(logic.getNonogramSolutionBoard().get(rowIdx));
-    }
-
-    public String getField(int rowIdx, int colIdx) {
-        return logic.getNonogramSolutionBoard().get(rowIdx).get(colIdx);
     }
 
     public boolean areFieldIndexesValid (Field fieldToValidate) {
@@ -72,6 +70,11 @@ public class NonogramBoardAccessHelper {
         return IntStream.rangeClosed(start, end)
                 .mapToObj(rowIdx -> new Field(rowIdx, columnIdx))
                 .allMatch(field -> isFieldColoured(logic.getNonogramSolutionBoard(), field));
+    }
+
+    @Override
+    public void refreshFrom(NonogramColumnLogic logicToCopy) {
+        logic.setNonogramSolutionBoard(logicToCopy.getNonogramSolutionBoard());
     }
 }
 

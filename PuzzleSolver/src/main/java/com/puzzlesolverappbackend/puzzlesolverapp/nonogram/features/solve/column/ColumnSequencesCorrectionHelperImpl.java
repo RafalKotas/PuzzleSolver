@@ -3,7 +3,12 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.colum
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.RangeCorrectionHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.*;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.SequenceRangeCorrectionFromColouredEdgesLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.SequenceRangeCorrectionLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.SequenceRangeCorrectionWhenMetColouredFieldsLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.SequenceRangeCorrectionWhenMetXLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.solve.SequenceRangeCorrectionHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.solve.SequenceRangeCorrectionWhenMetXHelper;
 
 import java.util.*;
 
@@ -11,7 +16,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldColoured;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.TooLongMergeFieldHelper.collectColouredSequencesRanges;
 
-public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorrectionHelper {
+public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorrectionHelper, RefreshableColumnHelper {
 
     private final NonogramColumnLogic logic;
 
@@ -268,9 +273,7 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
         boolean hasChanged;
 
         do {
-            hasChanged = false;
-
-            hasChanged |= processDirection(colouredRanges, columnSequencesRanges, columnSequencesLengths, true); // TOP -> BOTTOM
+            hasChanged = processDirection(colouredRanges, columnSequencesRanges, columnSequencesLengths, true); // TOP -> BOTTOM
             hasChanged |= processDirection(colouredRanges, columnSequencesRanges, columnSequencesLengths, false); // BOTTOM → TOP
 
             hasChangedGlobal |= hasChanged;
@@ -423,4 +426,9 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
         }
     }
 
+    @Override
+    public void refreshFrom(NonogramColumnLogic logicToCopy) {
+        logic.setColumnsSequencesRanges(logicToCopy.getColumnsSequencesRanges());
+        logic.setColumnsFieldsNotToInclude(logicToCopy.getColumnsFieldsNotToInclude());
+    }
 }
