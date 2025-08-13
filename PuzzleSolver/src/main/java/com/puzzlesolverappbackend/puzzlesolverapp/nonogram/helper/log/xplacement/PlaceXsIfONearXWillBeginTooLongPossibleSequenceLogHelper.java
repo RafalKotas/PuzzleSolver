@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @UtilityClass
-public class PlaceXsIfOWillCreateTooLongSequenceLogHelper {
+public class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper {
 
     private static final String LIST_STRING_FORMAT = "    List.of(%s),%n";
 
@@ -22,7 +22,7 @@ public class PlaceXsIfOWillCreateTooLongSequenceLogHelper {
     ) {
         return String.format(
                 """
-                        PLACE_X_IF_O_WILL_CREATE_TOO_LONG_SEQUENCE_IN_%s: %s=%d
+                        PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE_IN_%s: %s=%d
                         before=%s
                         after=%s
                         lengths=%s
@@ -41,7 +41,7 @@ public class PlaceXsIfOWillCreateTooLongSequenceLogHelper {
     public static String convertLogToTestArguments(String log, String solutionName, NonogramLogic logic) {
         String[] lines = log.split("\\n");
 
-        boolean isRow = lines[0].startsWith("PLACE_X_IF_O_WILL_CREATE_TOO_LONG_SEQUENCE_IN_ROW");
+        boolean isRow = lines[0].startsWith("PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE_IN_ROW");
         String axisLabel = isRow ? "row" : "col";
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());

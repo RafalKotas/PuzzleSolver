@@ -8,13 +8,13 @@ import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PlaceXsIfOWillCreateTooLongSequenceLogHelperTest {
+class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelperTest {
 
     @Test
-    @DisplayName("PlaceXsIfOWillCreateTooLongSequenceLogHelper constructor should throw UnsupportedOperationException - reflect instantiation")
+    @DisplayName("PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper constructor should throw UnsupportedOperationException - reflect instantiation")
     void constructor_throwsException_whenInstantiatedReflectively() throws Exception {
         // given
-        Constructor<PlaceXsIfOWillCreateTooLongSequenceLogHelper> constructor = PlaceXsIfOWillCreateTooLongSequenceLogHelper.class.getDeclaredConstructor();
+        Constructor<PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper> constructor = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.class.getDeclaredConstructor();
         constructor.setAccessible(true);
 
         // when

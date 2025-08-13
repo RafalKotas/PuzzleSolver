@@ -10,6 +10,8 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramB
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.clearing.NonogramFieldClearingHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark.*;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.NonogramLogService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.rangeLength;
@@ -28,6 +31,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.ac
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.util.NonogramParametersComparatorHelper.rangesNotEqual;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark.NonogramFieldMarkHelper.markColumnBoardField;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exclusion.ExcludedSequenceLogHelper.generateExcludedSequenceLog;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLogHelper.generateCorrectingRangePartLog;
 
 @Getter
 @Setter
@@ -109,6 +113,10 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                 boardAccessHelper
         );
 
+        refreshables.add(columnColouringHelper);
+        refreshables.add(columnXPlacementHelper);
+        refreshables.add(columnSequencesCorrectionHelper);
+
         this.logService = new NonogramLogService();
     }
 
@@ -145,6 +153,10 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                 this.columnsFieldsNotToInclude,
                 boardAccessHelper
         );
+
+        refreshables.add(columnColouringHelper);
+        refreshables.add(columnXPlacementHelper);
+        refreshables.add(columnSequencesCorrectionHelper);
 
         this.logService = new NonogramLogService();
     }
@@ -183,7 +195,17 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                 boardAccessHelper
         );
 
+        refreshables.add(columnColouringHelper);
+        refreshables.add(columnXPlacementHelper);
+        refreshables.add(columnSequencesCorrectionHelper);
+
         this.logService = new NonogramLogService();
+    }
+
+    public void refreshHelpers() {
+        for (RefreshableColumnHelper r : refreshables) {
+            r.refreshFrom(this);
+        }
     }
 
     public void setColumnSequencesRanges(int columnIdx, List<List<Integer>> ranges) {
@@ -264,6 +286,9 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
     }
 
     private void preventExtendingColouredSequenceToExcessLengthInColumnToTop(int columnIdx) {
+        List<String> columnBefore = getColumnCopy(columnIdx);
+        List<List<Integer>> columnRangesBefore = getColumnSequencesRangesCopy(columnIdx);
+
         List<Integer> columnSequencesLengths = this.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
         List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
 
@@ -275,7 +300,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         List<Integer> sequencesIds;
         int maxSequenceLength;
         List<List<Integer>> colouredSequences;
-        List<Integer> validSequenceIds;
+        List<Integer> validSequencesIds;
         List<Integer> validSequenceLengths;
 
         for (int rowIdx = this.getNonogramRules().getHeight() - 1; rowIdx > 0; rowIdx--) {
@@ -293,9 +318,9 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
 
                     colouredSequences = getColouredSequencesRangesInColumnInRangeToTop(this.getNonogramSolutionBoard(), columnIdx, potentiallyColouredFieldRow, maxSequenceLength);
 
-                    validSequenceIds = findValidSequencesIdsMergingToTop(sequencesIds, sequencesLengths, potentiallyColouredFieldRow, colouredSequences);
+                    validSequencesIds = findValidSequencesIdsMergingToTop(sequencesIds, sequencesLengths, potentiallyColouredFieldRow, colouredSequences);
 
-                    validSequenceLengths = validSequenceIds.stream()
+                    validSequenceLengths = validSequencesIds.stream()
                             .map(sequencesIds::indexOf)
                             .map(sequencesLengths::get)
                             .toList();
@@ -305,6 +330,10 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                         int colouredSequenceRowStartIdx = potentiallyColouredFieldRow - sequenceLength + 1;
                         Field fieldToColour;
 
+                        List<String> columnAfterColouring;
+                        List<String> columnAfterXPlacing;
+                        List<String> columnAfterUpdate;
+
                         for (int rowToColourIdx = colouredSequenceRowStartIdx; rowToColourIdx <= potentiallyColouredFieldRow; rowToColourIdx++) {
                             fieldToColour = new Field(rowToColourIdx, columnIdx);
                             if (isFieldEmpty(this.nonogramSolutionBoard, fieldToColour)) {
@@ -312,36 +341,75 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                                 actionScheduler.scheduleActionsBasedOnField(fieldToColour, NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART);
 
                                 this.nonogramState.increaseMadeSteps();
-                                this.tmpLog = generateColourStepDescription(columnIdx, rowToColourIdx, "extend coloured sequence to matching length to top near X (with placing X before)");
+
+                                columnAfterColouring = getColumnCopy(columnIdx);
+                                tmpLog = PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper
+                                        .generateExtendSequenceLog(
+                                                columnIdx,
+                                                false,
+                                                "top",
+                                                sequencesLengths,
+                                                columnSequencesRanges,
+                                                columnBefore,
+                                                columnAfterColouring
+                                        );
+                                addLog();
                             }
                         }
-
 
                         Field fieldToPlaceX = new Field(colouredSequenceRowStartIdx - 1, columnIdx);
                         if (fieldToPlaceX.getRowIdx() >= 0 && isFieldEmpty(this.nonogramSolutionBoard, fieldToPlaceX)) {
                             this.getColumnXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(fieldToPlaceX);
+                            this.nonogramState.increaseMadeSteps();
+
+                            columnAfterXPlacing = getColumnCopy(columnIdx);
+                            tmpLog = PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper
+                                    .generateExtendSequenceLog(
+                                            columnIdx,
+                                            false,
+                                            "top",
+                                            sequencesLengths,
+                                            columnSequencesRanges,
+                                            columnBefore,
+                                            columnAfterXPlacing
+                                    );
+                            addLog();
+
                             this.getNonogramFieldExclusionHelper().excludeFieldInColumn(fieldToPlaceX);
                             actionScheduler.scheduleActionsBasedOnField(fieldToPlaceX, NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART);
-
-                            this.nonogramState.increaseMadeSteps();
-                            // TODO - add log
                         }
 
-                        if (validSequenceIds.size() == 1) {
-                            int matchingSeqId = validSequenceIds.get(0);
+                        // moreover - only one id is valid -> can correct sequence range
+                        if (validSequencesIds.size() == 1) {
+                            int matchingSeqId = validSequencesIds.get(0);
                             List<Integer> oldRange = columnSequencesRanges.get(matchingSeqId);
                             List<Integer> updatedRange = new ArrayList<>(Arrays.asList(colouredSequenceRowStartIdx, potentiallyColouredFieldRow));
 
                             if (rangesNotEqual(oldRange, updatedRange)) {
                                 this.updateColumnSequenceRange(columnIdx, matchingSeqId, updatedRange);
+                                this.nonogramState.increaseMadeSteps();
+                                List<List<Integer>> columnRangesAfter = this.getColumnsSequencesRanges().get(columnIdx);
+
                                 if (sequenceShouldBeExcluded(columnIdx, matchingSeqId)) {
                                     excludeSequenceInColumn(columnIdx, matchingSeqId);
+                                    this.nonogramState.increaseMadeSteps();
                                 }
+
                                 Field columnField = new Field(0, columnIdx);
                                 actionScheduler.scheduleActionsBasedOnField(columnField, NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART);
 
-                                this.nonogramState.increaseMadeSteps();
-                                this.tmpLog = generateCorrectingColumnSequenceRangeStepDescription(columnIdx, matchingSeqId, oldRange, updatedRange, "update only matching sequence part preventing excess length to top");
+                                columnAfterUpdate = getColumnCopy(columnIdx);
+                                tmpLog = generateCorrectingRangePartLog(
+                                        columnIdx,
+                                        "top",
+                                        false,
+                                        matchingSeqId,
+                                        sequencesLengths,
+                                        columnBefore,
+                                        columnAfterUpdate,
+                                        columnRangesBefore,
+                                        columnRangesAfter
+                                );
                                 addLog();
                             }
 
@@ -353,6 +421,9 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
     }
 
     private void preventExtendingColouredSequenceToExcessLengthInColumnToBottom(int columnIdx) {
+        List<String> columnBefore = getRowCopy(columnIdx);
+        List<List<Integer>> columnRangesBefore = getColumnSequencesRangesCopy(columnIdx);
+
         List<Integer> columnSequencesLengths = this.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
         List<List<Integer>> columnSequencesRanges = this.getColumnsSequencesRanges().get(columnIdx);
 
@@ -395,15 +466,28 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                         int colouredSequenceEndRowIndex = potentiallyColouredFieldRowIndex + sequenceLength - 1;
                         Field fieldToColour;
 
+                        List<String> columnAfterColouring;
+                        List<String> columnAfterXPlacing;
+                        List<String> columnAfterUpdate;
+
                         for (int rowToColourIdx = potentiallyColouredFieldRowIndex; rowToColourIdx <= colouredSequenceEndRowIndex; rowToColourIdx++) {
                             fieldToColour = new Field(rowToColourIdx, columnIdx);
                             if (isFieldEmpty(this.nonogramSolutionBoard, fieldToColour)) {
                                 this.getColumnColouringHelper().getColouringHelper().colourFieldAtGivenPosition(fieldToColour, "--C-");
+                                this.nonogramState.increaseMadeSteps();
                                 actionScheduler.scheduleActionsBasedOnField(fieldToColour, NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART);
 
-                                this.nonogramState.increaseMadeSteps();
-
-                                this.tmpLog = generateColourStepDescription(columnIdx, rowToColourIdx, "extend coloured sequence to matching length to bottom near X (with placing X before)");
+                                columnAfterColouring = getColumnCopy(columnIdx);
+                                tmpLog = PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper
+                                        .generateExtendSequenceLog(
+                                                columnIdx,
+                                                false,
+                                                "bottom",
+                                                sequencesLengths,
+                                                columnSequencesRanges,
+                                                columnBefore,
+                                                columnAfterColouring
+                                        );
                                 addLog();
                             }
                         }
@@ -411,10 +495,25 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                         Field fieldToPlaceX = new Field(colouredSequenceEndRowIndex + 1, columnIdx);
                         if (fieldToPlaceX.getRowIdx() < this.getNonogramRules().getHeight() && isFieldEmpty(this.nonogramSolutionBoard, fieldToPlaceX)) { // TODO - temp condition fieldToPlaceX.getRowIdx() < this.getNonogramRules().getHeight()
                             this.getColumnXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(fieldToPlaceX);
+                            this.nonogramState.increaseMadeSteps();
+                            columnAfterXPlacing = getRowCopy(rowIdx);
+                            tmpLog = PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper
+                                    .generateExtendSequenceLog(
+                                            columnIdx,
+                                            false,
+                                            "bottom",
+                                            sequencesLengths,
+                                            columnSequencesRanges,
+                                            columnBefore,
+                                            columnAfterXPlacing
+                                    );
+                            addLog();
+
                             this.getNonogramFieldExclusionHelper().excludeFieldInColumn(fieldToPlaceX);
                             actionScheduler.scheduleActionsBasedOnField(fieldToPlaceX, NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART);
                         }
 
+                        // moreover - only one id is valid -> can correct sequence range
                         if (validSequencesIds.size() == 1) {
                             int matchingSeqId = validSequencesIds.get(0);
                             List<Integer> oldRange = columnSequencesRanges.get(matchingSeqId);
@@ -422,14 +521,27 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
 
                             if (rangesNotEqual(oldRange, updatedRange)) {
                                 this.updateColumnSequenceRange(columnIdx, matchingSeqId, updatedRange);
+                                this.nonogramState.increaseMadeSteps();
+                                List<List<Integer>> columnRangesAfter = this.getColumnsSequencesRanges().get(columnIdx);
+
                                 if (sequenceShouldBeExcluded(columnIdx, matchingSeqId)) {
                                     excludeSequenceInColumn(columnIdx, matchingSeqId);
                                 }
                                 Field columnField = new Field(0, columnIdx);
                                 actionScheduler.scheduleActionsBasedOnField(columnField, NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART);
 
-                                this.nonogramState.increaseMadeSteps();
-                                this.tmpLog = generateCorrectingColumnSequenceRangeStepDescription(columnIdx, matchingSeqId, oldRange, updatedRange, "update only matching sequence part preventing excess length to bottom");
+                                columnAfterUpdate = getColumnCopy(columnIdx);
+                                tmpLog = generateCorrectingRangePartLog(
+                                        columnIdx,
+                                        "bottom",
+                                        false,
+                                        matchingSeqId,
+                                        sequencesLengths,
+                                        columnBefore,
+                                        columnAfterUpdate,
+                                        columnRangesBefore,
+                                        columnRangesAfter
+                                );
                                 addLog();
                             }
                         }
@@ -536,5 +648,11 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
     private String generateCorrectingColumnSequenceRangeStepDescription(int columnIndex, int sequenceIndex, List<Integer> oldRange, List<Integer> correctedRange, String actionType) {
         return String.format("COLUMN %d, SEQUENCE %d - range correcting - from [%d, %d] to [%d, %d] - %s", columnIndex, sequenceIndex,
                 oldRange.get(0), oldRange.get(1), correctedRange.get(0), correctedRange.get(1), actionType);
+    }
+
+    protected List<List<Integer>> getColumnSequencesRangesCopy(int columnIdx) {
+        return this.getColumnsSequencesRanges().get(columnIdx).stream()
+                .map(ArrayList::new)
+                .collect(Collectors.toList());
     }
 }

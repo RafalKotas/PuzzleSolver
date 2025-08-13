@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range;
 
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils;
 import lombok.experimental.UtilityClass;
 
@@ -32,5 +33,9 @@ public class SequenceRangeCorrectionByMatchingLogHelper {
                 LogFormatUtils.formatList(sequenceLengths),
                 LogFormatUtils.formatList(lineState)
         );
+    }
+
+    public static String convertLogToTestArguments(String log, String solutionName, NonogramLogic logic) {
+        return "TODO CORRECT BY MATCHING";
     }
 }

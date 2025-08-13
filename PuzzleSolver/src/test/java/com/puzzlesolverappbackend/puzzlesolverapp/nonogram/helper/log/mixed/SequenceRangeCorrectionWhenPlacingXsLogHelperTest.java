@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
