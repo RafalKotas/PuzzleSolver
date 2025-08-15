@@ -3,7 +3,7 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class HelpersConstants {
+public final class HelpersConstants {
 
     public static final String ROW_ACTION_NAME = "ROW";
 
