@@ -20,14 +20,14 @@ public class OverlappingLogHelper {
         String type = isRow ? "ROW" : "COLUMN";
         return String.format(
                 """
-                        OVERLAP_%s_SEQUENCE: %s=%d
+                        COLOUR_OVERLAPPING_FIELDS_IN_%s: %s=%d
                         initialLine=%s
                         sequencesRanges=%s
                         sequencesLengths=%s
                         updatedLine=%s
                         """,
                 type,
-                isRow ? "row" : "col",
+                isRow ? "row" : "column",
                 index,
                 initialLine.toString(),
                 sequencesRanges.toString(),
@@ -42,7 +42,7 @@ public class OverlappingLogHelper {
     ) {
         String[] lines = log.split("\\n");
 
-        boolean isRow = lines[0].startsWith("ROW_");
+        boolean isRow = lines[0].contains("ROW");
         String axisLabel = isRow ? "row" : "column";
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
@@ -63,7 +63,7 @@ public class OverlappingLogHelper {
                             %s)
                         )""",
                 fileName,
-                isRow ? "Row" : "Column",
+                isRow ? "row" : "column",
                 index,
                 toMutableStringListLiteral(initialLine),
                 toImmutableRangesListLiteral(sequencesRanges),

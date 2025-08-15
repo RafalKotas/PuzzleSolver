@@ -31,7 +31,7 @@ public class SequenceRangeCorrectionWhenMetXLogHelper {
                         excludedSequencesIndexes=%s
                         """,
                 isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "col",
+                isRow ? "row" : "column",
                 index,
                 line.toString(),
                 initialRanges.toString(),

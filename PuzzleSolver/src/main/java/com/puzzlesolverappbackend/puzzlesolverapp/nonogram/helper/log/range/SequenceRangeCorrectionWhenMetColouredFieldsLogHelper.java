@@ -10,8 +10,6 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.log
 @UtilityClass
 public class SequenceRangeCorrectionWhenMetColouredFieldsLogHelper {
 
-    private static final String LIST_OF_PREFIX = "List.of(";
-
     public static String generateLog(
             boolean isRow,
             int index,
@@ -30,7 +28,7 @@ public class SequenceRangeCorrectionWhenMetColouredFieldsLogHelper {
                         updatedRanges=%s
                         """,
                 isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "col",
+                isRow ? "row" : "column",
                 index,
                 line,
                 sequencesLengths,

@@ -26,7 +26,7 @@ public class PlaceXsAroundLongestSequenceLogHelper {
                         final=%s
                         """,
                 isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "col",
+                isRow ? "row" : "column",
                 index,
                 xEdges,
                 onlyMatching,

@@ -25,7 +25,7 @@ public class MarkAvailableFieldsLogHelper {
                         updatedLine=%s
                         """,
                 isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "col",
+                isRow ? "row" : "column",
                 index,
                 sequenceIdx,
                 marker,
@@ -38,7 +38,7 @@ public class MarkAvailableFieldsLogHelper {
         String[] lines = log.split("\\n");
 
         boolean isRow = lines[0].startsWith("MARK_AVAILABLE_FIELDS_IN_ROW");
-        String axisLabel = isRow ? "row" : "col";
+        String axisLabel = isRow ? "row" : "column";
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].split(",")[0].trim());
         int seqIdx = Integer.parseInt(lines[0].split("sequenceIdx=")[1].split(",")[0].trim());

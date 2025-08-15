@@ -29,7 +29,7 @@ public class TrivialFillLogHelper {
                         updatedLine=%s
                         """,
                 label,
-                isRow ? "row" : "col",
+                isRow ? "row" : "column",
                 index,
                 initialLine.toString(),
                 sequencesLengths.toString(),

@@ -76,7 +76,7 @@ class RowXPlacementHelperImplTest {
         assertThat(nonogramRowLogic.getActionScheduler().getActionsToDoList()).hasSize(initialColourOverlappingActionsCount + 64);
 
         assertNotNull(rowXPlacementHelper.getNonogramFieldPlacingXHelper());
-        assertNotNull(rowXPlacementHelper.getLogic());
+        assertNotNull(rowXPlacementHelper.getNonogramRowLogic());
     }
 
     @DisplayName("Should not place any Xs if all fields are within ranges - o10017 row 0")
@@ -123,7 +123,7 @@ class RowXPlacementHelperImplTest {
         assertThat(nonogramRowLogic.getActionScheduler().getActionsToDoList()).hasSize(initialColourOverlappingActionsCount);
 
         assertNotNull(rowXPlacementHelper.getNonogramFieldPlacingXHelper());
-        assertNotNull(rowXPlacementHelper.getLogic());
+        assertNotNull(rowXPlacementHelper.getNonogramRowLogic());
     }
 
     @DisplayName("Should continue while when field is not coloured during placing Xs around longest sequences in row")

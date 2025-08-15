@@ -30,7 +30,7 @@ class ColumnXPlacementHelperImplTest {
         ColumnXPlacementHelperImpl helper = new ColumnXPlacementHelperImpl(logic.getNonogramColumnLogic());
 
         // then
-        assertNotNull(helper.getLogic(), "Logic should be initialized");
+        assertNotNull(helper.getNonogramColumnLogic(), "Logic should be initialized");
         assertNotNull(helper.getNonogramFieldPlacingXHelper(), "NonogramFieldPlacingXHelper should be initialized");
     }
 
@@ -1317,15 +1317,15 @@ class ColumnXPlacementHelperImplTest {
 
         ColumnXPlacementHelperImpl helper = new ColumnXPlacementHelperImpl(columnLogicForHelper);
 
-        assertThat(helper.getLogic().getColumnsSequencesRanges().get(0)).isEqualTo(List.of(List.of(0, 9)));
-        assertThat(helper.getLogic().getColumnsFieldsNotToInclude().get(0)).isEmpty();
+        assertThat(helper.getNonogramColumnLogic().getColumnsSequencesRanges().get(0)).isEqualTo(List.of(List.of(0, 9)));
+        assertThat(helper.getNonogramColumnLogic().getColumnsFieldsNotToInclude().get(0)).isEmpty();
 
         // when
         helper.refreshFrom(columnLogicToCopy);
 
         // then
-        assertThat(helper.getLogic().getColumnsSequencesRanges().get(0)).isEqualTo(List.of(List.of(1, 9)));
-        assertThat(helper.getLogic().getColumnsFieldsNotToInclude().get(0)).containsExactly(3);
+        assertThat(helper.getNonogramColumnLogic().getColumnsSequencesRanges().get(0)).isEqualTo(List.of(List.of(1, 9)));
+        assertThat(helper.getNonogramColumnLogic().getColumnsFieldsNotToInclude().get(0)).containsExactly(3);
     }
 
     private static List<List<Integer>> buildConstantSeqs(int count, int val) {

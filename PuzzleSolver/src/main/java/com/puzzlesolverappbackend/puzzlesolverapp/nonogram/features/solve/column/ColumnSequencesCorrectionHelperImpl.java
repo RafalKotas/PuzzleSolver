@@ -47,8 +47,8 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
                     initialRanges,
                     updatedRanges
             );
-            nonogramColumnLogic.getLogService().setTmpLog(tmpLog);
-            nonogramColumnLogic.getLogService().addLog();
+            nonogramColumnLogic.setTmpLog(tmpLog);
+            nonogramColumnLogic.addLog();
         }
     }
 
@@ -155,8 +155,8 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
                     initialRanges,
                     updatedRanges
             );
-            nonogramColumnLogic.getLogService().setTmpLog(tmpLog);
-            nonogramColumnLogic.getLogService().addLog();
+            nonogramColumnLogic.setTmpLog(tmpLog);
+            nonogramColumnLogic.addLog();
         }
     }
 
@@ -281,15 +281,16 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
         if (changed && changeLogicDetails) {
             List<List<Integer>> updatedRanges = nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx);
 
-            nonogramColumnLogic.getLogService().setTmpLog(SequenceRangeCorrectionWhenMetXLogHelper.generateLog(
+            String tmpLog = SequenceRangeCorrectionWhenMetXLogHelper.generateLog(
                     columnIdx,
                     column,
                     initialRanges,
                     updatedRanges,
                     lengths,
                     excluded,
-                    false));
-            nonogramColumnLogic.getLogService().addLog();
+                    false);
+            nonogramColumnLogic.setTmpLog(tmpLog);
+            nonogramColumnLogic.addLog();
 
             nonogramColumnLogic.getNonogramState().increaseMadeSteps();
             nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(
@@ -330,8 +331,8 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
                     initialRanges,
                     updatedRanges
             );
-            nonogramColumnLogic.getLogService().setTmpLog(tmpLog);
-            nonogramColumnLogic.getLogService().addLog();
+            nonogramColumnLogic.setTmpLog(tmpLog);
+            nonogramColumnLogic.addLog();
 
             nonogramColumnLogic.getNonogramState().increaseMadeSteps();
             Field columnField = new Field(0, columnIdx);
@@ -471,8 +472,8 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
                     line,
                     false // isRow == false
             );
-            nonogramColumnLogic.getLogService().setTmpLog(tmpLog);
-            nonogramColumnLogic.getLogService().addLog();
+            nonogramColumnLogic.setTmpLog(tmpLog);
+            nonogramColumnLogic.addLog();
 
             Field columnField = new Field(0, columnIdx);
             nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(columnField, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE);
@@ -481,6 +482,9 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
 
     @Override
     public void refreshFrom(NonogramColumnLogic logicToCopy) {
+        nonogramColumnLogic.setLogs(logicToCopy.getLogs());
+
+        nonogramColumnLogic.setNonogramSolutionBoard(logicToCopy.getNonogramSolutionBoard());
         nonogramColumnLogic.setColumnsSequencesRanges(logicToCopy.getColumnsSequencesRanges());
         nonogramColumnLogic.setColumnsFieldsNotToInclude(logicToCopy.getColumnsFieldsNotToInclude());
     }

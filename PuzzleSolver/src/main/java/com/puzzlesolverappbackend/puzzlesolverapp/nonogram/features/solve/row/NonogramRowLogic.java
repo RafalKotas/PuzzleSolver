@@ -364,9 +364,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                                 rowAfterUpdate = getRowCopy(rowIdx);
                                 tmpLog = generateCorrectingRangePartLog(
                                         rowIdx,
-                                        "left",
                                         true,
-                                        matchingSeqId,
                                         sequencesLengths,
                                         rowBefore,
                                         rowAfterUpdate,
@@ -495,9 +493,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                                 rowAfterUpdate = getRowCopy(rowIdx);
                                 tmpLog = generateCorrectingRangePartLog(
                                         rowIdx,
-                                        "right",
                                         true,
-                                        matchingSeqId,
                                         sequencesLengths,
                                         rowBefore,
                                         rowAfterUpdate,

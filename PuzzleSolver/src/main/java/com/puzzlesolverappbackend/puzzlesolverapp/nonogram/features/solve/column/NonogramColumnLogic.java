@@ -401,9 +401,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                                 columnAfterUpdate = getColumnCopy(columnIdx);
                                 tmpLog = generateCorrectingRangePartLog(
                                         columnIdx,
-                                        "top",
                                         false,
-                                        matchingSeqId,
                                         sequencesLengths,
                                         columnBefore,
                                         columnAfterUpdate,
@@ -533,9 +531,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                                 columnAfterUpdate = getColumnCopy(columnIdx);
                                 tmpLog = generateCorrectingRangePartLog(
                                         columnIdx,
-                                        "bottom",
                                         false,
-                                        matchingSeqId,
                                         sequencesLengths,
                                         columnBefore,
                                         columnAfterUpdate,

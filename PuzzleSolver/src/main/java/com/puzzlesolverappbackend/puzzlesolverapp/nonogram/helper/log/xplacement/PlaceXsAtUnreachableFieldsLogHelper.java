@@ -15,21 +15,21 @@ public class PlaceXsAtUnreachableFieldsLogHelper {
             int index,
             List<String> initialLine,
             List<String> updatedLine,
-            List<List<Integer>> sequenceRanges,
+            List<List<Integer>> sequencesRanges,
             boolean isRow
     ) {
         return String.format(
                 """
                         PLACE_XS_AT_UNREACHABLE_FIELDS_IN_%s: %s=%d
                         initialLine=%s
-                        sequenceRanges=%s
+                        sequencesRanges=%s
                         updatedLine=%s
                         """,
                 isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "col",
+                isRow ? "row" : "column",
                 index,
                 initialLine,
-                sequenceRanges,
+                sequencesRanges,
                 updatedLine
         );
     }
@@ -37,7 +37,7 @@ public class PlaceXsAtUnreachableFieldsLogHelper {
     public static String convertLogToTestArguments(String log, String solutionName) {
         String[] lines = log.split("\\n");
 
-        boolean isRow = lines[0].startsWith("ROW_");
+        boolean isRow = lines[0].contains("ROW");
         String axisLabel = isRow ? "row" : "column";
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
@@ -45,7 +45,7 @@ public class PlaceXsAtUnreachableFieldsLogHelper {
         String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
 
         String initialLine = extractValue(lines, "initialLine");
-        String sequenceRanges = extractValue(lines, "sequenceRanges");
+        String sequencesRanges = extractValue(lines, "sequencesRanges");
         String updatedLine = extractValue(lines, "updatedLine");
 
 
@@ -60,7 +60,7 @@ public class PlaceXsAtUnreachableFieldsLogHelper {
                 isRow ? "Row" : "Column",
                 index,
                 initialLine,
-                sequenceRanges,
+                sequencesRanges,
                 updatedLine
         );
     }

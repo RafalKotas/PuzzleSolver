@@ -5,127 +5,187 @@ import lombok.experimental.UtilityClass;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @UtilityClass
 public class LogFormatUtils {
 
-    private static final String BRACKETS_REGEX = "[\\[\\]]";
     private static final String LIST_OF_PREFIX = "List.of(";
 
-    // 1+
-    public static String formatList(String input) {
-        return Arrays.stream(input.replaceAll(BRACKETS_REGEX, "").split(","))
-                .map(String::trim)
-                .map(s -> s.matches("-?\\d+") ? s : "\"" + s + "\"")
-                .collect(Collectors.joining(", "));
-    }
+    // Pattern to match an inner integer list: [0, 14], [3, 16], ...
+    private static final Pattern INNER_LIST = Pattern.compile(
+            "\\[(\\s*-?\\d+(?:\\s*,\\s*-?\\d+)*)\\]"
+    );
 
-    // 2+
-    public static String formatNestedList(String input) {
-        String[] parts = input.replaceAll("\\[\\[|\\]\\]", "").split("\\],\\s*\\[");
-        return Arrays.stream(parts)
-                .map(p -> LIST_OF_PREFIX + formatList("[" + p + "]") + ")")
-                .collect(Collectors.joining(", "));
-    }
+    // =====================================================================================
+    //  PARSERS FOR LIST<LIST<INTEGER>> FROM "[[...]]" LITERALS
+    // =====================================================================================
 
-    // 3+
-    public static String formatList(List<?> list) {
-        return list.stream()
-                .map(e -> (e instanceof Number) ? e.toString() : "\"" + e + "\"")
-                .collect(Collectors.joining(", "));
-    }
-
-    // 4+
-    public static String formatNestedList(List<? extends List<?>> nestedList) {
-        return nestedList.stream()
-                .map(inner -> LIST_OF_PREFIX + formatList(inner) + ")")
-                .collect(Collectors.joining(", "));
-    }
-
-    // 5+
-    public static String toQuotedStringList(List<String> list) {
-        return list.stream()
-                .map(s -> "\"" + s + "\"")
-                .collect(Collectors.joining(", "));
-    }
-
-    // 6+
-    public static String toRangeStringList(List<List<Integer>> ranges) {
-        return ranges.stream()
-                .map(inner -> LIST_OF_PREFIX + inner.stream().map(String::valueOf).collect(Collectors.joining(", ")) + ")")
-                .collect(Collectors.joining(", "));
-    }
-
-    // 7+
-    public static List<String> parseStringListLine(String line) {
-        String content = line.contains("=") ? line.substring(line.indexOf('=') + 1) : line;
-
-        return Arrays.stream(content.replaceAll(BRACKETS_REGEX, "").split(","))
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .toList();
-    }
-
-    // 8+
-    public static List<Integer> parseIntegerListLine(String line) {
-        String content = line.contains("=") ? line.substring(line.indexOf('=') + 1) : line;
-        content = content.replaceAll(BRACKETS_REGEX, "").trim();
-
-        if (content.isEmpty()) {
-            return new ArrayList<>();
+    /**
+     * Parses string literal "[[0, 14], [3, 16], [18, 18]]"
+     * to a mutable, deep-copied List<List<Integer>> structure.
+     */
+    public static List<List<Integer>> toMutableRangesList(String arrayLiteral) {
+        if (arrayLiteral == null) throw new IllegalArgumentException("arrayLiteral is null");
+        String s = arrayLiteral.trim();
+        if (!s.startsWith("[[") || !s.endsWith("]]")) {
+            throw new IllegalArgumentException("Unsupported format (expected [[...]]): " + arrayLiteral);
         }
-
-        return Arrays.stream(content.split(","))
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .map(Integer::parseInt)
-                .toList();
-    }
-
-    // TODO - SequenceRangeCorrectionLogHelper 9
-    public static List<List<Integer>> parseNestedListLine(String line) {
-        if (line == null || line.isBlank()) return List.of();
 
         List<List<Integer>> result = new ArrayList<>();
+        Matcher m = INNER_LIST.matcher(s);
 
-        String trimmed = line.trim();
-        if (trimmed.startsWith(LIST_OF_PREFIX) && trimmed.endsWith(")")) {
-            trimmed = trimmed.substring(LIST_OF_PREFIX.length(), trimmed.length() - 1);
-        } else {
-            throw new IllegalArgumentException("Line does not start with 'List.of(': " + line);
-        }
-
-        String[] parts = trimmed.split("List\\.of\\(");
-        for (String part : parts) {
-            String content = part.replace(")", "").trim();
-            if (content.isEmpty()) continue;
-
-            List<Integer> inner = Arrays.stream(content.split(","))
-                    .map(String::trim)
-                    .filter(s -> !s.isEmpty())
-                    .map(Integer::parseInt)
-                    .collect(Collectors.toCollection(ArrayList::new));
-
+        while (m.find()) {
+            String body = m.group(1); // e.g. "0, 14"
+            String[] parts = body.split(",");
+            List<Integer> inner = new ArrayList<>(parts.length);
+            for (String p : parts) {
+                String t = p.trim();
+                if (!t.isEmpty()) inner.add(Integer.parseInt(t));
+            }
+            // add mutable list
             result.add(inner);
         }
 
         return result;
     }
 
-    // 10 +
-    public static List<List<Integer>> parseNestedListLineWrappedInListOf(String input) {
-        String trimmed = input.trim();
+    /**
+     * Parses literal "[[0, 14], [3, 16], [18, 18]]"
+     * & returns a *deeply immutable* structure:
+     * - each inner list is List.copyOf(...)
+     * - outer list is List.copyOf(...)
+     */
+    public static List<List<Integer>> toImmutableRangesList(String arrayLiteral) {
+        List<List<Integer>> mutable = toMutableRangesList(arrayLiteral);
+        List<List<Integer>> frozenInner = mutable.stream()
+                .map(List::copyOf)
+                .toList();
+        return List.copyOf(frozenInner);
+    }
 
-        if (trimmed.startsWith(LIST_OF_PREFIX)) {
-            trimmed = trimmed.substring(8, trimmed.length() - 1); // remove "List.of(" and final ")"
+    // =====================================================================================
+    //  FORMATTERS FROM PARSED LIST STRUCTURES → "List.of(...)" LITERALS
+    // =====================================================================================
+
+    /**
+     * Formats List<List<Integer>> into a literal:
+     * "List.of(List.of(a, b), List.of(c, d), ...)".
+     */
+    public static String toListOfLiteral(List<List<Integer>> ranges) {
+        String inner = ranges.stream()
+                .map(innerList -> LIST_OF_PREFIX + innerList.stream()
+                        .map(String::valueOf)
+                        .reduce((a, b) -> a + ", " + b).orElse("") + ")")
+                .reduce((a, b) -> a + ", " + b)
+                .orElse("");
+        return LIST_OF_PREFIX + inner + ")";
+    }
+
+    /**
+     * Extracts the value from a log line starting with "prefix=".
+     * Example: prefix="initialRanges", line="initialRanges=[[0, 14], [3, 16]]"
+     * will return "[[0, 14], [3, 16]]".
+     */
+    public static String extractValue(String[] lines, String prefix) {
+        return Arrays.stream(lines)
+                .filter(l -> l.startsWith(prefix + "="))
+                .map(l -> l.replace(prefix + "=", "").trim())
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Missing line for: " + prefix));
+    }
+
+    // =====================================================================================
+    //  NEW: STRING → STRING LITERAL CONVERTERS FOR TEST ARGUMENTS
+    // =====================================================================================
+
+    // -------- Flat integer lists --------
+
+    /** Converts "[2, 2, 1]" to "List.of(2, 2, 1)" (immutable). */
+    public static String toImmutableIntListLiteral(String arrayLiteral) {
+        List<Integer> nums = parseFlatIntArrayLiteral(arrayLiteral);
+        return LIST_OF_PREFIX + nums.stream().map(String::valueOf).collect(Collectors.joining(", ")) + ")";
+    }
+
+    /** Converts "[2, 2, 1]" to "new ArrayList<>(List.of(2, 2, 1))" (mutable). */
+    public static String toMutableIntListLiteral(String arrayLiteral) {
+        return "new ArrayList<>(" + toImmutableIntListLiteral(arrayLiteral) + ")";
+    }
+
+    // -------- Ranges (list of lists) --------
+
+    /** Converts "[[0, 14], [3, 16], [18, 18]]" to "List.of(List.of(0, 14), List.of(3, 16), List.of(18, 18))" (immutable). */
+    public static String toImmutableRangesListLiteral(String arrayLiteral) {
+        List<List<Integer>> ranges = toMutableRangesList(arrayLiteral);
+        String inner = ranges.stream()
+                .map(in -> LIST_OF_PREFIX + in.stream().map(String::valueOf).collect(Collectors.joining(", ")) + ")")
+                .collect(Collectors.joining(", "));
+        return LIST_OF_PREFIX + inner + ")";
+    }
+
+    /**
+     * Converts "[[0, 14], [3, 16], [18, 18]]" to mutable structure literal:
+     * "new ArrayList<>(List.of(new ArrayList<>(List.of(0, 14)), new ArrayList<>(List.of(3, 16)), ...))".
+     */
+    public static String toMutableRangesListLiteral(String arrayLiteral) {
+        List<List<Integer>> ranges = toMutableRangesList(arrayLiteral);
+        String inner = ranges.stream()
+                .map(in -> "new ArrayList<>(List.of(" + in.stream().map(String::valueOf).collect(Collectors.joining(", ")) + "))")
+                .collect(Collectors.joining(", "));
+        return "new ArrayList<>(List.of(" + inner + "))";
+    }
+
+    // =====================================================================================
+    //  INTERNAL HELPERS
+    // =====================================================================================
+
+    /** Minimal parser for a flat integer list from a literal "[...]" (allows spaces). */
+    private static List<Integer> parseFlatIntArrayLiteral(String arrayLiteral) {
+        if (arrayLiteral == null) throw new IllegalArgumentException("arrayLiteral is null");
+        String s = arrayLiteral.trim();
+        if (!s.startsWith("[") || !s.endsWith("]")) {
+            throw new IllegalArgumentException("Unsupported format (expected [...]): " + arrayLiteral);
+        }
+        s = s.substring(1, s.length() - 1).trim();
+        if (s.isEmpty()) return List.of();
+        return Arrays.stream(s.split(","))
+                .map(String::trim)
+                .filter(t -> !t.isEmpty())
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Converts literal like "[-, -, X, -, -, -, -, -, X, O, -, -, -, -, -]"
+     * into immutable List.of("-", "-", "X", "-", ...)
+     */
+    public static String toImmutableStringListLiteral(String arrayLiteral) {
+        if (arrayLiteral == null) throw new IllegalArgumentException("arrayLiteral is null");
+        String trimmed = arrayLiteral.trim();
+        if (!trimmed.startsWith("[") || !trimmed.endsWith("]")) {
+            throw new IllegalArgumentException("Unsupported format (expected [ ... ]): " + arrayLiteral);
         }
 
-        return Arrays.stream(trimmed.split("\\),\\s*List.of\\("))
-                .map(s -> Arrays.stream(s.replaceAll("[\\[\\]()]", "").split(","))
-                        .map(String::trim)
-                        .map(Integer::parseInt)
-                        .toList())
-                .toList();
+        String body = trimmed.substring(1, trimmed.length() - 1).trim();
+        if (body.isEmpty()) {
+            return "List.of()";
+        }
+
+        String elements = Arrays.stream(body.split(","))
+                .map(String::trim)
+                .map(s -> "\"" + s + "\"")
+                .collect(Collectors.joining(", "));
+
+        return "List.of(" + elements + ")";
+    }
+
+    /**
+     * Converts literal like "[-, -, X, -, -, -, -, -, X, O, -, -, -, -, -]"
+     * into mutable new ArrayList<>(List.of("-", "-", "X", "-", ...))
+     */
+    public static String toMutableStringListLiteral(String arrayLiteral) {
+        return "new ArrayList<>(" + toImmutableStringListLiteral(arrayLiteral) + ")";
     }
 }

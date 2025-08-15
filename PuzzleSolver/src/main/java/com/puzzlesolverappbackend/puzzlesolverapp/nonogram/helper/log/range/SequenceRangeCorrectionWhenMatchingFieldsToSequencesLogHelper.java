@@ -27,7 +27,7 @@ public class SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper {
                         updatedRanges=%s
                         """,
                 isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "col",
+                isRow ? "row" : "column",
                 index,
                 sequencesLengths,
                 line,

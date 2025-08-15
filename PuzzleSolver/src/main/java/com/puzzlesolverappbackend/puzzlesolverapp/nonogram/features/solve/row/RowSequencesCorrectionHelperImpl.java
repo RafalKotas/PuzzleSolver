@@ -47,8 +47,8 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
                     initialRanges,
                     finalRanges
             );
-            nonogramRowLogic.getLogService().setTmpLog(tmpLog);
-            nonogramRowLogic.getLogService().addLog();
+            nonogramRowLogic.setTmpLog(tmpLog);
+            nonogramRowLogic.addLog();
         }
     }
 
@@ -155,8 +155,8 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
                     initialRanges,
                     updatedRanges
             );
-            nonogramRowLogic.getLogService().setTmpLog(tmpLog);
-            nonogramRowLogic.getLogService().addLog();
+            nonogramRowLogic.setTmpLog(tmpLog);
+            nonogramRowLogic.addLog();
         }
     }
 
@@ -282,15 +282,16 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
         if (changed && changeLogicDetails) {
             List<List<Integer>> updatedRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
 
-            nonogramRowLogic.getLogService().setTmpLog(SequenceRangeCorrectionWhenMetXLogHelper.generateLog(
+            String tmpLog = SequenceRangeCorrectionWhenMetXLogHelper.generateLog(
                     rowIdx,
                     row,
                     initialRanges,
                     updatedRanges,
                     lengths,
                     excluded,
-                    true));
-            nonogramRowLogic.getLogService().addLog();
+                    true);
+            nonogramRowLogic.setTmpLog(tmpLog);
+            nonogramRowLogic.addLog();
 
             nonogramRowLogic.getNonogramState().increaseMadeSteps();
             nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(
@@ -331,8 +332,8 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
                     rangesBefore,
                     rangesAfter
             );
-            nonogramRowLogic.getLogService().setTmpLog(tmpLog);
-            nonogramRowLogic.getLogService().addLog();
+            nonogramRowLogic.setTmpLog(tmpLog);
+            nonogramRowLogic.addLog();
 
             nonogramRowLogic.getNonogramState().increaseMadeSteps();
             Field rowField = new Field(rowIdx, 0);
@@ -472,8 +473,8 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
                     line,
                     true // isRow
             );
-            nonogramRowLogic.getLogService().setTmpLog(tmpLog);
-            nonogramRowLogic.getLogService().addLog();
+            nonogramRowLogic.setTmpLog(tmpLog);
+            nonogramRowLogic.addLog();
 
             nonogramRowLogic.getNonogramState().increaseMadeSteps();
             Field rowField = new Field(rowIdx, 0);
@@ -483,6 +484,7 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
 
     @Override
     public void refreshFrom(NonogramRowLogic logicToCopy) {
+        nonogramRowLogic.setNonogramSolutionBoard(logicToCopy.getNonogramSolutionBoard());
         nonogramRowLogic.setRowsSequencesRanges(logicToCopy.getRowsSequencesRanges());
         nonogramRowLogic.setRowsFieldsNotToInclude(logicToCopy.getRowsFieldsNotToInclude());
     }

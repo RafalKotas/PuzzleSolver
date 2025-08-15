@@ -27,23 +27,23 @@ public class LogConverter {
     ) {
         return switch (actionType) {
             // correction
-            case "SEQUENCES_RANGE_CORRECTION" ->
-                    Optional.of(SequenceRangeCorrectionLogHelper.convertLogToTestArguments(log, solutionName));
-            case "SEQUENCE_RANGE_CORRECTION_WHEN_MET_COLOURED_FIELDS" ->
+            case "SEQUENCES_RANGES_CORRECTION" ->
+                    Optional.of(SequencesRangesCorrectionLogHelper.convertLogToTestArguments(log, solutionName));
+            case "SEQUENCES_RANGES_CORRECTION_WHEN_MET_COLOURED_FIELDS" ->
                     Optional.of(SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.convertLogToTestArguments(log, solutionName, logic));
-            case "SEQUENCES_RANGE_CORRECTION_IF_X_ON_WAY" ->
+            case "SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY" ->
                     Optional.of(SequenceRangeCorrectionWhenMetXLogHelper.convertLogToTestArguments(log, solutionName, logic));
-            case "SEQUENCES_RANGE_CORRECTION_BY_MATCHING_FIELDS_TO_SEQUENCES" -> // TODO - implementation methods
-                    Optional.of(SequenceRangeCorrectionByMatchingLogHelper.convertLogToTestArguments(log, solutionName, logic));
-            case "SEQUENCES_RANGE_CORRECTION_FROM_COLOURED_EDGES" ->
+            case "SEQUENCES_RANGES_CORRECTION_BY_MATCHING_FIELDS_TO_SEQUENCES" -> // TODO - implementation methods
+                    Optional.of(SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper.convertLogToTestArguments(log, solutionName, logic));
+            case "SEQUENCES_RANGES_CORRECTION_FROM_COLOURED_EDGES" ->
                     Optional.of(SequenceRangeCorrectionFromColouredEdgesLogHelper.convertLogToTestArguments(log, solutionName));
-            case "SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS" ->
-                    Optional.of(SequenceRangeCorrectionWhenMarkingFieldsLogHelper.convertLogToTestArguments(log, solutionName, logic));
+            case "SEQUENCES_RANGES_CORRECTION_WHEN_MARKING_FIELDS" ->
+                    Optional.of(SequenceRangeCorrectionWhenMarkingFieldsLogHelper.convertLogToTestArguments(log, solutionName));
 
             // colour
-            case "OVERLAP" -> Optional.of(OverlappingLogHelper.convertLogToTestArguments(log, solutionName, logic));
-            case "TOO_LONG_MERGE" -> Optional.of(TooLongMergeLogHelper.convertLogToTestArguments(log, solutionName, logic));
-            case "EXTEND" -> Optional.of(ExtendLogHelper.convertLogToTestArguments(log, solutionName, logic));
+            case "COLOUR_OVERLAPPING_FIELDS" -> Optional.of(OverlappingLogHelper.convertLogToTestArguments(log, solutionName));
+            case "TOO_LONG_MERGE" -> Optional.of(TooLongMergeLogHelper.convertLogToTestArguments(log, solutionName));
+            case "EXTEND" -> Optional.of(ExtendLogHelper.convertLogToTestArguments(log, solutionName));
             // TODO - implementation methods
             case "COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT" -> Optional.of(AssignmentConflictLogHelper.convertLogToTestArguments(log, solutionName, logic));
 
@@ -72,22 +72,22 @@ public class LogConverter {
                     Optional.of(MarkAvailableFieldsLogHelper.convertLogToTestArguments(log, solutionName, logic));
 
             case "TRIVIAL" -> Optional.of(TrivialFillLogHelper.convertLogToTestArguments(log, solutionName, logic));
-            case "EXCLUDED" -> Optional.of(ExcludedSequenceLogHelper.convertLogToTestArguments(log, solutionName, logic));
+            case "EXCLUDED" -> Optional.of(ExcludedSequenceLogHelper.convertLogToTestArguments(log, solutionName));
             default -> Optional.empty();
         };
     }
     public static String detectActionTypeFromRawLog(String log) {
         // correction
-        if (isRangeCorrection(log)) return "SEQUENCES_RANGE_CORRECTION";
-        if (isCorrectionWhenMetColoured(log)) return "SEQUENCE_RANGE_CORRECTION_WHEN_MET_COLOURED_FIELDS";
-        if (isCorrectionIfXOnWay(log)) return "SEQUENCES_RANGE_CORRECTION_IF_X_ON_WAY";
-        if (isMatchingSequenceCorrection(log)) return "SEQUENCES_RANGE_CORRECTION_BY_MATCHING_FIELDS_TO_SEQUENCES";
-        if (isCorrectionFromEdges(log)) return "SEQUENCES_RANGE_CORRECTION_FROM_COLOURED_EDGES";
+        if (isRangeCorrection(log)) return "SEQUENCES_RANGES_CORRECTION";
+        if (isCorrectionWhenMetColoured(log)) return "SEQUENCES_RANGES_CORRECTION_WHEN_MET_COLOURED_FIELDS";
+        if (isCorrectionIfXOnWay(log)) return "SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY";
+        if (isMatchingSequenceCorrection(log)) return "SEQUENCES_RANGES_CORRECTION_BY_MATCHING_FIELDS_TO_SEQUENCES";
+        if (isCorrectionFromEdges(log)) return "SEQUENCES_RANGES_CORRECTION_FROM_COLOURED_EDGES";
         // SUB-ACTION of "MARK_AVAILABLE_FIELDS"
-        if (isRangeCorrectionWhenMarking(log)) return "SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS";
+        if (isRangeCorrectionWhenMarking(log)) return "SEQUENCES_RANGES_CORRECTION_WHEN_MARKING_FIELDS";
 
         // colour
-        if (isOverlap(log)) return "OVERLAP";
+        if (isOverlap(log)) return "COLOUR_OVERLAPPING_FIELDS";
         if (isTooLongMerge(log)) return "TOO_LONG_MERGE";
         if (isExtend(log)) return "EXTEND";
         if(isColourFieldsIfXCausesAssignmentConflict(log)) return "COLOUR_FIELDS_IF_X_CAUSES_ASSIGNMENT_CONFLICT";
@@ -119,8 +119,8 @@ public class LogConverter {
     // correction
 
     private static boolean isRangeCorrection(String log) {
-        return log.startsWith("ROW_SEQUENCES_RANGES_CORRECTED:") ||
-                log.startsWith("COLUMN_SEQUENCES_RANGES_CORRECTED:");
+        return log.startsWith("ROW_SEQUENCES_RANGES_CORRECTION:") ||
+                log.startsWith("COLUMN_SEQUENCES_RANGES_CORRECTION:");
     }
 
     private static boolean isCorrectionWhenMetColoured(String log) {
@@ -151,7 +151,7 @@ public class LogConverter {
     // colour
 
     private static boolean isOverlap(String log) {
-        return log.startsWith("OVERLAP_");
+        return log.startsWith("COLOUR_OVERLAPPING_FIELDS_IN_");
     }
 
     private static boolean isTooLongMerge(String log) {
@@ -220,6 +220,6 @@ public class LogConverter {
     }
 
     private static boolean isExcluded(String log) {
-        return log.startsWith("EXCLUDED_ROW_SEQUENCE:") || log.startsWith("EXCLUDED_COLUMN_SEQUENCE:");
+        return log.startsWith("EXCLUSION_ROW_SEQUENCE:") || log.startsWith("EXCLUSION_COLUMN_SEQUENCE:");
     }
 }

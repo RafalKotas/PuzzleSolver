@@ -28,7 +28,7 @@ public class TooLongMergeLogHelper {
                         updatedLine=%s
                         """,
                 label,
-                isRow ? "row" : "col",
+                isRow ? "row" : "column",
                 index,
                 initialLine.toString(),
                 sequencesRanges.toString(),

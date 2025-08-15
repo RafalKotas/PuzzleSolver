@@ -20,7 +20,8 @@ public class ExtendLogHelper {
     ) {
         return String.format(
                 """
-                        EXTEND_%s_SEQUENCE: %s=%d, dir=%s
+                        EXTEND_%s_SEQUENCE: %s=%d
+                        direction=%s
                         initialLine=%s
                         sequencesRanges=%s
                         sequencesLengths=%s
@@ -43,10 +44,10 @@ public class ExtendLogHelper {
     ) {
         String[] lines = log.split("\\n");
 
-        boolean isRow = lines[0].startsWith("ROW_");
+        boolean isRow = lines[0].contains("ROW");
         String axisLabel = isRow ? "row" : "column";
 
-        int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].split(", ")[0].trim());
+        int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
 
         String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
 
@@ -64,7 +65,7 @@ public class ExtendLogHelper {
                             %s
                         )""",
                 fileName,
-                isRow ? "Row" : "Column",
+                isRow ? "row" : "column",
                 index,
                 toMutableStringListLiteral(initialLine),
                 toImmutableRangesListLiteral(sequencesRanges),

@@ -29,7 +29,7 @@ public class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper {
                         sequencesRanges=%s
                         """,
                 isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "col",
+                isRow ? "row" : "column",
                 index,
                 initialLine.toString(),
                 updatedLine.toString(),

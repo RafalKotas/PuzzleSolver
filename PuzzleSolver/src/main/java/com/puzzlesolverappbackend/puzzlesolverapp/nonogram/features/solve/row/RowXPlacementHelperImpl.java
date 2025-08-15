@@ -29,7 +29,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.Nonogr
 @Setter
 public class RowXPlacementHelperImpl implements RowXPlacementHelper, RefreshableRowHelper {
 
-    private final NonogramRowLogic logic;
+    private final NonogramRowLogic nonogramRowLogic;
 
     private final NonogramFieldPlacingXHelper nonogramFieldPlacingXHelper;
 
@@ -38,60 +38,61 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
     private static final List<Integer> NOT_FOUND_COLOURED_FIELDS_RANGE_VALUE = List.of(-1, -1);
 
     public RowXPlacementHelperImpl(NonogramRowLogic nonogramRowLogic) {
-        logic = nonogramRowLogic;
+        this.nonogramRowLogic = nonogramRowLogic;
         this.nonogramFieldPlacingXHelper = new NonogramFieldPlacingXHelper(
-                logic.getNonogramSolutionBoard(),
-                logic.getNonogramSolutionBoardWithMarks(),
-                logic.getBoardAccessHelper()
+                this.nonogramRowLogic.getNonogramSolutionBoard(),
+                this.nonogramRowLogic.getNonogramSolutionBoardWithMarks(),
+                this.nonogramRowLogic.getBoardAccessHelper()
         );
     }
 
     @Override
     public void placeXsRowAtUnreachableFields(int rowIdx) {
-        List<List<Integer>> rowSequencesRanges = logic.getRowsSequencesRanges().get(rowIdx);
+        List<List<Integer>> rowSequencesRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
 
-        List<String> initialState = logic.getBoardAccessHelper().getRowCopy(rowIdx);
+        List<String> initialState = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
         List<List<Integer>> initialRanges = cloneAndMakeImmutable2DList(rowSequencesRanges);
 
-        for (int columnIdx = 0; columnIdx < logic.getNonogramRules().getWidth(); columnIdx++) {
+        for (int columnIdx = 0; columnIdx < nonogramRowLogic.getNonogramRules().getWidth(); columnIdx++) {
             List<Integer> fieldAsRange = List.of(columnIdx, columnIdx);
             boolean isReachable = rangesListIncludingAnotherRange(rowSequencesRanges, fieldAsRange);
 
             if (!isReachable) {
                 Field fieldToExclude = new Field(rowIdx, columnIdx);
-                if (isFieldEmpty(logic.getNonogramSolutionBoard(), fieldToExclude)) {
+                if (isFieldEmpty(nonogramRowLogic.getNonogramSolutionBoard(), fieldToExclude)) {
                     nonogramFieldPlacingXHelper.placeXAtGivenField(fieldToExclude);
-                    logic.getNonogramFieldExclusionHelper().excludeFieldInRow(fieldToExclude);
-                    logic.getActionScheduler().scheduleActionsBasedOnField(fieldToExclude, NonogramSolveAction.PLACE_XS_ROW_AT_UNREACHABLE_FIELDS);
-                    logic.getNonogramState().increaseMadeSteps();
+                    nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(fieldToExclude);
+                    nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(fieldToExclude, NonogramSolveAction.PLACE_XS_ROW_AT_UNREACHABLE_FIELDS);
+                    nonogramRowLogic.getNonogramState().increaseMadeSteps();
                 } else if (NonogramLogicParams.SHOW_REPETITIONS) {
                     log.warn("X at unreachable field in row placed earlier!");
                 }
             }
         }
 
-        List<String> finalState = logic.getBoardAccessHelper().getRowCopy(rowIdx);
+        List<String> finalState = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
         if (!initialState.equals(finalState)) {
-            logic.getLogService().setTmpLog(PlaceXsAtUnreachableFieldsLogHelper.generateLog(
+            String tmpLog = PlaceXsAtUnreachableFieldsLogHelper.generateLog(
                     rowIdx,
                     initialState,
                     finalState,
                     initialRanges,
                     true
-            ));
-            logic.getLogService().addLog();
+            );
+            nonogramRowLogic.setTmpLog(tmpLog);
+            nonogramRowLogic.addLog();
         }
     }
 
     @Override
     public void placeXsAroundLongestSequencesInRow(int rowIdx) {
-        int width = logic.getNonogramRules().getWidth();
+        int width = nonogramRowLogic.getNonogramRules().getWidth();
         int columnIdx = 1;
 
         while (columnIdx < width - 1) {
             Field field = new Field(rowIdx, columnIdx);
 
-            if (isFieldColoured(logic.getNonogramSolutionBoard(), field)) {
+            if (isFieldColoured(nonogramRowLogic.getNonogramSolutionBoard(), field)) {
                 List<Integer> colouredRange = findColouredSequenceRangeInRow(columnIdx, rowIdx);
                 processColouredSequenceRangeInRow(rowIdx, colouredRange);
                 columnIdx = colouredRange.get(1) + 1;
@@ -104,18 +105,18 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
     private List<Integer> findColouredSequenceRangeInRow(int startColumnIdx, int rowIdx) {
         int start = startColumnIdx;
         int end = startColumnIdx;
-        int width = logic.getNonogramRules().getWidth();
+        int width = nonogramRowLogic.getNonogramRules().getWidth();
 
         int left = start - 1;
         while (left >= 0) {
-            if (!isFieldColoured(logic.getNonogramSolutionBoard(), new Field(rowIdx, left))) break;
+            if (!isFieldColoured(nonogramRowLogic.getNonogramSolutionBoard(), new Field(rowIdx, left))) break;
             start = left;
             left--;
         }
 
         int right = end + 1;
         while (right < width) {
-            if (!isFieldColoured(logic.getNonogramSolutionBoard(), new Field(rowIdx, right))) break;
+            if (!isFieldColoured(nonogramRowLogic.getNonogramSolutionBoard(), new Field(rowIdx, right))) break;
             end = right;
             right++;
         }
@@ -124,8 +125,8 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
     }
 
     private void processColouredSequenceRangeInRow(int rowIdx, List<Integer> colouredRange) {
-        List<List<Integer>> rowRanges = logic.getRowsSequencesRanges().get(rowIdx);
-        List<Integer> rowLengths = logic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
+        List<List<Integer>> rowRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
+        List<Integer> rowLengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
 
         int lengthOnBoard = rangeLength(colouredRange);
         List<Integer> matchingIndices = new ArrayList<>();
@@ -159,63 +160,70 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
     }
 
     private void placeXsAroundLongestSequence(int rowIdx, List<Integer> xEdges, boolean onlyMatching) {
-        List<String> rowBefore = logic.getBoardAccessHelper().getRowCopy(rowIdx);
+        List<String> rowBefore = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
         boolean anyXPlaced = false;
 
         for (int columnIdx : xEdges) {
-            if (!logic.getBoardAccessHelper().isColumnIndexValid(columnIdx)) continue;
+            if (!nonogramRowLogic.getBoardAccessHelper().isColumnIndexValid(columnIdx)) continue;
 
             Field edgeField = new Field(rowIdx, columnIdx);
-            if (isFieldEmpty(logic.getNonogramSolutionBoard(), edgeField)) {
+            if (isFieldEmpty(nonogramRowLogic.getNonogramSolutionBoard(), edgeField)) {
                 nonogramFieldPlacingXHelper.placeXAtGivenField(edgeField);
-                logic.getNonogramFieldExclusionHelper().excludeFieldInRow(edgeField);
-                logic.getActionScheduler().scheduleActionsBasedOnField(
+                nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(edgeField);
+                nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(
                         new Field(rowIdx, columnIdx), NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES
                 );
-                logic.getNonogramState().increaseMadeSteps();
+                nonogramRowLogic.getNonogramState().increaseMadeSteps();
                 anyXPlaced = true;
             } else if (NonogramLogicParams.SHOW_REPETITIONS) {
                 log.warn("X around longest sequence already placed at {}", edgeField);
             }
         }
 
-        List<String> rowAfter = logic.getBoardAccessHelper().getRowCopy(rowIdx);
+        List<String> rowAfter = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
         if (anyXPlaced) {
-            logic.getLogService().setTmpLog(PlaceXsAroundLongestSequenceLogHelper.generateLog(
+            String tmpLog = PlaceXsAroundLongestSequenceLogHelper.generateLog(
                     rowIdx,
                     xEdges,
                     rowBefore,
                     rowAfter,
                     onlyMatching,
                     true
-            ));
-            logic.getLogService().addLog();
+            );
+            nonogramRowLogic.setTmpLog(tmpLog);
+            nonogramRowLogic.addLog();
         }
     }
 
     private void excludeColouredFieldsBetweenXs(int rowIdx, List<Integer> range) {
         for (int columnIdx = range.get(0); columnIdx <= range.get(1); columnIdx++) {
-            logic.getNonogramFieldExclusionHelper().excludeFieldInRow(new Field(rowIdx, columnIdx));
-            logic.getNonogramState().increaseMadeSteps();
+            nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(new Field(rowIdx, columnIdx));
+            nonogramRowLogic.getNonogramState().increaseMadeSteps();
         }
     }
 
-    private void updateLogicAfterXsPlacement(int rowIdx, int seqIdx, List<Integer> newRange) {
-        List<Integer> oldRange = logic.getRowsSequencesRanges().get(rowIdx).get(seqIdx);
+    private void updateLogicAfterXsPlacement(int rowIdx, int sequenceIdx, List<Integer> newRange) {
+        List<Integer> oldRange = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx).get(sequenceIdx);
         if (!newRange.equals(oldRange)) {
-            logic.changeRowSequenceRange(rowIdx, seqIdx, newRange);
+            nonogramRowLogic.changeRowSequenceRange(rowIdx, sequenceIdx, newRange);
 
-            List<List<Integer>> allRanges = logic.getRowsSequencesRanges().get(rowIdx);
-            List<Integer> lengths = logic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
-            List<String> rowState = logic.getBoardAccessHelper().getRowCopy(rowIdx);
+            List<List<Integer>> allRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
+            List<Integer> rowSequencesLengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
+            List<String> boardRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
-            logic.getLogService().setTmpLog(SequenceRangeCorrectionWhenPlacingXsLogHelper.generateLog(
-                    rowIdx, seqIdx, allRanges, newRange, rowState, lengths
-            ));
-            logic.getLogService().addLog();
+            String tmpLog = SequenceRangeCorrectionWhenPlacingXsLogHelper.generateLog(
+                    rowIdx,
+                    sequenceIdx,
+                    allRanges,
+                    newRange,
+                    boardRow,
+                    rowSequencesLengths
+            );
+            nonogramRowLogic.setTmpLog(tmpLog);
+            nonogramRowLogic.addLog();
 
-            logic.excludeSequenceInRow(rowIdx, seqIdx);
+            nonogramRowLogic.excludeSequenceInRow(rowIdx, sequenceIdx);
         }
     }
 
@@ -234,26 +242,32 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
      */
     @Override
     public void placeXsRowAtTooShortEmptySequences(int rowIdx) {
-        int width = logic.getNonogramRules().getWidth();
-        List<List<Integer>> sequenceRanges = logic.getRowsSequencesRanges().get(rowIdx);
-        List<Integer> sequenceLengths = logic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
-        List<Integer> excludedSequenceIds = logic.getRowsSequencesIdsNotToInclude().get(rowIdx);
+        int width = nonogramRowLogic.getNonogramRules().getWidth();
+        List<List<Integer>> sequenceRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
+        List<Integer> sequencesLengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
+        List<Integer> excludedSequenceIndexes = nonogramRowLogic.getRowsSequencesIdsNotToInclude().get(rowIdx);
 
-        List<String> rowBefore = logic.getBoardAccessHelper().getRowCopy(rowIdx);
+        List<String> initialRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
         List<List<Integer>> candidateRanges = findEmptyRangesBetweenXs(rowIdx, width);
 
         for (List<Integer> range : candidateRanges) {
-            if (onlyTooLongSequencesFitInRange(sequenceRanges, sequenceLengths, excludedSequenceIds, range)) {
+            if (onlyTooLongSequencesFitInRange(sequenceRanges, sequencesLengths, excludedSequenceIndexes, range)) {
                 markXsInRange(range, rowIdx);
             }
         }
 
-        List<String> rowAfter = logic.getBoardAccessHelper().getRowCopy(rowIdx);
-        if (!rowBefore.equals(rowAfter)) {
-            logic.getLogService().setTmpLog(PlaceXsAtTooShortEmptySequencesLogHelper.generateLog(
-                    rowIdx, rowBefore, rowAfter, sequenceLengths, excludedSequenceIds, true));
-            logic.getLogService().addLog();
+        List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
+        if (!initialRow.equals(updatedRow)) {
+            String tmpLog = PlaceXsAtTooShortEmptySequencesLogHelper.generateLog(
+                    rowIdx,
+                    initialRow,
+                    updatedRow,
+                    sequencesLengths,
+                    excludedSequenceIndexes,
+                    true);
+            nonogramRowLogic.setTmpLog(tmpLog);
+            nonogramRowLogic.addLog();
         }
     }
 
@@ -299,7 +313,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
      * @return the index of the first column with an X, or {@code width} if none found
      */
     private int findStartColumnWithX(int startIdx, int rowIdx, int width) {
-        while (startIdx < width && !isFieldWithX(logic.getNonogramSolutionBoard(), new Field(rowIdx, startIdx))) {
+        while (startIdx < width && !isFieldWithX(nonogramRowLogic.getNonogramSolutionBoard(), new Field(rowIdx, startIdx))) {
             startIdx++;
         }
         return startIdx;
@@ -316,11 +330,11 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
      */
     private int findEndColumnWithXAfterEmpty(int startIdx, int rowIdx, int width) {
         int cursor = startIdx;
-        while (cursor < width && isFieldEmpty(logic.getNonogramSolutionBoard(), new Field(rowIdx, cursor))) {
+        while (cursor < width && isFieldEmpty(nonogramRowLogic.getNonogramSolutionBoard(), new Field(rowIdx, cursor))) {
             cursor++;
         }
 
-        if (cursor >= width || !isFieldWithX(logic.getNonogramSolutionBoard(), new Field(rowIdx, cursor))) {
+        if (cursor >= width || !isFieldWithX(nonogramRowLogic.getNonogramSolutionBoard(), new Field(rowIdx, cursor))) {
             return -1;
         }
 
@@ -382,22 +396,22 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
     private void markXsInRange(List<Integer> emptyRange, int rowIdx) {
         for (int col = emptyRange.get(0); col <= emptyRange.get(1); col++) {
             Field field = new Field(rowIdx, col);
-            if (!isFieldEmpty(logic.getNonogramSolutionBoard(), field)) continue;
+            if (!isFieldEmpty(nonogramRowLogic.getNonogramSolutionBoard(), field)) continue;
 
             nonogramFieldPlacingXHelper.placeXAtGivenField(field);
-            logic.getNonogramFieldExclusionHelper().excludeFieldInRow(field);
-            logic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES);
-            logic.getNonogramState().increaseMadeSteps();
+            nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(field);
+            nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES);
+            nonogramRowLogic.getNonogramState().increaseMadeSteps();
         }
     }
 
     @Override
     public void placeXsRowIfOWillMergeNearFieldsToTooLongColouredSequence(int rowIdx) {
-        List<Integer> colouredFields = findColouredFieldsInRow(logic.getNonogramSolutionBoard(), rowIdx);
+        List<Integer> colouredFields = findColouredFieldsInRow(nonogramRowLogic.getNonogramSolutionBoard(), rowIdx);
         List<List<Integer>> colouredRanges = groupConsecutiveIndices(colouredFields);
         List<List<List<Integer>>> rangesWithExtras = createCandidateRangesAroundSequences(colouredRanges);
 
-        List<String> rowBefore = logic.getBoardAccessHelper().getRowCopy(rowIdx);
+        List<String> rowBefore = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
         for (int i = 0; i < colouredRanges.size(); i++) {
             List<List<Integer>> currentWithExtras = rangesWithExtras.get(i);
@@ -406,19 +420,19 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
             checkAndPlaceXAfterInRow(colouredRanges, currentWithExtras.get(1), i, rowIdx);
         }
 
-        List<String> rowAfter = logic.getBoardAccessHelper().getRowCopy(rowIdx);
+        List<String> rowAfter = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
         if (!rowBefore.equals(rowAfter)) {
             // TODO - create log helper for this action
-            logic.getLogService().setTmpLog(PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
+            nonogramRowLogic.getLogService().setTmpLog(PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
                     rowIdx,
                     rowBefore,
                     rowAfter,
-                    logic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
-                    logic.getRowsSequencesRanges().get(rowIdx),
+                    nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
+                    nonogramRowLogic.getRowsSequencesRanges().get(rowIdx),
                     true
             ));
-            logic.getLogService().addLog();
+            nonogramRowLogic.addLog();
         }
     }
 
@@ -432,9 +446,9 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
 
         if (shouldPlaceXInRow(rowIdx, col, field, merged)) {
             nonogramFieldPlacingXHelper.placeXAtGivenField(field);
-            logic.getNonogramFieldExclusionHelper().excludeFieldInRow(field);
-            logic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
-            logic.getNonogramState().increaseMadeSteps();
+            nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(field);
+            nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
+            nonogramRowLogic.getNonogramState().increaseMadeSteps();
         } else if (NonogramLogicParams.SHOW_REPETITIONS) {
             log.info("X because \"O\" will create too long sequence in row placed earlier!");
         }
@@ -442,7 +456,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
 
     private void checkAndPlaceXAfterInRow(List<List<Integer>> colouredRanges, List<Integer> rangeWithExtra, int idx, int rowIdx) {
         int nextCol = rangeWithExtra.get(1);
-        if (nextCol == logic.getNonogramRules().getWidth()) return;
+        if (nextCol == nonogramRowLogic.getNonogramRules().getWidth()) return;
 
         Field field = new Field(rowIdx, nextCol);
         List<Integer> merged = (idx < colouredRanges.size() - 1)
@@ -451,50 +465,50 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
 
         if (shouldPlaceXInRow(rowIdx, nextCol, field, merged)) {
             nonogramFieldPlacingXHelper.placeXAtGivenField(field);
-            logic.getNonogramFieldExclusionHelper().excludeFieldInRow(field);
-            logic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
-            logic.getNonogramState().increaseMadeSteps();
+            nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(field);
+            nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
+            nonogramRowLogic.getNonogramState().increaseMadeSteps();
         } else if (NonogramLogicParams.SHOW_REPETITIONS) {
             log.info("X because \"O\" will create too long sequence in row placed earlier!");
         }
     }
 
     private boolean shouldPlaceXInRow(int rowIdx, int colIdx, Field field, List<Integer> range) {
-        return logic.getBoardAccessHelper().isColumnIndexValid(colIdx)
-                && isFieldEmpty(logic.getNonogramSolutionBoard(), field)
-                && !colouredSequenceInRowIsValid(range, rowIdx, logic);
+        return nonogramRowLogic.getBoardAccessHelper().isColumnIndexValid(colIdx)
+                && isFieldEmpty(nonogramRowLogic.getNonogramSolutionBoard(), field)
+                && !colouredSequenceInRowIsValid(range, rowIdx, nonogramRowLogic);
     }
 
     @Override
     public void placeXsRowIfONearXWillBeginTooLongPossibleColouredSequence(int rowIdx) {
-        List<String> rowBefore = logic.getBoardAccessHelper().getRowCopy(rowIdx);
+        List<String> rowBefore = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
         checkDirectionAndPlaceXsInRow(rowIdx, true);  // from left
         checkDirectionAndPlaceXsInRow(rowIdx, false); // from right
 
-        List<String> rowAfter = logic.getBoardAccessHelper().getRowCopy(rowIdx);
+        List<String> rowAfter = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
         if (!rowBefore.equals(rowAfter)) {
-            logic.getLogService().setTmpLog(PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
+            nonogramRowLogic.getLogService().setTmpLog(PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
                     rowIdx,
                     rowBefore,
                     rowAfter,
-                    logic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
-                    logic.getRowsSequencesRanges().get(rowIdx),
+                    nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
+                    nonogramRowLogic.getRowsSequencesRanges().get(rowIdx),
                     true
             ));
-            logic.getLogService().addLog();
+            nonogramRowLogic.addLog();
         }
     }
 
     private void checkDirectionAndPlaceXsInRow(int rowIdx, boolean fromLeft) {
-        int start = fromLeft ? 0 : logic.getNonogramRules().getWidth() - 1;
-        int end = fromLeft ? logic.getNonogramRules().getWidth() : -1;
+        int start = fromLeft ? 0 : nonogramRowLogic.getNonogramRules().getWidth() - 1;
+        int end = fromLeft ? nonogramRowLogic.getNonogramRules().getWidth() : -1;
         int step = fromLeft ? 1 : -1;
 
         for (int columnIdx = start; fromLeft ? columnIdx < end : columnIdx > end; columnIdx += step) {
             Field xField = new Field(rowIdx, columnIdx);
-            if (!isFieldWithX(logic.getNonogramSolutionBoard(), xField)) continue;
+            if (!isFieldWithX(nonogramRowLogic.getNonogramSolutionBoard(), xField)) continue;
 
             List<Integer> emptyRange = fromLeft
                     ? getEmptyFieldsRangeFromXToFirstColouredFieldFromLeft(xField)
@@ -520,7 +534,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
         return getFieldRange(
                 new Field(xField.getRowIdx(), xField.getColumnIdx() + 1),
                 i -> i + 1,
-                f -> isFieldEmpty(logic.getNonogramSolutionBoard(), f)
+                f -> isFieldEmpty(nonogramRowLogic.getNonogramSolutionBoard(), f)
         );
     }
 
@@ -528,7 +542,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
         return getFieldRange(
                 new Field(xField.getRowIdx(), xField.getColumnIdx() - 1),
                 i -> i - 1,
-                f -> isFieldEmpty(logic.getNonogramSolutionBoard(), f)
+                f -> isFieldEmpty(nonogramRowLogic.getNonogramSolutionBoard(), f)
         );
     }
 
@@ -536,7 +550,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
         return getFieldRange(
                 new Field(startField.getRowIdx(), startField.getColumnIdx()),
                 i -> i + 1,
-                f -> isFieldColoured(logic.getNonogramSolutionBoard(), f)
+                f -> isFieldColoured(nonogramRowLogic.getNonogramSolutionBoard(), f)
         );
     }
 
@@ -544,7 +558,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
         return getFieldRange(
                 new Field(startField.getRowIdx(), startField.getColumnIdx()),
                 i -> i - 1,
-                f -> isFieldColoured(logic.getNonogramSolutionBoard(), f)
+                f -> isFieldColoured(nonogramRowLogic.getNonogramSolutionBoard(), f)
         );
     }
 
@@ -555,7 +569,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
         int max = Integer.MIN_VALUE;
 
         Field f = new Field(startField.getRowIdx(), startField.getColumnIdx());
-        while (logic.getBoardAccessHelper().areFieldIndexesValid(f) && matchCondition.test(f)) {
+        while (nonogramRowLogic.getBoardAccessHelper().areFieldIndexesValid(f) && matchCondition.test(f)) {
             int c = f.getColumnIdx();
             if (c < min) min = c;
             if (c > max) max = c;
@@ -567,8 +581,8 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
     }
 
     private void evaluateAndMaybePlaceX(int rowIdx, List<Integer> emptyRange, List<Integer> colouredRange, boolean isFromLeft) {
-        List<Integer> lengths = logic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
-        List<List<Integer>> ranges = logic.getRowsSequencesRanges().get(rowIdx);
+        List<Integer> lengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
+        List<List<Integer>> ranges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
 
         int emptyLen = rangeLength(emptyRange);
         int colouredLen = rangeLength(colouredRange);
@@ -594,18 +608,18 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
             int xCol = isFromLeft ? emptyRange.get(0) : emptyRange.get(1);
             Field field = new Field(rowIdx, xCol);
 
-            if (isFieldEmpty(logic.getNonogramSolutionBoard(), field)) {
+            if (isFieldEmpty(nonogramRowLogic.getNonogramSolutionBoard(), field)) {
                 nonogramFieldPlacingXHelper.placeXAtGivenField(field);
-                logic.getNonogramFieldExclusionHelper().excludeFieldInRow(field);
-                logic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE);
-                logic.getNonogramState().increaseMadeSteps();
+                nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(field);
+                nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE);
+                nonogramRowLogic.getNonogramState().increaseMadeSteps();
             }
         }
     }
 
     @Override
     public void refreshFrom(NonogramRowLogic logicToCopy) {
-        logic.setRowsSequencesRanges(logicToCopy.getRowsSequencesRanges());
-        logic.setRowsFieldsNotToInclude(logicToCopy.getRowsFieldsNotToInclude());
+        nonogramRowLogic.setRowsSequencesRanges(logicToCopy.getRowsSequencesRanges());
+        nonogramRowLogic.setRowsFieldsNotToInclude(logicToCopy.getRowsFieldsNotToInclude());
     }
 }
