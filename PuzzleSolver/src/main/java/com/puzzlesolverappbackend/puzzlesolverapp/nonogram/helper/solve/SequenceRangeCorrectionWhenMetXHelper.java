@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.solve;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import lombok.experimental.UtilityClass;

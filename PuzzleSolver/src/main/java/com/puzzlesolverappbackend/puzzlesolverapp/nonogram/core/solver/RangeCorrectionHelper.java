@@ -11,9 +11,9 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.Bo
 public class RangeCorrectionHelper {
 
     public static List<Integer> updatedSequenceRangeWhenMetColouredField(
-            int sequenceStart, int sequenceEnd, int colouredIndex, int sequenceLength, boolean fromLeft) {
+            int sequenceStart, int sequenceEnd, int colouredIndex, int sequenceLength, boolean fromStart) {
 
-        if (fromLeft) {
+        if (fromStart) {
             int maxEnd = colouredIndex + sequenceLength - 1;
             int updatedEnd = Math.min(sequenceEnd, maxEnd);
             return List.of(sequenceStart, updatedEnd);

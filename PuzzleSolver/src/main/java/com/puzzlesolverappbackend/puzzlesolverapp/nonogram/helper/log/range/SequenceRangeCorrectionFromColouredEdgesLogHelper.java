@@ -1,9 +1,10 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
+
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
 
 @UtilityClass
 public class SequenceRangeCorrectionFromColouredEdgesLogHelper {
@@ -11,26 +12,26 @@ public class SequenceRangeCorrectionFromColouredEdgesLogHelper {
     public static String generateLog(
             int index,
             List<List<Integer>> initialRanges,
-            List<List<Integer>> finalRanges,
+            List<List<Integer>> updatedRanges,
             List<Integer> sequenceLengths,
-            List<String> lineState,
+            List<String> line,
             boolean isRow
     ) {
         return String.format(
                 """
                         %s_CORRECTING_SEQUENCES_RANGES_FROM_COLOURED_EDGES: %s=%d
-                        initial=%s
-                        final=%s
-                        lengths=%s
+                        initialRanges=%s
+                        updatedRanges=%s
+                        sequenceLengths=%s
                         line=%s
                         """,
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",
                 index,
-                LogFormatUtils.formatNestedList(initialRanges),
-                LogFormatUtils.formatNestedList(finalRanges),
-                LogFormatUtils.formatList(sequenceLengths),
-                LogFormatUtils.formatList(lineState)
+                initialRanges,
+                updatedRanges,
+                sequenceLengths,
+                line
         );
     }
 
@@ -41,10 +42,10 @@ public class SequenceRangeCorrectionFromColouredEdgesLogHelper {
         String axisLabel = isRow ? "row" : "col";
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
-        List<List<Integer>> initial = LogFormatUtils.parseNestedListLine(lines[1].split("=", 2)[1].trim());
-        List<List<Integer>> finalRanges = LogFormatUtils.parseNestedListLine(lines[2].split("=", 2)[1].trim());
-        List<Integer> lengths = LogFormatUtils.parseIntegerListLine(lines[3].split("=", 2)[1].trim());
-        List<String> line = LogFormatUtils.parseStringListLine(lines[4].split("=", 2)[1].trim());
+        String initialRanges = extractValue(lines, "initialRanges");
+        String updatedRanges = extractValue(lines, "updatedRanges");
+        String sequencesLengths = extractValue(lines, "sequencesLengths");
+        String line = extractValue(lines, "line");
 
         return String.format(
                 """
@@ -58,10 +59,10 @@ public class SequenceRangeCorrectionFromColouredEdgesLogHelper {
                 solutionName,
                 isRow ? "Row" : "Column",
                 index,
-                LogFormatUtils.toRangeStringList(initial),
-                LogFormatUtils.toRangeStringList(finalRanges),
-                lengths.toString(),
-                LogFormatUtils.toQuotedStringList(line),
+                initialRanges,
+                updatedRanges,
+                sequencesLengths,
+                line,
                 isRow
         );
     }

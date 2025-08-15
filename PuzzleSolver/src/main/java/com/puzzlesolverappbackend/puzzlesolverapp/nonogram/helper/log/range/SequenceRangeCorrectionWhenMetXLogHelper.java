@@ -1,10 +1,11 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
+
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
 
 @UtilityClass
 public class SequenceRangeCorrectionWhenMetXLogHelper {
@@ -13,60 +14,66 @@ public class SequenceRangeCorrectionWhenMetXLogHelper {
 
     public static String generateLog(
             int index,
+            List<String> line,
             List<List<Integer>> initialRanges,
             List<List<Integer>> updatedRanges,
             List<Integer> sequenceLengths,
-            List<Integer> excludedSequences,
+            List<Integer> excludedSequencesIndexes,
             boolean isRow
     ) {
         return String.format(
                 """
-                        CORRECT_%s_SEQUENCES_RANGES_IF_X_ON_WAY: %s=%d
+                        %s_SEQUENCES_RANGES_CORRECT_IF_X_ON_WAY: %s=%d
+                        line=%s
                         initialRanges=%s
                         updatedRanges=%s
-                        lengths=%s
-                        excluded=%s
+                        sequenceLengths=%s
+                        excludedSequencesIndexes=%s
                         """,
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",
                 index,
-                LogFormatUtils.formatNestedList(initialRanges),
-                LogFormatUtils.formatNestedList(updatedRanges),
-                LogFormatUtils.formatList(sequenceLengths),
-                LogFormatUtils.formatList(excludedSequences)
+                line.toString(),
+                initialRanges.toString(),
+                updatedRanges.toString(),
+                sequenceLengths.toString(),
+                excludedSequencesIndexes.toString()
         );
     }
 
-    public static String convertLogToTestArguments(String log, String fileName, NonogramLogic logic) {
+    public static String convertLogToTestArguments(String log, String solutionName, NonogramLogic logic) {
         String[] lines = log.split("\n");
 
-        boolean isRow = lines[0].startsWith("CORRECT_ROW");
-        String axisLabel = isRow ? "row" : "col";
+        boolean isRow = lines[0].startsWith("ROW_");
+        String axisLabel = isRow ? "row" : "column";
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
-        List<List<Integer>> initialRanges = LogFormatUtils.parseNestedListLine(lines[1].split("=")[1].trim());
-        List<List<Integer>> updatedRanges = LogFormatUtils.parseNestedListLine(lines[2].split("=")[1].trim());
-        List<Integer> lengths = LogFormatUtils.parseIntegerListLine(lines[3].split("=")[1].trim());
-        List<String> excluded = LogFormatUtils.parseStringListLine(lines[4]);
+
+        String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
+
+        String initialRanges = extractValue(lines, "initialRanges");
+        String updatedRanges = extractValue(lines, "updatedRanges");
+
+        String sequenceLengths = extractValue(lines, "sequenceLengths");
+        String excludedSequencesIndexes = extractValue(lines, "excludedSequencesIndexes");
+
 
         return String.format(
-                "Arguments.of(\"%s / %dx%d / %s %d - ranges correction if X on way\",%n" +
-                        LIST_STRING_FORMAT +   // initial
-                        LIST_STRING_FORMAT +   // updated
-                        LIST_STRING_FORMAT +   // lengths
-                        LIST_STRING_FORMAT +   // excluded
-                        "    %s%n" +             // isRow
-                        ")",
+                """
+                        Arguments.of("%s / %s=%d - sequences range correction",
+                            %s,
+                            %s,
+                            %s,
+                            %s,
+                            %s)
+                        )""",
                 fileName,
-                logic.getNonogramRules().getWidth(),
-                logic.getNonogramRules().getHeight(),
                 isRow ? "Row" : "Column",
                 index,
-                LogFormatUtils.toRangeStringList(initialRanges),
-                LogFormatUtils.toRangeStringList(updatedRanges),
-                lengths.toString(),
-                excluded.toString(),
-                isRow
+                initialRanges,
+                updatedRanges,
+                sequenceLengths,
+                excludedSequencesIndexes
         );
     }
 

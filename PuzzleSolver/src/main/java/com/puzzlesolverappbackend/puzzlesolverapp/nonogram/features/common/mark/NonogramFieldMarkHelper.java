@@ -183,19 +183,22 @@ public class NonogramFieldMarkHelper {
         List<Integer> oldRange = sequences.getSequencesRanges().get(board.getLineIdx()).get(seqIdx);
         int seqLength = sequences.getSequencesLengths().get(board.getLineIdx()).get(seqIdx);
 
-        List<Integer> newRange = calculateNewMarkedRange(oldRange, colouredRange, seqLength);
-        if (oldRange.equals(newRange)) return false;
+        List<Integer> updatedRange = calculateNewMarkedRange(oldRange, colouredRange, seqLength);
+        if (oldRange.equals(updatedRange)) return false;
 
         String log = SequenceRangeCorrectionWhenMarkingFieldsLogHelper.generateLog(
-                board.getLineIdx(), seqIdx, sequences.getSequencesRanges().get(board.getLineIdx()),
-                newRange, sequences.getSequencesLengths().get(board.getLineIdx()), board.isRow()
+                board.getLineIdx(),
+                sequences.getSequencesRanges().get(board.getLineIdx()),
+                updatedRange,
+                sequences.getSequencesLengths().get(board.getLineIdx()),
+                board.isRow()
         );
         ops.getSetTmpLogConsumer().accept(log);
         ops.getAddLogRunnable().run();
 
-        sequences.getUpdateRangeConsumer().accept(board.getLineIdx(), seqIdx, newRange);
+        sequences.getUpdateRangeConsumer().accept(board.getLineIdx(), seqIdx, updatedRange);
 
-        if (rangeLength(newRange) == seqLength) {
+        if (rangeLength(updatedRange) == seqLength) {
             sequences.getExcludeSequenceConsumer().accept(board.getLineIdx(), seqIdx);
         }
 

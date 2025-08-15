@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range;
 
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.solve.SequenceRangeCorrectionHelper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

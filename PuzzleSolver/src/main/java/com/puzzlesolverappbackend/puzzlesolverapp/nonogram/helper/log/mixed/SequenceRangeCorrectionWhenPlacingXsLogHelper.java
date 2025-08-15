@@ -9,27 +9,27 @@ public class SequenceRangeCorrectionWhenPlacingXsLogHelper {
 
     public static String generateLog(
             int rowIdx,
-            int seqIdx,
-            List<List<Integer>> allRanges,
+            int sequenceIdx,
+            List<List<Integer>> sequencesRanges,
             List<Integer> updatedRange,
-            List<String> rowState,
-            List<Integer> lengths
+            List<String> line,
+            List<Integer> sequencesLengths
     ) {
         return String.format(
                 """
-                        ROW_SEQUENCE_CORRECTION_WHEN_PLACING_X: row=%d
-                        seq=%d
-                        old=%s
-                        new=%s
-                        state=%s
+                        ROW_SEQUENCE_CORRECTION_WHEN_PLACING_X: rowIdx=%d
+                        sequenceIdx=%d
+                        sequencesRanges=%s
+                        updatedRange=%s
+                        line=%s
                         lengths=%s
                         """,
                 rowIdx,
-                seqIdx,
-                allRanges,
+                sequenceIdx,
+                sequencesRanges,
                 updatedRange,
-                rowState,
-                lengths
+                line,
+                sequencesLengths
         );
     }
 }

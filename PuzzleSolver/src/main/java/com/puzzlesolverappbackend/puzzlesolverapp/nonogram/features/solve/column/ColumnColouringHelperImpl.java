@@ -58,7 +58,7 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
 
         if (anyFieldColoured) {
             List<String> columnAfter = logic.getBoardAccessHelper().getColumnCopy(columnIdx);
-            String tmpLog = OverlappingLogHelper.generateOverlappingSequenceLog(
+            String tmpLog = OverlappingLogHelper.generateLog(
                     columnIdx,
                     false,
                     columnBefore,
@@ -345,7 +345,7 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
 
         if (anyGlobalFieldColoured) {
             List<String> columnAfter = logic.getBoardAccessHelper().getColumnCopy(columnIdx);
-            logic.getLogService().setTmpLog(ExtendLogHelper.generateExtendSequenceLog(
+            logic.getLogService().setTmpLog(ExtendLogHelper.generateLog(
                     columnIdx,
                     "toTop",
                     columnBefore,
@@ -415,7 +415,7 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
 
         if (anyGlobalFieldColoured) {
             List<String> columnAfter = logic.getBoardAccessHelper().getColumnCopy(columnIdx);
-            logic.getLogService().setTmpLog(ExtendLogHelper.generateExtendSequenceLog(
+            logic.getLogService().setTmpLog(ExtendLogHelper.generateLog(
                     columnIdx,
                     "toBottom",
                     columnBefore,

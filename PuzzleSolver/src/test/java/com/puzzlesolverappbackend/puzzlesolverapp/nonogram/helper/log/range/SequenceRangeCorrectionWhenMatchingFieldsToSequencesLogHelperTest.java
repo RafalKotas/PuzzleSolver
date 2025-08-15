@@ -8,13 +8,13 @@ import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SequenceRangeCorrectionByMatchingLogHelperTest {
+class SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelperTest {
 
     @Test
     @DisplayName("SequenceRangeCorrectionByMatchingLogHelper constructor should throw UnsupportedOperationException - reflect instantiation")
     void constructor_throwsException_whenInstantiatedReflectively() throws Exception {
         // given
-        Constructor<SequenceRangeCorrectionByMatchingLogHelper> constructor = SequenceRangeCorrectionByMatchingLogHelper.class.getDeclaredConstructor();
+        Constructor<SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper> constructor = SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper.class.getDeclaredConstructor();
         constructor.setAccessible(true);
 
         // when

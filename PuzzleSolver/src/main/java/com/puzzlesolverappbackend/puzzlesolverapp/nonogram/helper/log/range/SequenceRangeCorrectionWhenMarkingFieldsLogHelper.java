@@ -1,7 +1,5 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
@@ -9,67 +7,54 @@ import java.util.List;
 @UtilityClass
 public class SequenceRangeCorrectionWhenMarkingFieldsLogHelper {
 
-    private static final String LIST_STRING_FORMAT = "    List.of(%s),%n";
-
     public static String generateLog(
             int index,
-            int seqIdx,
-            List<List<Integer>> allRanges,
-            List<Integer> newRange,
-            List<Integer> sequenceLengths,
+            List<List<Integer>> sequencesRanges,
+            List<Integer> updatedRange,
+            List<Integer> sequencesLengths,
             boolean isRow
     ) {
         return String.format(
                 """
-                        %s_SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS: %s=%d, seq=%d
-                        ranges=%s
-                        new=%s
-                        lengths=%s
+                        %s_SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS: %s=%d
+                        sequencesRanges=%s
+                        updatedRange=%s
+                        sequencesLengths=%s
                         """,
                 isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "col",
+                isRow ? "row" : "column",
                 index,
-                seqIdx,
-                LogFormatUtils.formatNestedList(allRanges),
-                newRange,
-                LogFormatUtils.formatList(sequenceLengths)
+                sequencesRanges.toString(),
+                updatedRange.toString(),
+                sequencesLengths.toString()
         );
     }
 
-    public static String convertLogToTestArguments(String log, String fileName, NonogramLogic logic) {
+    public static String convertLogToTestArguments(String log, String solutionName) {
         String[] lines = log.split("\\n");
 
-        boolean isRow = lines[0].startsWith("ROW_SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS");
-        String axisLabel = isRow ? "row" : "col";
+        boolean isRow = lines[0].startsWith("ROW_");
+        String axisLabel = isRow ? "row" : "column";
 
-        int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].split(",")[0].trim());
-        int seqIdx = Integer.parseInt(lines[0].split("seq=")[1].split(",")[0].trim());
+        int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
 
-        List<List<Integer>> ranges = LogFormatUtils.parseNestedListLineWrappedInListOf(lines[1].split("=", 2)[1].trim());
-        List<Integer> newRange = LogFormatUtils.parseIntegerListLine(lines[2].split("=", 2)[1].trim());
-        List<Integer> lengths = LogFormatUtils.parseIntegerListLine(lines[3].split("=", 2)[1].trim());
-
-        List<String> lineState = isRow
-                ? logic.getNonogramSolutionBoard().get(index)
-                : logic.getNonogramSolutionBoard().stream().map(row -> row.get(index)).toList();
+        String sequencesRanges = lines[1].contains("=") ? lines[1].split("=")[1].trim() : "";
+        String updatedRange = lines[2].contains("=") ? lines[1].split("=")[1].trim() : "";
+        String sequencesLengths = lines[3].contains("=") ? lines[1].split("=")[1].trim() : "";
 
         return String.format(
-                "Arguments.of(\"%s / %dx%d / %s / %s %d - seq %d\",%n" +
-                        LIST_STRING_FORMAT +
-                        LIST_STRING_FORMAT +
-                        LIST_STRING_FORMAT +
-                        "    List.of(%s))",
-                fileName,
-                logic.getNonogramRules().getWidth(),
-                logic.getNonogramRules().getHeight(),
-                "marking",
-                isRow ? "Row" : "Column",
+                """
+                        Arguments.of("%s / %s=%d - sequences range correction when marking fields",
+                            List.of(%s),
+                            List.of(%s),
+                            List.of(%s)
+                        )""",
+                solutionName,
+                isRow ? "row" : "column",
                 index,
-                seqIdx,
-                LogFormatUtils.toQuotedStringList(lineState),
-                LogFormatUtils.toRangeStringList(ranges),
-                lengths.toString(),
-                newRange.toString()
+                sequencesRanges,
+                updatedRange,
+                sequencesLengths
         );
     }
 }

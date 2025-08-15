@@ -1,74 +1,71 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
+
 @UtilityClass
 public class PlaceXsAtTooShortEmptySequencesLogHelper {
 
-    private static final String LIST_STRING_FORMAT = "    List.of(%s),%n";
-
     public static String generateLog(
             int index,
-            List<String> initialState,
-            List<String> finalState,
-            List<Integer> sequenceLengths,
-            List<Integer> excludedSequences,
+            List<String> initialLine,
+            List<String> updatedLine,
+            List<Integer> sequencesLengths,
+            List<Integer> excludedSequencesIndexes,
             boolean isRow
     ) {
         return String.format(
                 """
                         PLACE_XS_IN_%s_AT_TOO_SHORT_EMPTY_SEQUENCES: %s=%d
-                        initial=%s
-                        final=%s
-                        lengths=%s
-                        excluded=%s
+                        initialLine=%s
+                        updatedLine=%s
+                        sequencesLengths=%s
+                        excludedSequencesIndexes=%s
                         """,
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",
                 index,
-                initialState.toString(),
-                finalState.toString(),
-                LogFormatUtils.formatList(sequenceLengths),
-                LogFormatUtils.formatList(excludedSequences)
+                initialLine.toString(),
+                updatedLine.toString(),
+                sequencesLengths.toString(),
+                excludedSequencesIndexes.toString()
         );
     }
 
     public static String convertLogToTestArguments(String log, String solutionName, NonogramLogic logic) {
-        String[] lines = log.split("\n");
+        String[] lines = log.split("\\n");
 
-        boolean isRow = lines[0].startsWith("PLACE_XS_IN_ROW");
-        String axisLabel = isRow ? "row" : "col";
+        boolean isRow = lines[0].startsWith("ROW_");
+        String axisLabel = isRow ? "row" : "column";
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
 
-        List<String> initialState = LogFormatUtils.parseStringListLine(lines[1].split("=")[1].trim());
-        List<String> finalState = LogFormatUtils.parseStringListLine(lines[2].split("=")[1].trim());
-        List<Integer> lengths = LogFormatUtils.parseIntegerListLine(lines[3].split("=")[1].trim());
-        String[] splittedExcludedLine = lines[4].split("=");
-        List<Integer> excluded = LogFormatUtils.parseIntegerListLine(splittedExcludedLine.length == 1 ? "" : splittedExcludedLine[1].trim());
+        String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
 
-        return String.format("""
-                Arguments.of("%s / %dx%d / %s %d - place Xs in too short empty sequences",
-                %s
-                %s
-                %s
-                %s
-                %s
-                )""",
-                solutionName,
-                logic.getNonogramRules().getWidth(),
-                logic.getNonogramRules().getHeight(),
+        String initialLine = extractValue(lines, "initialLine");
+        String updatedLine = extractValue(lines, "updatedLine");
+        String sequencesLengths = extractValue(lines, "sequencesLengths");
+        String excludedSequencesIndexes = extractValue(lines, "excludedSequencesIndexes");
+
+        return String.format(
+                """
+                        Arguments.of("%s / %s=%d - place X at too short empty sequences",
+                            %s,
+                            %s,
+                            %s,
+                            %s)
+                        )""",
+                fileName,
                 isRow ? "Row" : "Column",
                 index,
-                String.format(LIST_STRING_FORMAT, initialState),
-                String.format(LIST_STRING_FORMAT, finalState),
-                String.format(LIST_STRING_FORMAT, lengths),
-                String.format(LIST_STRING_FORMAT, excluded),
-                isRow
+                initialLine,
+                updatedLine,
+                sequencesLengths,
+                excludedSequencesIndexes
         );
     }
 }

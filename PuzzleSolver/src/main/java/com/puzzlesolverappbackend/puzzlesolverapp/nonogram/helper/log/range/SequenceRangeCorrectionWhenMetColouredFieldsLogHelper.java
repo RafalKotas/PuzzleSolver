@@ -3,9 +3,9 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import lombok.experimental.UtilityClass;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
 
 @UtilityClass
 public class SequenceRangeCorrectionWhenMetColouredFieldsLogHelper {
@@ -13,116 +13,64 @@ public class SequenceRangeCorrectionWhenMetColouredFieldsLogHelper {
     private static final String LIST_OF_PREFIX = "List.of(";
 
     public static String generateLog(
+            boolean isRow,
             int index,
-            int seqIdx,
-            List<List<Integer>> ranges,
-            List<Integer> newRange,
-            List<String> state,
-            List<Integer> sequenceLengths,
-            String direction
+            List<String> line,
+            List<Integer> sequencesLengths,
+            List<List<Integer>> initialRanges,
+            List<List<Integer>> updatedRanges
     ) {
-        boolean isRow = direction.equals("toLeft") || direction.equals("toRight");
 
         return String.format(
                 """
-                        %s_SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS: %s=%d, dir=%s%n
-                        seq=%d%n
-                        new=%s%n
-                        state=%s%n
-                        lengths=%s%n
-                        ranges=%s%n
+                        %s_SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS: %s=%d
+                        line=%s
+                        sequencesLengths=%s
+                        initialRanges=%s
+                        updatedRanges=%s
                         """,
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",
                 index,
-                direction,
-                seqIdx,
-                newRange,
-                state,
-                sequenceLengths,
-                ranges
+                line,
+                sequencesLengths,
+                initialRanges,
+                updatedRanges
         );
     }
 
     public static String convertLogToTestArguments(String log, String solutionName, NonogramLogic logic) {
-        String[] lines = log.split("\n");
+        String[] lines = log.split("\\n");
 
-        // --- Header ---
-        String headerLine = lines[0];
-        boolean isRow = headerLine.startsWith("ROW_");
-        int index = extractIntFromLine(headerLine, isRow ? "row=" : "col=");
+        boolean isRow = lines[0].startsWith("ROW_");
+        String axisLabel = isRow ? "row" : "column";
 
-        // --- Content ---
-        int seqIdx = extractIntFromLine(lines[1], "seq=");
-        List<Integer> newRange = parseListOfInts(lines[2].substring("new=".length()));
-        List<String> state = parseListOfStrings(lines[3].substring("state=".length()));
-        List<Integer> sequenceLengths = parseListOfInts(lines[4].substring("lengths=".length()));
-        List<List<Integer>> ranges = parseListOfListOfInts(lines[5].substring("ranges=".length()));
+        int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
 
-        // --- Label ---
-        String label = String.format("%s / %dx%d / %s / %s %d - seq %d",
-                solutionName,
-                logic.getNonogramRules().getWidth(),
-                logic.getNonogramRules().getHeight(),
-                "1.0",
-                isRow ? "Row" : "Column",
-                index,
-                seqIdx
-        );
+        String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
+
+        String line = extractValue(lines, "line");
+        String sequencesLengths = extractValue(lines, "sequencesLengths");
+
+        String initialRanges = extractValue(lines, "initialRanges");
+        String updatedRanges = extractValue(lines, "updatedRanges");
 
         return String.format(
                 """
-                        Arguments.of("%s",
+                        Arguments.of("%s / %s=%d - sequences range correction when met coloured fields",
                             %s,
                             %s,
                             %s,
                             %s
                         ),""",
-                label,
-                formatList(state),
-                formatNestedList(ranges),
-                formatList(sequenceLengths),
-                formatList(newRange)
+                fileName,
+                isRow ? "Row" : "Column",
+                index,
+                line,
+                sequencesLengths,
+                initialRanges,
+                updatedRanges
         );
-    }
-
-    // --- Utility Parsers ---
-
-    private static int extractIntFromLine(String line, String key) {
-        return Integer.parseInt(line.substring(line.indexOf(key) + key.length()).split("[,\\s]")[0]);
-    }
-
-    private static List<Integer> parseListOfInts(String input) {
-        return Arrays.stream(input.replaceAll("[\\[\\]]", "").split(","))
-                .filter(s -> !s.isBlank())
-                .map(String::trim)
-                .map(Integer::parseInt)
-                .toList();
-    }
-
-    private static List<List<Integer>> parseListOfListOfInts(String input) {
-        String[] parts = input.replaceAll("\\[\\[|\\]\\]", "").split("\\],\\s*\\[");
-        return Arrays.stream(parts)
-                .map(part -> parseListOfInts("[" + part + "]"))
-                .toList();
-    }
-
-    private static List<String> parseListOfStrings(String input) {
-        return Arrays.stream(input.replaceAll("[\\[\\]]", "").split(","))
-                .map(String::trim)
-                .toList();
-    }
-
-    private static String formatList(List<?> list) {
-        return LIST_OF_PREFIX + list.stream()
-                .map(e -> (e instanceof String) ? "\"" + e + "\"" : e.toString())
-                .collect(Collectors.joining(", ")) + ")";
-    }
-
-    private static String formatNestedList(List<List<Integer>> list) {
-        return LIST_OF_PREFIX + list.stream()
-                .map(inner -> LIST_OF_PREFIX + inner.stream().map(Object::toString).collect(Collectors.joining(", ")) + ")")
-                .collect(Collectors.joining(", ")) + ")";
     }
 }
 

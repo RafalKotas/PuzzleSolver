@@ -25,7 +25,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.To
 @Slf4j
 @Getter
 @Setter
-public class RowColouringHelperImpl implements RowColouringHelper {
+public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRowHelper {
 
     private final NonogramRowLogic logic;
 
@@ -59,7 +59,7 @@ public class RowColouringHelperImpl implements RowColouringHelper {
 
         if (anyFieldColoured) {
             List<String> rowAfter = logic.getBoardAccessHelper().getRowCopy(rowIdx);
-            String tmpLog = OverlappingLogHelper.generateOverlappingSequenceLog(
+            String tmpLog = OverlappingLogHelper.generateLog(
                     rowIdx,
                     true,
                     rowBefore,
@@ -287,7 +287,7 @@ public class RowColouringHelperImpl implements RowColouringHelper {
 
         if (anyGlobalFieldColoured) {
             List<String> rowAfter = logic.getBoardAccessHelper().getRowCopy(rowIdx);
-            logic.getLogService().setTmpLog(ExtendLogHelper.generateExtendSequenceLog(
+            logic.getLogService().setTmpLog(ExtendLogHelper.generateLog(
                     rowIdx,
                     "toLeft",
                     rowBefore,
@@ -354,7 +354,7 @@ public class RowColouringHelperImpl implements RowColouringHelper {
 
         if (anyGlobalFieldColoured) {
             List<String> rowAfter = logic.getBoardAccessHelper().getRowCopy(rowIdx);
-            logic.getLogService().setTmpLog(ExtendLogHelper.generateExtendSequenceLog(
+            logic.getLogService().setTmpLog(ExtendLogHelper.generateLog(
                     rowIdx,
                     "toRight",
                     rowBefore,
@@ -365,5 +365,11 @@ public class RowColouringHelperImpl implements RowColouringHelper {
             ));
             logic.getLogService().addLog();
         }
+    }
+
+    @Override
+    public void refreshFrom(NonogramRowLogic logicToCopy) {
+        logic.setRowsSequencesRanges(logicToCopy.getRowsSequencesRanges());
+        logic.setRowsFieldsNotToInclude(logicToCopy.getRowsFieldsNotToInclude());
     }
 }

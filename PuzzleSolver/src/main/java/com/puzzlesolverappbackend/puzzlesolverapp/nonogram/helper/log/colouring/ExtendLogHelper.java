@@ -1,91 +1,75 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.formatList;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.formatNestedList;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
 public class ExtendLogHelper {
 
-    public static String generateExtendSequenceLog(
+    public static String generateLog(
             int index,
             String direction,
-            List<String> initialState,
-            List<List<Integer>> sequenceRanges,
-            List<Integer> sequenceLengths,
-            List<String> finalState,
+            List<String> initialLine,
+            List<List<Integer>> sequencesRanges,
+            List<Integer> sequencesLengths,
+            List<String> updatedLine,
             boolean isRow
     ) {
         return String.format(
                 """
                         EXTEND_%s_SEQUENCE: %s=%d, dir=%s
-                        initial=%s
-                        ranges=%s
-                        lengths=%s
-                        final=%s
+                        initialLine=%s
+                        sequencesRanges=%s
+                        sequencesLengths=%s
+                        updatedLine=%s
                         """,
                 isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "col",
+                isRow ? "row" : "column",
                 index,
                 direction,
-                initialState.toString(),
-                sequenceRanges.toString(),
-                sequenceLengths.toString(),
-                finalState.toString()
+                initialLine.toString(),
+                sequencesRanges.toString(),
+                sequencesLengths.toString(),
+                updatedLine.toString()
         );
     }
 
     public static String convertLogToTestArguments(
-            String logText,
-            String solutionName,
-            NonogramLogic logic
+            String log,
+            String solutionName
     ) {
-        String[] lines = logText.strip().split("\n");
+        String[] lines = log.split("\\n");
 
-        String header = lines[0].replace("EXTEND_", "").replace("_SEQUENCE:", "").trim(); // e.g. "COLUMN col=2, dir=toBottom"
-        String[] headerParts = header.split(", ");
-        String indexInfo = headerParts[0]; // "row=14" or "col=2"
-        String direction = headerParts[1].split("=")[1]; // e.g. "toBottom"
+        boolean isRow = lines[0].startsWith("ROW_");
+        String axisLabel = isRow ? "row" : "column";
 
-        int indexNumber = Integer.parseInt(indexInfo.split("=")[1]);
-        String isRow = indexInfo.startsWith("row") ? "Row" : "Column";
+        int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].split(", ")[0].trim());
 
-        String fileName = solutionName.startsWith("r") ? solutionName.substring(1) : solutionName;
+        String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
 
-        int height = logic.getNonogramRules().getHeight();
-        int width = logic.getNonogramRules().getWidth();
+        String initialLine = extractValue(lines, "initialLine");
+        String sequencesRanges = extractValue(lines, "sequencesRanges");
+        String sequencesLengths = extractValue(lines, "sequencesLengths");
+        String updatedLine = extractValue(lines, "updatedLine");
 
-        String testLabel = String.format(
-                "%s / %dx%d / diff  / %s %d / %s",
+        return String.format(
+                """
+                        Arguments.of("%s / %s=%d - extending coloured fields near X",
+                            %s,
+                            %s,
+                            %s,
+                            %s
+                        )""",
                 fileName,
-                height,
-                width,
-                isRow,
-                indexNumber,
-                direction
-        );
-
-        String initialLine = lines[1].replace("initial=", "").trim();
-        String rangesLine = lines[2].replace("ranges=", "").trim();
-        String lengthsLine = lines[3].replace("lengths=", "").trim();
-        String finalLine = lines[4].replace("final=", "").trim();
-
-        return String.format("""
-        Arguments.of("%s",
-            List.of(%s),
-            List.of(%s),
-            List.of(%s),
-            List.of(%s)
-        )""",
-                testLabel,
-                formatList(initialLine),
-                formatNestedList(rangesLine),
-                formatList(lengthsLine),
-                formatList(finalLine)
+                isRow ? "Row" : "Column",
+                index,
+                toMutableStringListLiteral(initialLine),
+                toImmutableRangesListLiteral(sequencesRanges),
+                toImmutableIntListLiteral(sequencesLengths),
+                toImmutableStringListLiteral(updatedLine)
         );
     }
 }

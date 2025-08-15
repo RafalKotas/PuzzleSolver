@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range;
 
 import lombok.experimental.UtilityClass;
 
@@ -7,40 +7,38 @@ import java.util.List;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
-public class TooLongMergeLogHelper {
+public class SequencesRangesCorrectionLogHelper {
 
-    public static String generateTooLongMergeSequenceLog(
-            int index,
+    public static String generateLog(
             boolean isRow,
-            List<String> initialLine,
-            List<List<Integer>> sequencesRanges,
+            int index,
             List<Integer> sequencesLengths,
-            List<String> updatedLine
+            List<Integer> excludedFields,
+            List<Integer> excludedSequencesIndexes,
+            List<List<Integer>> initialRanges,
+            List<List<Integer>> updatedRanges
     ) {
-        String label = isRow ? "ROW" : "COLUMN";
-
         return String.format(
                 """
-                        TOO_LONG_MERGE_%s_SEQUENCE: %s=%d
-                        initialLine=%s
-                        sequencesRanges=%s
+                        %s_SEQUENCES_RANGES_CORRECTION: %s=%d
                         sequencesLengths=%s
-                        updatedLine=%s
+                        excludedFields=%s
+                        excludedSequencesIndexes=%s
+                        initialRanges=%s
+                        updatedRanges=%s
                         """,
-                label,
-                isRow ? "row" : "col",
+                isRow ? "ROW" : "COLUMN",
+                isRow ? "row" : "column",
                 index,
-                initialLine.toString(),
-                sequencesRanges.toString(),
                 sequencesLengths.toString(),
-                updatedLine.toString()
+                excludedFields.toString(),
+                excludedSequencesIndexes.toString(),
+                initialRanges.toString(),
+                updatedRanges.toString()
         );
     }
 
-    public static String convertLogToTestArguments(
-            String log,
-            String solutionName
-    ) {
+    public static String convertLogToTestArguments(String log, String solutionName) {
         String[] lines = log.split("\\n");
 
         boolean isRow = lines[0].startsWith("ROW_");
@@ -71,8 +69,8 @@ public class TooLongMergeLogHelper {
                 toImmutableIntListLiteral(sequencesLengths),
                 toMutableIntListLiteral(excludedFields),
                 toMutableIntListLiteral(excludedSequencesIndexes),
-                toMutableRangesList(initialRanges),
-                toImmutableRangesList(updatedRanges)
+                toMutableRangesListLiteral(initialRanges),
+                toImmutableRangesListLiteral(updatedRanges)
         );
     }
 }

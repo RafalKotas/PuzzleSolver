@@ -4,6 +4,8 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.RangeCorrectionHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.*;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.solve.SequenceRangeCorrectionHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.solve.SequenceRangeCorrectionWhenMetXHelper;
 
 import java.util.*;
 
@@ -11,7 +13,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldColoured;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.TooLongMergeFieldHelper.collectColouredSequencesRanges;
 
-public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionHelper {
+public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionHelper, RefreshableRowHelper {
 
     private final NonogramRowLogic nonogramRowLogic;
 
@@ -21,36 +23,42 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
 
     @Override
     public void correctRowSequencesRanges(int rowIdx) {
-        List<List<Integer>> beforeRangesSnapshot = deepCopy(nonogramRowLogic.getRowsSequencesRanges().get(rowIdx));
+        List<List<Integer>> initialRanges = deepCopy(nonogramRowLogic.getRowsSequencesRanges().get(rowIdx));
 
-        correctFromLeft(rowIdx);
-        correctFromRight(rowIdx);
+        boolean anyUpdated = false;
 
-        List<List<Integer>> afterRangesSnapshot = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
+        anyUpdated |= correctFromLeft(rowIdx);
+        anyUpdated |= correctFromRight(rowIdx);
 
-        if (rangesListNotEqual(beforeRangesSnapshot, afterRangesSnapshot)) {
-            nonogramRowLogic.getLogService().setTmpLog(SequenceRangeCorrectionLogHelper.generateLog(
-                    rowIdx,
-                    beforeRangesSnapshot,
-                    afterRangesSnapshot,
-                    nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
-                    nonogramRowLogic.getRowsFieldsNotToInclude().get(rowIdx),
-                    nonogramRowLogic.getRowsSequencesIdsNotToInclude().get(rowIdx),
-                    true
-            ));
-            nonogramRowLogic.getLogService().addLog();
+        List<List<Integer>> finalRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
+
+        if (anyUpdated) {
             nonogramRowLogic.getNonogramState().increaseMadeSteps();
 
             Field rowField = new Field(rowIdx, 0);
             nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(rowField, NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES);
+
+            String tmpLog = SequencesRangesCorrectionLogHelper.generateLog(
+                    true, // isRow
+                    rowIdx,
+                    nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
+                    nonogramRowLogic.getRowsFieldsNotToInclude().get(rowIdx),
+                    nonogramRowLogic.getRowsSequencesIdsNotToInclude().get(rowIdx),
+                    initialRanges,
+                    finalRanges
+            );
+            nonogramRowLogic.getLogService().setTmpLog(tmpLog);
+            nonogramRowLogic.getLogService().addLog();
         }
     }
 
-    private void correctFromLeft(int rowIdx) {
+    private boolean correctFromLeft(int rowIdx) {
         List<Integer> lengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
         List<List<Integer>> ranges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
         List<Integer> fieldsNotToInclude = nonogramRowLogic.getRowsFieldsNotToInclude().get(rowIdx);
         List<Integer> excludedIds = nonogramRowLogic.getRowsSequencesIdsNotToInclude().get(rowIdx);
+
+        boolean anyUpdated = false;
 
         for (int seqIdx = 0; seqIdx < ranges.size() - 1; seqIdx++) {
             int nextIdx = seqIdx + 1;
@@ -60,11 +68,13 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
                     ? SequenceRangeCorrectionHelper.calculateUpdatedNextSequenceRangeAfterExcludedSequence(ranges, fieldsNotToInclude, seqIdx, nextIdx)
                     : SequenceRangeCorrectionHelper.calculateUpdatedNextSequenceRangeAfterIncludedSequence(ranges, lengths, seqIdx, nextIdx);
 
-            tryCorrectFromLeft(rowIdx, lengths, ranges.get(nextIdx), updatedNext, nextIdx);
+            anyUpdated |= tryCorrectFromLeft(rowIdx, lengths, ranges.get(nextIdx), updatedNext, nextIdx);
         }
+
+        return anyUpdated;
     }
 
-    private void tryCorrectFromLeft(int rowIdx,
+    private boolean tryCorrectFromLeft(int rowIdx,
                                     List<Integer> lengths,
                                     List<Integer> oldRange,
                                     List<Integer> newRange,
@@ -74,14 +84,20 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
             if (rangeLength(newRange) == lengths.get(idx) && nonogramRowLogic.getBoardAccessHelper().isRowRangeColoured(rowIdx, newRange)) {
                 nonogramRowLogic.excludeSequenceInRow(rowIdx, idx);
             }
+
+            return true;
         }
+
+        return false;
     }
 
-    private void correctFromRight(int rowIdx) {
+    private boolean correctFromRight(int rowIdx) {
         List<Integer> lengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
         List<List<Integer>> ranges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
         List<Integer> fieldsNotToInclude = nonogramRowLogic.getRowsFieldsNotToInclude().get(rowIdx);
         List<Integer> excludedIds = nonogramRowLogic.getRowsSequencesIdsNotToInclude().get(rowIdx);
+
+        boolean anyUpdated = false;
 
         for (int seqIdx = ranges.size() - 1; seqIdx > 0; seqIdx--) {
             int prevIdx = seqIdx - 1;
@@ -91,151 +107,157 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
                     ? SequenceRangeCorrectionHelper.calculateUpdatedPreviousSequenceRangeAfterExcludedSequence(ranges, fieldsNotToInclude, seqIdx, prevIdx)
                     : SequenceRangeCorrectionHelper.calculateUpdatedPreviousSequenceRangeAfterIncludedSequence(ranges, lengths, seqIdx, prevIdx);
 
-            tryCorrectFromRight(rowIdx, lengths, ranges.get(prevIdx), updatedPrev, prevIdx);
+            anyUpdated |= tryCorrectFromRight(rowIdx, lengths, ranges.get(prevIdx), updatedPrev, prevIdx);
         }
+
+        return anyUpdated;
     }
 
-    private void tryCorrectFromRight(int rowIdx,
+    private boolean tryCorrectFromRight(int rowIdx,
                                      List<Integer> lengths,
                                      List<Integer> oldRange,
                                      List<Integer> newRange,
-                                     int idx) {
+                                     int sequenceIdx) {
         if (!oldRange.get(1).equals(newRange.get(1))) {
-            nonogramRowLogic.updateRowSequenceRange(rowIdx, idx, newRange);
-            if (rangeLength(newRange) == lengths.get(idx) && nonogramRowLogic.getBoardAccessHelper().isRowRangeColoured(rowIdx, newRange)) {
-                nonogramRowLogic.excludeSequenceInRow(rowIdx, idx);
+            nonogramRowLogic.updateRowSequenceRange(rowIdx, sequenceIdx, newRange);
+            if (rangeLength(newRange) == lengths.get(sequenceIdx) && nonogramRowLogic.getBoardAccessHelper().isRowRangeColoured(rowIdx, newRange)) {
+                nonogramRowLogic.excludeSequenceInRow(rowIdx, sequenceIdx);
             }
+
+            return true;
         }
+
+        return false;
     }
 
     @Override
     public void correctRowSequencesRangesWhenMetColouredField(int rowIdx) {
-        correctRowSequencesRangesWhenMetColouredFieldFromLeft(rowIdx);
-        correctRowSequencesRangesWhenMetColouredFieldFromRight(rowIdx);
+        List<List<Integer>> initialRanges = deepCopy(nonogramRowLogic.getRowsSequencesRanges().get(rowIdx));
+
+        boolean anyUpdated = false;
+
+        anyUpdated |= correctRowSequencesRangesWhenMetColouredFieldFromLeft(rowIdx);
+        anyUpdated |= correctRowSequencesRangesWhenMetColouredFieldFromRight(rowIdx);
+
+        if (anyUpdated) {
+            List<List<Integer>> updatedRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
+            nonogramRowLogic.getNonogramState().increaseMadeSteps();
+
+            Field rowField = new Field(rowIdx, 0);
+            nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(rowField,
+                    NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS);
+
+            String tmpLog = SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.generateLog(
+                    true, // isRow
+                    rowIdx,
+                    nonogramRowLogic.getNonogramBoardColumn(rowIdx),
+                    nonogramRowLogic.getNonogramRules().getColumnSequencesLengths().get(rowIdx),
+                    initialRanges,
+                    updatedRanges
+            );
+            nonogramRowLogic.getLogService().setTmpLog(tmpLog);
+            nonogramRowLogic.getLogService().addLog();
+        }
     }
 
-    private void correctRowSequencesRangesWhenMetColouredFieldFromLeft(int rowIdx) {
+    private boolean correctRowSequencesRangesWhenMetColouredFieldFromLeft(int rowIdx) {
         var ranges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
         var lengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
         boolean changed = false;
 
-        int seqId = 0;
-        int seqLength = lengths.get(seqId);
-        int colIdx = 0;
+        int seqIdx = 0;
+        int seqLength = lengths.get(seqIdx);
+        int columnIdx = 0;
 
-        while (colIdx < nonogramRowLogic.getNonogramRules().getWidth() && seqId < lengths.size()) {
-            Field field = new Field(rowIdx, colIdx);
-            if (isFieldColoured(nonogramRowLogic.getNonogramSolutionBoard(), field)) {
-                List<Integer> oldRange = ranges.get(seqId);
-                List<Integer> updatedRange = RangeCorrectionHelper.updatedSequenceRangeWhenMetColouredField(
-                        oldRange.get(0), oldRange.get(1), colIdx, seqLength, true
-                );
+        while (columnIdx < nonogramRowLogic.getNonogramRules().getWidth() && seqIdx < lengths.size()) {
+            Field field = new Field(rowIdx, columnIdx);
 
-                if (!updatedRange.equals(oldRange)) {
-                    nonogramRowLogic.getLogService().setTmpLog(
-                            SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.generateLog(
-                                    rowIdx, seqId, ranges, updatedRange,
-                                    nonogramRowLogic.getNonogramSolutionBoard().get(rowIdx),
-                                    lengths,  "fromLeft"
-                            )
-                    );
-                    nonogramRowLogic.getLogService().addLog();
-                    nonogramRowLogic.updateRowSequenceRange(rowIdx, seqId, updatedRange);
+            if (!isFieldColoured(nonogramRowLogic.getNonogramSolutionBoard(), field)) {
+                columnIdx++;
+                continue;
+            }
 
-                    if (rangeLength(updatedRange) == seqLength &&
-                            nonogramRowLogic.getBoardAccessHelper().isRowRangeColoured(rowIdx, updatedRange)) {
-                        nonogramRowLogic.excludeSequenceInRow(rowIdx, seqId);
-                    }
+            List<Integer> oldRange = ranges.get(seqIdx);
+            List<Integer> updatedRange = RangeCorrectionHelper.updatedSequenceRangeWhenMetColouredField(
+                    oldRange.get(0), oldRange.get(1), columnIdx, seqLength, true);
 
-                    changed = true;
+            if (!updatedRange.equals(oldRange)) {
+                nonogramRowLogic.updateRowSequenceRange(rowIdx, seqIdx, updatedRange);
+
+                if (rangeLength(updatedRange) == seqLength &&
+                        nonogramRowLogic.getBoardAccessHelper().isRowRangeColoured(rowIdx, updatedRange)) {
+                    nonogramRowLogic.excludeSequenceInRow(rowIdx, seqIdx);
+                    nonogramRowLogic.getNonogramState().increaseMadeSteps();
                 }
 
-                colIdx += seqLength;
-                seqId++;
-                if (seqId < lengths.size()) {
-                    seqLength = lengths.get(seqId);
-                }
-            } else {
-                colIdx++;
+                changed = true;
+            }
+
+            columnIdx += seqLength;
+            seqIdx++;
+            if (seqIdx != lengths.size()) {
+                seqLength = lengths.get(seqIdx);
             }
         }
 
-        if (changed) {
-            nonogramRowLogic.getNonogramState().increaseMadeSteps();
-            nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(
-                    new Field(rowIdx, 0),
-                    NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS
-            );
-        }
+        return changed;
     }
 
-    private void correctRowSequencesRangesWhenMetColouredFieldFromRight(int rowIdx) {
+    private boolean correctRowSequencesRangesWhenMetColouredFieldFromRight(int rowIdx) {
         var ranges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
         var lengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
         boolean changed = false;
 
-        int seqId = lengths.size() - 1;
-        int seqLength = lengths.get(seqId);
-        int colIdx = nonogramRowLogic.getNonogramRules().getWidth() - 1;
+        int seqIdx = lengths.size() - 1;
+        int seqLength = lengths.get(seqIdx);
+        int columnIdx = nonogramRowLogic.getNonogramRules().getWidth() - 1;
 
-        while (colIdx >= 0 && seqId >= 0) {
-            Field field = new Field(rowIdx, colIdx);
+        while (columnIdx >= 0 && seqIdx >= 0) {
+            Field field = new Field(rowIdx, columnIdx);
 
-            if (isFieldColoured(nonogramRowLogic.getNonogramSolutionBoard(), field)) {
-                List<Integer> oldRange = ranges.get(seqId);
-                List<Integer> updatedRange = RangeCorrectionHelper.updatedSequenceRangeWhenMetColouredField(
-                        oldRange.get(0), oldRange.get(1), colIdx, seqLength, false
-                );
+            if (!isFieldColoured(nonogramRowLogic.getNonogramSolutionBoard(), field)) {
+                columnIdx--;
+                continue;
+            }
 
-                if (!updatedRange.equals(oldRange)) {
-                    nonogramRowLogic.getLogService().setTmpLog(
-                            SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.generateLog(
-                                    rowIdx, seqId, ranges, updatedRange,
-                                    nonogramRowLogic.getNonogramSolutionBoard().get(rowIdx),
-                                    lengths, "fromRight"
-                            )
-                    );
-                    nonogramRowLogic.getLogService().addLog();
-                    nonogramRowLogic.updateRowSequenceRange(rowIdx, seqId, updatedRange);
+            List<Integer> oldRange = ranges.get(seqIdx);
+            List<Integer> updatedRange = RangeCorrectionHelper.updatedSequenceRangeWhenMetColouredField(
+                    oldRange.get(0), oldRange.get(1), columnIdx, seqLength, false
+            );
 
-                    if (rangeLength(updatedRange) == seqLength &&
-                            nonogramRowLogic.getBoardAccessHelper().isRowRangeColoured(rowIdx, updatedRange)) {
-                        nonogramRowLogic.excludeSequenceInRow(rowIdx, seqId);
-                    }
+            if (!updatedRange.equals(oldRange)) {
+                nonogramRowLogic.updateRowSequenceRange(rowIdx, seqIdx, updatedRange);
 
-                    changed = true;
+                if (rangeLength(updatedRange) == seqLength &&
+                        nonogramRowLogic.getBoardAccessHelper().isRowRangeColoured(rowIdx, updatedRange)) {
+                    nonogramRowLogic.excludeSequenceInRow(rowIdx, seqIdx);
+                    nonogramRowLogic.getNonogramState().increaseMadeSteps();
                 }
 
-                colIdx -= seqLength;
-                seqId--;
-                if (seqId >= 0) {
-                    seqLength = lengths.get(seqId);
-                }
-            } else {
-                colIdx--;
+                changed = true;
+            }
+
+            columnIdx -= seqLength;
+            seqIdx--;
+            if (seqIdx > -1) {
+                seqLength = lengths.get(seqIdx);
             }
         }
 
-        if (changed) {
-            nonogramRowLogic.getNonogramState().increaseMadeSteps();
-            nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(
-                    new Field(rowIdx, 0),
-                    NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS
-            );
-        }
+        return changed;
     }
 
     @Override
     public void correctRowSequencesRangesIfXOnWay(int rowIdx, boolean changeLogicDetails) {
+        var ranges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
+        var lengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
+        var excluded = nonogramRowLogic.getRowsSequencesIdsNotToInclude().get(rowIdx);
+
+        var row = nonogramRowLogic.getNonogramSolutionBoard().get(rowIdx);
+
         boolean changed = false;
 
-        List<Integer> lengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
-        List<List<Integer>> ranges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
-        List<Integer> excluded = nonogramRowLogic.getRowsSequencesIdsNotToInclude().get(rowIdx);
-
-        List<List<Integer>> beforeSnapshot = ranges.stream()
-                .map(r -> List.of(r.get(0), r.get(1)))
-                .toList();
+        List<List<Integer>> initialRanges = deepCopy(ranges);
 
         for (int seqIdx = 0; seqIdx < ranges.size(); seqIdx++) {
             if (excluded.contains(seqIdx)) continue;
@@ -247,20 +269,29 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
                     currentRange, length, rowIdx, false, nonogramRowLogic.getNonogramSolutionBoard());
 
             if (!currentRange.equals(corrected)) {
-                changed = true;
                 nonogramRowLogic.updateRowSequenceRange(rowIdx, seqIdx, corrected);
 
                 if (changeLogicDetails && shouldExcludeSequence(rowIdx, corrected, length)) {
                     nonogramRowLogic.excludeSequenceInRow(rowIdx, seqIdx);
                 }
+
+                changed = true;
             }
         }
 
         if (changed && changeLogicDetails) {
-            List<List<Integer>> afterSnapshot = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
+            List<List<Integer>> updatedRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
+
             nonogramRowLogic.getLogService().setTmpLog(SequenceRangeCorrectionWhenMetXLogHelper.generateLog(
-                    rowIdx, beforeSnapshot, afterSnapshot, lengths, excluded, true));
+                    rowIdx,
+                    row,
+                    initialRanges,
+                    updatedRanges,
+                    lengths,
+                    excluded,
+                    true));
             nonogramRowLogic.getLogService().addLog();
+
             nonogramRowLogic.getNonogramState().increaseMadeSteps();
             nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(
                     new Field(rowIdx, 0), NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY);
@@ -283,146 +314,22 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
         boolean hasChanged;
 
         do {
-            hasChanged = false;
+            hasChanged = processDirection(colouredRanges, rowSequencesRanges, rowSequencesLengths, true);
+            hasChanged |= processDirection(colouredRanges, rowSequencesRanges, rowSequencesLengths, false);
 
-            Map<Integer, List<Integer>> colouredToSequencesLeft = new HashMap<>();
-            for (int i = 0; i < colouredRanges.size(); i++) {
-                List<Integer> coloured = colouredRanges.get(i);
-                int colouredLen = rangeLength(coloured);
-                List<Integer> possible = new ArrayList<>();
-
-                for (int seqIdx = 0; seqIdx < rowSequencesRanges.size(); seqIdx++) {
-                    List<Integer> seqRange = rowSequencesRanges.get(seqIdx);
-                    int seqLen = rowSequencesLengths.get(seqIdx);
-                    if (rangeInsideAnotherRange(coloured, seqRange) && seqLen >= colouredLen) {
-                        possible.add(seqIdx);
-                    }
-                }
-
-                colouredToSequencesLeft.put(i, possible);
-            }
-
-            int maxAssigned = -1;
-            for (int i = 0; i < colouredRanges.size(); i++) {
-                List<Integer> possible = colouredToSequencesLeft.get(i);
-                if (possible == null || possible.isEmpty()) continue;
-
-                List<Integer> filtered = new ArrayList<>();
-                for (int seqId : possible) {
-                    if (seqId >= maxAssigned) {
-                        filtered.add(seqId);
-                    }
-                }
-
-                colouredToSequencesLeft.put(i, filtered);
-                if (filtered.size() == 1) {
-                    maxAssigned = filtered.get(0);
-                }
-            }
-
-            for (Map.Entry<Integer, List<Integer>> entry : colouredToSequencesLeft.entrySet()) {
-                List<Integer> possible = entry.getValue();
-                if (possible == null || possible.isEmpty()) continue;
-
-                int seqIdx = Collections.min(possible);
-                List<Integer> seqRange = rowSequencesRanges.get(seqIdx);
-                int seqLength = rowSequencesLengths.get(seqIdx);
-                List<Integer> coloured = colouredRanges.get(entry.getKey());
-
-                int newStart = coloured.get(1) - seqLength + 1;
-                int newEnd = coloured.get(0) + seqLength - 1;
-
-                int oldStart = seqRange.get(0);
-                int oldEnd = seqRange.get(1);
-
-                boolean isCertain = possible.size() == 1;
-                int updatedStart = isCertain ? Math.max(newStart, oldStart) : oldStart;
-                int updatedEnd = Math.min(newEnd, oldEnd);
-
-                if (rangeInsideAnotherRange(coloured, seqRange) && newStart <= newEnd
-                        && (updatedStart != oldStart || updatedEnd != oldEnd)) {
-                    seqRange.set(0, updatedStart);
-                    seqRange.set(1, updatedEnd);
-                    hasChanged = true;
-                    hasChangedGlobal = true;
-                }
-            }
-
-            Map<Integer, List<Integer>> colouredToSequencesRight = new HashMap<>();
-            for (int i = colouredRanges.size() - 1; i >= 0; i--) {
-                List<Integer> coloured = colouredRanges.get(i);
-                int colouredLen = rangeLength(coloured);
-                List<Integer> possible = new ArrayList<>();
-
-                for (int seqIdx = rowSequencesRanges.size() - 1; seqIdx >= 0; seqIdx--) {
-                    List<Integer> seqRange = rowSequencesRanges.get(seqIdx);
-                    int seqLen = rowSequencesLengths.get(seqIdx);
-                    if (rangeInsideAnotherRange(coloured, seqRange) && seqLen >= colouredLen) {
-                        possible.add(seqIdx);
-                    }
-                }
-
-                colouredToSequencesRight.put(i, possible);
-            }
-
-            int minAssigned = rowSequencesRanges.size();
-            for (int i = colouredRanges.size() - 1; i >= 0; i--) {
-                List<Integer> possible = colouredToSequencesRight.get(i);
-                if (possible == null || possible.isEmpty()) continue;
-
-                List<Integer> filtered = new ArrayList<>();
-                for (int seqId : possible) {
-                    if (seqId <= minAssigned) {
-                        filtered.add(seqId);
-                    }
-                }
-
-                colouredToSequencesRight.put(i, filtered);
-                if (filtered.size() == 1) {
-                    minAssigned = filtered.get(0);
-                }
-            }
-
-            for (Map.Entry<Integer, List<Integer>> entry : colouredToSequencesRight.entrySet()) {
-                List<Integer> possible = entry.getValue();
-                if (possible == null || possible.isEmpty()) continue;
-
-                int seqIdx = Collections.max(possible);
-                List<Integer> seqRange = rowSequencesRanges.get(seqIdx);
-                int seqLength = rowSequencesLengths.get(seqIdx);
-                List<Integer> coloured = colouredRanges.get(entry.getKey());
-
-                int newStart = coloured.get(1) - seqLength + 1;
-                int newEnd = coloured.get(0) + seqLength - 1;
-
-                int oldStart = seqRange.get(0);
-                int oldEnd = seqRange.get(1);
-
-                boolean isCertain = possible.size() == 1;
-                int updatedEnd = isCertain ? Math.min(newEnd, oldEnd) : oldEnd;
-                int updatedStart = Math.max(newStart, oldStart);
-
-                if (rangeInsideAnotherRange(coloured, seqRange) && newStart <= newEnd
-                        && (updatedStart != oldStart || updatedEnd != oldEnd)) {
-                    seqRange.set(0, updatedStart);
-                    seqRange.set(1, updatedEnd);
-                    hasChanged = true;
-                    hasChangedGlobal = true;
-                }
-            }
-
+            hasChangedGlobal |= hasChanged;
         } while (hasChanged);
 
         if (hasChangedGlobal) {
             List<List<Integer>> rangesAfter = deepCopy(rowSequencesRanges);
 
-            String tmpLog = SequenceRangeCorrectionFromColouredEdgesLogHelper.generateLog(
+            String tmpLog = SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper.generateLog(
+                    true, // isRow
                     rowIdx,
-                    rangesBefore,
-                    rangesAfter,
                     rowSequencesLengths,
                     nonogramRowLogic.getNonogramSolutionBoard().get(rowIdx),
-                    true // isRow
+                    rangesBefore,
+                    rangesAfter
             );
             nonogramRowLogic.getLogService().setTmpLog(tmpLog);
             nonogramRowLogic.getLogService().addLog();
@@ -431,6 +338,100 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
             Field rowField = new Field(rowIdx, 0);
             nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(rowField, NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES);
         }
+    }
+
+    private boolean processDirection(List<List<Integer>> colouredRanges, List<List<Integer>> rowSequencesRanges,
+                                     List<Integer> rowSequencesLengths, boolean fromRight) {
+
+        Map<Integer, List<Integer>> colouredToSeqs = collectMatchingSequences(colouredRanges, rowSequencesRanges, rowSequencesLengths, fromRight);
+        filterSequences(colouredToSeqs, rowSequencesRanges.size(), fromRight);
+
+        return updateRanges(colouredToSeqs, colouredRanges, rowSequencesRanges, rowSequencesLengths);
+    }
+
+    private Map<Integer, List<Integer>> collectMatchingSequences(List<List<Integer>> colouredRanges, List<List<Integer>> sequenceRanges,
+                                                                 List<Integer> sequenceLengths, boolean fromRight) {
+        Map<Integer, List<Integer>> result = new HashMap<>();
+        int start = fromRight ? 0 : colouredRanges.size() - 1;
+        int end = fromRight ? colouredRanges.size() : -1;
+        int step = fromRight ? 1 : -1;
+
+        for (int i = start; i != end; i += step) {
+            List<Integer> coloured = colouredRanges.get(i);
+            int colouredLen = rangeLength(coloured);
+
+            List<Integer> possible = new ArrayList<>();
+            for (int seqIdx = 0; seqIdx < sequenceRanges.size(); seqIdx++) {
+                List<Integer> seqRange = sequenceRanges.get(seqIdx);
+                int seqLen = sequenceLengths.get(seqIdx);
+
+                if (rangeInsideAnotherRange(coloured, seqRange) && seqLen >= colouredLen) {
+                    possible.add(seqIdx);
+                }
+            }
+
+            result.put(i, possible);
+        }
+
+        return result;
+    }
+
+    private void filterSequences(Map<Integer, List<Integer>> colouredToSeqs, int totalSequences, boolean fromRight) {
+        int boundary = fromRight ? -1 : totalSequences;
+        List<Integer> keys = new ArrayList<>(colouredToSeqs.keySet());
+        keys.sort(fromRight ? Comparator.naturalOrder() : Comparator.reverseOrder());
+
+        for (int i : keys) {
+            List<Integer> possible = colouredToSeqs.get(i);
+            if (possible == null || possible.isEmpty()) continue;
+
+            List<Integer> filtered = filterByBoundary(possible, boundary, fromRight);
+            colouredToSeqs.put(i, filtered);
+
+            if (filtered.size() == 1) {
+                boundary = filtered.get(0);
+            }
+        }
+    }
+
+    private List<Integer> filterByBoundary(List<Integer> sequenceIds, int boundary, boolean fromRight) {
+        return sequenceIds.stream()
+                .filter(seqId -> fromRight ? seqId >= boundary : seqId <= boundary)
+                .toList();
+    }
+
+    private boolean updateRanges(Map<Integer, List<Integer>> colouredToSeqs, List<List<Integer>> colouredRanges,
+                                 List<List<Integer>> sequenceRanges, List<Integer> sequenceLengths) {
+        boolean hasChanged = false;
+
+        for (Map.Entry<Integer, List<Integer>> entry : colouredToSeqs.entrySet()) {
+            List<Integer> possible = entry.getValue();
+            if (possible == null || possible.isEmpty()) continue;
+
+            int seqIdx = possible.size() == 1 ? possible.get(0)
+                    : possible.stream().min(Comparator.naturalOrder()).orElse(possible.get(0));  // fallback
+
+            List<Integer> seqRange = sequenceRanges.get(seqIdx);
+            int seqLen = sequenceLengths.get(seqIdx);
+            List<Integer> coloured = colouredRanges.get(entry.getKey());
+
+            int newStart = coloured.get(1) - seqLen + 1;
+            int newEnd = coloured.get(0) + seqLen - 1;
+
+            int updatedStart = possible.size() == 1 ? Math.max(newStart, seqRange.get(0)) : seqRange.get(0);
+            int updatedEnd = possible.size() == 1 ? Math.min(newEnd, seqRange.get(1)) : seqRange.get(1);
+
+            boolean inside = rangeInsideAnotherRange(coloured, seqRange);
+            boolean valid = newStart <= newEnd;
+
+            if (inside && valid && (updatedStart != seqRange.get(0) || updatedEnd != seqRange.get(1))) {
+                seqRange.set(0, updatedStart);
+                seqRange.set(1, updatedEnd);
+                hasChanged = true;
+            }
+        }
+
+        return hasChanged;
     }
 
     @Override
@@ -463,7 +464,6 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
             List<Integer> lengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
             List<String> line = nonogramRowLogic.getNonogramSolutionBoard().get(rowIdx);
 
-
             String tmpLog = SequenceRangeCorrectionFromColouredEdgesLogHelper.generateLog(
                     rowIdx,
                     before,
@@ -479,6 +479,12 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
             Field rowField = new Field(rowIdx, 0);
             nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(rowField, NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE);
         }
+    }
+
+    @Override
+    public void refreshFrom(NonogramRowLogic logicToCopy) {
+        nonogramRowLogic.setRowsSequencesRanges(logicToCopy.getRowsSequencesRanges());
+        nonogramRowLogic.setRowsFieldsNotToInclude(logicToCopy.getRowsFieldsNotToInclude());
     }
 }
 

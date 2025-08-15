@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import lombok.experimental.UtilityClass;
@@ -8,33 +8,31 @@ import java.util.List;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
 
 @UtilityClass
-public class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper {
-
-    private static final String LIST_STRING_FORMAT = "    List.of(%s),%n";
+public class SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper {
 
     public static String generateLog(
+            boolean isRow,
             int index,
-            List<String> initialLine,
-            List<String> updatedLine,
             List<Integer> sequencesLengths,
-            List<List<Integer>> sequencesRanges,
-            boolean isRow
+            List<String> line,
+            List<List<Integer>> initialRanges,
+            List<List<Integer>> updatedRanges
     ) {
         return String.format(
                 """
-                        PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE_IN_%s: %s=%d
-                        initialLine=%s
-                        updatedLine=%s
+                        %s_CORRECTING_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES: %s=%d
                         sequencesLengths=%s
-                        sequencesRanges=%s
+                        line=%s
+                        initialRanges=%s
+                        updatedRanges=%s
                         """,
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",
                 index,
-                initialLine.toString(),
-                updatedLine.toString(),
-                sequencesLengths.toString(),
-                sequencesRanges.toString()
+                sequencesLengths,
+                line,
+                initialRanges,
+                updatedRanges
         );
     }
 
@@ -48,26 +46,27 @@ public class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper {
 
         String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
 
-        String initialLine = extractValue(lines, "initialLine");
-        String updatedLine = extractValue(lines, "updatedLine");
         String sequencesLengths = extractValue(lines, "sequencesLengths");
-        String sequencesRanges = extractValue(lines, "sequencesRanges");
+        String line = extractValue(lines, "line");
+
+        String initialRanges = extractValue(lines, "initialRanges");
+        String updatedRanges = extractValue(lines, "updatedRanges");
 
         return String.format(
                 """
-                        Arguments.of("%s / %s=%d - place X if O near X will begin too long possible sequence",
-                            %s,
-                            %s,
-                            %s,
-                            %s)
+                        Arguments.of("%s / %s=%d - sequences range correction when matching fields to sequences",
+                            List.of(%s),
+                            List.of(%s),
+                            List.of(%s),
+                            List.of(%s)
                         )""",
                 fileName,
                 isRow ? "Row" : "Column",
                 index,
-                initialLine,
-                updatedLine,
                 sequencesLengths,
-                sequencesRanges
+                line,
+                initialRanges,
+                updatedRanges
         );
     }
 }

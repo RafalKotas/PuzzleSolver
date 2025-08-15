@@ -1,7 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.marking;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
@@ -13,25 +12,25 @@ public class MarkAvailableFieldsLogHelper {
 
     public static String generateLog(
             int index,
-            List<String> initialState,
-            List<String> finalState,
-            int seqIdx,
+            List<String> initialLine,
+            List<String> updatedLine,
+            int sequenceIdx,
             String marker,
             boolean isRow
     ) {
         return String.format(
                 """
-                        MARK_AVAILABLE_FIELDS_IN_%s: %s=%d, seq=%d, marker=%s
-                        initial=%s
-                        final=%s
+                        MARK_AVAILABLE_FIELDS_IN_%s: %s=%d, sequenceIdx=%d, marker=%s
+                        initialLine=%s
+                        updatedLine=%s
                         """,
                 isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "col",
                 index,
-                seqIdx,
+                sequenceIdx,
                 marker,
-                LogFormatUtils.formatList(initialState),
-                LogFormatUtils.formatList(finalState)
+                initialLine,
+                updatedLine
         );
     }
 
@@ -42,11 +41,11 @@ public class MarkAvailableFieldsLogHelper {
         String axisLabel = isRow ? "row" : "col";
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].split(",")[0].trim());
-        int seqIdx = Integer.parseInt(lines[0].split("seq=")[1].split(",")[0].trim());
+        int seqIdx = Integer.parseInt(lines[0].split("sequenceIdx=")[1].split(",")[0].trim());
         String marker = lines[0].split("marker=")[1].trim();
 
-        List<String> initialState = LogFormatUtils.parseStringListLine(lines[1]);
-        List<String> finalState = LogFormatUtils.parseStringListLine(lines[2]);
+        String initialLine = lines[1].split("initialLine=")[1].trim();
+        String updatedLine = lines[2].split("updatedLine=")[1].trim();
 
         List<String> fieldState = isRow
                 ? logic.getNonogramSolutionBoard().get(index)
@@ -74,10 +73,10 @@ public class MarkAvailableFieldsLogHelper {
                 isRow ? "Row" : "Column",
                 index,
                 seqIdx,
-                LogFormatUtils.toQuotedStringList(initialState),
-                LogFormatUtils.toQuotedStringList(finalState),
-                LogFormatUtils.toQuotedStringList(fieldState),
-                LogFormatUtils.toRangeStringList(ranges),
+                initialLine,
+                updatedLine,
+                fieldState,
+                ranges,
                 lengths.toString()
         );
     }

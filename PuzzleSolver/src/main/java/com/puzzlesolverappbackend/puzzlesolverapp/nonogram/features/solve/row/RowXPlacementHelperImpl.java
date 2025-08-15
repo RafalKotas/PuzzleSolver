@@ -4,11 +4,11 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLo
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.xplacement.NonogramFieldPlacingXHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.SequenceRangeCorrectionWhenPlacingXsLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.SequenceRangeCorrectionWhenPlacingXsLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAroundLongestSequenceLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAtTooShortEmptySequencesLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAtUnreachableFieldsLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsIfOWillCreateTooLongSequenceLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.Nonogr
 @Slf4j
 @Getter
 @Setter
-public class RowXPlacementHelperImpl implements RowXPlacementHelper {
+public class RowXPlacementHelperImpl implements RowXPlacementHelper, RefreshableRowHelper {
 
     private final NonogramRowLogic logic;
 
@@ -410,7 +410,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper {
 
         if (!rowBefore.equals(rowAfter)) {
             // TODO - create log helper for this action
-            logic.getLogService().setTmpLog(PlaceXsIfOWillCreateTooLongSequenceLogHelper.generateLog(
+            logic.getLogService().setTmpLog(PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
                     rowIdx,
                     rowBefore,
                     rowAfter,
@@ -475,7 +475,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper {
         List<String> rowAfter = logic.getBoardAccessHelper().getRowCopy(rowIdx);
 
         if (!rowBefore.equals(rowAfter)) {
-            logic.getLogService().setTmpLog(PlaceXsIfOWillCreateTooLongSequenceLogHelper.generateLog(
+            logic.getLogService().setTmpLog(PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
                     rowIdx,
                     rowBefore,
                     rowAfter,
@@ -601,5 +601,11 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper {
                 logic.getNonogramState().increaseMadeSteps();
             }
         }
+    }
+
+    @Override
+    public void refreshFrom(NonogramRowLogic logicToCopy) {
+        logic.setRowsSequencesRanges(logicToCopy.getRowsSequencesRanges());
+        logic.setRowsFieldsNotToInclude(logicToCopy.getRowsFieldsNotToInclude());
     }
 }

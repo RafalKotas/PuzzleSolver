@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.solve;
 
 import lombok.experimental.UtilityClass;
 

@@ -24,20 +24,29 @@ public class MixedActionsHelper {
         });
     }
 
-    public static boolean wouldMergeTooLongBackward(int expectedLength, int indexBeforeX, List<List<Integer>> colouredSequences) {
-        int contactIndex = indexBeforeX - expectedLength + 1;
+    public static boolean wouldMergeTooLongBackward(int expectedLength,
+                                                    int indexBeforeX,
+                                                    List<List<Integer>> colouredSequences) {
+        int startNew = indexBeforeX - expectedLength + 1;
 
-        return colouredSequences.stream().anyMatch(colouredSequenceRange -> {
-            int start = colouredSequenceRange.get(0);
-            int end = colouredSequenceRange.get(1);
+        return colouredSequences.stream().anyMatch(range -> {
+            int start = range.get(0);
+            int end   = range.get(1);
 
-            if (contactIndex <= end + 1) {
-                int firstPartEnd = contactIndex - 1;
-                int firstPartLength = Math.max(0, firstPartEnd - start + 1);
-                int secondPartLength = indexBeforeX - contactIndex + 1;
-                return firstPartLength + secondPartLength > expectedLength;
-            }
-            return false;
+            boolean touchesOrOverlaps = startNew <= end + 1;
+            boolean extendsAboveStart = start < startNew;
+
+//            if (!touchesOrOverlaps && !extendsAboveStart) {
+//                System.out.println("40 not covered");
+//            } else if (!touchesOrOverlaps && extendsAboveStart) {
+//                System.out.println("42 not covered");
+//            } else if (touchesOrOverlaps && !extendsAboveStart) {
+//                System.out.println("44 not covered");
+//            } else if (touchesOrOverlaps && extendsAboveStart) {
+//                System.out.println("46 not covered");
+//            }
+
+            return touchesOrOverlaps && extendsAboveStart;
         });
     }
 }
