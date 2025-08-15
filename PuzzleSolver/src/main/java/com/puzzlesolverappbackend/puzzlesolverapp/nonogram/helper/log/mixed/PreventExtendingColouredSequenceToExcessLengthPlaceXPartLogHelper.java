@@ -1,7 +1,10 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.List;
 
+@UtilityClass
 public class PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper {
 
     // TODO - implement

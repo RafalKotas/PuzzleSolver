@@ -1,10 +1,13 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
 
+@UtilityClass
 public class PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLogHelper {
 
     public static String generateLog(
