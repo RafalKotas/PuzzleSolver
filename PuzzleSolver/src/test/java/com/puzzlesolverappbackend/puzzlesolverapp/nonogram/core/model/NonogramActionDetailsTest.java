@@ -99,11 +99,11 @@ class NonogramActionDetailsTest {
         String s = d.toString();
 
         // then
-        assertThat(s).contains("NonogramActionDetails");
-        assertThat(s).contains("index=9");
-        assertThat(s).contains(NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW.name());
-        assertThat(s).contains(NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_ROW.name());
-        assertThat(s).contains("changedState=false");
+        assertThat(s).contains("NonogramActionDetails")
+                .contains("index=9")
+                .contains(NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW.name())
+                .contains(NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_ROW.name())
+                .contains("changedState=false");
     }
 
     // --- equals / hashCode ---
@@ -162,10 +162,10 @@ class NonogramActionDetailsTest {
                 base.getIndex(), base.getActionName(), base.getTriggeringActionName(), true);
 
         // when // then
-        assertThat(base).isNotEqualTo(diffIndex);
-        assertThat(base).isNotEqualTo(diffAction);
-        assertThat(base).isNotEqualTo(diffTrigger);
-        assertThat(base).isNotEqualTo(diffChanged);
+        assertThat(base).isNotEqualTo(diffIndex)
+                .isNotEqualTo(diffAction)
+                .isNotEqualTo(diffTrigger)
+                .isNotEqualTo(diffChanged);
     }
 
     @DisplayName("hashCode is consistent with equals (same fields -> same hash)")
@@ -176,8 +176,8 @@ class NonogramActionDetailsTest {
         NonogramActionDetails b = sample(3);
 
         // when // then
-        assertThat(a).isEqualTo(b);
-        assertThat(a.hashCode()).isEqualTo(b.hashCode());
+        assertThat(a).isEqualTo(b)
+                .hasSameHashCodeAs(b);
     }
 
     @DisplayName("hashCode likely differs when significant fields differ")
@@ -264,8 +264,8 @@ class NonogramActionDetailsTest {
         NonogramActionDetails y = new NonogramActionDetails(7, null, null, true);
 
         // when / then
-        assertThat(x).isEqualTo(y);                    // crossing branch: this$actionName == null && other$actionName == null
-        assertThat(x.hashCode()).isEqualTo(y.hashCode()); // cover hashCode branches with nulls
+        assertThat(x).isEqualTo(y)
+                .hasSameHashCodeAs(y); // cover hashCode branches with nulls
     }
 
     @DisplayName("equals returns false when one actionName is null and the other is non-null")

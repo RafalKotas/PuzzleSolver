@@ -86,7 +86,7 @@ class SequencesRangesCorrectionLogHelperTest {
         );
 
         // then
-        String expected = "Arguments.of(\"o07942 / Row=7 - sequences range correction\",\n" +
+        String expected = "Arguments.of(\"o07942 / row=7 - sequences range correction\",\n" +
                 "    List.of(2, 2, 1),\n" +
                 "    new ArrayList<>(List.of()),\n" +
                 "    new ArrayList<>(List.of()),\n" +

@@ -5,7 +5,8 @@ import lombok.experimental.UtilityClass;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.toImmutableIntListLiteral;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.toMutableRangesListLiteral;
 
 @UtilityClass
 public class SequenceRangeCorrectionWhenMarkingFieldsLogHelper {
@@ -42,8 +43,8 @@ public class SequenceRangeCorrectionWhenMarkingFieldsLogHelper {
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
 
         String sequencesRanges = lines[1].contains("=") ? lines[1].split("=")[1].trim() : "";
-        String updatedRange = lines[2].contains("=") ? lines[1].split("=")[1].trim() : "";
-        String sequencesLengths = lines[3].contains("=") ? lines[1].split("=")[1].trim() : "";
+        String updatedRange = lines[2].contains("=") ? lines[2].split("=")[1].trim() : "";
+        String sequencesLengths = lines[3].contains("=") ? lines[3].split("=")[1].trim() : "";
 
         return String.format(
                 """
@@ -56,7 +57,7 @@ public class SequenceRangeCorrectionWhenMarkingFieldsLogHelper {
                 isRow ? ROW : COLUMN,
                 index,
                 toMutableRangesListLiteral(sequencesRanges),
-                toImmutableRangesListLiteral(updatedRange),
+                toImmutableIntListLiteral(updatedRange),
                 toImmutableIntListLiteral(sequencesLengths)
         );
     }

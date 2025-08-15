@@ -14,7 +14,7 @@ class NonogramStateTest {
         NonogramState state = NonogramState.buildInitialEmptyNonogramState();
 
         // then
-        assertThat(state.getNewStepsMade()).isEqualTo(0);
+        assertThat(state.getNewStepsMade()).isZero();
         assertThat(state.isInvalidSolution()).isFalse();
     }
 
@@ -47,7 +47,7 @@ class NonogramStateTest {
 
         // then
         assertThat(state.isInvalidSolution()).isTrue();
-        assertThat(state.getNewStepsMade()).isEqualTo(0);
+        assertThat(state.getNewStepsMade()).isZero();
     }
 
     @Test

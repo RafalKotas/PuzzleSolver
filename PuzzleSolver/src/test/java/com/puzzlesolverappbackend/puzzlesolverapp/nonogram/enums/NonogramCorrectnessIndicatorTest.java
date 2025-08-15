@@ -52,6 +52,6 @@ class NonogramCorrectnessIndicatorTest {
 
         // then
         assertThat(result).isSameAs(indicator);
-        assertThat(indicator.toString()).isEqualTo(name);
+        assertThat(indicator).hasToString(name);
     }
 }

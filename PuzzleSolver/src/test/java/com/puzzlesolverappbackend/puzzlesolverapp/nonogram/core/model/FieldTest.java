@@ -37,7 +37,7 @@ class FieldTest {
 
         // Positive case
         assertThat(f1).isEqualTo(f2);
-        assertThat(f1.hashCode()).isEqualTo(f2.hashCode());
+        assertThat(f1).hasSameHashCodeAs(f2);
 
         // Negative case
         assertThat(f1).isNotEqualTo(f3);
@@ -70,6 +70,6 @@ class FieldTest {
     void toStringShouldReturnCorrectFormat() {
         Field field = new Field(2, 7);
 
-        assertThat(field.toString()).isEqualTo("Field(rowIdx=2, columnIdx=7)");
+        assertThat(field.toString()).hasToString("Field(rowIdx=2, columnIdx=7)");
     }
 }

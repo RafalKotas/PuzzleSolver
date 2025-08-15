@@ -223,7 +223,7 @@ public class LogConverter {
     }
 
     private static boolean isTrivial(String log) {
-        return log.startsWith("TRIVIAL_ROW_SEQUENCE:") || log.startsWith("TRIVIAL_COLUMN_SEQUENCE:");
+        return log.startsWith("FILL_TRIVIAL_ROW_SEQUENCE:") || log.startsWith("FILL_TRIVIAL_COLUMN_SEQUENCE:");
     }
 
     private static boolean isExcluded(String log) {

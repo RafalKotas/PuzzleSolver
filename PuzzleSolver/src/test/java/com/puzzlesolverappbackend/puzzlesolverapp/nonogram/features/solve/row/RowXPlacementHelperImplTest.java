@@ -404,7 +404,7 @@ class RowXPlacementHelperImplTest {
         assertThat(rowAfter.get(7)).isEqualTo("X");
         assertThat(rowAfter.get(10)).isEqualTo("X");
         assertThat(state.getNewStepsMade()).isEqualTo(initialSteps + 2);
-        assertThat(rowLogic.getActionScheduler().getActionsToDoList().size()).isEqualTo(initialActions + 16); // 2 x 8 for every X placed
+        assertThat(rowLogic.getActionScheduler().getActionsToDoList()).hasSize(initialActions + 16);  // 2 x 8 for every X placed
     }
 
     @DisplayName("Should place X in range too short for any sequence – o07836 row 3")
@@ -542,7 +542,7 @@ class RowXPlacementHelperImplTest {
         List<String> rowAfter = rowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
         assertThat(rowAfter).isEqualTo(rowBefore);
         assertThat(state.getNewStepsMade()).isEqualTo(initialSteps);
-        assertThat(rowLogic.getActionScheduler().getActionsToDoList().size()).isEqualTo(initialActions);
+        assertThat(rowLogic.getActionScheduler().getActionsToDoList()).hasSize(initialActions);
     }
 
     private static NonogramRules createTestNonogramRules_placingXAtUnreachableFields_o10683() {
