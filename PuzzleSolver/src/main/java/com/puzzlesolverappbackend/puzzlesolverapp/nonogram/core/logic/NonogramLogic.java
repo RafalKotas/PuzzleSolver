@@ -701,10 +701,10 @@ public class NonogramLogic extends NonogramLogicParams {
         copyLogicToNonogramRowLogic();
 
         int stepsBefore = nonogramState.getNewStepsMade();
-
         makeProperActionInRow(rowIdx, actionDetails.getActionName());
-
         int stepsAfter = nonogramState.getNewStepsMade();
+
+        nonogramRowLogic.refreshHelpers();
 
         if (logChanges && stepsBefore != stepsAfter) {
             logRowStateBefore(actionDetails, rowIdx);
@@ -718,10 +718,10 @@ public class NonogramLogic extends NonogramLogicParams {
         copyLogicToNonogramColumnLogic();
 
         int stepsBefore = nonogramState.getNewStepsMade();
-
         makeProperActionInColumn(columnIdx, actionDetails.getActionName());
-
         int stepsAfter = nonogramState.getNewStepsMade();
+
+        nonogramColumnLogic.refreshHelpers();
 
         if (logChanges && stepsBefore != stepsAfter) {
             logColumnStateBefore(actionDetails, columnIdx);

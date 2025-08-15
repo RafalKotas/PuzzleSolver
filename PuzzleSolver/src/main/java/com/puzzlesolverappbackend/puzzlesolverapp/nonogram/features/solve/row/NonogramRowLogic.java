@@ -63,6 +63,9 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
     private final NonogramFieldExclusionHelperRow nonogramFieldExclusionHelper;
 
     @JsonIgnore
+    private final List<RefreshableRowHelper> refreshables = new ArrayList<>();
+
+    @JsonIgnore
     private final NonogramLogService logService;
 
     public NonogramRowLogic() {
@@ -78,6 +81,10 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 this.rowsFieldsNotToInclude,
                 boardAccessHelper
         );
+
+        refreshables.add(rowColouringHelper);
+        refreshables.add(rowXPlacementHelper);
+        refreshables.add(rowSequencesCorrectionHelper);
 
         this.logService = new NonogramLogService();
     }
@@ -116,43 +123,18 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 boardAccessHelper
         );
 
+        refreshables.add(rowColouringHelper);
+        refreshables.add(rowXPlacementHelper);
+        refreshables.add(rowSequencesCorrectionHelper);
+
         this.logService = new NonogramLogService();
     }
 
-//    public NonogramRowLogic(NonogramLogic logic, NonogramBoardAccessHelper accessHelper) {
-//        super(
-//                logic.getNonogramRules(),
-//                logic.getNonogramSolutionBoard(),
-//                logic.getNonogramSolutionBoardWithMarks(),
-//                logic.getActionsToDoList(),
-//                logic.getNonogramState(),
-//                logic.getLogs()
-//        );
-//
-//        this.rowsSequencesRanges = logic.getRowsSequencesRanges();
-//        this.rowsSequencesIdsNotToInclude = logic.getRowsSequencesIdsNotToInclude();
-//        this.rowsFieldsNotToInclude = logic.getRowsFieldsNotToInclude();
-//
-//        this.nonogramSolutionBoardWithMarks = logic.getNonogramSolutionBoardWithMarks();
-//        this.nonogramSolutionBoard = logic.getNonogramSolutionBoard();
-//
-//        this.actionsToDoList = logic.getActionsToDoList();
-//
-//        this.actionScheduler = new NonogramActionScheduler(this.getActionsToDoList());
-//        this.boardAccessHelper = accessHelper;
-//        this.rowColouringHelper = new RowColouringHelperImpl(this);
-//        this.rowXPlacementHelper = new RowXPlacementHelperImpl(this);
-//        this.rowSequencesCorrectionHelper = new RowSequencesCorrectionHelperImpl(this);
-//        this.nonogramFieldClearingHelper = new NonogramFieldClearingHelper(this.getNonogramSolutionBoard(),
-//                this.getNonogramSolutionBoardWithMarks(),
-//                this.getBoardAccessHelper());
-//        this.nonogramFieldExclusionHelper = new NonogramFieldExclusionHelperRow(
-//                this.rowsFieldsNotToInclude,
-//                boardAccessHelper
-//        );
-//
-//        this.logService = new NonogramLogService();
-//    }
+    public void refreshHelpers() {
+        for (RefreshableRowHelper r : refreshables) {
+            r.refreshFrom(this);
+        }
+    }
 
     public void setRowSequencesRanges(int rowIdx, List<List<Integer>> rowSequencesRanges) {
         this.getRowsSequencesRanges().set(rowIdx, rowSequencesRanges);
