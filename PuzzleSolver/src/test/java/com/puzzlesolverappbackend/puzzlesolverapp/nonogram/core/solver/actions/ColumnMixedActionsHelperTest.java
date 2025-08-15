@@ -134,8 +134,8 @@ class ColumnMixedActionsHelperTest {
         );
 
         // then
-        assertThat(ranges).isEqualTo(List.of(List.of(0, 7)));
-        assertThat(ranges).hasSize(1);
+        assertThat(ranges).isEqualTo(List.of(List.of(0, 7)))
+                .hasSize(1);
     }
 
     @DisplayName("getColouredSequencesRangesInColumnInRangeToTop — o06041, col=7, hits empty cell branch and returns [3,5]")
@@ -164,8 +164,8 @@ class ColumnMixedActionsHelperTest {
                         board, columnIdx, potentiallyColouredFieldRowIndex, maxSequenceLength);
 
         // then
-        assertThat(ranges).isEqualTo(List.of(List.of(3, 5)));
-        assertThat(ranges).hasSize(1);
+        assertThat(ranges).isEqualTo(List.of(List.of(3, 5)))
+                .hasSize(1);
     }
 
     /*
