@@ -11,12 +11,12 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.log
 public class PlaceXsAtTooShortEmptySequencesLogHelper {
 
     public static String generateLog(
+            boolean isRow,
             int index,
             List<String> initialLine,
             List<String> updatedLine,
             List<Integer> sequencesLengths,
-            List<Integer> excludedSequencesIndexes,
-            boolean isRow
+            List<Integer> excludedSequencesIndexes
     ) {
         return String.format(
                 """

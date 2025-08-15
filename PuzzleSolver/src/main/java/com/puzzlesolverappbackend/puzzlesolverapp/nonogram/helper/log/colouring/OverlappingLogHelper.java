@@ -56,7 +56,7 @@ public class OverlappingLogHelper {
 
         return String.format(
                 """
-                        Arguments.of("%s / %s=%d - sequences range correction",
+                        Arguments.of("%s / %s=%d - colour overlapping fields",
                             %s,
                             %s,
                             %s,

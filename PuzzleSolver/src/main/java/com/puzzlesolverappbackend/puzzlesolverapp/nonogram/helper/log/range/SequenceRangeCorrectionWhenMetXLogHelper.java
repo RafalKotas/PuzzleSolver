@@ -23,7 +23,7 @@ public class SequenceRangeCorrectionWhenMetXLogHelper {
     ) {
         return String.format(
                 """
-                        %s_SEQUENCES_RANGES_CORRECT_IF_X_ON_WAY: %s=%d
+                        %s_SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY: %s=%d
                         line=%s
                         initialRanges=%s
                         updatedRanges=%s
@@ -64,11 +64,10 @@ public class SequenceRangeCorrectionWhenMetXLogHelper {
                             %s,
                             %s,
                             %s,
-                            %s,
                             %s)
                         )""",
                 fileName,
-                isRow ? "Row" : "Column",
+                isRow ? "row" : "column",
                 index,
                 initialRanges,
                 updatedRanges,

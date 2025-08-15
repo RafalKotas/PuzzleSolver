@@ -8,13 +8,13 @@ import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TooLongMergeLogHelperTest {
+class ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelperTest {
 
     @Test
     @DisplayName("TooLongMergeLogHelper constructor should throw UnsupportedOperationException - reflect instantiation")
     void constructor_throwsException_whenInstantiatedReflectively() throws Exception {
         // given
-        Constructor<TooLongMergeLogHelper> constructor = TooLongMergeLogHelper.class.getDeclaredConstructor();
+        Constructor<ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper> constructor = ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.class.getDeclaredConstructor();
         constructor.setAccessible(true);
 
         // when

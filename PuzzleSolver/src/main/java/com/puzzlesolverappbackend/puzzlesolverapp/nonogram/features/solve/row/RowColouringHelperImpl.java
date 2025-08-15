@@ -5,9 +5,9 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.Colouring
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.TooLongMergeFieldHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.colouring.NonogramFieldColouringHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ExtendLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.OverlappingLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.TooLongMergeLogHelper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -99,8 +99,12 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
     }
 
 
+    /* TODO - think about second coloring action:
+        first about colour field near another if X will force to too long coloured fields sequence (this method)
+        second about merging two coloured sequences with empty Field break (?)
+     */
     @Override
-    public void colourFieldsIfXWouldForceTooLongColouredFieldsSequence(int rowIdx) {
+    public void colourFieldsInRowIfXWouldForceTooLongColouredFieldsSequence(int rowIdx) {
         List<String> rowBefore = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
         boolean anyFieldColoured = false;
 
@@ -113,9 +117,9 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
 
         if (anyFieldColoured) {
             List<String> rowAfter = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
-            String tmpLog = TooLongMergeLogHelper.generateTooLongMergeSequenceLog(
-                    rowIdx,
+            String tmpLog = ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.generateLog(
                     true,
+                    rowIdx,
                     rowBefore,
                     nonogramRowLogic.getRowsSequencesRanges().get(rowIdx),
                     sequenceLengths,

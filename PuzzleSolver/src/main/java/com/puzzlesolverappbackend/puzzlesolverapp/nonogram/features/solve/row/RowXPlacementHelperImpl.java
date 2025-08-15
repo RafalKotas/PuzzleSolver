@@ -245,14 +245,14 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
         int width = nonogramRowLogic.getNonogramRules().getWidth();
         List<List<Integer>> sequenceRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
         List<Integer> sequencesLengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
-        List<Integer> excludedSequenceIndexes = nonogramRowLogic.getRowsSequencesIdsNotToInclude().get(rowIdx);
+        List<Integer> excludedSequenceIds = nonogramRowLogic.getRowsSequencesIdsNotToInclude().get(rowIdx);
 
         List<String> initialRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
         List<List<Integer>> candidateRanges = findEmptyRangesBetweenXs(rowIdx, width);
 
         for (List<Integer> range : candidateRanges) {
-            if (onlyTooLongSequencesFitInRange(sequenceRanges, sequencesLengths, excludedSequenceIndexes, range)) {
+            if (onlyTooLongSequencesFitInRange(sequenceRanges, sequencesLengths, excludedSequenceIds, range)) {
                 markXsInRange(range, rowIdx);
             }
         }
@@ -260,12 +260,13 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
         List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
         if (!initialRow.equals(updatedRow)) {
             String tmpLog = PlaceXsAtTooShortEmptySequencesLogHelper.generateLog(
+                    true,
                     rowIdx,
                     initialRow,
                     updatedRow,
                     sequencesLengths,
-                    excludedSequenceIndexes,
-                    true);
+                    excludedSequenceIds
+            );
             nonogramRowLogic.setTmpLog(tmpLog);
             nonogramRowLogic.addLog();
         }

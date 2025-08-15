@@ -6,9 +6,9 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.Colouring
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.TooLongMergeFieldHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.colouring.NonogramFieldColouringHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ExtendLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.OverlappingLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.TooLongMergeLogHelper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -123,9 +123,9 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
 
         if (anyFieldColoured) {
             List<String> columnAfter = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
-            String tmpLog = TooLongMergeLogHelper.generateTooLongMergeSequenceLog(
-                    columnIdx,
+            String tmpLog = ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.generateLog(
                     false,
+                    columnIdx,
                     columnBefore,
                     nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx),
                     nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx),

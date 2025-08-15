@@ -337,16 +337,16 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
     @Override
     public void placeXsColumnAtTooShortEmptySequences(int columnIdx) {
         int height = nonogramColumnLogic.getNonogramRules().getHeight();
-        List<List<Integer>> sequenceRanges = nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx);
-        List<Integer> sequenceLengths = nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
-        List<Integer> excludedSequenceIds = nonogramColumnLogic.getColumnsSequencesIdsNotToInclude().get(columnIdx);
+        List<List<Integer>> sequencesRanges = nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx);
+        List<Integer> sequencesLengths = nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
+        List<Integer> excludedSequenceIndexes = nonogramColumnLogic.getColumnsSequencesIdsNotToInclude().get(columnIdx);
 
         List<String> initialColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
 
         List<List<Integer>> candidateRanges = findEmptyRangesBetweenXs(columnIdx, height);
 
         for (List<Integer> range : candidateRanges) {
-            if (onlyTooLongSequencesFitInRange(sequenceRanges, sequenceLengths, excludedSequenceIds, range)) {
+            if (onlyTooLongSequencesFitInRange(sequencesRanges, sequencesLengths, excludedSequenceIndexes, range)) {
                 markXsInRange(range, columnIdx);
             }
         }
@@ -354,12 +354,12 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
         List<String> updatedColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
         if (!initialColumn.equals(updatedColumn)) {
             String tmpLog = PlaceXsAtTooShortEmptySequencesLogHelper.generateLog(
+                    false,
                     columnIdx,
                     initialColumn,
                     updatedColumn,
-                    sequenceLengths,
-                    excludedSequenceIds,
-                    false);
+                    sequencesLengths,
+                    excludedSequenceIndexes);
             nonogramColumnLogic.setTmpLog(tmpLog);
             nonogramColumnLogic.addLog();
         }

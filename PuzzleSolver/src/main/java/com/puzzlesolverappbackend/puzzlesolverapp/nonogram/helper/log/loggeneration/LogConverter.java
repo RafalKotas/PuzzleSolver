@@ -2,14 +2,15 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggenera
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.AssignmentConflictLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ExtendLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.OverlappingLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.TooLongMergeLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exclusion.ExcludedSequenceLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.marking.MarkAvailableFieldsLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.SequenceRangeCorrectionWhenPlacingXsLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.*;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.*;
 import lombok.experimental.UtilityClass;
@@ -39,10 +40,12 @@ public class LogConverter {
                     Optional.of(SequenceRangeCorrectionFromColouredEdgesLogHelper.convertLogToTestArguments(log, solutionName));
             case "SEQUENCES_RANGES_CORRECTION_WHEN_MARKING_FIELDS" ->
                     Optional.of(SequenceRangeCorrectionWhenMarkingFieldsLogHelper.convertLogToTestArguments(log, solutionName));
+            case "SEQUENCES_RANGES_CORRECTION_WHEN_PLACING_X" ->
+                    Optional.of(SequenceRangeCorrectionWhenPlacingXsLogHelper.convertLogToTestArguments(log, solutionName));
 
             // colour
             case "COLOUR_OVERLAPPING_FIELDS" -> Optional.of(OverlappingLogHelper.convertLogToTestArguments(log, solutionName));
-            case "TOO_LONG_MERGE" -> Optional.of(TooLongMergeLogHelper.convertLogToTestArguments(log, solutionName));
+            case "TOO_LONG_MERGE" -> Optional.of(ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.convertLogToTestArguments(log, solutionName));
             case "EXTEND" -> Optional.of(ExtendLogHelper.convertLogToTestArguments(log, solutionName));
             // TODO - implementation methods
             case "COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT" -> Optional.of(AssignmentConflictLogHelper.convertLogToTestArguments(log, solutionName, logic));
@@ -57,7 +60,7 @@ public class LogConverter {
             case "PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE" ->
                     Optional.of(PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.convertLogToTestArguments(log, solutionName, logic));
             case "PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_SEQUENCE" -> // TODO - implementation methods
-                    Optional.of(PlaceXsIfONearXWillMergeNearFieldsToTooLongColouredSequenceLogHelper.convertLogToTestArguments(log, solutionName, logic));
+                    Optional.of(PlaceXsIfONearXWillMergeNearFieldsToTooLongColouredSequenceLogHelper.convertLogToTestArguments(log, solutionName));
 
             // mixed
             case "PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART" ->
@@ -85,12 +88,14 @@ public class LogConverter {
         if (isCorrectionFromEdges(log)) return "SEQUENCES_RANGES_CORRECTION_FROM_COLOURED_EDGES";
         // SUB-ACTION of "MARK_AVAILABLE_FIELDS"
         if (isRangeCorrectionWhenMarking(log)) return "SEQUENCES_RANGES_CORRECTION_WHEN_MARKING_FIELDS";
+        // SUB_ACTION of "PLACE_XS_AROUND_LONGEST_SEQUENCE"
+        if (isRangeCorrectionWhenPlacingX(log)) return "SEQUENCES_RANGES_CORRECTION_WHEN_PLACING_X";
 
         // colour
         if (isOverlap(log)) return "COLOUR_OVERLAPPING_FIELDS";
         if (isTooLongMerge(log)) return "TOO_LONG_MERGE";
         if (isExtend(log)) return "EXTEND";
-        if(isColourFieldsIfXCausesAssignmentConflict(log)) return "COLOUR_FIELDS_IF_X_CAUSES_ASSIGNMENT_CONFLICT";
+        if (isColourFieldsIfXCausesAssignmentConflict(log)) return "COLOUR_FIELDS_IF_X_CAUSES_ASSIGNMENT_CONFLICT";
 
         // x placing
         if (isPlaceXsAtUnreachable(log)) return "PLACE_XS_AT_UNREACHABLE_FIELDS";
@@ -129,8 +134,8 @@ public class LogConverter {
     }
 
     private static boolean isCorrectionIfXOnWay(String log) {
-        return log.startsWith("CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY:") ||
-                log.startsWith("CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY:");
+        return log.startsWith("ROW_SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY:") ||
+                log.startsWith("COLUMN_SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY:");
     }
 
     private static boolean isMatchingSequenceCorrection(String log) {
@@ -148,6 +153,10 @@ public class LogConverter {
                 log.startsWith("COLUMN_SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS:");
     }
 
+    private static boolean isRangeCorrectionWhenPlacingX(String log) {
+        return log.contains("_SEQUENCE_CORRECTION_WHEN_PLACING_X");
+    }
+
     // colour
 
     private static boolean isOverlap(String log) {
@@ -155,7 +164,7 @@ public class LogConverter {
     }
 
     private static boolean isTooLongMerge(String log) {
-        return log.startsWith("TOO_LONG_MERGE_");
+        return log.startsWith("COLOURING_FIELDS_IN") && log.contains("IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE");
     }
 
     private static boolean isExtend(String log) {

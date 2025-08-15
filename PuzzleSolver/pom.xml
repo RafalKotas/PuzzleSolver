@@ -15,7 +15,11 @@
 	<description>Manage files for storing puzzle data</description>
 	<properties>
 		<java.version>17</java.version>
-		<sonar.exclusions>**/NonogramSolveInitializer.java</sonar.exclusions>
+		<sonar.exclusions>
+			**/NonogramSolveInitializer.java,
+			**/nonogram/core/guess/**,
+			**/nonogram/initializers/SymmetricNonogramLoggerInitializer.java
+		</sonar.exclusions>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -161,6 +165,12 @@
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
+						<configuration>
+							<excludes>
+								<exclude>**/nonogram/core/guess/*</exclude>
+								<exclude>**/nonogram/initializers/SymmetricNonogramLoggerInitializer*</exclude>
+							</excludes>
+						</configuration>
 					</execution>
 					<execution>
 						<id>report</id>
@@ -168,6 +178,12 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
+						<configuration>
+							<excludes>
+								<exclude>**/nonogram/core/guess/*</exclude>
+								<exclude>**/nonogram/initializers/SymmetricNonogramLoggerInitializer*</exclude>
+							</excludes>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

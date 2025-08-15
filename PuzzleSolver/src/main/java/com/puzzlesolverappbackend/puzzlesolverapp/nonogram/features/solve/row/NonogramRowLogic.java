@@ -172,7 +172,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
     @Override
     public void colourFieldsIfInRowXWouldForceTooLongColouredFieldsSequence(int rowIdx) {
-        rowColouringHelper.colourFieldsIfXWouldForceTooLongColouredFieldsSequence(rowIdx);
+        rowColouringHelper.colourFieldsInRowIfXWouldForceTooLongColouredFieldsSequence(rowIdx);
     }
 
     @Override

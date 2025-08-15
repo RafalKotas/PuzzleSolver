@@ -4,30 +4,28 @@ import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
 
 @UtilityClass
-public class TooLongMergeLogHelper {
+public class ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper {
 
-    public static String generateTooLongMergeSequenceLog(
-            int index,
+    public static String generateLog(
             boolean isRow,
+            int index,
             List<String> initialLine,
             List<List<Integer>> sequencesRanges,
             List<Integer> sequencesLengths,
             List<String> updatedLine
     ) {
-        String label = isRow ? "ROW" : "COLUMN";
-
         return String.format(
                 """
-                        TOO_LONG_MERGE_%s_SEQUENCE: %s=%d
+                        COLOURING_FIELDS_IN_%s_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE: %s=%d
                         initialLine=%s
                         sequencesRanges=%s
                         sequencesLengths=%s
                         updatedLine=%s
                         """,
-                label,
+                isRow ? "ROW" : "COLUMN",
                 isRow ? "row" : "column",
                 index,
                 initialLine.toString(),
@@ -50,29 +48,26 @@ public class TooLongMergeLogHelper {
 
         String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
 
+        String initialLine = extractValue(lines, "initialLine");
+        String sequencesRanges = extractValue(lines, "sequencesRanges");
         String sequencesLengths = extractValue(lines, "sequencesLengths");
-        String excludedFields = extractValue(lines, "excludedFields");
-        String excludedSequencesIndexes = extractValue(lines, "excludedSequencesIndexes");
-        String initialRanges = extractValue(lines, "initialRanges");
-        String updatedRanges = extractValue(lines, "updatedRanges");
+        String updatedLine = extractValue(lines, "updatedLine");
 
         return String.format(
                 """
-                        Arguments.of("%s / %s=%d - sequences range correction",
-                            %s,
+                        Arguments.of("%s / %s=%d - colouring fields if X would force too long coloured field sequence",
                             %s,
                             %s,
                             %s,
                             %s)
                         )""",
                 fileName,
-                isRow ? "Row" : "Column",
+                isRow ? "row" : "column",
                 index,
-                toImmutableIntListLiteral(sequencesLengths),
-                toMutableIntListLiteral(excludedFields),
-                toMutableIntListLiteral(excludedSequencesIndexes),
-                toMutableRangesList(initialRanges),
-                toImmutableRangesList(updatedRanges)
+                initialLine,
+                sequencesRanges,
+                sequencesLengths,
+                updatedLine
         );
     }
 }
