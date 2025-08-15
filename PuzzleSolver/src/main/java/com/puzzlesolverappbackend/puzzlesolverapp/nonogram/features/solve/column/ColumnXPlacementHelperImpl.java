@@ -246,12 +246,12 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
 
         if (anyXPlaced) {
             String tmpLog = PlaceXsAroundLongestSequenceLogHelper.generateLog(
+                    false,
                     columnIdx,
                     xEdges,
                     columnBefore,
                     columnAfter,
-                    onlyMatching,
-                    false
+                    onlyMatching
             );
             nonogramColumnLogic.setTmpLog(tmpLog);
             nonogramColumnLogic.addLog();
@@ -359,6 +359,7 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
                     columnIdx,
                     initialColumn,
                     updatedColumn,
+                    sequencesRanges,
                     sequencesLengths,
                     excludedSequenceIndexes);
             nonogramColumnLogic.setTmpLog(tmpLog);

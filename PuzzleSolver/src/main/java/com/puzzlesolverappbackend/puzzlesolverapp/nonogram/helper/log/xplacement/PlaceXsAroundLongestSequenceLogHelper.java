@@ -2,87 +2,70 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacemen
 
 import lombok.experimental.UtilityClass;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
 public class PlaceXsAroundLongestSequenceLogHelper {
 
     public static String generateLog(
+            boolean isRow,
             int index,
             List<Integer> xEdges,
-            List<String> initialState,
-            List<String> finalState,
-            boolean onlyMatching,
-            boolean isRow
+            List<String> initialLine,
+            List<String> updatedLine,
+            boolean onlyMatching
     ) {
         return String.format(
                 """
                         PLACE_XS_%s_AROUND_LONGEST_SEQUENCE: %s=%d
-                        xs=%s
+                        xEdges=%s
                         onlyMatching=%b
-                        initial=%s
-                        final=%s
+                        initialLine=%s
+                        updatedLine=%s
                         """,
-                isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "column",
+                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                isRow ? ROW : COLUMN,
                 index,
                 xEdges,
                 onlyMatching,
-                initialState,
-                finalState
+                initialLine,
+                updatedLine
         );
     }
 
     public static String convertLogToTestArguments(String log, String solutionName) {
         String[] lines = log.strip().split("\n");
-        boolean isRow = lines[0].startsWith("PLACE_XS_ROW");
 
-        int index = Integer.parseInt(lines[0].split("=")[1]);
-        List<Integer> xEdges = parseIntList(lines[1].split("=")[1]);
-        boolean onlyMatching = Boolean.parseBoolean(lines[2].split("=")[1]);
-        List<String> initialState = parseStringList(lines[3].split("=")[1]);
-        List<String> finalState = parseStringList(lines[4].split("=")[1]);
+        boolean isRow = lines[0].contains(ROW_ACTION_NAME);
+        String axisLabel = isRow ? ROW : COLUMN;
 
-        String header = String.format("%s / %s %d",
-                solutionName,
-                isRow ? "Row" : "Column",
-                index
-        );
+        int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
+
+        String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
+
+        String xEdges = extractValue(lines, "xEdges");
+        String onlyMatching = extractValue(lines, "onlyMatching");
+        String initialLine = extractValue(lines, "initialLine");
+        String updatedLine = extractValue(lines, "updatedLine");
 
         return String.format(
                 """
-                        Arguments.of("%s",
+                        Arguments.of("%s / %s=%d - place X around longest sequences",
                             %s,
                             %s,
                             %s,
-                            %b
+                            %s
                         )""",
-                header,
-                formatList(initialState),
-                formatList(xEdges),
-                formatList(finalState),
-                onlyMatching
+                fileName,
+                isRow ? ROW : COLUMN,
+                index,
+                toImmutableIntListLiteral(xEdges),
+                onlyMatching,
+                toMutableStringListLiteral(initialLine),
+                toMutableStringListLiteral(updatedLine)
         );
-    }
-
-    private static List<Integer> parseIntList(String raw) {
-        return Arrays.stream(raw.replaceAll("[\\[\\]]", "").split(","))
-                .map(String::trim)
-                .map(Integer::parseInt)
-                .toList();
-    }
-
-    private static List<String> parseStringList(String raw) {
-        return Arrays.stream(raw.replaceAll("[\\[\\]\"]", "").split(","))
-                .map(String::trim)
-                .toList();
-    }
-
-    private static String formatList(List<?> list) {
-        return "List.of(" + list.stream()
-                .map(e -> e instanceof String ? "\"" + e + "\"" : e.toString())
-                .collect(Collectors.joining(", ")) + ")";
     }
 }

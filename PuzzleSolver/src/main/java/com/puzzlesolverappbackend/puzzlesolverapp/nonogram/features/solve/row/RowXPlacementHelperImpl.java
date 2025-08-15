@@ -160,7 +160,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
     }
 
     private void placeXsAroundLongestSequence(int rowIdx, List<Integer> xEdges, boolean onlyMatching) {
-        List<String> rowBefore = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
+        List<String> initialRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
         boolean anyXPlaced = false;
 
         for (int columnIdx : xEdges) {
@@ -180,16 +180,16 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
             }
         }
 
-        List<String> rowAfter = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
+        List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
         if (anyXPlaced) {
             String tmpLog = PlaceXsAroundLongestSequenceLogHelper.generateLog(
+                    true,
                     rowIdx,
                     xEdges,
-                    rowBefore,
-                    rowAfter,
-                    onlyMatching,
-                    true
+                    initialRow,
+                    updatedRow,
+                    onlyMatching
             );
             nonogramRowLogic.setTmpLog(tmpLog);
             nonogramRowLogic.addLog();
@@ -265,6 +265,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
                     rowIdx,
                     initialRow,
                     updatedRow,
+                    sequenceRanges,
                     sequencesLengths,
                     excludedSequenceIds
             );

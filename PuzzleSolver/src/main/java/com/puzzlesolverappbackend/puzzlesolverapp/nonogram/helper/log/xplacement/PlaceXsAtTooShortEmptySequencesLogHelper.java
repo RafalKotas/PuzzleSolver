@@ -5,7 +5,7 @@ import lombok.experimental.UtilityClass;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
 public class PlaceXsAtTooShortEmptySequencesLogHelper {
@@ -15,6 +15,7 @@ public class PlaceXsAtTooShortEmptySequencesLogHelper {
             int index,
             List<String> initialLine,
             List<String> updatedLine,
+            List<List<Integer>> sequencesRanges,
             List<Integer> sequencesLengths,
             List<Integer> excludedSequencesIndexes
     ) {
@@ -23,6 +24,7 @@ public class PlaceXsAtTooShortEmptySequencesLogHelper {
                         PLACE_XS_IN_%s_AT_TOO_SHORT_EMPTY_SEQUENCES: %s=%d
                         initialLine=%s
                         updatedLine=%s
+                        sequencesRanges=%s
                         sequencesLengths=%s
                         excludedSequencesIndexes=%s
                         """,
@@ -31,6 +33,7 @@ public class PlaceXsAtTooShortEmptySequencesLogHelper {
                 index,
                 initialLine.toString(),
                 updatedLine.toString(),
+                sequencesRanges.toString(),
                 sequencesLengths.toString(),
                 excludedSequencesIndexes.toString()
         );
@@ -48,6 +51,7 @@ public class PlaceXsAtTooShortEmptySequencesLogHelper {
 
         String initialLine = extractValue(lines, "initialLine");
         String updatedLine = extractValue(lines, "updatedLine");
+        String sequencesRanges = extractValue(lines, "sequencesRanges");
         String sequencesLengths = extractValue(lines, "sequencesLengths");
         String excludedSequencesIndexes = extractValue(lines, "excludedSequencesIndexes");
 
@@ -57,15 +61,17 @@ public class PlaceXsAtTooShortEmptySequencesLogHelper {
                             %s,
                             %s,
                             %s,
+                            %s,
                             %s)
                         )""",
                 fileName,
                 isRow ? ROW : COLUMN,
                 index,
-                initialLine,
-                updatedLine,
-                sequencesLengths,
-                excludedSequencesIndexes
+                toMutableStringListLiteral(initialLine),
+                toImmutableStringListLiteral(updatedLine),
+                toMutableRangesListLiteral(sequencesRanges),
+                toImmutableIntListLiteral(sequencesLengths),
+                toMutableIntListLiteral(excludedSequencesIndexes)
         );
     }
 }
