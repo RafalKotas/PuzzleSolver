@@ -4,15 +4,18 @@ import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
+
 @UtilityClass
 public class SequenceRangeCorrectionWhenMarkingFieldsLogHelper {
 
     public static String generateLog(
+            boolean isRow,
             int index,
             List<List<Integer>> sequencesRanges,
             List<Integer> updatedRange,
-            List<Integer> sequencesLengths,
-            boolean isRow
+            List<Integer> sequencesLengths
     ) {
         return String.format(
                 """
@@ -21,8 +24,8 @@ public class SequenceRangeCorrectionWhenMarkingFieldsLogHelper {
                         updatedRange=%s
                         sequencesLengths=%s
                         """,
-                isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "column",
+                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                isRow ? ROW : COLUMN,
                 index,
                 sequencesRanges.toString(),
                 updatedRange.toString(),
@@ -33,8 +36,8 @@ public class SequenceRangeCorrectionWhenMarkingFieldsLogHelper {
     public static String convertLogToTestArguments(String log, String solutionName) {
         String[] lines = log.split("\\n");
 
-        boolean isRow = lines[0].startsWith("ROW_");
-        String axisLabel = isRow ? "row" : "column";
+        boolean isRow = lines[0].contains(ROW_ACTION_NAME);
+        String axisLabel = isRow ? ROW : COLUMN;
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
 
@@ -45,16 +48,16 @@ public class SequenceRangeCorrectionWhenMarkingFieldsLogHelper {
         return String.format(
                 """
                         Arguments.of("%s / %s=%d - sequences range correction when marking fields",
-                            List.of(%s),
-                            List.of(%s),
-                            List.of(%s)
+                            %s,
+                            %s,
+                            %s
                         )""",
                 solutionName,
-                isRow ? "row" : "column",
+                isRow ? ROW : COLUMN,
                 index,
-                sequencesRanges,
-                updatedRange,
-                sequencesLengths
+                toMutableRangesListLiteral(sequencesRanges),
+                toImmutableRangesListLiteral(updatedRange),
+                toImmutableIntListLiteral(sequencesLengths)
         );
     }
 }

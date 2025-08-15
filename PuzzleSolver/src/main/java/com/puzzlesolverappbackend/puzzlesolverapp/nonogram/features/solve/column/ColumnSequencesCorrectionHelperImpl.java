@@ -282,13 +282,13 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
             List<List<Integer>> updatedRanges = nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx);
 
             String tmpLog = SequenceRangeCorrectionWhenMetXLogHelper.generateLog(
+                    false,
                     columnIdx,
                     column,
                     initialRanges,
                     updatedRanges,
                     lengths,
-                    excluded,
-                    false);
+                    excluded);
             nonogramColumnLogic.setTmpLog(tmpLog);
             nonogramColumnLogic.addLog();
 
@@ -343,10 +343,10 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
     private boolean processDirection(List<List<Integer>> colouredRanges, List<List<Integer>> columnSequencesRanges,
                                      List<Integer> columnSequencesLengths, boolean fromTop) {
 
-        Map<Integer, List<Integer>> colouredToSeqs = collectMatchingSequences(colouredRanges, columnSequencesRanges, columnSequencesLengths, fromTop);
-        filterSequences(colouredToSeqs, columnSequencesRanges.size(), fromTop);
+        Map<Integer, List<Integer>> colouredToSequences = collectMatchingSequences(colouredRanges, columnSequencesRanges, columnSequencesLengths, fromTop);
+        filterSequences(colouredToSequences, columnSequencesRanges.size(), fromTop);
 
-        return updateRanges(colouredToSeqs, colouredRanges, columnSequencesRanges, columnSequencesLengths);
+        return updateRanges(colouredToSequences, colouredRanges, columnSequencesRanges, columnSequencesLengths);
     }
 
     private Map<Integer, List<Integer>> collectMatchingSequences(List<List<Integer>> colouredRanges, List<List<Integer>> sequenceRanges,
@@ -376,17 +376,17 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
         return result;
     }
 
-    private void filterSequences(Map<Integer, List<Integer>> colouredToSeqs, int totalSequences, boolean fromTop) {
+    private void filterSequences(Map<Integer, List<Integer>> colouredToSequences, int totalSequences, boolean fromTop) {
         int boundary = fromTop ? -1 : totalSequences;
-        List<Integer> keys = new ArrayList<>(colouredToSeqs.keySet());
+        List<Integer> keys = new ArrayList<>(colouredToSequences.keySet());
         keys.sort(fromTop ? Comparator.naturalOrder() : Comparator.reverseOrder());
 
         for (int i : keys) {
-            List<Integer> possible = colouredToSeqs.get(i);
+            List<Integer> possible = colouredToSequences.get(i);
             if (possible == null || possible.isEmpty()) continue;
 
             List<Integer> filtered = filterByBoundary(possible, boundary, fromTop);
-            colouredToSeqs.put(i, filtered);
+            colouredToSequences.put(i, filtered);
 
             if (filtered.size() == 1) {
                 boundary = filtered.get(0);
@@ -400,11 +400,11 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
                 .toList();
     }
 
-    private boolean updateRanges(Map<Integer, List<Integer>> colouredToSeqs, List<List<Integer>> colouredRanges,
+    private boolean updateRanges(Map<Integer, List<Integer>> colouredToSequences, List<List<Integer>> colouredRanges,
                                  List<List<Integer>> sequenceRanges, List<Integer> sequenceLengths) {
         boolean hasChanged = false;
 
-        for (Map.Entry<Integer, List<Integer>> entry : colouredToSeqs.entrySet()) {
+        for (Map.Entry<Integer, List<Integer>> entry : colouredToSequences.entrySet()) {
             List<Integer> possible = entry.getValue();
             if (possible == null || possible.isEmpty()) continue;
 
@@ -465,12 +465,12 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
             List<String> line = nonogramColumnLogic.getNonogramBoardColumn(columnIdx);
 
             String tmpLog = SequenceRangeCorrectionFromColouredEdgesLogHelper.generateLog(
+                    false, // isRow
                     columnIdx,
                     before,
                     after,
                     lengths,
-                    line,
-                    false // isRow == false
+                    line
             );
             nonogramColumnLogic.setTmpLog(tmpLog);
             nonogramColumnLogic.addLog();

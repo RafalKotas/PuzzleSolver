@@ -10,6 +10,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramB
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.clearing.NonogramFieldClearingHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark.*;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exclusion.ExcludedSequenceLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.NonogramLogService;
@@ -30,8 +31,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.Bo
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.actions.ColumnMixedActionsHelper.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.util.NonogramParametersComparatorHelper.rangesNotEqual;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark.NonogramFieldMarkHelper.markColumnBoardField;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exclusion.ExcludedSequenceLogHelper.generateExcludedSequenceLog;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLogHelper.generateCorrectingRangePartLog;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLogHelper.generateLog;
 
 @Getter
 @Setter
@@ -344,9 +344,9 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
 
                                 columnAfterColouring = getColumnCopy(columnIdx);
                                 tmpLog = PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper
-                                        .generateExtendSequenceLog(
-                                                columnIdx,
+                                        .generateLog(
                                                 false,
+                                                columnIdx,
                                                 "top",
                                                 sequencesLengths,
                                                 columnSequencesRanges,
@@ -364,9 +364,9 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
 
                             columnAfterXPlacing = getColumnCopy(columnIdx);
                             tmpLog = PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper
-                                    .generateExtendSequenceLog(
-                                            columnIdx,
+                                    .generateLog(
                                             false,
+                                            columnIdx,
                                             "top",
                                             sequencesLengths,
                                             columnSequencesRanges,
@@ -399,9 +399,9 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                                 actionScheduler.scheduleActionsBasedOnField(columnField, NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART);
 
                                 columnAfterUpdate = getColumnCopy(columnIdx);
-                                tmpLog = generateCorrectingRangePartLog(
-                                        columnIdx,
+                                tmpLog = generateLog(
                                         false,
+                                        columnIdx,
                                         sequencesLengths,
                                         columnBefore,
                                         columnAfterUpdate,
@@ -477,9 +477,9 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
 
                                 columnAfterColouring = getColumnCopy(columnIdx);
                                 tmpLog = PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper
-                                        .generateExtendSequenceLog(
-                                                columnIdx,
+                                        .generateLog(
                                                 false,
+                                                columnIdx,
                                                 "bottom",
                                                 sequencesLengths,
                                                 columnSequencesRanges,
@@ -496,9 +496,9 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                             this.nonogramState.increaseMadeSteps();
                             columnAfterXPlacing = getRowCopy(rowIdx);
                             tmpLog = PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper
-                                    .generateExtendSequenceLog(
-                                            columnIdx,
+                                    .generateLog(
                                             false,
+                                            columnIdx,
                                             "bottom",
                                             sequencesLengths,
                                             columnSequencesRanges,
@@ -529,9 +529,9 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                                 actionScheduler.scheduleActionsBasedOnField(columnField, NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART);
 
                                 columnAfterUpdate = getColumnCopy(columnIdx);
-                                tmpLog = generateCorrectingRangePartLog(
-                                        columnIdx,
+                                tmpLog = generateLog(
                                         false,
+                                        columnIdx,
                                         sequencesLengths,
                                         columnBefore,
                                         columnAfterUpdate,
@@ -577,10 +577,10 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         IntStream.rangeClosed(columnSeqRange.get(0), columnSeqRange.get(1))
                 .forEach(rowIdx -> markColumnBoardField(this.getNonogramSolutionBoardWithMarks(), rowIdx, columnIdx, marker));
 
-        tmpLog = generateExcludedSequenceLog(
+        tmpLog = ExcludedSequenceLogHelper.generateLog(
+                false,
                 columnIdx,
                 seqIdx,
-                false,
                 this.getColumnCopy(columnIdx),
                 this.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
                 this.getColumnsSequencesRanges().get(columnIdx)

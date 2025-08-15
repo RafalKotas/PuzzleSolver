@@ -82,14 +82,14 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
             }
         }
 
-        List<String> finalState = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
-        if (!initialState.equals(finalState)) {
+        List<String> updatedState = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
+        if (!initialState.equals(updatedState)) {
             String tmpLog = PlaceXsAtUnreachableFieldsLogHelper.generateLog(
+                    false,
                     columnIdx,
                     initialState,
-                    finalState,
-                    initialRanges,
-                    false
+                    updatedState,
+                    initialRanges
             );
             nonogramColumnLogic.setTmpLog(tmpLog);
             nonogramColumnLogic.addLog();
@@ -281,21 +281,22 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
      * The sequence is also excluded from further solving, and actions are scheduled for adjacent cells.
      *
      * @param columnIdx the index of the column being processed
-     * @param sequenceIdx the index of the sequence being updated
+     * @param sequenceIndex the index of the sequence being updated
      * @param newRange the new detected range for the sequence after placing Xs
      */
-    private void updateLogicAfterXsPlacement(int columnIdx, int sequenceIdx, List<Integer> newRange) {
-        List<Integer> oldRange = nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx).get(sequenceIdx);
+    private void updateLogicAfterXsPlacement(int columnIdx, int sequenceIndex, List<Integer> newRange) {
+        List<Integer> oldRange = nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx).get(sequenceIndex);
         if (!newRange.equals(oldRange)) {
-            nonogramColumnLogic.changeColumnSequenceRange(columnIdx, sequenceIdx, newRange);
+            nonogramColumnLogic.changeColumnSequenceRange(columnIdx, sequenceIndex, newRange);
 
             List<List<Integer>> allRanges = nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx);
             List<Integer> sequencesLengths = nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
             List<String> columnState = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
 
             String tmpLog = SequenceRangeCorrectionWhenPlacingXsLogHelper.generateLog(
+                    false,
                     columnIdx,
-                    sequenceIdx,
+                    sequenceIndex,
                     allRanges,
                     newRange,
                     columnState,
@@ -305,7 +306,7 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
             nonogramColumnLogic.addLog();
         }
 
-        nonogramColumnLogic.excludeSequenceInColumn(columnIdx, sequenceIdx);
+        nonogramColumnLogic.excludeSequenceInColumn(columnIdx, sequenceIndex);
 
         Field topEdge = new Field(newRange.get(0) - 1, columnIdx);
         Field bottomEdge = new Field(newRange.get(1) + 1, columnIdx);
@@ -520,12 +521,12 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
 
         if (!columnBefore.equals(columnAfter)) {
             String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
+                    false, // isRow == false
                     columnIdx,
                     columnBefore,
                     columnAfter,
                     nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
-                    nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx),
-                    false // isRow == false
+                    nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx)
             );
             nonogramColumnLogic.setTmpLog(tmpLog);
             nonogramColumnLogic.addLog();
@@ -579,23 +580,25 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
 
     @Override
     public void placeXsColumnIfONearXWillBeginTooLongPossibleColouredSequence(int columnIdx) {
-        List<String> columnBefore = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
+        List<String> initialColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
 
         checkDirectionAndPlaceXs(columnIdx, true);
         checkDirectionAndPlaceXs(columnIdx, false);
 
-        List<String> columnAfter = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
+        List<String> updatedColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
 
-        String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
-                columnIdx,
-                columnBefore,
-                columnAfter,
-                nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
-                nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx),
-                false // isRow = false
-        );
-        nonogramColumnLogic.setTmpLog(tmpLog);
-        nonogramColumnLogic.addLog();
+        if (!initialColumn.equals(updatedColumn)) {
+            String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
+                    false, // isRow = false
+                    columnIdx,
+                    initialColumn,
+                    updatedColumn,
+                    nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
+                    nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx)
+            );
+            nonogramColumnLogic.setTmpLog(tmpLog);
+            nonogramColumnLogic.addLog();
+        }
     }
 
     private void checkDirectionAndPlaceXs(int columnIdx, boolean fromTop) {

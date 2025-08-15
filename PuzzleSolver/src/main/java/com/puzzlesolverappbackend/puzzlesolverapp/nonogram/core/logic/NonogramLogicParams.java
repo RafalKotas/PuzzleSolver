@@ -68,7 +68,7 @@ public abstract class NonogramLogicParams {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    protected void addLog() {
+    public void addLog() {
         if (this.tmpLog.isEmpty()) {
             log.warn("Trying to add empty log!!!");
         } else {

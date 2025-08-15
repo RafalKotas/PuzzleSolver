@@ -59,8 +59,8 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
         if (anyFieldColoured) {
             List<String> columnAfter = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
             String tmpLog = OverlappingLogHelper.generateLog(
-                    columnIdx,
                     false,
+                    columnIdx,
                     columnBefore,
                     sequenceRanges,
                     sequenceLengths,

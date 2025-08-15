@@ -1,24 +1,22 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
 public class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper {
 
-    private static final String LIST_STRING_FORMAT = "    List.of(%s),%n";
-
     public static String generateLog(
+            boolean isRow,
             int index,
             List<String> initialLine,
             List<String> updatedLine,
             List<Integer> sequencesLengths,
-            List<List<Integer>> sequencesRanges,
-            boolean isRow
+            List<List<Integer>> sequencesRanges
     ) {
         return String.format(
                 """
@@ -28,8 +26,8 @@ public class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper {
                         sequencesLengths=%s
                         sequencesRanges=%s
                         """,
-                isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "column",
+                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                isRow ? ROW : COLUMN,
                 index,
                 initialLine.toString(),
                 updatedLine.toString(),
@@ -38,11 +36,11 @@ public class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper {
         );
     }
 
-    public static String convertLogToTestArguments(String log, String solutionName, NonogramLogic logic) {
+    public static String convertLogToTestArguments(String log, String solutionName) {
         String[] lines = log.split("\\n");
 
-        boolean isRow = lines[0].startsWith("ROW_");
-        String axisLabel = isRow ? "row" : "column";
+        boolean isRow = lines[0].contains(ROW_ACTION_NAME);
+        String axisLabel = isRow ? ROW : COLUMN;
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
 
@@ -62,12 +60,12 @@ public class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper {
                             %s)
                         )""",
                 fileName,
-                isRow ? "Row" : "Column",
+                isRow ? ROW : COLUMN,
                 index,
-                initialLine,
-                updatedLine,
-                sequencesLengths,
-                sequencesRanges
+                toMutableStringListLiteral(initialLine),
+                toImmutableStringListLiteral(updatedLine),
+                toImmutableIntListLiteral(sequencesLengths),
+                toMutableRangesListLiteral(sequencesRanges)
         );
     }
 }

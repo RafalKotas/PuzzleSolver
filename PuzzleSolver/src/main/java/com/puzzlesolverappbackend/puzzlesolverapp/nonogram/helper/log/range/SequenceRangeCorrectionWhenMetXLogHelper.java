@@ -1,25 +1,24 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
 
 @UtilityClass
 public class SequenceRangeCorrectionWhenMetXLogHelper {
 
-    private static final String LIST_STRING_FORMAT = "    List.of(%s),%n";
-
     public static String generateLog(
+            boolean isRow,
             int index,
             List<String> line,
             List<List<Integer>> initialRanges,
             List<List<Integer>> updatedRanges,
-            List<Integer> sequenceLengths,
-            List<Integer> excludedSequencesIndexes,
-            boolean isRow
+            List<Integer> sequencesLengths,
+            List<Integer> excludedSequencesIndexes
+
     ) {
         return String.format(
                 """
@@ -27,25 +26,25 @@ public class SequenceRangeCorrectionWhenMetXLogHelper {
                         line=%s
                         initialRanges=%s
                         updatedRanges=%s
-                        sequenceLengths=%s
+                        sequencesLengths=%s
                         excludedSequencesIndexes=%s
                         """,
-                isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "column",
+                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                isRow ? ROW : COLUMN,
                 index,
                 line.toString(),
                 initialRanges.toString(),
                 updatedRanges.toString(),
-                sequenceLengths.toString(),
+                sequencesLengths.toString(),
                 excludedSequencesIndexes.toString()
         );
     }
 
-    public static String convertLogToTestArguments(String log, String solutionName, NonogramLogic logic) {
+    public static String convertLogToTestArguments(String log, String solutionName) {
         String[] lines = log.split("\n");
 
-        boolean isRow = lines[0].startsWith("ROW_");
-        String axisLabel = isRow ? "row" : "column";
+        boolean isRow = lines[0].contains(ROW_ACTION_NAME);
+        String axisLabel = isRow ? ROW : COLUMN;
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
 
@@ -54,20 +53,20 @@ public class SequenceRangeCorrectionWhenMetXLogHelper {
         String initialRanges = extractValue(lines, "initialRanges");
         String updatedRanges = extractValue(lines, "updatedRanges");
 
-        String sequenceLengths = extractValue(lines, "sequenceLengths");
+        String sequenceLengths = extractValue(lines, "sequencesLengths");
         String excludedSequencesIndexes = extractValue(lines, "excludedSequencesIndexes");
 
 
         return String.format(
                 """
-                        Arguments.of("%s / %s=%d - sequences range correction",
+                        Arguments.of("%s / %s=%d - sequences range correction if X on way",
                             %s,
                             %s,
                             %s,
                             %s)
                         )""",
                 fileName,
-                isRow ? "row" : "column",
+                isRow ? ROW : COLUMN,
                 index,
                 initialRanges,
                 updatedRanges,

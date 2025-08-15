@@ -4,15 +4,16 @@ import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
 public class ExcludedSequenceLogHelper {
 
-    public static String generateExcludedSequenceLog(
+    public static String generateLog(
+            boolean isRow,
             int index,
             int sequenceIndex,
-            boolean isRow,
             List<String> line,
             List<Integer> sequenceLengths,
             List<List<Integer>> sequenceRanges
@@ -20,13 +21,13 @@ public class ExcludedSequenceLogHelper {
         return String.format(
                 """
                         EXCLUSION_%s_SEQUENCE: %s=%d
-                        seq=%d
+                        sequenceIndex=%d
                         line=%s
                         sequencesLengths=%s
                         sequencesRanges=%s
                         """,
-                isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "column",
+                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                isRow ? ROW : COLUMN,
                 index,
                 sequenceIndex,
                 line.toString(),
@@ -41,13 +42,13 @@ public class ExcludedSequenceLogHelper {
     ) {
         String[] lines = log.split("\\n");
 
-        boolean isRow = lines[0].startsWith("EXCLUSION_ROW");
-        String axisLabel = isRow ? "row" : "column";
+        boolean isRow = lines[0].contains(ROW_ACTION_NAME);
+        String axisLabel = isRow ? ROW : COLUMN;
 
         String fileName = solutionName.startsWith("r") ? solutionName.substring(1) : solutionName;
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
-        int sequenceIdx = Integer.parseInt(lines[1].split("seq=")[1].trim());
+        int sequenceIndex = Integer.parseInt(lines[1].split("sequenceIndex=")[1].trim());
         String line = lines[2].replace("line=", "").trim();
         String sequencesLengths = lines[3].replace("sequencesLengths=", "").trim();
         String sequencesRanges = lines[4].replace("sequencesRanges=", "").trim();
@@ -61,9 +62,9 @@ public class ExcludedSequenceLogHelper {
                             %s)
                         )""",
                 fileName,
-                isRow ? "Row" : "Column",
+                isRow ? ROW : COLUMN,
                 index,
-                sequenceIdx,
+                sequenceIndex,
                 toImmutableStringListLiteral(line),
                 toImmutableIntListLiteral(sequencesLengths),
                 toImmutableRangesListLiteral(sequencesRanges)

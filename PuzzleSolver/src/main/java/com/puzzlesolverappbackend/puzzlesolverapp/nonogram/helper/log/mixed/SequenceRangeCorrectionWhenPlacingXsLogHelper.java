@@ -4,12 +4,14 @@ import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
 public class SequenceRangeCorrectionWhenPlacingXsLogHelper {
 
     public static String generateLog(
+            boolean isRow,
             int rowIdx,
             int sequenceIndex,
             List<List<Integer>> sequencesRanges,
@@ -19,13 +21,15 @@ public class SequenceRangeCorrectionWhenPlacingXsLogHelper {
     ) {
         return String.format(
                 """
-                        ROW_SEQUENCE_CORRECTION_WHEN_PLACING_X: row=%d
+                        %s_SEQUENCE_CORRECTION_WHEN_PLACING_X: %s=%d
                         sequenceIndex=%d
                         sequencesRanges=%s
                         updatedRange=%s
                         line=%s
                         sequencesLengths=%s
                         """,
+                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                isRow ? ROW : COLUMN,
                 rowIdx,
                 sequenceIndex,
                 sequencesRanges,
@@ -41,8 +45,8 @@ public class SequenceRangeCorrectionWhenPlacingXsLogHelper {
     ) {
         String[] lines = log.split("\\n");
 
-        boolean isRow = lines[0].contains("ROW");
-        String axisLabel = isRow ? "row" : "column";
+        boolean isRow = lines[0].contains(ROW_ACTION_NAME);
+        String axisLabel = isRow ? ROW : COLUMN;
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
 
@@ -56,7 +60,7 @@ public class SequenceRangeCorrectionWhenPlacingXsLogHelper {
 
         return String.format(
                 """
-                        Arguments.of("%s / %s=%d - sequence range correction when placing X",
+                        Arguments.of("%s / %s=%d - correct sequence range when placing X",
                             %s,
                             %s,
                             %s,
@@ -64,7 +68,7 @@ public class SequenceRangeCorrectionWhenPlacingXsLogHelper {
                             %s)
                         )""",
                 fileName,
-                isRow ? "row" : "column",
+                isRow ? ROW : COLUMN,
                 index,
                 sequenceIndex,
                 toMutableRangesList(sequencesRanges),

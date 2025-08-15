@@ -1,27 +1,24 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
-
 import java.util.List;
 
 public class PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper {
 
-    public static String generateExtendSequenceLog(
-            int index,
+    public static String generateLog(
             boolean isRow,
+            int index,
             String direction,
-            List<Integer> sequenceLengths,
-            List<List<Integer>> sequenceRanges,
+            List<Integer> sequencesLengths,
+            List<List<Integer>> sequencesRanges,
             List<String> initialLine,
-            List<String> finalLine
+            List<String> updatedLine
     ) {
         return "PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART_IN_ROW - RAW LOG TODO";
     }
 
     public static String convertLogToTestArguments(
             String logText,
-            String solutionName,
-            NonogramLogic logic
+            String solutionName
     ) {
         return "PREVENT EXTENDING COLOURED SEQUENCE TO EXCESS LENGTH COLOURING PART - CONVERTED LOG TODO";
     }

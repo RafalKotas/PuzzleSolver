@@ -1,11 +1,11 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
 public class SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper {
@@ -26,8 +26,8 @@ public class SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper {
                         initialRanges=%s
                         updatedRanges=%s
                         """,
-                isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "column",
+                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                isRow ? ROW : COLUMN,
                 index,
                 sequencesLengths,
                 line,
@@ -36,11 +36,11 @@ public class SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper {
         );
     }
 
-    public static String convertLogToTestArguments(String log, String solutionName, NonogramLogic logic) {
+    public static String convertLogToTestArguments(String log, String solutionName) {
         String[] lines = log.split("\\n");
 
-        boolean isRow = lines[0].startsWith("ROW_");
-        String axisLabel = isRow ? "row" : "column";
+        boolean isRow = lines[0].contains(ROW_ACTION_NAME);
+        String axisLabel = isRow ? ROW : COLUMN;
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
 
@@ -55,18 +55,18 @@ public class SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper {
         return String.format(
                 """
                         Arguments.of("%s / %s=%d - sequences range correction when matching fields to sequences",
-                            List.of(%s),
-                            List.of(%s),
-                            List.of(%s),
-                            List.of(%s)
+                            %s,
+                            %s,
+                            %s,
+                            %s
                         )""",
                 fileName,
-                isRow ? "Row" : "Column",
+                isRow ? ROW : COLUMN,
                 index,
-                sequencesLengths,
-                line,
-                initialRanges,
-                updatedRanges
+                toImmutableIntListLiteral(sequencesLengths),
+                toImmutableStringListLiteral(line),
+                toMutableRangesListLiteral(initialRanges),
+                toImmutableRangesListLiteral(updatedRanges)
         );
     }
 }

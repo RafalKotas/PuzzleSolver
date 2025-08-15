@@ -40,7 +40,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.To
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.util.NonogramParametersComparatorHelper.sequencesRangesEqual;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.util.NonogramSolverUtils.actualRangesDoNotContainCorrectRanges;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction.*;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exclusion.ExcludedSequenceLogHelper.generateExcludedSequenceLog;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exclusion.ExcludedSequenceLogHelper.generateLog;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.utils.NonogramStatsUtils.areaInFields;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.utils.NonogramStatsUtils.fieldsFilled;
 
@@ -299,7 +299,7 @@ public class NonogramLogic extends NonogramLogicParams {
         int width = getNonogramRules().getWidth();
 
         for (int rowIdx = 0; rowIdx < getNonogramRules().getHeight(); rowIdx++) {
-            List<String> rowBefore = getRowCopy(rowIdx);
+            List<String> initialRow = getRowCopy(rowIdx);
             boolean changed = false;
 
             if (isRowTrivial(rowIdx)) {
@@ -311,17 +311,17 @@ public class NonogramLogic extends NonogramLogicParams {
             }
 
             if (changed) {
-                List<String> rowAfter = getRowCopy(rowIdx);
-                List<Integer> sequenceLengths = getNonogramRules().getRowSequencesLengths().get(rowIdx);
-                List<List<Integer>> sequenceRanges = getRowsSequencesRanges().get(rowIdx);
+                List<String> updatedRow = getRowCopy(rowIdx);
+                List<Integer> sequencesLengths = getNonogramRules().getRowSequencesLengths().get(rowIdx);
+                List<List<Integer>> sequencesRanges = getRowsSequencesRanges().get(rowIdx);
 
                 this.tmpLog = TrivialFillLogHelper.generateTrivialLineLog(
-                        rowIdx,
                         true,
-                        rowBefore,
-                        rowAfter,
-                        sequenceLengths,
-                        sequenceRanges
+                        rowIdx,
+                        initialRow,
+                        updatedRow,
+                        sequencesLengths,
+                        sequencesRanges
                 );
                 addLog();
             }
@@ -397,10 +397,10 @@ public class NonogramLogic extends NonogramLogicParams {
 
     public void addTrivialRowSequenceIdxToNotToInclude(int rowIdx, int seqIdx) {
         if (!this.rowsSequencesIdsNotToInclude.get(rowIdx).contains(seqIdx)) {
-            this.tmpLog = generateExcludedSequenceLog(
+            this.tmpLog = generateLog(
+                    true,
                     rowIdx,
                     seqIdx,
-                    true,
                     this.getRowCopy(rowIdx),
                     this.getNonogramRules().getRowSequencesLengths().get(rowIdx),
                     this.getRowsSequencesRanges().get(rowIdx)
@@ -437,7 +437,7 @@ public class NonogramLogic extends NonogramLogicParams {
         int height = getNonogramRules().getHeight();
 
         for (int columnIdx = 0; columnIdx < getNonogramRules().getWidth(); columnIdx++) {
-            List<String> columnBefore = getColumnCopy(columnIdx);
+            List<String> initialColumn = getColumnCopy(columnIdx);
             boolean changed = false;
 
             if (isColumnTrivial(columnIdx)) {
@@ -449,17 +449,17 @@ public class NonogramLogic extends NonogramLogicParams {
             }
 
             if (changed) {
-                List<String> columnAfter = getColumnCopy(columnIdx);
-                List<Integer> sequenceLengths = getNonogramRules().getColumnSequencesLengths().get(columnIdx);
-                List<List<Integer>> sequenceRanges = getColumnsSequencesRanges().get(columnIdx);
+                List<String> updatedColumn = getColumnCopy(columnIdx);
+                List<Integer> sequencesLengths = getNonogramRules().getColumnSequencesLengths().get(columnIdx);
+                List<List<Integer>> sequencesRanges = getColumnsSequencesRanges().get(columnIdx);
 
                 this.tmpLog = TrivialFillLogHelper.generateTrivialLineLog(
-                        columnIdx,
                         false,
-                        columnBefore,
-                        columnAfter,
-                        sequenceLengths,
-                        sequenceRanges
+                        columnIdx,
+                        initialColumn,
+                        updatedColumn,
+                        sequencesLengths,
+                        sequencesRanges
                 );
                 addLog();
             }
@@ -534,10 +534,10 @@ public class NonogramLogic extends NonogramLogicParams {
 
     public void addColumnSequenceIdxToNotToInclude(int columnIdx, int seqIdx) {
         if (!this.columnsSequencesIdsNotToInclude.get(columnIdx).contains(seqIdx)) {
-            this.tmpLog = generateExcludedSequenceLog(
+            this.tmpLog = generateLog(
+                    true,
                     columnIdx,
                     seqIdx,
-                    true,
                     this.getColumnCopy(columnIdx),
                     this.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
                     this.getColumnsSequencesRanges().get(columnIdx)

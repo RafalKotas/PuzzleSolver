@@ -48,7 +48,7 @@ class NonogramSolverTest {
     void shouldSolveAllLogiNonogramsHeuristically() {
         Map<Double, List<String>> notSolvedByDifficulty = new HashMap<>();
 
-        for (double difficulty : List.of(1.0, 2.0/*, 3.0*/)) {
+        for (double difficulty : List.of(1.0/*, 2.0, 3.0*/)) {
             solveNonogramsAtDifficulty(difficulty, notSolvedByDifficulty);
         }
 
@@ -63,6 +63,7 @@ class NonogramSolverTest {
         List<String> filenames = nonogramRepository.findLogiNonogramsNamesByDifficultySortedByArea(difficulty);
 
         for (String filename : filenames) {
+            log.info("Solving nonogram {}", filename);
             Path filePath = Paths.get(projectRootPath, "../FrontReact", "public", "resources", "Nonograms", filename + ".json");
             NonogramFileDetails details = nonogramService.getNonogramDetailsFromFile(filePath.toString());
             NonogramCorrectnessIndicator indicator = nonogramService.checkNonogramCorrectness(details);

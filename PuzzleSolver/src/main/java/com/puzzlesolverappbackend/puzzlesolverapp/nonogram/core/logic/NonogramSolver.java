@@ -34,10 +34,11 @@ public class NonogramSolver {
     private final NonogramLogicFactory logicFactory;
 
     private static final int MAX_TREE_HEIGHT = 50;
-    private GuessMode guessMode = GuessMode.DISABLED;
+    private GuessMode guessMode;
     private static final boolean RECURSION_MODE_ENABLED = false;
 
     private static final boolean LOG_STEPS_SOLVER = false;
+    private static final boolean LOG_HEURISTICS_RESULTS = true;
     private boolean printNodeCompletionPercentage = true;
 
     private boolean oneOfTwoDecisionsWrong;
@@ -80,47 +81,47 @@ public class NonogramSolver {
 
     public void runHeuristicSolver(NonogramSolutionNode nonogramStartNode, String solutionFileName,
                                    int currentTreeHeight, int maxTreeHeight) {
-        NonogramSolutionNode nonogramSubsolutionNode = logicFactory.copyNode(nonogramStartNode);
-        loadSolutionData(solutionFileName, nonogramSubsolutionNode);
+        NonogramSolutionNode nonogramPartialSolutionNode = logicFactory.copyNode(nonogramStartNode);
+        loadSolutionData(solutionFileName, nonogramPartialSolutionNode);
 
-        if (getCompletionPercentage(nonogramSubsolutionNode.getNonogramLogic()) == 100) {
+        if (getCompletionPercentage(nonogramPartialSolutionNode.getNonogramLogic()) == 100) {
             logIf(LOG_STEPS_SOLVER, "Solution found, recursion depth: {}", currentTreeHeight);
-            replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
+            replaceSolutionNodeWithMoreBeneficialSolution(nonogramPartialSolutionNode);
             return;
         }
 
-        nonogramSubsolutionNode.getNonogramLogic().fillTrivialRowsAndColumns();
-        nonogramSubsolutionNode.setNodeLogs(nonogramSubsolutionNode.getNonogramLogic().getLogs());
-        nonogramSubsolutionNode.makeBasicSolverActions();
+        nonogramPartialSolutionNode.getNonogramLogic().fillTrivialRowsAndColumns();
+        nonogramPartialSolutionNode.setNodeLogs(nonogramPartialSolutionNode.getNonogramLogic().getLogs());
+        nonogramPartialSolutionNode.makeBasicSolverActions();
 
-        if (LOG_STEPS_SOLVER) {
-            logHeuristicResults(nonogramSubsolutionNode, solutionFileName);
+        if (LOG_HEURISTICS_RESULTS) {
+            logHeuristicResults(nonogramPartialSolutionNode, solutionFileName);
         }
 
         List<NonogramGuessActionsLog> guessesLogs = new ArrayList<>();
 
         if (currentTreeHeight == 0) {
-            replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
+            replaceSolutionNodeWithMoreBeneficialSolution(nonogramPartialSolutionNode);
         }
 
-        if (this.guessMode == GuessMode.ENABLED && getCompletionPercentage(nonogramSubsolutionNode.getNonogramLogic()) != 100) {
-            int wrongDecisionsCount = runGuessLoop(nonogramSubsolutionNode, currentTreeHeight, guessesLogs);
+        if (this.guessMode == GuessMode.ENABLED && getCompletionPercentage(nonogramPartialSolutionNode.getNonogramLogic()) != 100) {
+            int wrongDecisionsCount = runGuessLoop(nonogramPartialSolutionNode, currentTreeHeight, guessesLogs);
 
             if (currentTreeHeight == 0) {
-                replaceSolutionNodeWithMoreBeneficialSolution(nonogramSubsolutionNode);
+                replaceSolutionNodeWithMoreBeneficialSolution(nonogramPartialSolutionNode);
             }
 
             if (wrongDecisionsCount == 0) {
-                recurseIfNeeded(nonogramSubsolutionNode, currentTreeHeight, maxTreeHeight, solutionFileName);
+                recurseIfNeeded(nonogramPartialSolutionNode, currentTreeHeight, maxTreeHeight, solutionFileName);
             } else if (wrongDecisionsCount == 2 && LOG_STEPS_SOLVER) {
                 log.info("Solver ends at node, both decisions wrong (treeHeight: {}, completeness: {}).\n",
-                        currentTreeHeight, getCompletionPercentage(nonogramSubsolutionNode.getNonogramLogic()));
+                        currentTreeHeight, getCompletionPercentage(nonogramPartialSolutionNode.getNonogramLogic()));
             }
         } else if (LOG_STEPS_SOLVER) {
             log.info("full solution:");
             log.info(".".repeat(50));
             log.info("currentTreeHeight: {} , completion percentage without guess enabled: {}",
-                    currentTreeHeight, getCompletionPercentage(nonogramSubsolutionNode.getNonogramLogic()));
+                    currentTreeHeight, getCompletionPercentage(nonogramPartialSolutionNode.getNonogramLogic()));
         }
     }
 
@@ -146,10 +147,16 @@ public class NonogramSolver {
         List<String> rawLogs = node.getNodeLogs();
         List<String> convertedLogs = new ArrayList<>();
 
-        for (String rawLog : rawLogs) {
-            NonogramLogic logic = node.getNonogramLogic();
-            LogConverter.convertLogByAction(rawLog, solutionFileName, logic, LogConverter.detectActionTypeFromRawLog(rawLog))
-                    .ifPresentOrElse(convertedLogs::add, () -> log.info(rawLog));
+        for (int i = 0; i < rawLogs.size(); i++) {
+            String rawLog = rawLogs.get(i);
+            final int idx = i; // effectively final
+
+            LogConverter.convertLogByAction(rawLog, solutionFileName,
+                            LogConverter.detectActionTypeFromRawLog(rawLog))
+                    .ifPresentOrElse(
+                            convertedLogs::add,
+                            () -> log.info("logIdx {}: {}", idx, rawLog)
+                    );
         }
 
         LogGroupingPrinter.printLogsGroupedByDetectedType(rawLogs, convertedLogs);
@@ -286,14 +293,14 @@ public class NonogramSolver {
         return DecisionOutcome.bothValid();
     }
 
-    private void printOverallHeuristicsResult(NonogramSolutionNode nonogramSubsolutionNode) {
-            log.info("decisions {}", nonogramSubsolutionNode.getNonogramLogic().getActionsToDoList().size());
+    private void printOverallHeuristicsResult(NonogramSolutionNode nonogramPartialSolutionNode) {
+            log.info("decisions {}", nonogramPartialSolutionNode.getNonogramLogic().getActionsToDoList().size());
 
             log.info("Fields filled after fill trivial rows and columns: {}",
-                    fieldsFilled(nonogramSubsolutionNode.getNonogramLogic()));
+                    fieldsFilled(nonogramPartialSolutionNode.getNonogramLogic()));
             log.info("COMPLETION PERCENTAGE: {}, DECISIONS SIZE: {}",
-                    getCompletionPercentage(nonogramSubsolutionNode.getNonogramLogic()),
-                    nonogramSubsolutionNode.getNonogramGuessDecisions().size());
+                    getCompletionPercentage(nonogramPartialSolutionNode.getNonogramLogic()),
+                    nonogramPartialSolutionNode.getNonogramGuessDecisions().size());
             log.info("SOLUTION STEPS: ");
     }
 

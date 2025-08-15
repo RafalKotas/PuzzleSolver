@@ -1,6 +1,5 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.AssignmentConflictLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ExtendLogHelper;
@@ -23,7 +22,6 @@ public class LogConverter {
     public static Optional<String> convertLogByAction(
             String log,
             String solutionName,
-            NonogramLogic logic,
             String actionType
     ) {
         return switch (actionType) {
@@ -31,11 +29,11 @@ public class LogConverter {
             case "SEQUENCES_RANGES_CORRECTION" ->
                     Optional.of(SequencesRangesCorrectionLogHelper.convertLogToTestArguments(log, solutionName));
             case "SEQUENCES_RANGES_CORRECTION_WHEN_MET_COLOURED_FIELDS" ->
-                    Optional.of(SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.convertLogToTestArguments(log, solutionName, logic));
+                    Optional.of(SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.convertLogToTestArguments(log, solutionName));
             case "SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY" ->
-                    Optional.of(SequenceRangeCorrectionWhenMetXLogHelper.convertLogToTestArguments(log, solutionName, logic));
+                    Optional.of(SequenceRangeCorrectionWhenMetXLogHelper.convertLogToTestArguments(log, solutionName));
             case "SEQUENCES_RANGES_CORRECTION_BY_MATCHING_FIELDS_TO_SEQUENCES" -> // TODO - implementation methods
-                    Optional.of(SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper.convertLogToTestArguments(log, solutionName, logic));
+                    Optional.of(SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper.convertLogToTestArguments(log, solutionName));
             case "SEQUENCES_RANGES_CORRECTION_FROM_COLOURED_EDGES" ->
                     Optional.of(SequenceRangeCorrectionFromColouredEdgesLogHelper.convertLogToTestArguments(log, solutionName));
             case "SEQUENCES_RANGES_CORRECTION_WHEN_MARKING_FIELDS" ->
@@ -48,7 +46,7 @@ public class LogConverter {
             case "TOO_LONG_MERGE" -> Optional.of(ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.convertLogToTestArguments(log, solutionName));
             case "EXTEND" -> Optional.of(ExtendLogHelper.convertLogToTestArguments(log, solutionName));
             // TODO - implementation methods
-            case "COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT" -> Optional.of(AssignmentConflictLogHelper.convertLogToTestArguments(log, solutionName, logic));
+            case "COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT" -> Optional.of(AssignmentConflictLogHelper.convertLogToTestArguments(log, solutionName));
 
             // x placing
             case "PLACE_XS_AT_UNREACHABLE_FIELDS" ->
@@ -56,25 +54,25 @@ public class LogConverter {
             case "PLACE_XS_AROUND_LONGEST_SEQUENCE" ->
                     Optional.of(PlaceXsAroundLongestSequenceLogHelper.convertLogToTestArguments(log, solutionName));
             case "PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES" ->
-                    Optional.of(PlaceXsAtTooShortEmptySequencesLogHelper.convertLogToTestArguments(log, solutionName, logic));
+                    Optional.of(PlaceXsAtTooShortEmptySequencesLogHelper.convertLogToTestArguments(log, solutionName));
             case "PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE" ->
-                    Optional.of(PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.convertLogToTestArguments(log, solutionName, logic));
+                    Optional.of(PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.convertLogToTestArguments(log, solutionName));
             case "PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_SEQUENCE" -> // TODO - implementation methods
                     Optional.of(PlaceXsIfONearXWillMergeNearFieldsToTooLongColouredSequenceLogHelper.convertLogToTestArguments(log, solutionName));
 
             // mixed
             case "PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART" ->
-                    Optional.of(PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper.convertLogToTestArguments(log, solutionName, logic));
+                    Optional.of(PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper.convertLogToTestArguments(log, solutionName));
             case "PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART" ->
-                    Optional.of(PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper.convertLogToTestArguments(log, solutionName, logic));
+                    Optional.of(PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper.convertLogToTestArguments(log, solutionName));
             case "PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART" ->
-                    Optional.of(PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLogHelper.convertLogToTestArguments(log, solutionName, logic));
+                    Optional.of(PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLogHelper.convertLogToTestArguments(log, solutionName));
 
             // other
             case "MARK_AVAILABLE_FIELDS" ->
-                    Optional.of(MarkAvailableFieldsLogHelper.convertLogToTestArguments(log, solutionName, logic));
+                    Optional.of(MarkAvailableFieldsLogHelper.convertLogToTestArguments(log, solutionName));
 
-            case "TRIVIAL" -> Optional.of(TrivialFillLogHelper.convertLogToTestArguments(log, solutionName, logic));
+            case "TRIVIAL" -> Optional.of(TrivialFillLogHelper.convertLogToTestArguments(log, solutionName));
             case "EXCLUDED" -> Optional.of(ExcludedSequenceLogHelper.convertLogToTestArguments(log, solutionName));
             default -> Optional.empty();
         };

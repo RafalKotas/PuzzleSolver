@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO - removee class(?)
 @UtilityClass
 public class NonogramSpecification {
 

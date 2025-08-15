@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
@@ -27,8 +28,8 @@ public class ExtendLogHelper {
                         sequencesLengths=%s
                         updatedLine=%s
                         """,
-                isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "column",
+                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                isRow ? ROW : COLUMN,
                 index,
                 direction,
                 initialLine.toString(),
@@ -38,14 +39,11 @@ public class ExtendLogHelper {
         );
     }
 
-    public static String convertLogToTestArguments(
-            String log,
-            String solutionName
-    ) {
+    public static String convertLogToTestArguments(String log, String solutionName) {
         String[] lines = log.split("\\n");
 
-        boolean isRow = lines[0].contains("ROW");
-        String axisLabel = isRow ? "row" : "column";
+        boolean isRow = lines[0].contains(ROW_ACTION_NAME);
+        String axisLabel = isRow ? ROW : COLUMN;
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
 
@@ -65,7 +63,7 @@ public class ExtendLogHelper {
                             %s
                         )""",
                 fileName,
-                isRow ? "row" : "column",
+                isRow ? ROW : COLUMN,
                 index,
                 toMutableStringListLiteral(initialLine),
                 toImmutableRangesListLiteral(sequencesRanges),

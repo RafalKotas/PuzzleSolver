@@ -31,7 +31,7 @@ class ExtendLogHelperTest {
 
     @Test
     @DisplayName("ExtendLogHelper - generate example log - o08007")
-    void shouldGenerateLogWhenAtLeastOneSequenceIsExtended() {
+    void shouldGenerateLog() {
         // given
         int index = 3;
         String direction = "toBottom";
@@ -61,7 +61,8 @@ class ExtendLogHelperTest {
 
         // then
         String expected =
-                "EXTEND_COLUMN_SEQUENCE: column=3, dir=toBottom\n" +
+                "EXTEND_COLUMN_SEQUENCE: column=3\n" +
+                        "direction=toBottom\n" +
                         "initialLine=[-, -, X, -, -, -, -, -, X, O, -, -, -, -, -]\n" +
                         "sequencesRanges=[[0, 5], [3, 7], [9, 10], [10, 14]]\n" +
                         "sequencesLengths=[2, 3, 2, 1]\n" +
@@ -75,7 +76,8 @@ class ExtendLogHelperTest {
     void shouldConvertGeneratedLogToTestArguments() {
         // given
         String generatedLog =
-                "EXTEND_COLUMN_SEQUENCE: column=3, dir=toBottom\n" +
+                "EXTEND_COLUMN_SEQUENCE: column=3\n" +
+                        "direction=toBottom\n" +
                         "initialLine=[-, -, X, -, -, -, -, -, X, O, -, -, -, -, -]\n" +
                         "sequencesRanges=[[0, 5], [3, 7], [9, 10], [10, 14]]\n" +
                         "sequencesLengths=[2, 3, 2, 1]\n" +
@@ -88,7 +90,7 @@ class ExtendLogHelperTest {
         );
 
         // then
-        String expected = "Arguments.of(\"o08007 / Column=3 - extending coloured fields near X\",\n" +
+        String expected = "Arguments.of(\"o08007 / column=3 - extending coloured fields near X\",\n" +
                 "    new ArrayList<>(List.of(\"-\", \"-\", \"X\", \"-\", \"-\", \"-\", \"-\", \"-\", \"X\", \"O\", \"-\", \"-\", \"-\", \"-\", \"-\")),\n" +
                 "    List.of(List.of(0, 5), List.of(3, 7), List.of(9, 10), List.of(10, 14)),\n" +
                 "    List.of(2, 3, 2, 1),\n" +

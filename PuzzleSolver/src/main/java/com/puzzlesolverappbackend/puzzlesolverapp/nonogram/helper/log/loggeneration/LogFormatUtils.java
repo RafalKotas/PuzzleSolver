@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 public class LogFormatUtils {
 
     private static final String LIST_OF_PREFIX = "List.of(";
+    private static final String ARRAY_LIST_PREFIX = "new ArrayList<>(";
 
     // Pattern to match an inner integer list: [0, 14], [3, 16], ...
     private static final Pattern INNER_LIST = Pattern.compile(
@@ -111,7 +112,7 @@ public class LogFormatUtils {
 
     /** Converts "[2, 2, 1]" to "new ArrayList<>(List.of(2, 2, 1))" (mutable). */
     public static String toMutableIntListLiteral(String arrayLiteral) {
-        return "new ArrayList<>(" + toImmutableIntListLiteral(arrayLiteral) + ")";
+        return ARRAY_LIST_PREFIX + toImmutableIntListLiteral(arrayLiteral) + ")";
     }
 
     // -------- Ranges (list of lists) --------
@@ -132,9 +133,9 @@ public class LogFormatUtils {
     public static String toMutableRangesListLiteral(String arrayLiteral) {
         List<List<Integer>> ranges = toMutableRangesList(arrayLiteral);
         String inner = ranges.stream()
-                .map(in -> "new ArrayList<>(List.of(" + in.stream().map(String::valueOf).collect(Collectors.joining(", ")) + "))")
+                .map(in -> ARRAY_LIST_PREFIX + LIST_OF_PREFIX + in.stream().map(String::valueOf).collect(Collectors.joining(", ")) + "))")
                 .collect(Collectors.joining(", "));
-        return "new ArrayList<>(List.of(" + inner + "))";
+        return ARRAY_LIST_PREFIX + LIST_OF_PREFIX + inner + "))";
     }
 
     // =====================================================================================
@@ -170,7 +171,7 @@ public class LogFormatUtils {
 
         String body = trimmed.substring(1, trimmed.length() - 1).trim();
         if (body.isEmpty()) {
-            return "List.of()";
+            return LIST_OF_PREFIX;
         }
 
         String elements = Arrays.stream(body.split(","))
@@ -178,7 +179,7 @@ public class LogFormatUtils {
                 .map(s -> "\"" + s + "\"")
                 .collect(Collectors.joining(", "));
 
-        return "List.of(" + elements + ")";
+        return LIST_OF_PREFIX + elements + ")";
     }
 
     /**
@@ -186,6 +187,6 @@ public class LogFormatUtils {
      * into mutable new ArrayList<>(List.of("-", "-", "X", "-", ...))
      */
     public static String toMutableStringListLiteral(String arrayLiteral) {
-        return "new ArrayList<>(" + toImmutableStringListLiteral(arrayLiteral) + ")";
+        return ARRAY_LIST_PREFIX + toImmutableStringListLiteral(arrayLiteral) + ")";
     }
 }

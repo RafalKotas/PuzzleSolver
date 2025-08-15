@@ -30,7 +30,7 @@ class OverlappingLogHelperTest {
 
     @Test
     @DisplayName("ExtendLogHelper - generate example log - o08007")
-    void shouldGenerateLogWhenAtLeastOneSequenceIsExtended() {
+    void shouldGenerateLog() {
         // given
         int index = 9;
         boolean isRow = true;
@@ -45,8 +45,8 @@ class OverlappingLogHelperTest {
 
         // when
         String actual = OverlappingLogHelper.generateLog(
-                index,
                 isRow,
+                index,
                 initialLine,
                 sequencesRanges,
                 sequencesLengths,
@@ -55,7 +55,7 @@ class OverlappingLogHelperTest {
 
         // then
         String expected =
-                "OVERLAP_ROW_SEQUENCE: row=9\n" +
+                "COLOUR_OVERLAPPING_FIELDS_IN_ROW: row=9\n" +
                         "initialLine=[-, -, -, -, -, -, -, -, -, -, -, -, -, -, -]\n" +
                         "sequencesRanges=[[0, 14]]\n" +
                         "sequencesLengths=[9]\n" +

@@ -70,14 +70,14 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
             }
         }
 
-        List<String> finalState = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
-        if (!initialState.equals(finalState)) {
+        List<String> updatedState = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
+        if (!initialState.equals(updatedState)) {
             String tmpLog = PlaceXsAtUnreachableFieldsLogHelper.generateLog(
+                    true,
                     rowIdx,
                     initialState,
-                    finalState,
-                    initialRanges,
-                    true
+                    updatedState,
+                    initialRanges
             );
             nonogramRowLogic.setTmpLog(tmpLog);
             nonogramRowLogic.addLog();
@@ -203,27 +203,28 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
         }
     }
 
-    private void updateLogicAfterXsPlacement(int rowIdx, int sequenceIdx, List<Integer> newRange) {
-        List<Integer> oldRange = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx).get(sequenceIdx);
-        if (!newRange.equals(oldRange)) {
-            nonogramRowLogic.changeRowSequenceRange(rowIdx, sequenceIdx, newRange);
+    private void updateLogicAfterXsPlacement(int rowIdx, int sequenceIndex, List<Integer> updatedRange) {
+        List<Integer> oldRange = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx).get(sequenceIndex);
+        if (!updatedRange.equals(oldRange)) {
+            nonogramRowLogic.changeRowSequenceRange(rowIdx, sequenceIndex, updatedRange);
 
             List<List<Integer>> allRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
             List<Integer> rowSequencesLengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
             List<String> boardRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
             String tmpLog = SequenceRangeCorrectionWhenPlacingXsLogHelper.generateLog(
+                    true,
                     rowIdx,
-                    sequenceIdx,
+                    sequenceIndex,
                     allRanges,
-                    newRange,
+                    updatedRange,
                     boardRow,
                     rowSequencesLengths
             );
             nonogramRowLogic.setTmpLog(tmpLog);
             nonogramRowLogic.addLog();
 
-            nonogramRowLogic.excludeSequenceInRow(rowIdx, sequenceIdx);
+            nonogramRowLogic.excludeSequenceInRow(rowIdx, sequenceIndex);
         }
     }
 
@@ -412,7 +413,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
         List<List<Integer>> colouredRanges = groupConsecutiveIndices(colouredFields);
         List<List<List<Integer>>> rangesWithExtras = createCandidateRangesAroundSequences(colouredRanges);
 
-        List<String> rowBefore = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
+        List<String> initialRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
         for (int i = 0; i < colouredRanges.size(); i++) {
             List<List<Integer>> currentWithExtras = rangesWithExtras.get(i);
@@ -421,18 +422,19 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
             checkAndPlaceXAfterInRow(colouredRanges, currentWithExtras.get(1), i, rowIdx);
         }
 
-        List<String> rowAfter = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
+        List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
-        if (!rowBefore.equals(rowAfter)) {
+        if (!initialRow.equals(updatedRow)) {
             // TODO - create log helper for this action
-            nonogramRowLogic.getLogService().setTmpLog(PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
+            String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
+                    true, // isRow = true
                     rowIdx,
-                    rowBefore,
-                    rowAfter,
+                    initialRow,
+                    updatedRow,
                     nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
-                    nonogramRowLogic.getRowsSequencesRanges().get(rowIdx),
-                    true
-            ));
+                    nonogramRowLogic.getRowsSequencesRanges().get(rowIdx)
+            );
+            nonogramRowLogic.setTmpLog(tmpLog);
             nonogramRowLogic.addLog();
         }
     }
@@ -490,14 +492,15 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
         List<String> rowAfter = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
         if (!rowBefore.equals(rowAfter)) {
-            nonogramRowLogic.getLogService().setTmpLog(PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
+            String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
+                    true, //isRow = true
                     rowIdx,
                     rowBefore,
                     rowAfter,
                     nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
-                    nonogramRowLogic.getRowsSequencesRanges().get(rowIdx),
-                    true
-            ));
+                    nonogramRowLogic.getRowsSequencesRanges().get(rowIdx)
+            );
+            nonogramRowLogic.setTmpLog(tmpLog);
             nonogramRowLogic.addLog();
         }
     }

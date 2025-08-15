@@ -1,17 +1,18 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
-
 import java.util.List;
+
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
 
 public class PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLogHelper {
 
-    public static String generateCorrectingRangePartLog(
-            int index,
+    public static String generateLog(
             boolean isRow,
+            int index,
             List<Integer> sequenceLengths,
             List<String> initialLine,
-            List<String> updatedLine, // TODO - niepotrzebne(?)
+            List<String> updatedLine, // TODO - not needed(?)
             List<List<Integer>> initialRanges,
             List<List<Integer>> updatedRanges
     ) {
@@ -24,8 +25,8 @@ public class PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLo
                         initialRanges=%s
                         updatedRanges=%s
                         """,
-                isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "column",
+                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                isRow ? ROW : COLUMN,
                 index,
                 sequenceLengths.toString(),
                 initialLine.toString(),
@@ -37,34 +38,33 @@ public class PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLo
 
     public static String convertLogToTestArguments(
             String logText,
-            String solutionName,
-            NonogramLogic logic
+            String solutionName
     ) {
         String[] lines = logText.strip().split("\n");
 
-        boolean isRow = lines[0].startsWith("ROW_");
-        String axisLabel = isRow ? "row" : "column";
+        boolean isRow = lines[0].contains(ROW_ACTION_NAME);
+        String axisLabel = isRow ? ROW : COLUMN;
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
 
-        String sequencesLengths = lines[1].contains("=") ? lines[1].split("=")[1].trim() : "";
-        String initialLine = lines[2].contains("=") ? lines[2].split("=", 2)[1].trim() : "";
-        String updatedLine = lines[3].contains("=") ? lines[3].split("=", 2)[1].trim() : "";
+        String sequencesLengths = extractValue(lines, "sequencesLengths");
+        String initialLine = extractValue(lines, "initialLine");
+        String updatedLine = extractValue(lines, "updatedLine");
 
-        String initialRanges = lines[4].contains("=") ? lines[4].split("=", 2)[1].trim() : "";
-        String updatedRanges = lines[5].contains("=") ? lines[5].split("=", 2)[1].trim() : "";
+        String initialRanges = extractValue(lines, "initialRanges");
+        String updatedRanges = extractValue(lines, "updatedRanges");
 
         return String.format(
                 """
-                    Arguments.of("%s / %s=%d - prevent extending coloured sequence to excess length correcting range part",
-                        List.of(%s),
-                        List.of(%s),
-                        List.of(%s),
-                        List.of(%s),
-                        List.of(%s)
-                    )""",
+                       Arguments.of("%s / %s=%d - prevent extending coloured sequence to excess length correcting range part",
+                           %s,
+                           %s,
+                           %s,
+                           %s,
+                           %s
+                       )""",
                 solutionName,
-                isRow ? "row" : "column",
+                isRow ? ROW : COLUMN,
                 index,
                 sequencesLengths,
                 initialLine,

@@ -1,10 +1,10 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model;
 
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
+@Getter
 public class NonogramFullSolutionData {
     private List<List<String>> finalBoard;
     private List<List<List<Integer>>> derivedRowRanges;

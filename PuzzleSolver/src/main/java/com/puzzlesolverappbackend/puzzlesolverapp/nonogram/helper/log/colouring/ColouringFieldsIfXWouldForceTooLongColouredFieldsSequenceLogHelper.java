@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
 
 @UtilityClass
@@ -25,8 +26,8 @@ public class ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper 
                         sequencesLengths=%s
                         updatedLine=%s
                         """,
-                isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "column",
+                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                isRow ? ROW : COLUMN,
                 index,
                 initialLine.toString(),
                 sequencesRanges.toString(),
@@ -41,8 +42,8 @@ public class ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper 
     ) {
         String[] lines = log.split("\\n");
 
-        boolean isRow = lines[0].startsWith("ROW_");
-        String axisLabel = isRow ? "row" : "column";
+        boolean isRow = lines[0].contains(ROW_ACTION_NAME);
+        String axisLabel = isRow ? ROW : COLUMN;
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
 
@@ -62,7 +63,7 @@ public class ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper 
                             %s)
                         )""",
                 fileName,
-                isRow ? "row" : "column",
+                isRow ? ROW : COLUMN,
                 index,
                 initialLine,
                 sequencesRanges,

@@ -1,25 +1,23 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
 
 @UtilityClass
 public class TrivialFillLogHelper {
 
     public static String generateTrivialLineLog(
-            int index,
             boolean isRow,
+            int index,
             List<String> initialLine,
             List<String> updatedLine,
             List<Integer> sequencesLengths,
             List<List<Integer>> sequencesRanges
     ) {
-        String label = isRow ? "ROW" : "COLUMN";
-
         return String.format(
                 """
                         FILL_TRIVIAL_%s_SEQUENCE: %s=%d
@@ -28,8 +26,8 @@ public class TrivialFillLogHelper {
                         sequencesRanges=%s
                         updatedLine=%s
                         """,
-                label,
-                isRow ? "row" : "column",
+                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                isRow ? ROW : COLUMN,
                 index,
                 initialLine.toString(),
                 sequencesLengths.toString(),
@@ -38,21 +36,13 @@ public class TrivialFillLogHelper {
         );
     }
 
-    public static String convertLogToTestArguments(String logText, String solutionName, NonogramLogic logic) {
-        String[] lines = logText.strip().split("\n");
+    public static String convertLogToTestArguments(String log, String solutionName) {
+        String[] lines = log.split("\\n");
 
-        String header = lines[0]
-                .replace("TRIVIAL_ROW_SEQUENCE:", "")
-                .replace("TRIVIAL_COLUMN_SEQUENCE:", "")
-                .trim();
+        boolean isRow = lines[0].contains(ROW_ACTION_NAME);
+        String axisLabel = isRow ? ROW : COLUMN;
 
-        String[] headerParts = header.split("=");
-        if (headerParts.length != 2) {
-            throw new IllegalArgumentException("Invalid header format: " + lines[0]);
-        }
-
-        boolean isRow = lines[0].contains("ROW");
-        int index = Integer.parseInt(headerParts[1].trim());
+        int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
 
         String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
 
@@ -60,8 +50,6 @@ public class TrivialFillLogHelper {
         String lengthsLine = extractValue(lines, "sequencesLengths");
         String rangesLine = extractValue(lines, "sequencesRanges");
         String updatedLine = extractValue(lines, "updatedLine");
-
-        String rowOrColumn = isRow ? "Row" : "Column";
 
         return String.format(
                 """
@@ -72,9 +60,9 @@ public class TrivialFillLogHelper {
                             List.of(%s)
                         )""",
                 fileName,
-                rowOrColumn,
+                isRow ? ROW : COLUMN,
                 index,
-                rowOrColumn,
+                isRow ? ROW : COLUMN,
                 initialLine,
                 lengthsLine,
                 rangesLine,

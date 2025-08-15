@@ -192,11 +192,11 @@ public class NonogramFieldMarkHelper {
         if (oldRange.equals(updatedRange)) return false;
 
         String log = SequenceRangeCorrectionWhenMarkingFieldsLogHelper.generateLog(
+                board.isRow(),
                 board.getLineIdx(),
                 sequences.getSequencesRanges().get(board.getLineIdx()),
                 updatedRange,
-                sequences.getSequencesLengths().get(board.getLineIdx()),
-                board.isRow()
+                sequences.getSequencesLengths().get(board.getLineIdx())
         );
         ops.getSetTmpLogConsumer().accept(log);
         ops.getAddLogRunnable().run();

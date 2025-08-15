@@ -60,8 +60,8 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
         if (anyFieldColoured) {
             List<String> rowAfter = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
             String tmpLog = OverlappingLogHelper.generateLog(
-                    rowIdx,
                     true,
+                    rowIdx,
                     rowBefore,
                     sequenceRanges,
                     sequenceLengths,

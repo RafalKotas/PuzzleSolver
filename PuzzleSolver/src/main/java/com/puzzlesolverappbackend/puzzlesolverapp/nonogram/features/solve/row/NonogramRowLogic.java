@@ -10,6 +10,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramB
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.clearing.NonogramFieldClearingHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark.*;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exclusion.ExcludedSequenceLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.NonogramLogService;
@@ -28,8 +29,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.range
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.util.NonogramParametersComparatorHelper.rangesNotEqual;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark.NonogramFieldMarkHelper.markRowBoardField;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exclusion.ExcludedSequenceLogHelper.generateExcludedSequenceLog;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLogHelper.generateCorrectingRangePartLog;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLogHelper.generateLog;
 
 @Setter
 @Getter
@@ -307,9 +307,9 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
                                 rowAfterColouring = getRowCopy(rowIdx);
                                 tmpLog = PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper
-                                        .generateExtendSequenceLog(
-                                                rowIdx,
+                                        .generateLog(
                                                 true,
+                                                rowIdx,
                                                 "left",
                                                 sequencesLengths,
                                                 rowSequencesRanges,
@@ -327,9 +327,9 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
                             rowAfterXPlacing = getRowCopy(rowIdx);
                             tmpLog = PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper
-                                    .generateExtendSequenceLog(
-                                            rowIdx,
+                                    .generateLog(
                                             true,
+                                            rowIdx,
                                             "left",
                                             sequencesLengths,
                                             rowSequencesRanges,
@@ -362,9 +362,9 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                                 actionScheduler.scheduleActionsBasedOnField(rowField, NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART);
 
                                 rowAfterUpdate = getRowCopy(rowIdx);
-                                tmpLog = generateCorrectingRangePartLog(
-                                        rowIdx,
+                                tmpLog = generateLog(
                                         true,
+                                        rowIdx,
                                         sequencesLengths,
                                         rowBefore,
                                         rowAfterUpdate,
@@ -439,9 +439,9 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
                                 rowAfterColouring = getRowCopy(rowIdx);
                                 tmpLog = PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper
-                                        .generateExtendSequenceLog(
-                                                rowIdx,
+                                        .generateLog(
                                                 true,
+                                                rowIdx,
                                                 "right",
                                                 sequencesLengths,
                                                 rowSequencesRanges,
@@ -458,9 +458,9 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                             this.nonogramState.increaseMadeSteps();
                             rowAfterXPlacing = getRowCopy(rowIdx);
                             tmpLog = PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper
-                                    .generateExtendSequenceLog(
-                                            rowIdx,
+                                    .generateLog(
                                             true,
+                                            rowIdx,
                                             "right",
                                             sequencesLengths,
                                             rowSequencesRanges,
@@ -491,9 +491,9 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                                 actionScheduler.scheduleActionsBasedOnField(rowField, NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART);
 
                                 rowAfterUpdate = getRowCopy(rowIdx);
-                                tmpLog = generateCorrectingRangePartLog(
-                                        rowIdx,
+                                tmpLog = generateLog(
                                         true,
+                                        rowIdx,
                                         sequencesLengths,
                                         rowBefore,
                                         rowAfterUpdate,
@@ -539,10 +539,10 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         IntStream.rangeClosed(rowSeqRange.get(0), rowSeqRange.get(1))
                 .forEach(columnIdx -> markRowBoardField(this.getNonogramSolutionBoardWithMarks(), rowIdx, columnIdx, marker));
 
-        tmpLog = generateExcludedSequenceLog(
+        tmpLog = ExcludedSequenceLogHelper.generateLog(
+                false,
                 rowIdx,
                 seqIdx,
-                false,
                 this.getRowCopy(rowIdx),
                 this.getNonogramRules().getRowSequencesLengths().get(rowIdx),
                 this.getRowsSequencesRanges().get(rowIdx)

@@ -4,20 +4,20 @@ import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
 public class OverlappingLogHelper {
 
     public static String generateLog(
-            int index,
             boolean isRow,
+            int index,
             List<String> initialLine,
             List<List<Integer>> sequencesRanges,
             List<Integer> sequencesLengths,
             List<String> updatedLine
     ) {
-        String type = isRow ? "ROW" : "COLUMN";
         return String.format(
                 """
                         COLOUR_OVERLAPPING_FIELDS_IN_%s: %s=%d
@@ -26,8 +26,8 @@ public class OverlappingLogHelper {
                         sequencesLengths=%s
                         updatedLine=%s
                         """,
-                type,
-                isRow ? "row" : "column",
+                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                isRow ? ROW : COLUMN,
                 index,
                 initialLine.toString(),
                 sequencesRanges.toString(),
@@ -42,8 +42,8 @@ public class OverlappingLogHelper {
     ) {
         String[] lines = log.split("\\n");
 
-        boolean isRow = lines[0].contains("ROW");
-        String axisLabel = isRow ? "row" : "column";
+        boolean isRow = lines[0].contains(ROW_ACTION_NAME);
+        String axisLabel = isRow ? ROW : COLUMN;
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
 
@@ -63,7 +63,7 @@ public class OverlappingLogHelper {
                             %s)
                         )""",
                 fileName,
-                isRow ? "row" : "column",
+                isRow ? ROW : COLUMN,
                 index,
                 toMutableStringListLiteral(initialLine),
                 toImmutableRangesListLiteral(sequencesRanges),

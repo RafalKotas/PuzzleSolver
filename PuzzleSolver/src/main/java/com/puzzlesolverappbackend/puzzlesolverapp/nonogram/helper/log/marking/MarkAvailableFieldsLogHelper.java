@@ -1,83 +1,71 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.marking;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
+
 @UtilityClass
 public class MarkAvailableFieldsLogHelper {
-
-    private static final String LIST_STRING_FORMAT = "    List.of(%s),%n";
 
     public static String generateLog(
             int index,
             List<String> initialLine,
             List<String> updatedLine,
-            int sequenceIdx,
+            int sequenceIndex,
             String marker,
             boolean isRow
     ) {
         return String.format(
                 """
-                        MARK_AVAILABLE_FIELDS_IN_%s: %s=%d, sequenceIdx=%d, marker=%s
+                        MARK_AVAILABLE_FIELDS_IN_%s: %s=%d
+                        sequenceIndex=%d
+                        marker=%s
                         initialLine=%s
                         updatedLine=%s
                         """,
-                isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "column",
+                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                isRow ? ROW : COLUMN,
                 index,
-                sequenceIdx,
+                sequenceIndex,
                 marker,
                 initialLine,
                 updatedLine
         );
     }
 
-    public static String convertLogToTestArguments(String log, String fileName, NonogramLogic logic) {
+    public static String convertLogToTestArguments(String log, String solutionName) {
         String[] lines = log.split("\\n");
 
-        boolean isRow = lines[0].startsWith("MARK_AVAILABLE_FIELDS_IN_ROW");
-        String axisLabel = isRow ? "row" : "column";
+        boolean isRow = lines[0].contains(ROW_ACTION_NAME);
+        String axisLabel = isRow ? ROW : COLUMN;
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].split(",")[0].trim());
-        int seqIdx = Integer.parseInt(lines[0].split("sequenceIdx=")[1].split(",")[0].trim());
-        String marker = lines[0].split("marker=")[1].trim();
 
-        String initialLine = lines[1].split("initialLine=")[1].trim();
-        String updatedLine = lines[2].split("updatedLine=")[1].trim();
+        String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
 
-        List<String> fieldState = isRow
-                ? logic.getNonogramSolutionBoard().get(index)
-                : logic.getNonogramSolutionBoard().stream().map(row -> row.get(index)).toList();
-
-        List<List<Integer>> ranges = isRow
-                ? logic.getRowsSequencesRanges().get(index)
-                : logic.getColumnsSequencesRanges().get(index);
-
-        List<Integer> lengths = isRow
-                ? logic.getNonogramRules().getRowSequencesLengths().get(index)
-                : logic.getNonogramRules().getColumnSequencesLengths().get(index);
+        int sequenceIndex = Integer.parseInt(lines[1].split("sequenceIndex=")[1].split(",")[0].trim());
+        String marker = extractValue(lines, "marker");
+        String initialLine = extractValue(lines, "initialLine");
+        String updatedLine = extractValue(lines, "updatedLine");
 
         return String.format(
-                "Arguments.of(\"%s / %dx%d / %s / %s %d - seq %d\",%n" +
-                        LIST_STRING_FORMAT +
-                        LIST_STRING_FORMAT +
-                        LIST_STRING_FORMAT +
-                        LIST_STRING_FORMAT +
-                        "    List.of(%s))",
+                """
+                        Arguments.of("%s / %s=%d - mark available fields",
+                            %s,
+                            %s,
+                            %s,
+                            %s
+                        )""",
                 fileName,
-                logic.getNonogramRules().getWidth(),
-                logic.getNonogramRules().getHeight(),
-                marker,
-                isRow ? "Row" : "Column",
+                isRow ? ROW : COLUMN,
                 index,
-                seqIdx,
-                initialLine,
-                updatedLine,
-                fieldState,
-                ranges,
-                lengths.toString()
+                sequenceIndex,
+                marker,
+                toMutableStringListLiteral(initialLine),
+                toImmutableStringListLiteral(updatedLine)
         );
     }
 }

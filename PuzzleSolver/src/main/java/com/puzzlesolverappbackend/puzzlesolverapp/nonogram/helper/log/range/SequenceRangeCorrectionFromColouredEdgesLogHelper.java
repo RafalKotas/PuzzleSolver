@@ -4,18 +4,19 @@ import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
 
 @UtilityClass
 public class SequenceRangeCorrectionFromColouredEdgesLogHelper {
 
     public static String generateLog(
+            boolean isRow,
             int index,
             List<List<Integer>> initialRanges,
             List<List<Integer>> updatedRanges,
             List<Integer> sequenceLengths,
-            List<String> line,
-            boolean isRow
+            List<String> line
     ) {
         return String.format(
                 """
@@ -25,8 +26,8 @@ public class SequenceRangeCorrectionFromColouredEdgesLogHelper {
                         sequencesLengths=%s
                         line=%s
                         """,
-                isRow ? "ROW" : "COLUMN",
-                isRow ? "row" : "column",
+                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                isRow ? ROW : COLUMN,
                 index,
                 initialRanges,
                 updatedRanges,
@@ -38,10 +39,13 @@ public class SequenceRangeCorrectionFromColouredEdgesLogHelper {
     public static String convertLogToTestArguments(String log, String solutionName) {
         String[] lines = log.split("\\n");
 
-        boolean isRow = lines[0].startsWith("ROW_");
-        String axisLabel = isRow ? "row" : "column";
+        boolean isRow = lines[0].contains(ROW_ACTION_NAME);
+        String axisLabel = isRow ? ROW : COLUMN;
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
+
+        String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
+
         String initialRanges = extractValue(lines, "initialRanges");
         String updatedRanges = extractValue(lines, "updatedRanges");
         String sequencesLengths = extractValue(lines, "sequencesLengths");
@@ -49,21 +53,19 @@ public class SequenceRangeCorrectionFromColouredEdgesLogHelper {
 
         return String.format(
                 """
-                        Arguments.of("%s / %s %d - corrected ranges from coloured edges",
-                            List.of(%s),
-                            List.of(%s),
-                            List.of(%s),
-                            List.of(%s),
+                        Arguments.of("%s / %s=%d - correct sequences ranges from coloured edges",
+                            %s,
+                            %s,
+                            %s,
                             %s
                         )""",
-                solutionName,
-                isRow ? "Row" : "Column",
+                fileName,
+                isRow ? ROW : COLUMN,
                 index,
                 initialRanges,
                 updatedRanges,
                 sequencesLengths,
-                line,
-                isRow
+                line
         );
     }
 }
