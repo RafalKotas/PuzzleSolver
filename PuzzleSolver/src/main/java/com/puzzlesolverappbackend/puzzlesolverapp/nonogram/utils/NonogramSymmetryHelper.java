@@ -8,12 +8,16 @@ import java.util.List;
 @UtilityClass
 public final class NonogramSymmetryHelper {
 
-    public static boolean isRowSymmetrical(NonogramLogic logic) {
-        return areOriginalAndReversedListIdentical(logic.getNonogramRules().getRowSequencesLengths());
-    }
-
-    public static boolean isColumnSymmetrical(NonogramLogic logic) {
-        return areOriginalAndReversedListIdentical(logic.getNonogramRules().getColumnSequencesLengths());
+    public static String getSymmetryGrade(NonogramLogic logic) {
+        if (is3DSymmetrical(logic)) {
+            return "4 axis";
+        } else if (is2DSymmetrical(logic)) {
+            return "2 axis";
+        } else if (is1DSymmetrical(logic)) {
+            return "1 axis";
+        } else {
+            return "None";
+        }
     }
 
     public static boolean is1DSymmetrical(NonogramLogic logic) {
@@ -30,16 +34,12 @@ public final class NonogramSymmetryHelper {
                 logic.areRowsSequencesIdenticalWithColumnsSequences();
     }
 
-    public static String getSymmetryGrade(NonogramLogic logic) {
-        if (is3DSymmetrical(logic)) {
-            return "4 axis";
-        } else if (is2DSymmetrical(logic)) {
-            return "2 axis";
-        } else if (is1DSymmetrical(logic)) {
-            return "1 axis";
-        } else {
-            return "None";
-        }
+    public static boolean isRowSymmetrical(NonogramLogic logic) {
+        return areOriginalAndReversedListIdentical(logic.getNonogramRules().getRowSequencesLengths());
+    }
+
+    public static boolean isColumnSymmetrical(NonogramLogic logic) {
+        return areOriginalAndReversedListIdentical(logic.getNonogramRules().getColumnSequencesLengths());
     }
 
     private static boolean areOriginalAndReversedListIdentical(List<List<Integer>> original) {
