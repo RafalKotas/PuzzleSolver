@@ -573,10 +573,12 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
         }
     }
 
-    private boolean shouldPlaceX(int rowIdx, List<Integer> range, int colIdx, Field field) {
+    private boolean shouldPlaceX(int rowIdx, List<Integer> range, int columnIdx, Field field) {
         return nonogramColumnLogic.getBoardAccessHelper().isRowIndexValid(rowIdx)
                 && isFieldEmpty(nonogramColumnLogic.getNonogramSolutionBoard(), field)
-                && !colouredSequenceInColumnIsValid(range, colIdx, nonogramColumnLogic);
+                && !colouredSequenceInColumnIsValid(range,
+                nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
+                nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx));
     }
 
     @Override
