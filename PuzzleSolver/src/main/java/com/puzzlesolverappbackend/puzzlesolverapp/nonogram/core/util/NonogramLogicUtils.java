@@ -1,7 +1,5 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.util;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.NonogramColumnLogic;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.NonogramRowLogic;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
@@ -12,10 +10,9 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.range
 @UtilityClass
 public class NonogramLogicUtils {
 
-    public static boolean colouredSequenceInRowIsValid(List<Integer> colouredSequence, int rowIdx,
-                                                                     NonogramRowLogic nonogramRowLogic) {
-        List<Integer> rowSequencesLengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
-        List<List<Integer>> rowSequencesRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
+    public static boolean colouredSequenceInRowIsValid(List<Integer> colouredSequence,
+                                                       List<Integer> rowSequencesLengths,
+                                                       List<List<Integer>> rowSequencesRanges) {
 
         for (int seqNo = 0; seqNo < rowSequencesLengths.size(); seqNo++) {
             if (rangeInsideAnotherRange(colouredSequence, rowSequencesRanges.get(seqNo)) &&
@@ -27,10 +24,9 @@ public class NonogramLogicUtils {
         return false;
     }
 
-    public static boolean colouredSequenceInColumnIsValid(List<Integer> colouredSequence, int columnIdx,
-                                                       NonogramColumnLogic nonogramColumnLogic) {
-        List<Integer> columnSequencesLengths = nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
-        List<List<Integer>> columnSequencesRanges = nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx);
+    public static boolean colouredSequenceInColumnIsValid(List<Integer> colouredSequence,
+                                                          List<Integer> columnSequencesLengths,
+                                                          List<List<Integer>> columnSequencesRanges) {
 
         for (int seqNo = 0; seqNo < columnSequencesLengths.size(); seqNo++) {
             if (rangeInsideAnotherRange(colouredSequence, columnSequencesRanges.get(seqNo)) &&
