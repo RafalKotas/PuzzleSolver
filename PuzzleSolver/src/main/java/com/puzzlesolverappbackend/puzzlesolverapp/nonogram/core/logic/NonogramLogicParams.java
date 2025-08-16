@@ -3,7 +3,9 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramActionDetails;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRules;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solutions.NonogramSolutionDecision;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +18,6 @@ import java.util.stream.IntStream;
 @Setter
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Data
 @Slf4j
 public abstract class NonogramLogicParams {
 
@@ -35,11 +35,11 @@ public abstract class NonogramLogicParams {
     protected List<NonogramSolutionDecision> availableChoices;
 
     protected NonogramLogicParams(NonogramRules nonogramRules,
-                               List<List<String>> nonogramSolutionBoard,
-                               List<List<String>> nonogramSolutionBoardWithMarks,
-                               List<NonogramActionDetails> actionsToDoList,
-                               NonogramState nonogramState,
-                               List<String> logs) {
+                                  List<List<String>> nonogramSolutionBoard,
+                                  List<List<String>> nonogramSolutionBoardWithMarks,
+                                  List<NonogramActionDetails> actionsToDoList,
+                                  NonogramState nonogramState,
+                                  List<String> logs) {
         this.nonogramRules = nonogramRules;
         this.nonogramSolutionBoard = nonogramSolutionBoard;
         this.nonogramSolutionBoardWithMarks = nonogramSolutionBoardWithMarks;
@@ -56,15 +56,13 @@ public abstract class NonogramLogicParams {
         return new ArrayList<>(this.getNonogramBoardColumn(columnIdx));
     }
 
+    public List<String> getNonogramBoardRow(int rowIdx) {
+        return this.getNonogramSolutionBoard().get(rowIdx);
+    }
+
     public List<String> getNonogramBoardColumn(int columnIdx) {
         return IntStream.range(0, this.getNonogramRules().getHeight())
                 .mapToObj(rowIdx -> this.nonogramSolutionBoard.get(rowIdx).get(columnIdx))
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    public List<String> getNonogramBoardColumnWithMarks(int columnIdx) {
-        return IntStream.range(0, this.getNonogramRules().getHeight())
-                .mapToObj(rowIdx -> this.nonogramSolutionBoardWithMarks.get(rowIdx).get(columnIdx))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
