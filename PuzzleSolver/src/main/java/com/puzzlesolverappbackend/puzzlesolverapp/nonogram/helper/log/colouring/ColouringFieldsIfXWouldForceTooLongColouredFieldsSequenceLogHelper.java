@@ -5,7 +5,7 @@ import lombok.experimental.UtilityClass;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
 public class ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper {
@@ -65,10 +65,10 @@ public class ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper 
                 fileName,
                 isRow ? ROW : COLUMN,
                 index,
-                initialLine,
-                sequencesRanges,
-                sequencesLengths,
-                updatedLine
+                toMutableStringListLiteral(initialLine),
+                toMutableRangesListLiteral(sequencesRanges),
+                toImmutableIntListLiteral(sequencesLengths),
+                toMutableStringListLiteral(updatedLine)
         );
     }
 }

@@ -11,13 +11,13 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.log
 public class ExtendLogHelper {
 
     public static String generateLog(
+            boolean isRow,
             int index,
             String direction,
             List<String> initialLine,
             List<List<Integer>> sequencesRanges,
             List<Integer> sequencesLengths,
-            List<String> updatedLine,
-            boolean isRow
+            List<String> updatedLine
     ) {
         return String.format(
                 """

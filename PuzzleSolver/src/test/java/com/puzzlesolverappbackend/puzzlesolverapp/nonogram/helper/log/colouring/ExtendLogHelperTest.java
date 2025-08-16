@@ -30,8 +30,8 @@ class ExtendLogHelperTest {
     }
 
     @Test
-    @DisplayName("ExtendLogHelper - generate example log - o08007")
-    void shouldGenerateLog() {
+    @DisplayName("ExtendLogHelper - generate example log - o08007 column 3")
+    void shouldGenerateLogColumnCase() {
         // given
         int index = 3;
         String direction = "toBottom";
@@ -50,13 +50,13 @@ class ExtendLogHelperTest {
 
         // when
         String actual = ExtendLogHelper.generateLog(
+                isRow,
                 index,
                 direction,
                 initialLine,
                 sequencesRanges,
                 sequencesLengths,
-                updatedLine,
-                isRow
+                updatedLine
         );
 
         // then
@@ -72,8 +72,8 @@ class ExtendLogHelperTest {
     }
 
     @Test
-    @DisplayName("ExtendLogHelper - convert example log to test arguments - o08007")
-    void shouldConvertGeneratedLogToTestArguments() {
+    @DisplayName("ExtendLogHelper - convert example log to test arguments - o08007 column 3")
+    void shouldConvertGeneratedLogToTestArgumentsColumnCase() {
         // given
         String generatedLog =
                 "EXTEND_COLUMN_SEQUENCE: column=3\n" +
@@ -95,6 +95,75 @@ class ExtendLogHelperTest {
                 "    List.of(List.of(0, 5), List.of(3, 7), List.of(9, 10), List.of(10, 14)),\n" +
                 "    List.of(2, 3, 2, 1),\n" +
                 "    List.of(\"-\", \"-\", \"X\", \"-\", \"-\", \"-\", \"-\", \"-\", \"X\", \"O\", \"O\", \"-\", \"-\", \"-\", \"-\")\n" +
+                ")";
+        assertThat(convertedLog).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("ExtendLogHelper - generate example log - o07942 row 12")
+    void shouldGenerateLogRowCase() {
+        // given
+        boolean isRow = true;
+        int index = 12;
+        String direction = "toLeft";
+        List<String> initialLine = new ArrayList<>(List.of("-", "-", "-", "-", "-", "O", "O", "O", "O", "O", "O", "O", "O", "-", "-", "X", "O", "X", "O", "X"));
+        List<List<Integer>> sequencesRanges = new ArrayList<>(
+                Arrays.asList(
+                        new ArrayList<>(List.of(2, 14)),
+                        new ArrayList<>(List.of(16, 16)),
+                        new ArrayList<>(List.of(18, 18))
+                )
+        );
+        List<Integer> sequencesLengths = List.of(11, 1, 1);
+        List<String> updatedLine = new ArrayList<>(List.of("-", "-", "-", "-", "O", "O", "O", "O", "O", "O", "O", "O", "O", "-", "-", "X", "O", "X", "O", "X"));
+
+        // when
+        String actual = ExtendLogHelper.generateLog(
+                isRow,
+                index,
+                direction,
+                initialLine,
+                sequencesRanges,
+                sequencesLengths,
+                updatedLine
+        );
+
+        // then
+        String expected =
+                "EXTEND_ROW_SEQUENCE: row=12\n" +
+                        "direction=toLeft\n" +
+                        "initialLine=[-, -, -, -, -, O, O, O, O, O, O, O, O, -, -, X, O, X, O, X]\n" +
+                        "sequencesRanges=[[2, 14], [16, 16], [18, 18]]\n" +
+                        "sequencesLengths=[11, 1, 1]\n" +
+                        "updatedLine=[-, -, -, -, O, O, O, O, O, O, O, O, O, -, -, X, O, X, O, X]\n";
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("ExtendLogHelper - convert example log to test arguments - o07942 row 12")
+    void shouldConvertGeneratedLogToTestArgumentsRowCase() {
+        // given
+        String generatedLog =
+                "EXTEND_ROW_SEQUENCE: row=12\n" +
+                        "direction=toLeft\n" +
+                        "initialLine=[-, -, -, -, -, O, O, O, O, O, O, O, O, -, -, X, O, X, O, X]\n" +
+                        "sequencesRanges=[[2, 14], [16, 16], [18, 18]]\n" +
+                        "sequencesLengths=[11, 1, 1]\n" +
+                        "updatedLine=[-, -, -, -, O, O, O, O, O, O, O, O, O, -, -, X, O, X, O, X]\n";
+
+        // when
+        String convertedLog = ExtendLogHelper.convertLogToTestArguments(
+                generatedLog,
+                "ro07942"
+        );
+
+        // then
+        String expected = "Arguments.of(\"o07942 / row=12 - extending coloured fields near X\",\n" +
+                "    new ArrayList<>(List.of(\"-\", \"-\", \"-\", \"-\", \"-\", \"O\", \"O\", \"O\", \"O\", \"O\", \"O\", \"O\", \"O\", \"-\", \"-\", \"X\", \"O\", \"X\", \"O\", \"X\")),\n" +
+                "    List.of(List.of(2, 14), List.of(16, 16), List.of(18, 18)),\n" +
+                "    List.of(11, 1, 1),\n" +
+                "    List.of(\"-\", \"-\", \"-\", \"-\", \"O\", \"O\", \"O\", \"O\", \"O\", \"O\", \"O\", \"O\", \"O\", \"-\", \"-\", \"X\", \"O\", \"X\", \"O\", \"X\")\n" +
                 ")";
         assertThat(convertedLog).isEqualTo(expected);
     }

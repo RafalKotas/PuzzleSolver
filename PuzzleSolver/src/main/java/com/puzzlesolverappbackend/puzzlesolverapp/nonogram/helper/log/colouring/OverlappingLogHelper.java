@@ -47,7 +47,7 @@ public class OverlappingLogHelper {
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
 
-        String fileName = solutionName.startsWith("r") ? solutionName.substring(1) : solutionName;
+        String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
 
         String initialLine = lines[1].replace("initialLine=", "").trim();
         String sequencesRanges = lines[2].replace("sequencesRanges=", "").trim();

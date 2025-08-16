@@ -346,13 +346,13 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
         if (anyGlobalFieldColoured) {
             List<String> columnAfter = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
             String tmpLog = ExtendLogHelper.generateLog(
+                    true,
                     columnIdx,
                     "toTop",
                     columnBefore,
                     nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx),
                     nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
-                    columnAfter,
-                    false
+                    columnAfter
             );
             nonogramColumnLogic.setTmpLog(tmpLog);
             nonogramColumnLogic.addLog();
@@ -417,13 +417,13 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
         if (anyGlobalFieldColoured) {
             List<String> columnAfter = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
             String tmpLog = ExtendLogHelper.generateLog(
+                    true,
                     columnIdx,
                     "toBottom",
                     columnBefore,
                     nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx),
                     nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
-                    columnAfter,
-                    false
+                    columnAfter
             );
             nonogramColumnLogic.setTmpLog(tmpLog);
             nonogramColumnLogic.addLog();
