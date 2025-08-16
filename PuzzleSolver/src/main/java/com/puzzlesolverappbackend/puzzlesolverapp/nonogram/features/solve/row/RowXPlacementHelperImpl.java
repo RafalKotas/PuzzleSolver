@@ -477,10 +477,12 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
         }
     }
 
-    private boolean shouldPlaceXInRow(int rowIdx, int colIdx, Field field, List<Integer> range) {
-        return nonogramRowLogic.getBoardAccessHelper().isColumnIndexValid(colIdx)
+    private boolean shouldPlaceXInRow(int rowIdx, int columnIdx, Field field, List<Integer> range) {
+        return nonogramRowLogic.getBoardAccessHelper().isColumnIndexValid(columnIdx)
                 && isFieldEmpty(nonogramRowLogic.getNonogramSolutionBoard(), field)
-                && !colouredSequenceInRowIsValid(range, rowIdx, nonogramRowLogic);
+                && !colouredSequenceInRowIsValid(range,
+                nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
+                nonogramRowLogic.getRowsSequencesRanges().get(rowIdx));
     }
 
     @Override
