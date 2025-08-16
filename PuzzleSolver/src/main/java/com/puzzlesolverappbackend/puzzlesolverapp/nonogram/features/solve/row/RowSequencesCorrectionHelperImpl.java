@@ -150,7 +150,7 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
             String tmpLog = SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.generateLog(
                     true, // isRow
                     rowIdx,
-                    nonogramRowLogic.getNonogramBoardColumn(rowIdx),
+                    nonogramRowLogic.getNonogramBoardRow(rowIdx),
                     nonogramRowLogic.getNonogramRules().getColumnSequencesLengths().get(rowIdx),
                     initialRanges,
                     updatedRanges

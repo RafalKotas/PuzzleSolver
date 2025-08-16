@@ -12,7 +12,6 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramA
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramBoardAccessHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramSequenceRangeInferer;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.config.GuessMode;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.dto.NonogramSolvePayload;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.clearing.NonogramFieldClearingHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.NonogramColumnLogic;
@@ -132,51 +131,14 @@ public class NonogramLogic extends NonogramLogicParams {
 
         this.nonogramState = NonogramState.buildInitialEmptyNonogramState();
 
+        this.boardAccessHelper = new NonogramBoardAccessHelper(this.getNonogramSolutionBoard());
+
         this.nonogramRowLogic = new NonogramRowLogic(this, boardAccessHelper, actionScheduler);
 
         this.nonogramColumnLogic = new NonogramColumnLogic(this);
 
-        this.boardAccessHelper = new NonogramBoardAccessHelper(this.getNonogramSolutionBoard());
-
         if (logChanges) {
             log.info("CREATED NonogramLogic object from rules and guessMode");
-        }
-
-        this.printer = new NonogramPrinter(this);
-    }
-
-    public NonogramLogic(NonogramRules rules, NonogramSolvePayload payload) {
-        this.nonogramRules = rules;
-        this.guessMode = GuessMode.DISABLED;
-        this.logs = new ArrayList<>();
-
-        int height = rules.getHeight();
-        int width = rules.getWidth();
-
-        this.actionsToDoList = generateInitialActionsToDo(rules);
-        this.actionScheduler = new NonogramActionScheduler(this.actionsToDoList);
-
-        this.nonogramSolutionBoard = generateEmptyBoard(height, width, 1);
-        this.nonogramSolutionBoardWithMarks = payload.getNonogramSolutionBoardWithMarks();
-
-        this.rowsFieldsNotToInclude = getRowsFieldsNotToInclude();
-        this.columnsFieldsNotToInclude = getColumnsFieldsNotToInclude();
-
-        this.rowsSequencesRanges = payload.getRowsSequencesRanges();
-        this.columnsSequencesRanges = payload.getColumnsSequencesRanges();
-
-        this.rowsSequencesIdsNotToInclude = payload.getRowsSequencesIdsNotToInclude();
-        this.columnsSequencesIdsNotToInclude = getColumnsSequencesIdsNotToInclude();
-
-        this.nonogramState = NonogramState.buildInitialEmptyNonogramState();
-
-        this.boardAccessHelper = new NonogramBoardAccessHelper(this);
-
-        this.nonogramRowLogic = new NonogramRowLogic(this, boardAccessHelper, actionScheduler);
-        this.nonogramColumnLogic = new NonogramColumnLogic(this, boardAccessHelper, actionScheduler);
-
-        if (logChanges) {
-            log.info("CREATED NonogramLogic object from rules and payload");
         }
 
         this.printer = new NonogramPrinter(this);
@@ -700,16 +662,9 @@ public class NonogramLogic extends NonogramLogicParams {
     private void executeRowAction(int rowIdx, NonogramActionDetails actionDetails) {
         copyLogicToNonogramRowLogic();
 
-        int stepsBefore = nonogramState.getNewStepsMade();
         makeProperActionInRow(rowIdx, actionDetails.getActionName());
-        int stepsAfter = nonogramState.getNewStepsMade();
 
         nonogramRowLogic.refreshHelpers();
-
-        if (logChanges && stepsBefore != stepsAfter) {
-            logRowStateBefore(actionDetails, rowIdx);
-            logRowStateAfter(actionDetails, rowIdx);
-        }
 
         copyLogicFromNonogramRowLogic();
     }
@@ -717,16 +672,9 @@ public class NonogramLogic extends NonogramLogicParams {
     private void executeColumnAction(int columnIdx, NonogramActionDetails actionDetails) {
         copyLogicToNonogramColumnLogic();
 
-        int stepsBefore = nonogramState.getNewStepsMade();
         makeProperActionInColumn(columnIdx, actionDetails.getActionName());
-        int stepsAfter = nonogramState.getNewStepsMade();
 
         nonogramColumnLogic.refreshHelpers();
-
-        if (logChanges && stepsBefore != stepsAfter) {
-            logColumnStateBefore(actionDetails, columnIdx);
-            logColumnStateAfter(actionDetails, columnIdx);
-        }
 
         copyLogicFromNonogramColumnLogic();
     }
@@ -791,78 +739,6 @@ public class NonogramLogic extends NonogramLogicParams {
                 errors.add("Column range mismatch at column " + colIdx);
             }
         }
-    }
-
-    private void logRowStateBefore(NonogramActionDetails actionDetails, int nextActionRowIndex) {
-        String elementToLog;
-
-        if (NonogramSolveAction.getCorrectRowRangesSolveActions().contains(actionDetails.getActionName())) {
-            elementToLog = this.getRowsSequencesRanges().get(nextActionRowIndex).toString();
-        } else if (NonogramSolveAction.isMarkRowAction(actionDetails.getActionName())) {
-            elementToLog = this.getNonogramSolutionBoardWithMarks().get(nextActionRowIndex).toString();
-        } else {
-            elementToLog = this.getNonogramSolutionBoard().get(nextActionRowIndex).toString();
-        }
-
-        String rangesLog = "";
-        String lengthsLog = "";
-
-        if (!actionDetails.getActionName().toString().contains("CORRECT")) {
-            rangesLog = this.getRowsSequencesRanges().get(nextActionRowIndex).toString();
-            lengthsLog = this.nonogramRules.getRowSequencesLengths().get(nextActionRowIndex).toString();
-        }
-
-        if (actionDetails.getActionName().toString().contains("EXTEND")) {
-            if (!rangesLog.isEmpty()) {
-                log.info("Row {} before making action {}: {} (ranges: {}, lengths: {})", nextActionRowIndex, actionDetails.getActionName(), elementToLog, rangesLog, lengthsLog);
-            } else {
-                log.info("Row {} before making action {}: {}", nextActionRowIndex, actionDetails.getActionName(), elementToLog);
-            }
-        }
-    }
-
-    private void logRowStateAfter(NonogramActionDetails actionDetails, int nextActionRowIndex) {
-        String elementToLog;
-
-        if (NonogramSolveAction.getCorrectRowRangesSolveActions().contains(actionDetails.getActionName())) {
-            elementToLog = this.getNonogramRowLogic().getRowsSequencesRanges().get(nextActionRowIndex).toString();
-        } else if (NonogramSolveAction.isMarkRowAction(actionDetails.getActionName())) {
-            elementToLog = this.getNonogramRowLogic().getNonogramSolutionBoardWithMarks().get(nextActionRowIndex).toString();
-        } else {
-            elementToLog = this.getNonogramRowLogic().getNonogramSolutionBoard().get(nextActionRowIndex).toString();
-        }
-
-        if (actionDetails.getActionName().toString().contains("EXTEND")) {
-            log.info("Row {} after  making action {}: {}", nextActionRowIndex, actionDetails.getActionName(), elementToLog);
-        }
-    }
-
-    private void logColumnStateBefore(NonogramActionDetails actionDetails, int nextActionColumnIndex) {
-        String elementToLog;
-
-        if (NonogramSolveAction.getCorrectColumnRangesSolveActions().contains(actionDetails.getActionName())) {
-            elementToLog = this.getColumnsSequencesRanges().get(nextActionColumnIndex).toString();
-        } else if (NonogramSolveAction.isMarkColumnAction(actionDetails.getActionName())) {
-            elementToLog = this.getNonogramBoardColumnWithMarks(nextActionColumnIndex).toString();
-        } else {
-            elementToLog = this.getNonogramBoardColumn(nextActionColumnIndex).toString();
-        }
-
-        log.info("Column {} before making action {}: {}", nextActionColumnIndex, actionDetails.getActionName(), elementToLog);
-    }
-
-    private void logColumnStateAfter(NonogramActionDetails actionDetails, int nextActionColumnIndex) {
-        String elementToLog;
-
-        if (NonogramSolveAction.getCorrectColumnRangesSolveActions().contains(actionDetails.getActionName())) {
-            elementToLog = this.getNonogramColumnLogic().getColumnsSequencesRanges().get(nextActionColumnIndex).toString();
-        } else if (NonogramSolveAction.isMarkColumnAction(actionDetails.getActionName())) {
-            elementToLog = this.getNonogramColumnLogic().getNonogramBoardColumnWithMarks(nextActionColumnIndex).toString();
-        } else {
-            elementToLog = this.getNonogramColumnLogic().getNonogramBoardColumn(nextActionColumnIndex).toString();
-        }
-
-        log.info("Column {} after  making action {}: {}", nextActionColumnIndex, actionDetails.getActionName(), elementToLog);
     }
 
     public void makeProperActionInRow(int rowIdx, NonogramSolveAction actionToDoInRow) {
