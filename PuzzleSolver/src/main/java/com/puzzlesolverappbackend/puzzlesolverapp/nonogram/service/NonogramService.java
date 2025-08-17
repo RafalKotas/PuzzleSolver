@@ -56,30 +56,6 @@ public class NonogramService {
         this.nonogramRepository = nonogramRepository;
     }
 
-    public List<String> getNonogramSources() {
-      return nonogramRepository.selectNonogramSources().stream().sorted().toList();
-    }
-
-    public List<String> getNonogramYears() {
-        return nonogramRepository.selectNonogramYears().stream().sorted().toList();
-    }
-
-    public List<String> getNonogramMonths() {
-        return nonogramRepository.selectNonogramMonths().stream().sorted().toList();
-    }
-
-    public List<Double> getNonogramDifficulties() {
-        return nonogramRepository.selectNonogramDifficulties().stream().sorted().toList();
-    }
-
-    public List<Integer> getNonogramHeights() {
-        return nonogramRepository.selectNonogramHeights().stream().sorted().toList();
-    }
-
-    public List<Integer> getNonogramWidths() {
-        return nonogramRepository.selectNonogramWidths().stream().sorted().toList();
-    }
-
     public List<Integer> inferDimensionRange(List<Integer> integerList) {
         List<Integer> bounds = new ArrayList<>(List.of(DEFAULT_MIN_DIMENSION, DEFAULT_MAX_DIMENSION));
         if (integerList.size() >= 2) {
@@ -120,6 +96,30 @@ public class NonogramService {
         List<Integer> widths = inferDimensionRange(getNonogramWidths());
 
         return new NonogramFiltersResponse(sources, years, months, difficulties, heights, widths);
+    }
+
+    private List<String> getNonogramSources() {
+        return nonogramRepository.selectNonogramSources().stream().sorted().toList();
+    }
+
+    private List<String> getNonogramYears() {
+        return nonogramRepository.selectNonogramYears().stream().sorted().toList();
+    }
+
+    private List<String> getNonogramMonths() {
+        return nonogramRepository.selectNonogramMonths().stream().sorted().toList();
+    }
+
+    private List<Double> getNonogramDifficulties() {
+        return nonogramRepository.selectNonogramDifficulties().stream().sorted().toList();
+    }
+
+    private List<Integer> getNonogramHeights() {
+        return nonogramRepository.selectNonogramHeights().stream().sorted().toList();
+    }
+
+    private List<Integer> getNonogramWidths() {
+        return nonogramRepository.selectNonogramWidths().stream().sorted().toList();
     }
 
     public NonogramCorrectnessIndicator checkNonogramCorrectness(NonogramFileDetails nonogramFileDetails) {
