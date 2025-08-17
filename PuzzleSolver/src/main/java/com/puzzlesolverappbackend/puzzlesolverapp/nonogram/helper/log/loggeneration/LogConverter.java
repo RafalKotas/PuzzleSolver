@@ -57,7 +57,7 @@ public class LogConverter {
                     Optional.of(PlaceXsAtTooShortEmptySequencesLogHelper.convertLogToTestArguments(log, solutionName));
             case "PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE" ->
                     Optional.of(PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.convertLogToTestArguments(log, solutionName));
-            case "PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_SEQUENCE" -> // TODO - implementation methods
+            case "PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE" -> // TODO - implementation methods
                     Optional.of(PlaceXsIfONearXWillMergeNearFieldsToTooLongColouredSequenceLogHelper.convertLogToTestArguments(log, solutionName));
 
             // mixed
@@ -99,7 +99,7 @@ public class LogConverter {
         if (isPlaceXsAtUnreachable(log)) return "PLACE_XS_AT_UNREACHABLE_FIELDS";
         if (isPlaceXsAroundLongest(log)) return "PLACE_XS_AROUND_LONGEST_SEQUENCE";
         if (isPlaceXsAtTooShort(log)) return "PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES";
-        if (isPlaceXIfOWillMergeNearFieldsToTooLongColouredSequence(log)) return "PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE";
+        if (isPlaceXIfOWillMergeNearFieldsToTooLongColouredSequence(log)) return "PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE";
         if (isPlaceXIfONearXWillBeginTooLongSeq(log)) return "PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE";
 
         // mixed
