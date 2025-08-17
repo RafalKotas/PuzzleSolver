@@ -18,4 +18,3 @@ public class NonogramFilterRequest {
     private Integer minWidth;
     private Integer maxWidth;
 }
-
