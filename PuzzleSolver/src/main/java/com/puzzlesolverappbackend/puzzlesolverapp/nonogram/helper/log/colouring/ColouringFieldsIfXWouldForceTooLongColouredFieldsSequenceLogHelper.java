@@ -20,7 +20,7 @@ public class ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper 
     ) {
         return String.format(
                 """
-                        COLOURING_FIELDS_IN_%s_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE: %s=%d
+                        COLOURING_FIELDS_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE_IN_%s: %s=%d
                         initialLine=%s
                         sequencesRanges=%s
                         sequencesLengths=%s

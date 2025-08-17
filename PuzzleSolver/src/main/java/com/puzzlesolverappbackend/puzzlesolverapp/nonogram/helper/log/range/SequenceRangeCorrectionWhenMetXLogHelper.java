@@ -22,7 +22,7 @@ public class SequenceRangeCorrectionWhenMetXLogHelper {
     ) {
         return String.format(
                 """
-                        %s_SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY: %s=%d
+                        SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY_IN_%s: %s=%d
                         line=%s
                         initialRanges=%s
                         updatedRanges=%s

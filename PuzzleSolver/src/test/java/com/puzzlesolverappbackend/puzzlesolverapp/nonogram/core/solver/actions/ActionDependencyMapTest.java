@@ -29,20 +29,20 @@ class ActionDependencyMapTest {
 
     @Test
     void returnsCorrectDependenciesForCorrectRowSequencesRanges() {
-        List<NonogramSolveAction> dependencies = ActionDependencyMap.getDependenciesFor(NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES);
+        List<NonogramSolveAction> dependencies = ActionDependencyMap.getDependenciesFor(NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_ROW);
 
         assertNotNull(dependencies);
         assertTrue(dependencies.contains(NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_ROW));
-        assertTrue(dependencies.contains(NonogramSolveAction.ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH));
+        assertTrue(dependencies.contains(NonogramSolveAction.PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_IN_ROW));
         assertEquals(8, dependencies.size());
     }
 
     @Test
     void returnsCorrectDependenciesForCorrectColumnSequencesRanges() {
-        List<NonogramSolveAction> dependencies = ActionDependencyMap.getDependenciesFor(NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES);
+        List<NonogramSolveAction> dependencies = ActionDependencyMap.getDependenciesFor(NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_COLUMN);
 
         assertTrue(dependencies.contains(NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_COLUMN));
-        assertTrue(dependencies.contains(NonogramSolveAction.PLACE_XS_COLUMN_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE));
+        assertTrue(dependencies.contains(NonogramSolveAction.PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE_IN_COLUMN));
         assertEquals(9, dependencies.size());
     }
 
@@ -58,7 +58,7 @@ class ActionDependencyMapTest {
     void containsExpectedDependencyForColourOverlappingFieldsInRow() {
         List<NonogramSolveAction> dependencies = ActionDependencyMap.getDependenciesFor(NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_ROW);
 
-        assertTrue(dependencies.contains(NonogramSolveAction.PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES));
+        assertTrue(dependencies.contains(NonogramSolveAction.PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_COLUMN));
     }
 
     @Test
@@ -66,9 +66,9 @@ class ActionDependencyMapTest {
         List<NonogramSolveAction> dependencies = ActionDependencyMap.getDependenciesFor(NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW);
 
         assertEquals(List.of(
-                NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_ROW,
                 NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_ROW,
-                NonogramSolveAction.PLACE_XS_ROW_AT_UNREACHABLE_FIELDS
+                NonogramSolveAction.PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW
         ), dependencies);
     }
 }

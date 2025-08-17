@@ -1025,12 +1025,12 @@ class ColumnXPlacementHelperImplTest {
         List<NonogramActionDetails> actions = logic.getActionScheduler().getActionsToDoList();
         assertTrue(actions.stream().anyMatch(a ->
                 a.getIndex() == 3 &&
-                        a.getTriggeringActionName() == NonogramSolveAction.PLACE_XS_COLUMN_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE &&
-                        a.getActionName() == NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY));
+                        a.getTriggeringActionName() == NonogramSolveAction.PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE_IN_COLUMN &&
+                        a.getActionName() == NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IF_X_ON_WAY_IN_ROW));
         assertTrue(actions.stream().anyMatch(a ->
                 a.getIndex() == 3 &&
-                        a.getTriggeringActionName() == NonogramSolveAction.PLACE_XS_COLUMN_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE &&
-                        a.getActionName() == NonogramSolveAction.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES));
+                        a.getTriggeringActionName() == NonogramSolveAction.PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE_IN_COLUMN &&
+                        a.getActionName() == NonogramSolveAction.PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES_IN_ROW));
     }
 
     @Test

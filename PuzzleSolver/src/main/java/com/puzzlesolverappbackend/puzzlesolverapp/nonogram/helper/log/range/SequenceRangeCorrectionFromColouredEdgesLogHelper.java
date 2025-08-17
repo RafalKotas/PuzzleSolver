@@ -20,7 +20,7 @@ public class SequenceRangeCorrectionFromColouredEdgesLogHelper {
     ) {
         return String.format(
                 """
-                        %s_CORRECTING_SEQUENCES_RANGES_FROM_COLOURED_EDGES: %s=%d
+                        CORRECTING_SEQUENCES_RANGES_FROM_COLOURED_EDGES_IN_%s: %s=%d
                         initialRanges=%s
                         updatedRanges=%s
                         sequencesLengths=%s

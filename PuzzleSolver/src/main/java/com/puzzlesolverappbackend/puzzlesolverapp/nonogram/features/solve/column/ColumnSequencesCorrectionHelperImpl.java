@@ -36,7 +36,7 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
             nonogramColumnLogic.getNonogramState().increaseMadeSteps();
 
             Field columnField = new Field(0, columnIdx);
-            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(columnField, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES);
+            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(columnField, NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_COLUMN);
 
             String tmpLog = SequencesRangesCorrectionLogHelper.generateLog(
                     false, // isRow
@@ -145,7 +145,7 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
 
             Field columnField = new Field(0, columnIdx);
             nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(columnField,
-                    NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS);
+                    NonogramSolveAction.CORRECT_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS_IN_COLUMN);
 
             String tmpLog = SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.generateLog(
                     false, // isRow
@@ -294,7 +294,7 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
 
             nonogramColumnLogic.getNonogramState().increaseMadeSteps();
             nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(
-                    new Field(0, columnIdx), NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY);
+                    new Field(0, columnIdx), NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IF_X_ON_WAY_IN_COLUMN);
         }
     }
 
@@ -336,7 +336,7 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
 
             nonogramColumnLogic.getNonogramState().increaseMadeSteps();
             Field columnField = new Field(0, columnIdx);
-            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(columnField, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES);
+            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(columnField, NonogramSolveAction.CORRECT_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES_IN_COLUMN);
         }
     }
 
@@ -476,7 +476,7 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
             nonogramColumnLogic.addLog();
 
             Field columnField = new Field(0, columnIdx);
-            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(columnField, NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE);
+            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(columnField, NonogramSolveAction.CORRECT_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE_IN_COLUMN);
         }
     }
 

@@ -222,11 +222,11 @@ class NonogramLogicTest {
         assertEquals(8, actions.size());
 
         assertTrue(actions.contains(new NonogramActionDetails(0,
-                NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS_IN_ROW,
                 COLOUR_FIELD_GUESS_OR_RECURSIVE, false)));
 
         assertTrue(actions.contains(new NonogramActionDetails(1,
-                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS_IN_COLUMN,
                 COLOUR_FIELD_GUESS_OR_RECURSIVE, false)));
 
         assertTrue(actions.contains(new NonogramActionDetails(0,
@@ -238,11 +238,11 @@ class NonogramLogicTest {
                 COLOUR_FIELD_GUESS_OR_RECURSIVE, false)));
 
         assertTrue(actions.contains(new NonogramActionDetails(1,
-                NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES,
+                NonogramSolveAction.PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_ROW,
                 COLOUR_FIELD_GUESS_OR_RECURSIVE, false)));
 
         assertTrue(actions.contains(new NonogramActionDetails(1,
-                NonogramSolveAction.PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES,
+                NonogramSolveAction.PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_COLUMN,
                 COLOUR_FIELD_GUESS_OR_RECURSIVE, false)));
 
         assertTrue(actions.contains(new NonogramActionDetails(0,
@@ -278,19 +278,19 @@ class NonogramLogicTest {
         assertEquals(8, actions.size());
 
         assertTrue(actions.contains(new NonogramActionDetails(0,
-                NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_ROW,
                 PLACE_X_FIELD_GUESS_OR_RECURSIVE, false)));
 
         assertTrue(actions.contains(new NonogramActionDetails(1,
-                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_COLUMN,
                 PLACE_X_FIELD_GUESS_OR_RECURSIVE, false)));
 
         assertTrue(actions.contains(new NonogramActionDetails(0,
-                NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IF_X_ON_WAY_IN_ROW,
                 PLACE_X_FIELD_GUESS_OR_RECURSIVE, false)));
 
         assertTrue(actions.contains(new NonogramActionDetails(1,
-                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES_IF_X_ON_WAY,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IF_X_ON_WAY_IN_COLUMN,
                 PLACE_X_FIELD_GUESS_OR_RECURSIVE, false)));
 
         assertTrue(actions.contains(new NonogramActionDetails(0,
@@ -302,11 +302,11 @@ class NonogramLogicTest {
                 PLACE_X_FIELD_GUESS_OR_RECURSIVE, false)));
 
         assertTrue(actions.contains(new NonogramActionDetails(0,
-                NonogramSolveAction.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES,
+                NonogramSolveAction.PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES_IN_ROW,
                 PLACE_X_FIELD_GUESS_OR_RECURSIVE, false)));
 
         assertTrue(actions.contains(new NonogramActionDetails(1,
-                NonogramSolveAction.PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES,
+                NonogramSolveAction.PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES_IN_COLUMN,
                 PLACE_X_FIELD_GUESS_OR_RECURSIVE, false)));
     }
 }

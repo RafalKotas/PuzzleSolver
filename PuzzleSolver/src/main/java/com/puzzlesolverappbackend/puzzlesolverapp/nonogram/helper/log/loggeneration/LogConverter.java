@@ -96,11 +96,11 @@ public class LogConverter {
         if (isColourFieldsIfXCausesAssignmentConflict(log)) return "COLOUR_FIELDS_IF_X_CAUSES_ASSIGNMENT_CONFLICT";
 
         // x placing
-        if (isPlaceXsAtUnreachable(log)) return "PLACE_XS_AT_UNREACHABLE_FIELDS";
-        if (isPlaceXsAroundLongest(log)) return "PLACE_XS_AROUND_LONGEST_SEQUENCE";
-        if (isPlaceXsAtTooShort(log)) return "PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES";
+        if (isPlaceXsAtUnreachableFields(log)) return "PLACE_XS_AT_UNREACHABLE_FIELDS";
+        if (isPlaceXsAroundLongestSequences(log)) return "PLACE_XS_AROUND_LONGEST_SEQUENCE";
+        if (isPlaceXsAtTooShortEmptySequences(log)) return "PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES";
         if (isPlaceXIfOWillMergeNearFieldsToTooLongColouredSequence(log)) return "PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE";
-        if (isPlaceXIfONearXWillBeginTooLongSeq(log)) return "PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE";
+        if (isPlaceXIfONearXWillBeginTooLongPossibleColouredSequence(log)) return "PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE";
 
         // mixed
         if (isPreventExtendingColouredSequenceToExcessLengthColouringPart(log))
@@ -122,47 +122,41 @@ public class LogConverter {
     // correction
 
     private static boolean isRangeCorrection(String log) {
-        return log.startsWith("ROW_SEQUENCES_RANGES_CORRECTION:") ||
-                log.startsWith("COLUMN_SEQUENCES_RANGES_CORRECTION:");
+        return log.startsWith("SEQUENCES_RANGES_CORRECTION_IN");
     }
 
     private static boolean isCorrectionWhenMetColoured(String log) {
-        return log.startsWith("ROW_SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS:") ||
-                log.startsWith("COLUMN_SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS:");
+        return log.startsWith("SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS");
     }
 
     private static boolean isCorrectionIfXOnWay(String log) {
-        return log.startsWith("ROW_SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY:") ||
-                log.startsWith("COLUMN_SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY:");
+        return log.startsWith("SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY");
     }
 
     private static boolean isMatchingSequenceCorrection(String log) {
-        return log.startsWith("ROW_CORRECTING_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES") ||
-                log.startsWith("COLUMN_CORRECTING_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES");
+        return log.startsWith("CORRECTING_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES");
     }
 
     private static boolean isCorrectionFromEdges(String log) {
-        return log.startsWith("ROW_CORRECTING_SEQUENCES_RANGES_FROM_COLOURED_EDGES:") ||
-                log.startsWith("COLUMN_CORRECTING_SEQUENCES_RANGES_FROM_COLOURED_EDGES:");
+        return log.startsWith("CORRECTING_SEQUENCES_RANGES_FROM_COLOURED_EDGES");
     }
 
     private static boolean isRangeCorrectionWhenMarking(String log) {
-        return log.startsWith("ROW_SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS:") ||
-                log.startsWith("COLUMN_SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS:");
+        return log.startsWith("SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS");
     }
 
     private static boolean isRangeCorrectionWhenPlacingX(String log) {
-        return log.contains("_SEQUENCE_CORRECTION_WHEN_PLACING_X");
+        return log.contains("SEQUENCE_CORRECTION_WHEN_PLACING_X");
     }
 
     // colour
 
     private static boolean isOverlap(String log) {
-        return log.startsWith("COLOUR_OVERLAPPING_FIELDS_IN_");
+        return log.startsWith("COLOUR_OVERLAPPING_FIELDS");
     }
 
     private static boolean isTooLongMerge(String log) {
-        return log.startsWith("COLOURING_FIELDS_IN") && log.contains("IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE");
+        return log.startsWith("COLOURING_FIELDS_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE");
     }
 
     private static boolean isExtend(String log) {
@@ -175,58 +169,50 @@ public class LogConverter {
 
     // x placing
 
-    private static boolean isPlaceXsAtUnreachable(String log) {
-        return log.startsWith("PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW:") ||
-                log.startsWith("PLACE_XS_AT_UNREACHABLE_FIELDS_IN_COLUMN:");
+    private static boolean isPlaceXsAtUnreachableFields(String log) {
+        return log.startsWith("PLACE_XS_AT_UNREACHABLE_FIELDS");
     }
 
-    private static boolean isPlaceXsAroundLongest(String log) {
-        return log.startsWith("PLACE_XS_ROW_AROUND_LONGEST_SEQUENCE:") ||
-                log.startsWith("PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCE:");
+    private static boolean isPlaceXsAroundLongestSequences(String log) {
+        return log.startsWith("PLACE_XS_AROUND_LONGEST_SEQUENCES");
     }
 
-    private static boolean isPlaceXsAtTooShort(String log) {
-        return log.startsWith("PLACE_XS_IN_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES:") ||
-                log.startsWith("PLACE_XS_IN_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES:");
+    private static boolean isPlaceXsAtTooShortEmptySequences(String log) {
+        return log.startsWith("PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES");
     }
 
     private static boolean isPlaceXIfOWillMergeNearFieldsToTooLongColouredSequence(String log) {
-        return log.startsWith("PLACE_X_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_ROW:") ||
-                log.startsWith("PLACE_X_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_COLUMN:");
+        return log.startsWith("PLACE_X_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE");
     }
 
-    private static boolean isPlaceXIfONearXWillBeginTooLongSeq(String log) {
-        return log.startsWith("PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE_IN_ROW:") ||
-                log.startsWith("PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE_IN_COLUMN:");
+    private static boolean isPlaceXIfONearXWillBeginTooLongPossibleColouredSequence(String log) {
+        return log.startsWith("PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE");
     }
 
     // mixed
     private static boolean isPreventExtendingColouredSequenceToExcessLengthColouringPart(String log) {
-        return log.startsWith("PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART_IN_ROW") ||
-                log.startsWith("PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART_IN_COLUMN");
+        return log.startsWith("PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART");
     }
 
     private static boolean isPreventExtendingColouredSequenceToExcessLengthPlaceXPart(String log) {
-        return log.startsWith("PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART_IN_ROW") ||
-                log.startsWith("PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART_IN_COLUMN");
+        return log.startsWith("PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART");
     }
 
     private static boolean isPreventExtendingColouredSequenceToExcessLengthCorrectingRangePart(String log) {
-        return log.startsWith("ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART") ||
-                log.startsWith("COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART");
+        return log.startsWith("PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART");
     }
 
     // other
 
     private static boolean isMarkAvailableFields(String log) {
-        return log.startsWith("MARK_AVAILABLE_FIELDS_IN_ROW:") || log.startsWith("MARK_AVAILABLE_FIELDS_IN_COLUMN:");
+        return log.startsWith("MARK_AVAILABLE_FIELDS");
     }
 
     private static boolean isTrivial(String log) {
-        return log.startsWith("FILL_TRIVIAL_ROW_SEQUENCE:") || log.startsWith("FILL_TRIVIAL_COLUMN_SEQUENCE:");
+        return log.startsWith("FILL_TRIVIAL_SEQUENCE");
     }
 
     private static boolean isExcluded(String log) {
-        return log.startsWith("EXCLUSION_ROW_SEQUENCE:") || log.startsWith("EXCLUSION_COLUMN_SEQUENCE:");
+        return log.startsWith("EXCLUSION_SEQUENCE");
     }
 }

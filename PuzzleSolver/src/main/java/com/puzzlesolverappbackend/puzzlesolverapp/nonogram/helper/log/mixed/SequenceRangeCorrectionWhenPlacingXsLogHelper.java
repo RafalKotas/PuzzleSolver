@@ -21,7 +21,7 @@ public class SequenceRangeCorrectionWhenPlacingXsLogHelper {
     ) {
         return String.format(
                 """
-                        %s_SEQUENCE_CORRECTION_WHEN_PLACING_X: %s=%d
+                        SEQUENCE_CORRECTION_WHEN_PLACING_X_IN_%s: %s=%d
                         sequenceIndex=%d
                         sequencesRanges=%s
                         updatedRange=%s

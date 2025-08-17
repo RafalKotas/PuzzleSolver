@@ -20,7 +20,7 @@ public class TrivialFillLogHelper {
     ) {
         return String.format(
                 """
-                        FILL_TRIVIAL_%s_SEQUENCE: %s=%d
+                        FILL_TRIVIAL_SEQUENCE_IN_%s: %s=%d
                         initialLine=%s
                         sequencesLengths=%s
                         sequencesRanges=%s

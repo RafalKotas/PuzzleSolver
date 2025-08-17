@@ -16,7 +16,7 @@ class NonogramSolveActionTest {
         List<NonogramSolveAction> actions = NonogramSolveAction.getRowSolveActions();
 
         // then
-        assertTrue(actions.contains(CORRECT_ROW_SEQUENCES_RANGES));
+        assertTrue(actions.contains(CORRECT_SEQUENCES_RANGES_IN_ROW));
         assertTrue(actions.contains(MARK_AVAILABLE_FIELDS_IN_ROW));
         assertEquals(16, actions.size());
     }
@@ -28,8 +28,8 @@ class NonogramSolveActionTest {
         List<NonogramSolveAction> actions = NonogramSolveAction.getCorrectRowRangesSolveActions();
 
         // then
-        assertTrue(actions.contains(CORRECT_ROW_SEQUENCES_RANGES_IF_X_ON_WAY));
-        assertFalse(actions.contains(PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES));
+        assertTrue(actions.contains(CORRECT_SEQUENCES_RANGES_IF_X_ON_WAY_IN_ROW));
+        assertFalse(actions.contains(PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_ROW));
         assertEquals(5, actions.size());
     }
 
@@ -64,8 +64,8 @@ class NonogramSolveActionTest {
         List<NonogramSolveAction> actions = NonogramSolveAction.getCorrectColumnRangesSolveActions();
 
         // then
-        assertTrue(actions.contains(CORRECT_COLUMN_SEQUENCES_RANGES));
-        assertFalse(actions.contains(PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS));
+        assertTrue(actions.contains(CORRECT_SEQUENCES_RANGES_IN_COLUMN));
+        assertFalse(actions.contains(PLACE_XS_AT_UNREACHABLE_FIELDS_IN_COLUMN));
         assertEquals(4, actions.size());
     }
 
@@ -97,8 +97,8 @@ class NonogramSolveActionTest {
     @DisplayName("isRowAction should return true if action name contains 'ROW'")
     void shouldIdentifyRowActions() {
         // given & when
-        boolean isRow = CORRECT_ROW_SEQUENCES_RANGES.isRowAction();
-        boolean isNotRow = CORRECT_COLUMN_SEQUENCES_RANGES.isRowAction();
+        boolean isRow = CORRECT_SEQUENCES_RANGES_IN_ROW.isRowAction();
+        boolean isNotRow = CORRECT_SEQUENCES_RANGES_IN_COLUMN.isRowAction();
 
         // then
         assertTrue(isRow);
@@ -109,7 +109,7 @@ class NonogramSolveActionTest {
     @DisplayName("isColumnAction should return true if action name contains 'COLUMN'")
     void shouldIdentifyColumnActions() {
         // given & when
-        boolean isColumn = CORRECT_COLUMN_SEQUENCES_RANGES.isColumnAction();
+        boolean isColumn = CORRECT_SEQUENCES_RANGES_IN_COLUMN.isColumnAction();
         boolean isNotColumn = MARK_AVAILABLE_FIELDS_IN_ROW.isColumnAction();
 
         // then

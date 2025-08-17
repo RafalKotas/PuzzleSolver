@@ -20,7 +20,7 @@ public class SequenceRangeCorrectionWhenMarkingFieldsLogHelper {
     ) {
         return String.format(
                 """
-                        %s_SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS: %s=%d
+                        SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS_IN_%s: %s=%d
                         sequencesRanges=%s
                         updatedRange=%s
                         sequencesLengths=%s

@@ -20,7 +20,7 @@ public class ExcludedSequenceLogHelper {
     ) {
         return String.format(
                 """
-                        EXCLUSION_%s_SEQUENCE: %s=%d
+                        EXCLUSION_SEQUENCE_IN_%s: %s=%d
                         sequenceIndex=%d
                         line=%s
                         sequencesLengths=%s

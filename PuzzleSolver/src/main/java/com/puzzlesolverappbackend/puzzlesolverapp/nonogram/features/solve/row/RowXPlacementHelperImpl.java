@@ -62,7 +62,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
                 if (isFieldEmpty(nonogramRowLogic.getNonogramSolutionBoard(), fieldToExclude)) {
                     nonogramFieldPlacingXHelper.placeXAtGivenField(fieldToExclude);
                     nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(fieldToExclude);
-                    nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(fieldToExclude, NonogramSolveAction.PLACE_XS_ROW_AT_UNREACHABLE_FIELDS);
+                    nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(fieldToExclude, NonogramSolveAction.PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW);
                     nonogramRowLogic.getNonogramState().increaseMadeSteps();
                 } else if (NonogramLogicParams.SHOW_REPETITIONS) {
                     log.warn("X at unreachable field in row placed earlier!");
@@ -171,7 +171,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
                 nonogramFieldPlacingXHelper.placeXAtGivenField(edgeField);
                 nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(edgeField);
                 nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(
-                        new Field(rowIdx, columnIdx), NonogramSolveAction.PLACE_XS_ROW_AROUND_LONGEST_SEQUENCES
+                        new Field(rowIdx, columnIdx), NonogramSolveAction.PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_ROW
                 );
                 nonogramRowLogic.getNonogramState().increaseMadeSteps();
                 anyXPlaced = true;
@@ -403,7 +403,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
 
             nonogramFieldPlacingXHelper.placeXAtGivenField(field);
             nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(field);
-            nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES);
+            nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES_IN_ROW);
             nonogramRowLogic.getNonogramState().increaseMadeSteps();
         }
     }
@@ -451,7 +451,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
         if (shouldPlaceXInRow(rowIdx, col, field, merged)) {
             nonogramFieldPlacingXHelper.placeXAtGivenField(field);
             nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(field);
-            nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
+            nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_ROW);
             nonogramRowLogic.getNonogramState().increaseMadeSteps();
         } else if (NonogramLogicParams.SHOW_REPETITIONS) {
             log.info("X because \"O\" will create too long sequence in row placed earlier!");
@@ -470,7 +470,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
         if (shouldPlaceXInRow(rowIdx, nextCol, field, merged)) {
             nonogramFieldPlacingXHelper.placeXAtGivenField(field);
             nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(field);
-            nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_ROW_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
+            nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_ROW);
             nonogramRowLogic.getNonogramState().increaseMadeSteps();
         } else if (NonogramLogicParams.SHOW_REPETITIONS) {
             log.info("X because \"O\" will create too long sequence in row placed earlier!");
@@ -618,7 +618,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
             if (isFieldEmpty(nonogramRowLogic.getNonogramSolutionBoard(), field)) {
                 nonogramFieldPlacingXHelper.placeXAtGivenField(field);
                 nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(field);
-                nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_ROW_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE);
+                nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE_IN_ROW);
                 nonogramRowLogic.getNonogramState().increaseMadeSteps();
             }
         }

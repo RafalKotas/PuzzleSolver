@@ -21,7 +21,7 @@ public class SequencesRangesCorrectionLogHelper {
     ) {
         return String.format(
                 """
-                        %s_SEQUENCES_RANGES_CORRECTION: %s=%d
+                        SEQUENCES_RANGES_CORRECTION_IN_%s: %s=%d
                         sequencesLengths=%s
                         excludedFields=%s
                         excludedSequencesIndexes=%s

@@ -156,7 +156,7 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
                 Field toColour = new Field(rowIdx, mergeStart - 1);
                 if (isFieldEmpty(nonogramRowLogic.getNonogramSolutionBoard(), toColour)) {
                     colouringHelper.colourFieldAtGivenPosition(toColour, "R---");
-                    nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(toColour, NonogramSolveAction.COLOUR_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE);
+                    nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(toColour, NonogramSolveAction.COLOUR_FIELDS_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE_IN_ROW);
                     nonogramRowLogic.getNonogramState().increaseMadeSteps();
                     anyFieldColoured = true;
                 }
@@ -194,7 +194,7 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
                 Field toColour = new Field(rowIdx, mergeEnd + 1);
                 if (isFieldEmpty(nonogramRowLogic.getNonogramSolutionBoard(), toColour)) {
                     colouringHelper.colourFieldAtGivenPosition(toColour, "R---");
-                    nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(toColour, NonogramSolveAction.COLOUR_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE);
+                    nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(toColour, NonogramSolveAction.COLOUR_FIELDS_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE_IN_ROW);
                     nonogramRowLogic.getNonogramState().increaseMadeSteps();
                     anyFieldColoured = true;
                 }

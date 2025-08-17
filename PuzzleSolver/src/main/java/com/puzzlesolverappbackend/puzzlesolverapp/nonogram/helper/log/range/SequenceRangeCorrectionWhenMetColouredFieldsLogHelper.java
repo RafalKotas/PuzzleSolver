@@ -21,7 +21,7 @@ public class SequenceRangeCorrectionWhenMetColouredFieldsLogHelper {
 
         return String.format(
                 """
-                        %s_SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS: %s=%d
+                        SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS_IN_%s: %s=%d
                         line=%s
                         sequencesLengths=%s
                         initialRanges=%s

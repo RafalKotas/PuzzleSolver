@@ -74,7 +74,7 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
                 if (isFieldEmpty(nonogramColumnLogic.getNonogramSolutionBoard(), fieldToExclude)) {
                     nonogramFieldPlacingXHelper.placeXAtGivenField(fieldToExclude);
 
-                    nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(fieldToExclude, NonogramSolveAction.PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS);
+                    nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(fieldToExclude, NonogramSolveAction.PLACE_XS_AT_UNREACHABLE_FIELDS_IN_COLUMN);
                     nonogramColumnLogic.getNonogramState().increaseMadeSteps();
                 } else if (NonogramLogicParams.SHOW_REPETITIONS) {
                     log.warn("X at unreachable field in column placed earlier!");
@@ -233,7 +233,7 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
                 nonogramColumnLogic.getNonogramFieldExclusionHelper().excludeFieldInColumn(edgeField);
                 nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(
                         new Field(rowIdx, columnIdx),
-                        NonogramSolveAction.PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES
+                        NonogramSolveAction.PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_COLUMN
                 );
                 nonogramColumnLogic.getNonogramState().increaseMadeSteps();
                 anyXPlaced = true;
@@ -312,11 +312,11 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
         Field bottomEdge = new Field(newRange.get(1) + 1, columnIdx);
 
         if (nonogramColumnLogic.getBoardAccessHelper().isRowIndexValid(topEdge.getRowIdx())) {
-            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(topEdge, NonogramSolveAction.PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES);
+            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(topEdge, NonogramSolveAction.PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_COLUMN);
         }
 
         if (nonogramColumnLogic.getBoardAccessHelper().isRowIndexValid(bottomEdge.getRowIdx())) {
-            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(bottomEdge, NonogramSolveAction.PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES);
+            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(bottomEdge, NonogramSolveAction.PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_COLUMN);
         }
     }
 
@@ -498,7 +498,7 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
             Field field = new Field(row, colIdx);
             nonogramFieldPlacingXHelper.placeXAtGivenField(field);
             nonogramColumnLogic.getNonogramFieldExclusionHelper().excludeFieldInColumn(field);
-            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES);
+            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES_IN_COLUMN);
             nonogramColumnLogic.getNonogramState().increaseMadeSteps();
         }
     }
@@ -545,7 +545,7 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
         if (shouldPlaceX(row, merged, colIdx, field)) {
             nonogramFieldPlacingXHelper.placeXAtGivenField(field);
             nonogramColumnLogic.getNonogramFieldExclusionHelper().excludeFieldInColumn(field);
-            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
+            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_COLUMN);
             nonogramColumnLogic.getNonogramState().increaseMadeSteps();
         } else if (NonogramLogicParams.SHOW_REPETITIONS) {
             log.info("X because \"O\" will create too long sequence in column placed earlier!");
@@ -566,7 +566,7 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
         if (shouldPlaceX(nextRow, merged, colIdx, field)) {
             nonogramFieldPlacingXHelper.placeXAtGivenField(field);
             nonogramColumnLogic.getNonogramFieldExclusionHelper().excludeFieldInColumn(field);
-            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_COLUMN_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE);
+            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_COLUMN);
             nonogramColumnLogic.getNonogramState().increaseMadeSteps();
         } else if (NonogramLogicParams.SHOW_REPETITIONS) {
             log.info("X because \"O\" will create too long sequence in column placed earlier!");
@@ -683,6 +683,15 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
             f.setRowIdx(directionFn.applyAsInt(r));
         }
 
+        if (min != Integer.MAX_VALUE && max != Integer.MIN_VALUE) {
+            System.out.println("FF");
+        } else if (min != Integer.MAX_VALUE && max == Integer.MIN_VALUE) {
+            System.out.println("FT");
+        } else if (min == Integer.MAX_VALUE && max != Integer.MIN_VALUE) {
+            System.out.println("TF");
+        } else if (min == Integer.MAX_VALUE && max == Integer.MIN_VALUE) {
+            System.out.println("TT");
+        }
         if (min == Integer.MAX_VALUE && max == Integer.MIN_VALUE) return List.of(-1, -1);
         return List.of(min, max);
     }
@@ -717,7 +726,7 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
 
             nonogramFieldPlacingXHelper.placeXAtGivenField(field);
             nonogramColumnLogic.getNonogramFieldExclusionHelper().excludeFieldInColumn(field);
-            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_COLUMN_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE);
+            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE_IN_COLUMN);
             nonogramColumnLogic.getNonogramState().increaseMadeSteps();
         }
     }

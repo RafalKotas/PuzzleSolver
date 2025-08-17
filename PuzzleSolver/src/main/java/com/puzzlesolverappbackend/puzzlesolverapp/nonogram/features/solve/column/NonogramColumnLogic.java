@@ -338,7 +338,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                             fieldToColour = new Field(rowToColourIdx, columnIdx);
                             if (isFieldEmpty(this.nonogramSolutionBoard, fieldToColour)) {
                                 this.getColumnColouringHelper().getColouringHelper().colourFieldAtGivenPosition(fieldToColour, "--C-");
-                                actionScheduler.scheduleActionsBasedOnField(fieldToColour, NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART);
+                                actionScheduler.scheduleActionsBasedOnField(fieldToColour, NonogramSolveAction.PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART_IN_COLUMN);
 
                                 this.nonogramState.increaseMadeSteps();
 
@@ -376,7 +376,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                             addLog();
 
                             this.getNonogramFieldExclusionHelper().excludeFieldInColumn(fieldToPlaceX);
-                            actionScheduler.scheduleActionsBasedOnField(fieldToPlaceX, NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART);
+                            actionScheduler.scheduleActionsBasedOnField(fieldToPlaceX, NonogramSolveAction.PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART_IN_COLUMN);
                         }
 
                         // moreover - only one id is valid -> can correct sequence range
@@ -396,7 +396,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                                 }
 
                                 Field columnField = new Field(0, columnIdx);
-                                actionScheduler.scheduleActionsBasedOnField(columnField, NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART);
+                                actionScheduler.scheduleActionsBasedOnField(columnField, NonogramSolveAction.PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART_IN_COLUMN);
 
                                 columnAfterUpdate = getColumnCopy(columnIdx);
                                 tmpLog = generateLog(
@@ -473,7 +473,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                             if (isFieldEmpty(this.nonogramSolutionBoard, fieldToColour)) {
                                 this.getColumnColouringHelper().getColouringHelper().colourFieldAtGivenPosition(fieldToColour, "--C-");
                                 this.nonogramState.increaseMadeSteps();
-                                actionScheduler.scheduleActionsBasedOnField(fieldToColour, NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART);
+                                actionScheduler.scheduleActionsBasedOnField(fieldToColour, NonogramSolveAction.PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART_IN_COLUMN);
 
                                 columnAfterColouring = getColumnCopy(columnIdx);
                                 tmpLog = PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper
@@ -508,7 +508,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                             addLog();
 
                             this.getNonogramFieldExclusionHelper().excludeFieldInColumn(fieldToPlaceX);
-                            actionScheduler.scheduleActionsBasedOnField(fieldToPlaceX, NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART);
+                            actionScheduler.scheduleActionsBasedOnField(fieldToPlaceX, NonogramSolveAction.PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART_IN_COLUMN);
                         }
 
                         // moreover - only one id is valid -> can correct sequence range
@@ -526,7 +526,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                                     excludeSequenceInColumn(columnIdx, matchingSeqId);
                                 }
                                 Field columnField = new Field(0, columnIdx);
-                                actionScheduler.scheduleActionsBasedOnField(columnField, NonogramSolveAction.COLUMN_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART);
+                                actionScheduler.scheduleActionsBasedOnField(columnField, NonogramSolveAction.PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART_IN_COLUMN);
 
                                 columnAfterUpdate = getColumnCopy(columnIdx);
                                 tmpLog = generateLog(

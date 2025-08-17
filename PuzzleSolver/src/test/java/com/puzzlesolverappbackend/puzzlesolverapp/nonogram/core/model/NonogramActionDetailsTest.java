@@ -17,8 +17,8 @@ class NonogramActionDetailsTest {
     private NonogramActionDetails sample(int index) {
         return new NonogramActionDetails(
                 index,
-                NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES,
-                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_ROW,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_COLUMN,
                 false
         );
     }
@@ -30,8 +30,8 @@ class NonogramActionDetailsTest {
     void allArgsConstructor_setsAllFields() {
         // given
         int idx = 5;
-        NonogramSolveAction action = NonogramSolveAction.PLACE_XS_ROW_AT_UNREACHABLE_FIELDS;
-        NonogramSolveAction trigger = NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES;
+        NonogramSolveAction action = NonogramSolveAction.PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW;
+        NonogramSolveAction trigger = NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_ROW;
 
         // when
         NonogramActionDetails d = new NonogramActionDetails(idx, action, trigger, true);
@@ -52,13 +52,13 @@ class NonogramActionDetailsTest {
         // when
         d.setIndex(7);
         d.setActionName(NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_COLUMN);
-        d.setTriggeringActionName(NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES);
+        d.setTriggeringActionName(NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_COLUMN);
         d.setChangedState(false);
 
         // then
         assertThat(d.getIndex()).isEqualTo(7);
         assertThat(d.getActionName()).isEqualTo(NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_COLUMN);
-        assertThat(d.getTriggeringActionName()).isEqualTo(NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES);
+        assertThat(d.getTriggeringActionName()).isEqualTo(NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_COLUMN);
         assertThat(d.isChangedState()).isFalse();
     }
 
@@ -68,8 +68,8 @@ class NonogramActionDetailsTest {
         // given
         NonogramActionDetails original = new NonogramActionDetails(
                 42,
-                NonogramSolveAction.PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS,
-                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES,
+                NonogramSolveAction.PLACE_XS_AT_UNREACHABLE_FIELDS_IN_COLUMN,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_COLUMN,
                 true
         );
 
@@ -153,7 +153,7 @@ class NonogramActionDetailsTest {
         NonogramActionDetails diffIndex = new NonogramActionDetails(
                 2, base.getActionName(), base.getTriggeringActionName(), base.isChangedState());
         NonogramActionDetails diffAction = new NonogramActionDetails(
-                base.getIndex(), NonogramSolveAction.PLACE_XS_ROW_AT_UNREACHABLE_FIELDS,
+                base.getIndex(), NonogramSolveAction.PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW,
                 base.getTriggeringActionName(), base.isChangedState());
         NonogramActionDetails diffTrigger = new NonogramActionDetails(
                 base.getIndex(), base.getActionName(),
@@ -207,21 +207,21 @@ class NonogramActionDetailsTest {
                 (Map<NonogramSolveAction, List<NonogramSolveAction>>) f.get(null);
 
         // when // then
-        assertThat(deps.get(NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES))
+        assertThat(deps.get(NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_ROW))
                 .contains(
-                        NonogramSolveAction.PLACE_XS_ROW_AT_UNREACHABLE_FIELDS,
+                        NonogramSolveAction.PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW,
                         NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_ROW
                 );
 
-        assertThat(deps.get(NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES))
+        assertThat(deps.get(NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_COLUMN))
                 .contains(
                         NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_COLUMN,
-                        NonogramSolveAction.PLACE_XS_COLUMN_AT_UNREACHABLE_FIELDS
+                        NonogramSolveAction.PLACE_XS_AT_UNREACHABLE_FIELDS_IN_COLUMN
                 );
 
         assertThat(deps.get(NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN))
                 .contains(
-                        NonogramSolveAction.PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCES,
+                        NonogramSolveAction.PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_COLUMN,
                         NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN
                 );
     }
@@ -232,8 +232,8 @@ class NonogramActionDetailsTest {
         // given
         NonogramActionDetails a = new NonogramActionDetails(
                 1,
-                NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES,
-                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_ROW,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_COLUMN,
                 false
         );
 
@@ -247,8 +247,8 @@ class NonogramActionDetailsTest {
         // given
         NonogramActionDetails a = new NonogramActionDetails(
                 1,
-                NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES,
-                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_ROW,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_COLUMN,
                 false
         );
 
@@ -311,16 +311,16 @@ class NonogramActionDetailsTest {
         // base class instance
         NonogramActionDetails base = new NonogramActionDetails(
                 1,
-                NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES,
-                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_ROW,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_COLUMN,
                 false
         );
 
         // subclass instance with canEqual always returning false
         NonogramActionDetails sub = new DetailsWithFalseCanEqual(
                 1,
-                NonogramSolveAction.CORRECT_ROW_SEQUENCES_RANGES,
-                NonogramSolveAction.CORRECT_COLUMN_SEQUENCES_RANGES,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_ROW,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_COLUMN,
                 false
         );
 

@@ -20,7 +20,7 @@ public class PlaceXsAroundLongestSequenceLogHelper {
     ) {
         return String.format(
                 """
-                        PLACE_XS_%s_AROUND_LONGEST_SEQUENCE: %s=%d
+                        PLACE_XS_AROUND_LONGEST_SEQUENCE_IN_%s: %s=%d
                         xEdges=%s
                         onlyMatching=%b
                         initialLine=%s

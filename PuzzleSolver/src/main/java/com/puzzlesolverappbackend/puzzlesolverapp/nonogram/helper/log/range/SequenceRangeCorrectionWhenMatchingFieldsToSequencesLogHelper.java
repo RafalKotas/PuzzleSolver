@@ -20,7 +20,7 @@ public class SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper {
     ) {
         return String.format(
                 """
-                        %s_CORRECTING_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES: %s=%d
+                        CORRECTING_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES_IN_%s: %s=%d
                         sequencesLengths=%s
                         line=%s
                         initialRanges=%s

@@ -243,49 +243,49 @@ class LogConverterTest {
 
         @Test @DisplayName("detects all correction flavours")
         void detects_corrections() {
-            assertThat(LogConverter.detectActionTypeFromRawLog("ROW_SEQUENCES_RANGES_CORRECTION: row=1"))
+            assertThat(LogConverter.detectActionTypeFromRawLog("SEQUENCES_RANGES_CORRECTION_IN ..."))
                     .isEqualTo("SEQUENCES_RANGES_CORRECTION");
-            assertThat(LogConverter.detectActionTypeFromRawLog("COLUMN_SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS: col=2"))
+            assertThat(LogConverter.detectActionTypeFromRawLog("SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS ..."))
                     .isEqualTo("SEQUENCES_RANGES_CORRECTION_WHEN_MET_COLOURED_FIELDS");
-            assertThat(LogConverter.detectActionTypeFromRawLog("ROW_SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY: row=3"))
+            assertThat(LogConverter.detectActionTypeFromRawLog("SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY ..."))
                     .isEqualTo("SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY");
-            assertThat(LogConverter.detectActionTypeFromRawLog("ROW_CORRECTING_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES ..."))
+            assertThat(LogConverter.detectActionTypeFromRawLog("CORRECTING_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES ..."))
                     .isEqualTo("SEQUENCES_RANGES_CORRECTION_BY_MATCHING_FIELDS_TO_SEQUENCES");
-            assertThat(LogConverter.detectActionTypeFromRawLog("COLUMN_CORRECTING_SEQUENCES_RANGES_FROM_COLOURED_EDGES: col=0"))
+            assertThat(LogConverter.detectActionTypeFromRawLog("CORRECTING_SEQUENCES_RANGES_FROM_COLOURED_EDGES ..."))
                     .isEqualTo("SEQUENCES_RANGES_CORRECTION_FROM_COLOURED_EDGES");
-            assertThat(LogConverter.detectActionTypeFromRawLog("ROW_SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS: ..."))
+            assertThat(LogConverter.detectActionTypeFromRawLog("SEQUENCE_RANGE_CORRECTION_WHEN_MARKING_FIELDS ..."))
                     .isEqualTo("SEQUENCES_RANGES_CORRECTION_WHEN_MARKING_FIELDS");
-            assertThat(LogConverter.detectActionTypeFromRawLog("ROW_SEQUENCE_CORRECTION_WHEN_PLACING_X ..."))
+            assertThat(LogConverter.detectActionTypeFromRawLog("SEQUENCE_CORRECTION_WHEN_PLACING_X ..."))
                     .isEqualTo("SEQUENCES_RANGES_CORRECTION_WHEN_PLACING_X");
         }
 
         @Test @DisplayName("detects colouring, x placement, mixed and other")
         void detects_otherFamilies() {
-            assertThat(LogConverter.detectActionTypeFromRawLog("COLOUR_OVERLAPPING_FIELDS_IN_ROW: row=5")).isEqualTo("COLOUR_OVERLAPPING_FIELDS");
-            assertThat(LogConverter.detectActionTypeFromRawLog("COLOURING_FIELDS_IN_ROW IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE ...")).isEqualTo("TOO_LONG_MERGE");
-            assertThat(LogConverter.detectActionTypeFromRawLog("EXTEND_ROW: ...")).isEqualTo("EXTEND");
-            assertThat(LogConverter.detectActionTypeFromRawLog("COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT_IN_ROW: ...")).isEqualTo("COLOUR_FIELDS_IF_X_CAUSES_ASSIGNMENT_CONFLICT");
+            assertThat(LogConverter.detectActionTypeFromRawLog("COLOUR_OVERLAPPING_FIELDS_IN_ROW ...")).isEqualTo("COLOUR_OVERLAPPING_FIELDS");
+            assertThat(LogConverter.detectActionTypeFromRawLog("COLOURING_FIELDS_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE ...")).isEqualTo("TOO_LONG_MERGE");
+            assertThat(LogConverter.detectActionTypeFromRawLog("EXTEND_ROW ...")).isEqualTo("EXTEND");
+            assertThat(LogConverter.detectActionTypeFromRawLog("COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT_IN_ROW ...")).isEqualTo("COLOUR_FIELDS_IF_X_CAUSES_ASSIGNMENT_CONFLICT");
 
-            assertThat(LogConverter.detectActionTypeFromRawLog("PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW: ...")).isEqualTo("PLACE_XS_AT_UNREACHABLE_FIELDS");
-            assertThat(LogConverter.detectActionTypeFromRawLog("PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCE: ...")).isEqualTo("PLACE_XS_AROUND_LONGEST_SEQUENCE");
-            assertThat(LogConverter.detectActionTypeFromRawLog("PLACE_XS_IN_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES: ...")).isEqualTo("PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES");
+            assertThat(LogConverter.detectActionTypeFromRawLog("PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW ...")).isEqualTo("PLACE_XS_AT_UNREACHABLE_FIELDS");
+            assertThat(LogConverter.detectActionTypeFromRawLog("PLACE_XS_AROUND_LONGEST_SEQUENCES ...")).isEqualTo("PLACE_XS_AROUND_LONGEST_SEQUENCE");
+            assertThat(LogConverter.detectActionTypeFromRawLog("PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES ...")).isEqualTo("PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES");
             assertThat(LogConverter.detectActionTypeFromRawLog("PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE_IN_ROW: ..."))
                     .isEqualTo("PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE");
 
             // detector returns a different constant than converter expects – this flags the mismatch explicitly
-            assertThat(LogConverter.detectActionTypeFromRawLog("PLACE_X_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_COLUMN: ..."))
+            assertThat(LogConverter.detectActionTypeFromRawLog("PLACE_X_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_COLUMN ..."))
                     .isEqualTo("PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE");
 
             assertThat(LogConverter.detectActionTypeFromRawLog("PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART_IN_ROW ..."))
                     .isEqualTo("PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART");
             assertThat(LogConverter.detectActionTypeFromRawLog("PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART_IN_COLUMN ..."))
                     .isEqualTo("PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_PLACE_X_PART");
-            assertThat(LogConverter.detectActionTypeFromRawLog("ROW_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART ..."))
+            assertThat(LogConverter.detectActionTypeFromRawLog("PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART_IN_ROW ..."))
                     .isEqualTo("PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART");
 
-            assertThat(LogConverter.detectActionTypeFromRawLog("MARK_AVAILABLE_FIELDS_IN_ROW: ...")).isEqualTo("MARK_AVAILABLE_FIELDS");
-            assertThat(LogConverter.detectActionTypeFromRawLog("FILL_TRIVIAL_COLUMN_SEQUENCE: ...")).isEqualTo("TRIVIAL");
-            assertThat(LogConverter.detectActionTypeFromRawLog("EXCLUSION_ROW_SEQUENCE: ...")).isEqualTo("EXCLUDED");
+            assertThat(LogConverter.detectActionTypeFromRawLog("MARK_AVAILABLE_FIELDS_IN_ROW ...")).isEqualTo("MARK_AVAILABLE_FIELDS");
+            assertThat(LogConverter.detectActionTypeFromRawLog("FILL_TRIVIAL_SEQUENCE_IN_COLUMN ...")).isEqualTo("TRIVIAL");
+            assertThat(LogConverter.detectActionTypeFromRawLog("EXCLUSION_SEQUENCE_IN_ROW ...")).isEqualTo("EXCLUDED");
         }
 
         @Test @DisplayName("returns UNKNOWN for unrecognized log line")
