@@ -8,7 +8,6 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramFi
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRules;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.config.GuessMode;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 
 import java.io.File;
@@ -23,56 +22,53 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.utils.Nonogram
 //@Order(9)
 @Slf4j
 public class SymmetricNonogramLoggerInitializer implements CommandLineRunner {
-    public static final String PUZZLE_PATH = InitializerConstants.PUZZLE_RELATIVE_PATH +
-            InitializerConstants.PuzzleMappings.NONOGRAM_PATH_SUFFIX;
+    static final String DEFAULT_BASE_PATH =
+            InitializerConstants.PUZZLE_RELATIVE_PATH + InitializerConstants.PuzzleMappings.NONOGRAM_PATH_SUFFIX;
 
-    @Autowired
-    CommonService commonService;
+    private final CommonService commonService;
+    private final ObjectMapper objectMapper;
+    private final String basePath;
 
     private final List<String> nonograms1Dsymmetrical = new ArrayList<>();
     private final List<String> nonograms2Dsymmetrical = new ArrayList<>();
     private final List<String> nonograms3Dsymmetrical = new ArrayList<>();
 
+    public SymmetricNonogramLoggerInitializer(CommonService commonService) {
+        this(commonService, new ObjectMapper(), DEFAULT_BASE_PATH);
+    }
+
+    SymmetricNonogramLoggerInitializer(CommonService commonService, ObjectMapper objectMapper, String basePath) {
+        this.commonService = commonService;
+        this.objectMapper = objectMapper;
+        this.basePath = basePath.endsWith(File.separator) ? basePath : (basePath + File.separator);
+    }
 
     @Override
     public void run(String... args) {
+        Set<String> existingFilesNames = commonService.listFilesUsingJavaIO(basePath);
 
-        log.info("Symmetrical nonograms logger(9)");
-
-        Set<String> existingFilesNames = commonService
-                .listFilesUsingJavaIO(PUZZLE_PATH);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        for (String nonogramFileName : existingFilesNames) {
-
+        for (String fileName : existingFilesNames) {
             try {
-                NonogramFileDetails nonogramFileDetails = objectMapper.readValue(new File(PUZZLE_PATH + nonogramFileName), NonogramFileDetails.class);
-                NonogramRules nonogramRules = mapNonogramFileDetailsToNonogramRules(nonogramFileDetails);
-                NonogramLogic nonogramLogic = new NonogramLogic(nonogramRules, GuessMode.DISABLED);
+                NonogramFileDetails nfd = objectMapper.readValue(new File(basePath + fileName), NonogramFileDetails.class);
+                NonogramRules rules = mapNonogramFileDetailsToNonogramRules(nfd);
+                NonogramLogic logic = new NonogramLogic(rules, GuessMode.DISABLED);
 
-                switch(getSymmetryGrade(nonogramLogic)) {
-                    case "4 axis":
-                        nonograms3Dsymmetrical.add(nonogramFileName);
-                        break;
-                    case "2 axis":
-                        nonograms2Dsymmetrical.add(nonogramFileName);
-                        break;
-                    case "1 axis":
-                        nonograms1Dsymmetrical.add(nonogramFileName);
-                        break;
-                    default:
-                        break;
+                switch (getSymmetryGrade(logic)) {
+                    case "4 axis" -> nonograms3Dsymmetrical.add(fileName);
+                    case "2 axis" -> nonograms2Dsymmetrical.add(fileName);
+                    case "1 axis" -> nonograms1Dsymmetrical.add(fileName);
+                    default -> { /* ignore */ }
                 }
             } catch (Exception e) {
-                log.error("Can't parse file with name: {}", nonogramFileName, e);
+                log.error("Can't parse file with name: {}", fileName, e);
             }
-
         }
 
         log.info("Nonograms 4 axis symmetrical filenames: ");
-        for (String nonogramSym : nonograms3Dsymmetrical) {
-            log.info("{}", nonogramSym);
-        }
+        for (String f : nonograms3Dsymmetrical) log.info("{}", f);
     }
+
+    List<String> getNonograms1Dsymmetrical() { return nonograms1Dsymmetrical; }
+    List<String> getNonograms2Dsymmetrical() { return nonograms2Dsymmetrical; }
+    List<String> getNonograms3Dsymmetrical() { return nonograms3Dsymmetrical; }
 }
