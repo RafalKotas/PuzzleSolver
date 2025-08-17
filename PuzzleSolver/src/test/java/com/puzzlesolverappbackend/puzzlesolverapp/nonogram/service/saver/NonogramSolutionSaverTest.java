@@ -5,9 +5,8 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.dto.FinalNonogramSolu
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.dto.NonogramSolutionSaveRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.MockedStatic;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -19,12 +18,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 
-@SpringBootTest
-@TestPropertySource(properties = "nonogram.solution-dir=target/test-output")
 class NonogramSolutionSaverTest {
 
+    @TempDir
+    Path tempDir;
+
+    private NonogramSolutionSaver buildSaver(Path dir) {
+        NonogramSolutionSaver saver = new NonogramSolutionSaver();
+        try {
+            Field field = NonogramSolutionSaver.class.getDeclaredField("solutionDir");
+            field.setAccessible(true);
+            field.set(saver, dir.toString());
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("Failed to inject solutionDir", e);
+        }
+        return saver;
+    }
+
     @Test
-    @DisplayName("Should save solution if board is correct and return populated FinalNonogramSolutionDTO")
+    @DisplayName("Should save solution if board is correct and return populated DTO")
     void shouldSaveSolutionIfCorrect() throws IOException {
         // given
         List<List<String>> board = List.of(
@@ -67,19 +79,12 @@ class NonogramSolutionSaverTest {
         );
 
         NonogramSolutionSaveRequest request = new NonogramSolutionSaveRequest();
-        request.setFileName("o06005");
+        request.setFileName("o06005_ok"); // unikalna nazwa dla tego testu
         request.setBoard(board);
         request.setRowSequences(rowSequences);
         request.setColumnSequences(columnSequences);
 
-        NonogramSolutionSaver saver = new NonogramSolutionSaver();
-        try {
-            Field field = NonogramSolutionSaver.class.getDeclaredField("solutionDir");
-            field.setAccessible(true);
-            field.set(saver, "target/test-output");
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException("Failed to inject solutionDir", e);
-        }
+        NonogramSolutionSaver saver = buildSaver(tempDir);
 
         List<List<List<Integer>>> derivedRowRanges = List.of(
                 List.of(List.of(2, 2), List.of(4, 4), List.of(6, 6)),
@@ -107,16 +112,16 @@ class NonogramSolutionSaverTest {
                 List.of(List.of(7, 7))
         );
 
-        try (
-                MockedStatic<NonogramSolverUtils> utilsMock = mockStatic(NonogramSolverUtils.class);
-                MockedStatic<SolutionJsonFormatter> formatterMock = mockStatic(SolutionJsonFormatter.class)
-        ) {
+        try (MockedStatic<NonogramSolverUtils> utilsMock = mockStatic(NonogramSolverUtils.class);
+             MockedStatic<SolutionJsonFormatter> formatterMock = mockStatic(SolutionJsonFormatter.class)) {
+
             utilsMock.when(() -> NonogramSolverUtils.isBoardConsistentWithSequences(any(), any(), any()))
                     .thenReturn(true);
             utilsMock.when(() -> NonogramSolverUtils.inferSequenceRangesFromBoard(any()))
                     .thenReturn(derivedRowRanges);
             utilsMock.when(() -> NonogramSolverUtils.inferSequenceRangesFromColumns(any()))
                     .thenReturn(derivedColumnRanges);
+
             formatterMock.when(() -> SolutionJsonFormatter.format(any()))
                     .thenReturn("{\"mocked\":true}");
 
@@ -129,13 +134,13 @@ class NonogramSolutionSaverTest {
             assertThat(result.getDerivedColumnRanges()).isEqualTo(derivedColumnRanges);
             assertThat(result.getVerifiedAgainstOriginal()).isEqualTo("PASS");
 
-            Path expectedFile = Path.of("target/test-output", "ro06005.json");
+            Path expectedFile = tempDir.resolve("ro06005_ok.json");
             assertThat(Files.exists(expectedFile)).isTrue();
         }
     }
 
     @Test
-    @DisplayName("Should not save solution if board is not correct and return populated FinalNonogramSolutionDTO")
+    @DisplayName("Should not save solution if board is not correct and return FAIL DTO")
     void shouldNotSaveSolutionIfNotCorrect() throws IOException {
         // given
         List<List<String>> board = List.of(
@@ -178,19 +183,12 @@ class NonogramSolutionSaverTest {
         );
 
         NonogramSolutionSaveRequest request = new NonogramSolutionSaveRequest();
-        request.setFileName("o06005");
+        request.setFileName("o06005_fail"); // inna nazwa
         request.setBoard(board);
         request.setRowSequences(rowSequences);
         request.setColumnSequences(columnSequences);
 
-        NonogramSolutionSaver saver = new NonogramSolutionSaver();
-        try {
-            Field field = NonogramSolutionSaver.class.getDeclaredField("solutionDir");
-            field.setAccessible(true);
-            field.set(saver, "target/test-output");
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException("Failed to inject solutionDir", e);
-        }
+        NonogramSolutionSaver saver = buildSaver(tempDir);
 
         List<List<List<Integer>>> derivedRowRanges = List.of(
                 List.of(List.of(2, 2), List.of(4, 4), List.of(6, 7)),
@@ -218,16 +216,16 @@ class NonogramSolutionSaverTest {
                 List.of(List.of(7, 7))
         );
 
-        try (
-                MockedStatic<NonogramSolverUtils> utilsMock = mockStatic(NonogramSolverUtils.class);
-                MockedStatic<SolutionJsonFormatter> formatterMock = mockStatic(SolutionJsonFormatter.class)
-        ) {
+        try (MockedStatic<NonogramSolverUtils> utilsMock = mockStatic(NonogramSolverUtils.class);
+             MockedStatic<SolutionJsonFormatter> formatterMock = mockStatic(SolutionJsonFormatter.class)) {
+
             utilsMock.when(() -> NonogramSolverUtils.isBoardConsistentWithSequences(any(), any(), any()))
                     .thenReturn(false);
             utilsMock.when(() -> NonogramSolverUtils.inferSequenceRangesFromBoard(any()))
                     .thenReturn(derivedRowRanges);
             utilsMock.when(() -> NonogramSolverUtils.inferSequenceRangesFromColumns(any()))
                     .thenReturn(derivedColumnRanges);
+
             formatterMock.when(() -> SolutionJsonFormatter.format(any()))
                     .thenReturn("{\"mocked\":true}");
 
@@ -240,8 +238,8 @@ class NonogramSolutionSaverTest {
             assertThat(result.getDerivedColumnRanges()).isNull();
             assertThat(result.getVerifiedAgainstOriginal()).isEqualTo("FAIL");
 
-            Path expectedFile = Path.of("target/test-output", "ro06005.json");
-            assertThat(Files.exists(expectedFile)).isFalse();
+            Path unexpectedFile = tempDir.resolve("ro06005_fail.json");
+            assertThat(Files.exists(unexpectedFile)).isFalse();
         }
     }
 }

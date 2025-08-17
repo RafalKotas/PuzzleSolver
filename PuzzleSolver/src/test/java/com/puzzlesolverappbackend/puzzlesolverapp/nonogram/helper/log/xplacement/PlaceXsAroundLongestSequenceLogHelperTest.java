@@ -53,7 +53,7 @@ class PlaceXsAroundLongestSequenceLogHelperTest {
         // then
         String expected =
                 """
-                        PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCE: column=14
+                        PLACE_XS_AROUND_LONGEST_SEQUENCE_IN_COLUMN: column=14
                         xEdges=[18, 20]
                         onlyMatching=true
                         initialLine=[-, -, -, -, -, -, -, -, -, -, X, -, -, -, -, -, -, -, -, O]
@@ -69,7 +69,7 @@ class PlaceXsAroundLongestSequenceLogHelperTest {
         // given
         String generatedLog =
                 """
-                        PLACE_XS_COLUMN_AROUND_LONGEST_SEQUENCE: column=14
+                        PLACE_XS_AROUND_LONGEST_SEQUENCE_IN_COLUMN: column=14
                         xEdges=[18, 20]
                         onlyMatching=true
                         initialLine=[-, -, -, -, -, -, -, -, -, -, X, -, -, -, -, -, -, -, -, O]
@@ -117,7 +117,7 @@ class PlaceXsAroundLongestSequenceLogHelperTest {
         // then
         String expected =
                 """
-                        PLACE_XS_ROW_AROUND_LONGEST_SEQUENCE: row=11
+                        PLACE_XS_AROUND_LONGEST_SEQUENCE_IN_ROW: row=11
                         xEdges=[15, 17]
                         onlyMatching=true
                         initialLine=[-, -, -, -, -, -, -, O, O, O, -, -, X, -, -, -, O, -, O, -]
@@ -133,7 +133,7 @@ class PlaceXsAroundLongestSequenceLogHelperTest {
         // given
         String generatedLog =
                 """
-                        PLACE_XS_ROW_AROUND_LONGEST_SEQUENCE: row=11
+                        PLACE_XS_AROUND_LONGEST_SEQUENCE_IN_ROW: row=11
                         xEdges=[15, 17]
                         onlyMatching=true
                         initialLine=[-, -, -, -, -, -, -, O, O, O, -, -, X, -, -, -, O, -, O, -]

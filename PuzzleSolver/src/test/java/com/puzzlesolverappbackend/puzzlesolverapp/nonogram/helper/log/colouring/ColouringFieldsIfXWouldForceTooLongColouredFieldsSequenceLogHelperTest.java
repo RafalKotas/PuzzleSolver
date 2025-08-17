@@ -59,7 +59,7 @@ class ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelperTest {
 
         // then
         String expected =
-                "COLOURING_FIELDS_IN_COLUMN_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE: column=5\n" +
+                "COLOURING_FIELDS_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE_IN_COLUMN: column=5\n" +
                         "initialLine=[-, -, -, -, -, -, -, -, -, O, -, -, -, O, -]\n" +
                         "sequencesRanges=[[0, 6], [6, 11], [12, 14]]\n" +
                         "sequencesLengths=[3, 4, 2]\n" +
@@ -73,7 +73,7 @@ class ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelperTest {
     void shouldConvertGeneratedLogToTestArgumentsColumnCase() {
         // given
         String generatedLog =
-                "COLOURING_FIELDS_IN_COLUMN_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE: column=5\n" +
+                "COLOURING_FIELDS_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE_IN_COLUMN: column=5\n" +
                         "initialLine=[-, -, -, -, -, -, -, -, -, O, -, -, -, O, -]\n" +
                         "sequencesRanges=[[0, 6], [6, 11], [12, 14]]\n" +
                         "sequencesLengths=[3, 4, 2]\n" +
@@ -124,7 +124,7 @@ class ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelperTest {
 
         // then
         String expected =
-                "COLOURING_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE: row=12\n" +
+                "COLOURING_FIELDS_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE_IN_ROW: row=12\n" +
                         "initialLine=[-, -, -, -, -, O, O, O, O, O, O, -, O, -, -, -, O, -, O, -]\n" +
                         "sequencesRanges=[[2, 14], [16, 16], [18, 18]]\n" +
                         "sequencesLengths=[11, 1, 1]\n" +
@@ -138,7 +138,7 @@ class ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelperTest {
     void shouldConvertGeneratedLogToTestArgumentsRowCase() {
         // given
         String generatedLog =
-                "COLOURING_FIELDS_IN_ROW_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE: row=12\n" +
+                "COLOURING_FIELDS_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE_IN_ROW: row=12\n" +
                         "initialLine=[-, -, -, -, -, O, O, O, O, O, O, -, O, -, -, -, O, -, O, -]\n" +
                         "sequencesRanges=[[2, 14], [16, 16], [18, 18]]\n" +
                         "sequencesLengths=[11, 1, 1]\n" +

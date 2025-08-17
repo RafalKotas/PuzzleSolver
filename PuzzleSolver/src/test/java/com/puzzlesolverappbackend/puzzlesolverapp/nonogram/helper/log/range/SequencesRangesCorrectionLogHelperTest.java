@@ -57,7 +57,7 @@ class SequencesRangesCorrectionLogHelperTest {
 
         // then
         String expected =
-                "ROW_SEQUENCES_RANGES_CORRECTION: row=7\n" +
+                "SEQUENCES_RANGES_CORRECTION_IN_ROW: row=7\n" +
                         "sequencesLengths=[2, 2, 1]\n" +
                         "excludedFields=[]\n" +
                         "excludedSequencesIndexes=[]\n" +
@@ -72,7 +72,7 @@ class SequencesRangesCorrectionLogHelperTest {
     void shouldConvertGeneratedLogToTestArguments() {
         // given
         String generatedLog =
-                "ROW_SEQUENCES_RANGES_CORRECTION: row=7\n" +
+                "SEQUENCES_RANGES_CORRECTION_IN_ROW: row=7\n" +
                         "sequencesLengths=[2, 2, 1]\n" +
                         "excludedFields=[]\n" +
                         "excludedSequencesIndexes=[]\n" +
