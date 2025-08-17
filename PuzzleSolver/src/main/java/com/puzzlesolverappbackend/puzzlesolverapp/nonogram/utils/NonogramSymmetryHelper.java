@@ -9,46 +9,35 @@ import java.util.List;
 public final class NonogramSymmetryHelper {
 
     public static String getSymmetryGrade(NonogramLogic logic) {
-        if (is3DSymmetrical(logic)) {
-            return "4 axis";
-        } else if (is2DSymmetrical(logic)) {
-            return "2 axis";
-        } else if (is1DSymmetrical(logic)) {
-            return "1 axis";
-        } else {
-            return "None";
-        }
-    }
-
-    public static boolean is1DSymmetrical(NonogramLogic logic) {
-        return isRowSymmetrical(logic) ^ isColumnSymmetrical(logic);
-    }
-
-    public static boolean is2DSymmetrical(NonogramLogic logic) {
-        return isRowSymmetrical(logic) && isColumnSymmetrical(logic) &&
-                !logic.areRowsSequencesIdenticalWithColumnsSequences();
-    }
-
-    public static boolean is3DSymmetrical(NonogramLogic logic) {
-        return isRowSymmetrical(logic) && isColumnSymmetrical(logic) &&
-                logic.areRowsSequencesIdenticalWithColumnsSequences();
-    }
-
-    public static boolean isRowSymmetrical(NonogramLogic logic) {
-        return areOriginalAndReversedListIdentical(logic.getNonogramRules().getRowSequencesLengths());
-    }
-
-    public static boolean isColumnSymmetrical(NonogramLogic logic) {
-        return areOriginalAndReversedListIdentical(logic.getNonogramRules().getColumnSequencesLengths());
-    }
-
-    private static boolean areOriginalAndReversedListIdentical(List<List<Integer>> original) {
-        int size = original.size();
-        for (int i = 0; i < size / 2; i++) {
-            if (!original.get(i).equals(original.get(size - i - 1))) {
-                return false;
+        Sym s = analyze(logic);
+        if (s.rowsMirror && s.colsMirror) {
+            if (s.rowsEqualsCols) {
+                return "4 axis";
+            } else {
+                return "2 axis";
             }
+        }
+        if (s.rowsMirror ^ s.colsMirror) return "1 axis";
+        return "None";
+    }
+
+    // --- helpers ---
+
+    private static boolean isMirror(List<List<Integer>> list) {
+        int n = list.size();
+        for (int i = 0; i < n / 2; i++) {
+            if (!list.get(i).equals(list.get(n - 1 - i))) return false;
         }
         return true;
     }
+
+    private static Sym analyze(NonogramLogic logic) {
+        boolean rowsMirror = isMirror(logic.getNonogramRules().getRowSequencesLengths());
+        boolean colsMirror = isMirror(logic.getNonogramRules().getColumnSequencesLengths());
+        boolean rowsEqualsCols = logic.getNonogramRules().getRowSequencesLengths()
+                .equals(logic.getNonogramRules().getColumnSequencesLengths());
+        return new Sym(rowsMirror, colsMirror, rowsEqualsCols);
+    }
+
+    private record Sym(boolean rowsMirror, boolean colsMirror, boolean rowsEqualsCols) {}
 }
