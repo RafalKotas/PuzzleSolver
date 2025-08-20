@@ -5,7 +5,7 @@ import lombok.experimental.UtilityClass;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
 public class SequenceRangeCorrectionFromColouredEdgesLogHelper {
@@ -62,10 +62,10 @@ public class SequenceRangeCorrectionFromColouredEdgesLogHelper {
                 fileName,
                 isRow ? ROW : COLUMN,
                 index,
-                initialRanges,
-                updatedRanges,
-                sequencesLengths,
-                line
+                toMutableRangesListLiteral(initialRanges),
+                toImmutableRangesListLiteral(updatedRanges),
+                toImmutableIntListLiteral(sequencesLengths),
+                toMutableStringListLiteral(line)
         );
     }
 }
