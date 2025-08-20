@@ -18,8 +18,7 @@ public class SequencesRangesCorrectionLogHelper {
             List<Integer> excludedSequencesIndexes,
             List<List<Integer>> initialRanges,
             List<List<Integer>> updatedRanges
-    ) {
-        return String.format(
+    ) {return String.format(
                 """
                         SEQUENCES_RANGES_CORRECTION_IN_%s: %s=%d
                         sequencesLengths=%s

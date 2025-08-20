@@ -29,8 +29,8 @@ class SequencesRangesCorrectionLogHelperTest {
     }
 
     @Test
-    @DisplayName("SequencesRangesCorrectionLogHelper - generate example log - o07942")
-    void shouldGenerateLogWhenAtLeastOneSequenceIsCorrected() {
+    @DisplayName("Generate example log - o07942 row 7")
+    void shouldGenerateLogRowCase() {
         // given
         boolean isRow = true;
         int index = 7;
@@ -68,8 +68,8 @@ class SequencesRangesCorrectionLogHelperTest {
     }
 
     @Test
-    @DisplayName("SequencesRangesCorrectionLogHelper - convert example log to test arguments - o07942")
-    void shouldConvertGeneratedLogToTestArguments() {
+    @DisplayName("SequencesRangesCorrectionLogHelper - convert example log to test arguments - o07942 row 7")
+    void shouldConvertGeneratedLogToTestArgumentsRowCase() {
         // given
         String generatedLog =
                 "SEQUENCES_RANGES_CORRECTION_IN_ROW: row=7\n" +
@@ -92,6 +92,74 @@ class SequencesRangesCorrectionLogHelperTest {
                 "    new ArrayList<>(List.of()),\n" +
                 "    new ArrayList<>(List.of(new ArrayList<>(List.of(0, 14)), new ArrayList<>(List.of(3, 16)), new ArrayList<>(List.of(18, 18)))),\n" +
                 "    List.of(List.of(0, 13), List.of(3, 16), List.of(18, 18)))\n" +
+                ")";
+        assertThat(convertedLog).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("Generate example log - o10035 column 14")
+    void shouldGenerateLogColumnCase() {
+        // given
+        boolean isRow = false;
+        int index = 14;
+        List<Integer> sequencesLengths = List.of(1, 5, 6, 4, 1);
+        List<Integer> excludedFields = List.of();
+        List<Integer> excludedSequencesIds = List.of();
+        List<List<Integer>> initialRanges = List.of(
+                List.of(0, 4), List.of(4, 11), List.of(12, 18), List.of(19, 25), List.of(22, 29)
+        );
+        List<List<Integer>> updatedRanges = List.of(
+                List.of(0, 4), List.of(4, 11), List.of(12, 18), List.of(19, 25), List.of(24, 29)
+        );
+
+        // when
+        String actual = SequencesRangesCorrectionLogHelper.generateLog(
+                isRow,
+                index,
+                sequencesLengths,
+                excludedFields,
+                excludedSequencesIds,
+                initialRanges,
+                updatedRanges
+        );
+
+        // then
+        String expected =
+                "SEQUENCES_RANGES_CORRECTION_IN_COLUMN: column=14\n" +
+                        "sequencesLengths=[1, 5, 6, 4, 1]\n" +
+                        "excludedFields=[]\n" +
+                        "excludedSequencesIndexes=[]\n" +
+                        "initialRanges=[[0, 4], [4, 11], [12, 18], [19, 25], [22, 29]]\n" +
+                        "updatedRanges=[[0, 4], [4, 11], [12, 18], [19, 25], [24, 29]]\n";
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("SequencesRangesCorrectionLogHelper - convert example log to test arguments - o10035 column 14")
+    void shouldConvertGeneratedLogToTestArgumentsColumnCase() {
+        // given
+        String generatedLog =
+                "SEQUENCES_RANGES_CORRECTION_IN_COLUMN: column=14\n" +
+                        "sequencesLengths=[1, 5, 6, 4, 1]\n" +
+                        "excludedFields=[]\n" +
+                        "excludedSequencesIndexes=[]\n" +
+                        "initialRanges=[[0, 4], [4, 11], [12, 18], [19, 25], [22, 29]]\n" +
+                        "updatedRanges=[[0, 4], [4, 11], [12, 18], [19, 25], [24, 29]]\n";
+
+        // when
+        String convertedLog = SequencesRangesCorrectionLogHelper.convertLogToTestArguments(
+                generatedLog,
+                "ro10035"
+        );
+
+        // then
+        String expected = "Arguments.of(\"o10035 / column=14 - sequences range correction\",\n" +
+                "    List.of(1, 5, 6, 4, 1),\n" +
+                "    new ArrayList<>(List.of()),\n" +
+                "    new ArrayList<>(List.of()),\n" +
+                "    new ArrayList<>(List.of(new ArrayList<>(List.of(0, 4)), new ArrayList<>(List.of(4, 11)), new ArrayList<>(List.of(12, 18)), new ArrayList<>(List.of(19, 25)), new ArrayList<>(List.of(22, 29)))),\n" +
+                "    List.of(List.of(0, 4), List.of(4, 11), List.of(12, 18), List.of(19, 25), List.of(24, 29)))\n" +
                 ")";
         assertThat(convertedLog).isEqualTo(expected);
     }
