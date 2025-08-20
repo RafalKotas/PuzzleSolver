@@ -11,13 +11,13 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class PlaceXsAroundLongestSequenceLogHelperTest {
+class PlaceXsAroundLongestSequencesLogHelperTest {
 
     @Test
     @DisplayName("PlaceXsAroundLongestSequenceLogHelper constructor should throw UnsupportedOperationException - reflect instantiation")
     void constructor_throwsException_whenInstantiatedReflectively() throws Exception {
         // given
-        Constructor<PlaceXsAroundLongestSequenceLogHelper> constructor = PlaceXsAroundLongestSequenceLogHelper.class.getDeclaredConstructor();
+        Constructor<PlaceXsAroundLongestSequencesLogHelper> constructor = PlaceXsAroundLongestSequencesLogHelper.class.getDeclaredConstructor();
         constructor.setAccessible(true);
 
         // when
@@ -30,7 +30,7 @@ class PlaceXsAroundLongestSequenceLogHelperTest {
     }
 
     @Test
-    @DisplayName("PlaceXsAroundLongestSequenceLogHelperTest - generate example log - o07942 column 14")
+    @DisplayName("PlaceXsAroundLongestSequenceLogHelper - generate example log - o07942 column 14")
     void shouldGenerateLogColumnCase() {
         // given
         boolean isRow = false;
@@ -41,7 +41,7 @@ class PlaceXsAroundLongestSequenceLogHelperTest {
         boolean onlyMatching = true;
 
         // when
-        String actual = PlaceXsAroundLongestSequenceLogHelper.generateLog(
+        String actual = PlaceXsAroundLongestSequencesLogHelper.generateLog(
                 isRow,
                 index,
                 xEdges,
@@ -53,7 +53,7 @@ class PlaceXsAroundLongestSequenceLogHelperTest {
         // then
         String expected =
                 """
-                        PLACE_XS_AROUND_LONGEST_SEQUENCE_IN_COLUMN: column=14
+                        PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_COLUMN: column=14
                         xEdges=[18, 20]
                         onlyMatching=true
                         initialLine=[-, -, -, -, -, -, -, -, -, -, X, -, -, -, -, -, -, -, -, O]
@@ -64,12 +64,12 @@ class PlaceXsAroundLongestSequenceLogHelperTest {
     }
 
     @Test
-    @DisplayName("PlaceXsAroundLongestSequenceLogHelperTest - convert example log to test arguments - o07942 column 14")
+    @DisplayName("PlaceXsAroundLongestSequenceLogHelper - convert example log to test arguments - o07942 column 14")
     void shouldConvertGeneratedLogToTestArgumentsColumnCase() {
         // given
         String generatedLog =
                 """
-                        PLACE_XS_AROUND_LONGEST_SEQUENCE_IN_COLUMN: column=14
+                        PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_COLUMN: column=14
                         xEdges=[18, 20]
                         onlyMatching=true
                         initialLine=[-, -, -, -, -, -, -, -, -, -, X, -, -, -, -, -, -, -, -, O]
@@ -77,7 +77,7 @@ class PlaceXsAroundLongestSequenceLogHelperTest {
                         """;
 
         // when
-        String convertedLog = PlaceXsAroundLongestSequenceLogHelper.convertLogToTestArguments(
+        String convertedLog = PlaceXsAroundLongestSequencesLogHelper.convertLogToTestArguments(
                 generatedLog,
                 "ro07942"
         );
@@ -94,7 +94,7 @@ class PlaceXsAroundLongestSequenceLogHelperTest {
     }
 
     @Test
-    @DisplayName("PlaceXsAroundLongestSequenceLogHelperTest - generate example log - o07942 row 11")
+    @DisplayName("PlaceXsAroundLongestSequenceLogHelper - generate example log - o07942 row 11")
     void shouldGenerateLogRowCase() {
         // given
         boolean isRow = true;
@@ -105,7 +105,7 @@ class PlaceXsAroundLongestSequenceLogHelperTest {
         boolean onlyMatching = true;
 
         // when
-        String actual = PlaceXsAroundLongestSequenceLogHelper.generateLog(
+        String actual = PlaceXsAroundLongestSequencesLogHelper.generateLog(
                 isRow,
                 index,
                 xEdges,
@@ -117,7 +117,7 @@ class PlaceXsAroundLongestSequenceLogHelperTest {
         // then
         String expected =
                 """
-                        PLACE_XS_AROUND_LONGEST_SEQUENCE_IN_ROW: row=11
+                        PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_ROW: row=11
                         xEdges=[15, 17]
                         onlyMatching=true
                         initialLine=[-, -, -, -, -, -, -, O, O, O, -, -, X, -, -, -, O, -, O, -]
@@ -128,12 +128,12 @@ class PlaceXsAroundLongestSequenceLogHelperTest {
     }
 
     @Test
-    @DisplayName("PlaceXsAroundLongestSequenceLogHelperTest - convert example log to test arguments - o07942 row 11")
+    @DisplayName("PlaceXsAroundLongestSequenceLogHelper - convert example log to test arguments - o07942 row 11")
     void shouldConvertGeneratedLogToTestArgumentsRowCase() {
         // given
         String generatedLog =
                 """
-                        PLACE_XS_AROUND_LONGEST_SEQUENCE_IN_ROW: row=11
+                        PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_ROW: row=11
                         xEdges=[15, 17]
                         onlyMatching=true
                         initialLine=[-, -, -, -, -, -, -, O, O, O, -, -, X, -, -, -, O, -, O, -]
@@ -141,7 +141,7 @@ class PlaceXsAroundLongestSequenceLogHelperTest {
                         """;
 
         // when
-        String convertedLog = PlaceXsAroundLongestSequenceLogHelper.convertLogToTestArguments(
+        String convertedLog = PlaceXsAroundLongestSequencesLogHelper.convertLogToTestArguments(
                 generatedLog,
                 "ro07942"
         );

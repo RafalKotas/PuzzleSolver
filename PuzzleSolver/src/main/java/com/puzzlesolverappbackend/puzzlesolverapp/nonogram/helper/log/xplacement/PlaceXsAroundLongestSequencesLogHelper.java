@@ -8,7 +8,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
-public class PlaceXsAroundLongestSequenceLogHelper {
+public class PlaceXsAroundLongestSequencesLogHelper {
 
     public static String generateLog(
             boolean isRow,
@@ -20,7 +20,7 @@ public class PlaceXsAroundLongestSequenceLogHelper {
     ) {
         return String.format(
                 """
-                        PLACE_XS_AROUND_LONGEST_SEQUENCE_IN_%s: %s=%d
+                        PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_%s: %s=%d
                         xEdges=%s
                         onlyMatching=%b
                         initialLine=%s

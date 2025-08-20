@@ -21,7 +21,7 @@ public class PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLo
     ) {
         return String.format(
                 """
-                        %s_PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART: %s=%d
+                        PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART_IN_%s: %s=%d
                         sequencesLengths=%s
                         initialLine=%s,
                         updatedLine=%s,

@@ -5,7 +5,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.xplacement.NonogramFieldPlacingXHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.SequenceRangeCorrectionWhenPlacingXsLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAroundLongestSequenceLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAroundLongestSequencesLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAtTooShortEmptySequencesLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAtUnreachableFieldsLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper;
@@ -245,7 +245,7 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
         List<String> columnAfter = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
 
         if (anyXPlaced) {
-            String tmpLog = PlaceXsAroundLongestSequenceLogHelper.generateLog(
+            String tmpLog = PlaceXsAroundLongestSequencesLogHelper.generateLog(
                     false,
                     columnIdx,
                     xEdges,

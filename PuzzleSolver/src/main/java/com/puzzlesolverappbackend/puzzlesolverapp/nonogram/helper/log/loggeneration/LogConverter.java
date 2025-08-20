@@ -51,8 +51,8 @@ public class LogConverter {
             // x placing
             case "PLACE_XS_AT_UNREACHABLE_FIELDS" ->
                     Optional.of(PlaceXsAtUnreachableFieldsLogHelper.convertLogToTestArguments(log, solutionName));
-            case "PLACE_XS_AROUND_LONGEST_SEQUENCE" ->
-                    Optional.of(PlaceXsAroundLongestSequenceLogHelper.convertLogToTestArguments(log, solutionName));
+            case "PLACE_XS_AROUND_LONGEST_SEQUENCES" ->
+                    Optional.of(PlaceXsAroundLongestSequencesLogHelper.convertLogToTestArguments(log, solutionName));
             case "PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES" ->
                     Optional.of(PlaceXsAtTooShortEmptySequencesLogHelper.convertLogToTestArguments(log, solutionName));
             case "PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE" ->
@@ -86,7 +86,7 @@ public class LogConverter {
         if (isCorrectionFromEdges(log)) return "SEQUENCES_RANGES_CORRECTION_FROM_COLOURED_EDGES";
         // SUB-ACTION of "MARK_AVAILABLE_FIELDS"
         if (isRangeCorrectionWhenMarking(log)) return "SEQUENCES_RANGES_CORRECTION_WHEN_MARKING_FIELDS";
-        // SUB_ACTION of "PLACE_XS_AROUND_LONGEST_SEQUENCE"
+        // SUB_ACTION of "PLACE_XS_AROUND_LONGEST_SEQUENCES"
         if (isRangeCorrectionWhenPlacingX(log)) return "SEQUENCES_RANGES_CORRECTION_WHEN_PLACING_X";
 
         // colour
@@ -97,7 +97,7 @@ public class LogConverter {
 
         // x placing
         if (isPlaceXsAtUnreachableFields(log)) return "PLACE_XS_AT_UNREACHABLE_FIELDS";
-        if (isPlaceXsAroundLongestSequences(log)) return "PLACE_XS_AROUND_LONGEST_SEQUENCE";
+        if (isPlaceXsAroundLongestSequences(log)) return "PLACE_XS_AROUND_LONGEST_SEQUENCES";
         if (isPlaceXsAtTooShortEmptySequences(log)) return "PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES";
         if (isPlaceXIfOWillMergeNearFieldsToTooLongColouredSequence(log)) return "PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE";
         if (isPlaceXIfONearXWillBeginTooLongPossibleColouredSequence(log)) return "PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE";

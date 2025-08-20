@@ -159,11 +159,11 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("routes PLACE_XS_AROUND_LONGEST_SEQUENCE")
+        @Test @DisplayName("routes PLACE_XS_AROUND_LONGEST_SEQUENCES")
         void routes_placeXsAroundLongest() {
-            try (MockedStatic<PlaceXsAroundLongestSequenceLogHelper> ms = mockStatic(PlaceXsAroundLongestSequenceLogHelper.class)) {
-                ms.when(() -> PlaceXsAroundLongestSequenceLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
-                Optional<String> out = LogConverter.convertLogByAction(LOG, SOL, "PLACE_XS_AROUND_LONGEST_SEQUENCE");
+            try (MockedStatic<PlaceXsAroundLongestSequencesLogHelper> ms = mockStatic(PlaceXsAroundLongestSequencesLogHelper.class)) {
+                ms.when(() -> PlaceXsAroundLongestSequencesLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
+                Optional<String> out = LogConverter.convertLogByAction(LOG, SOL, "PLACE_XS_AROUND_LONGEST_SEQUENCES");
                 assertThat(out).contains(OK);
             }
         }
@@ -267,7 +267,7 @@ class LogConverterTest {
             assertThat(LogConverter.detectActionTypeFromRawLog("COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT_IN_ROW ...")).isEqualTo("COLOUR_FIELDS_IF_X_CAUSES_ASSIGNMENT_CONFLICT");
 
             assertThat(LogConverter.detectActionTypeFromRawLog("PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW ...")).isEqualTo("PLACE_XS_AT_UNREACHABLE_FIELDS");
-            assertThat(LogConverter.detectActionTypeFromRawLog("PLACE_XS_AROUND_LONGEST_SEQUENCES ...")).isEqualTo("PLACE_XS_AROUND_LONGEST_SEQUENCE");
+            assertThat(LogConverter.detectActionTypeFromRawLog("PLACE_XS_AROUND_LONGEST_SEQUENCES ...")).isEqualTo("PLACE_XS_AROUND_LONGEST_SEQUENCES");
             assertThat(LogConverter.detectActionTypeFromRawLog("PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES ...")).isEqualTo("PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES");
             assertThat(LogConverter.detectActionTypeFromRawLog("PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE_IN_ROW: ..."))
                     .isEqualTo("PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE");

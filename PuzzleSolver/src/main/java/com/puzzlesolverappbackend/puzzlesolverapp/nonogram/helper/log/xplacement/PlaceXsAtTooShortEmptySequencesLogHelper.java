@@ -21,7 +21,7 @@ public class PlaceXsAtTooShortEmptySequencesLogHelper {
     ) {
         return String.format(
                 """
-                        PLACE_XS_IN_%s_AT_TOO_SHORT_EMPTY_SEQUENCES: %s=%d
+                        PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES_IN_%s: %s=%d
                         initialLine=%s
                         updatedLine=%s
                         sequencesRanges=%s
