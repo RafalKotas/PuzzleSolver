@@ -59,7 +59,7 @@ class PlaceXsAtTooShortEmptySequencesLogHelperTest {
         // then
         String expected =
                 """
-                        PLACE_XS_IN_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES: column=0
+                        PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES_IN_COLUMN: column=0
                         initialLine=[-, -, -, -, -, -, -, -, -, -, X, -, X, -, -, -, -, -, -, -]
                         updatedLine=[-, -, -, -, -, -, -, -, -, -, X, X, X, -, -, -, -, -, -, -]
                         sequencesRanges=[[0, 19]]
@@ -76,7 +76,7 @@ class PlaceXsAtTooShortEmptySequencesLogHelperTest {
         // given
         String generatedLog =
                 """
-                        PLACE_XS_IN_COLUMN_AT_TOO_SHORT_EMPTY_SEQUENCES: column=0
+                        PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES_IN_COLUMN: column=0
                         initialLine=[-, -, -, -, -, -, -, -, -, -, X, -, X, -, -, -, -, -, -, -]
                         updatedLine=[-, -, -, -, -, -, -, -, -, -, X, X, X, -, -, -, -, -, -, -]
                         sequencesRanges=[[0, 19]]
@@ -133,7 +133,7 @@ class PlaceXsAtTooShortEmptySequencesLogHelperTest {
         // then
         String expected =
                 """
-                        PLACE_XS_IN_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES: row=7
+                        PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES_IN_ROW: row=7
                         initialLine=[-, -, -, -, -, X, -, -, X, -, X, -, -, X, -, -, -, X, O, X]
                         updatedLine=[-, -, -, -, -, X, -, -, X, X, X, -, -, X, -, -, -, X, O, X]
                         sequencesRanges=[[0, 12], [3, 16], [18, 18]]
@@ -150,7 +150,7 @@ class PlaceXsAtTooShortEmptySequencesLogHelperTest {
         // given
         String generatedLog =
                 """
-                        PLACE_XS_IN_ROW_AT_TOO_SHORT_EMPTY_SEQUENCES: row=9
+                        PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES_IN_ROW: row=9
                         initialLine=[-, -, -, -, -, X, -, -, X, -, X, -, -, X, -, -, -, X, O, X]
                         updatedLine=[-, -, -, -, -, X, -, -, X, X, X, -, -, X, -, -, -, X, O, X]
                         sequencesRanges=[[0, 12], [3, 16], [18, 18]]
