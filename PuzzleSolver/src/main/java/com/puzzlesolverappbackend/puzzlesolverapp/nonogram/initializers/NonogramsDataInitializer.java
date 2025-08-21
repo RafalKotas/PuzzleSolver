@@ -7,7 +7,6 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Nonogram;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramFileDetails;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.repository.NonogramRepository;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -30,7 +29,6 @@ import java.util.stream.Stream;
 @Profile("!test")
 @Order(4)
 @Getter
-@Setter
 @Slf4j
 public class NonogramsDataInitializer implements CommandLineRunner {
 

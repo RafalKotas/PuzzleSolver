@@ -3,15 +3,20 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.initializers;
 import com.puzzlesolverappbackend.puzzlesolverapp.common.CommonService;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Nonogram;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.repository.NonogramRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,11 +26,8 @@ import static org.mockito.Mockito.*;
 
 class NonogramsDataInitializerTest {
 
-    @Mock
-    private NonogramRepository repository;
-
-    @Mock
-    private CommonService commonService;
+    @Mock private NonogramRepository repository;
+    @Mock private CommonService commonService;
 
     @InjectMocks
     private NonogramsDataInitializer initializer;
@@ -33,12 +35,42 @@ class NonogramsDataInitializerTest {
     @TempDir
     Path tempDir;
 
+    AutoCloseable mocks;
+
     @BeforeEach
-    void setup() {
-        repository = mock(NonogramRepository.class);
-        commonService = mock(CommonService.class);
+    void setUp() throws Exception {
+        mocks = MockitoAnnotations.openMocks(this);
         initializer = new NonogramsDataInitializer(repository, commonService);
+        setPuzzlePath(tempDir.toString() + "/");
+        clearStaticLists();
     }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        if (mocks != null) mocks.close();
+        clearStaticLists();
+    }
+
+    // --- helpers ---
+
+    private void setPuzzlePath(String path) throws Exception {
+        Field f = NonogramsDataInitializer.class.getDeclaredField("puzzlePath");
+        f.setAccessible(true);
+        f.set(initializer, path);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void clearStaticLists() throws Exception {
+        Field f1 = NonogramsDataInitializer.class.getDeclaredField("filesToCorrect");
+        f1.setAccessible(true);
+        ((List<String>) f1.get(null)).clear();
+
+        Field f2 = NonogramsDataInitializer.class.getDeclaredField("sourceMonthCombinations");
+        f2.setAccessible(true);
+        ((List<List<String>>) f2.get(null)).clear();
+    }
+
+    // ---------- existing coverage from wcześniej napisanych testów ----------
 
     @Test
     void shouldNotSaveNonogramWhenAlreadyExists() throws Exception {
@@ -57,13 +89,7 @@ class NonogramsDataInitializerTest {
               "width": 4
             }
             """;
-
-        Path filePath = tempDir.resolve(filename);
-        Files.writeString(filePath, content);
-
-        Field puzzlePathField = NonogramsDataInitializer.class.getDeclaredField("puzzlePath");
-        puzzlePathField.setAccessible(true);
-        puzzlePathField.set(initializer, tempDir.toString() + "/");
+        Files.writeString(tempDir.resolve(filename), content);
 
         when(commonService.listFilesUsingJavaIO(anyString()))
                 .thenReturn(Set.of(filename));
@@ -82,12 +108,12 @@ class NonogramsDataInitializerTest {
     @Test
     void shouldSaveNewNonogramWhenNotPresentInRepository() throws Exception {
         // given
-        String filename = "test-nonogram.json";
+        String filename = "to-save.json";
         String content = """
             {
               "rowSequences": [[1,2]],
               "columnSequences": [[3,4]],
-              "filename": "test-nonogram",
+              "filename": "to-save",
               "source": "logi",
               "year": "2024",
               "month": "07",
@@ -97,19 +123,12 @@ class NonogramsDataInitializerTest {
               "additionalContent": "ignore"
             }
             """;
-
-        Path filePath = tempDir.resolve(filename);
-        Files.writeString(filePath, content);
-
-        Field puzzlePathField = NonogramsDataInitializer.class.getDeclaredField("puzzlePath");
-        puzzlePathField.setAccessible(true);
-        puzzlePathField.set(initializer, tempDir.toString() + "/");
+        Files.writeString(tempDir.resolve(filename), content);
 
         when(commonService.listFilesUsingJavaIO(anyString()))
                 .thenReturn(Set.of(filename));
-
         when(repository.existsNonogramByGivenParamsFromFile(
-                "test-nonogram", "logi", "2024", "07", 4.5, 5, 5))
+                eq("to-save"), eq("logi"), eq("2024"), eq("07"), eq(4.5), eq(5), eq(5)))
                 .thenReturn(Optional.empty());
 
         // when
@@ -124,25 +143,21 @@ class NonogramsDataInitializerTest {
     @Test
     void shouldLogErrorWhenJsonIsMalformed() throws Exception {
         // given
-        String filename = "malformedNonogram.json";
-        String malformedJson = """
+        String filename = "malformed.json";
+        String malformed = """
         {
-          "rowSequences": [[1, 2]],
-          "columnSequences": [[3, 4]],
-          "filename": "malformedNonogram",
+          "rowSequences": [[1,2]],
+          "columnSequences": [[3,4]],
+          "filename": "malformed",
           "height": 5,
           "width": 5,
-          "source": "source",
+          "source": "s",
           "year": "2024",
           "month": "07",
           "difficulty": 4.5,
-          "additionalContent": "extraData"
+          "additionalContent": "x"
         """;
-
-        Path filePath = tempDir.resolve(filename);
-        Files.writeString(filePath, malformedJson);
-
-        initializer.setPuzzlePath(tempDir.toString() + "/");
+        Files.writeString(tempDir.resolve(filename), malformed);
 
         when(commonService.listFilesUsingJavaIO(anyString()))
                 .thenReturn(Set.of(filename));
@@ -152,5 +167,198 @@ class NonogramsDataInitializerTest {
 
         // then
         verify(repository, never()).save(any(Nonogram.class));
+    }
+
+    @Test
+    @DisplayName("analyze: marks file as incorrect when line count mismatches required")
+    void analyzeMarksIncorrectWhenLineCountMismatch() throws Exception {
+        // given
+        // Single-line JSON => lines.size() will be 1, requiredLines > 1 -> false branch
+        String filename = "wrong-lines.json";
+        String oneLine = "{\"rowSequences\": [[1]], \"columnSequences\": [[2]], \"filename\":\"abc\",\"source\":\"s\",\"year\":\"2024\",\"month\":\"07\",\"difficulty\":2.0,\"height\":5,\"width\":5}";
+        Files.writeString(tempDir.resolve(filename), oneLine);
+
+        when(commonService.listFilesUsingJavaIO(anyString()))
+                .thenReturn(Set.of(filename));
+
+        // when
+        initializer.run();
+
+        // then
+        // filesToCorrect contains name without ".json"
+        List<String> filesToCorrect = getFilesToCorrect();
+        assertThat(filesToCorrect).contains("wrong-lines");
+    }
+
+    @Test
+    @DisplayName("analyze: marks file as incorrect when property order is wrong (with correct line count)")
+    void analyzeMarksIncorrectWhenPropertyOrderWrong() throws Exception {
+        // given
+        // Build 15 lines total (4 fixed + 9 props + 1 + 1) so lineCountCorrect == true
+        // Put 'source' before 'filename' to make order incorrect
+        String filename = "wrong-order.json";
+        String content = String.join("\n", List.of(
+                "{",
+                "  \"source\": \"s\",",
+                "  \"filename\": \"wo\",",
+                "  \"year\": \"2024\",",
+                "  \"month\": \"07\",",
+                "  \"difficulty\": 3.0,",
+                "  \"height\": 5,",
+                "  \"width\": 5,",
+                "  \"rowSequences\": [[1]],",
+                "  \"columnSequences\": [[2]]",
+                "}",
+                "", "", "", "" // 4 blank lines -> total 15
+        ));
+        Files.writeString(tempDir.resolve(filename), content);
+
+        when(commonService.listFilesUsingJavaIO(anyString()))
+                .thenReturn(Set.of(filename));
+
+        // when
+        initializer.run();
+
+        // then
+        List<String> filesToCorrect = getFilesToCorrect();
+        assertThat(filesToCorrect).contains("wrong-order");
+    }
+
+    @Test
+    @DisplayName("scan: valid file passes analyze (ceil branches) and is saved")
+    void scanValidFilePassesAnalyzeAndSaved() throws Exception {
+        // given
+        // height=6 -> ceil(6/5)=2, width=7 -> ceil(7/5)=2
+        // requiredLines = 4 + 9 + 2 + 2 = 17
+        String filename = "ok.json";
+        Path path = tempDir.resolve(filename);
+
+        List<String> lines = new ArrayList<>(List.of(
+                "{",
+                "  \"filename\": \"ok\",",
+                "  \"source\": \"s\",",
+                "  \"year\": \"2024\",",
+                "  \"month\": \"08\",",
+                "  \"difficulty\": 1.5,",
+                "  \"height\": 6,",
+                "  \"width\": 7,",
+                "  \"rowSequences\": [[1]],",
+                "  \"columnSequences\": [[2]]",
+                "}"
+        ));
+        while (lines.size() < 17) lines.add("");
+
+        Files.write(path, lines);
+
+        when(commonService.listFilesUsingJavaIO(anyString()))
+                .thenReturn(Set.of(filename));
+        when(repository.existsNonogramByGivenParamsFromFile(
+                eq("ok"), eq("s"), eq("2024"), eq("08"), eq(1.5), eq(6), eq(7)))
+                .thenReturn(Optional.empty());
+
+        // when
+        initializer.run();
+
+        // then
+        verify(repository).save(any(Nonogram.class));
+    }
+
+    @Test
+    @DisplayName("deduplicate (source, month) pairs while scanning")
+    void deduplicateSourceMonthCombinations() throws Exception {
+        // given
+        String f1 = "a.json";
+        String f2 = "b.json";
+
+        String json1 = """
+            {
+              "rowSequences": [[1]],
+              "columnSequences": [[1]],
+              "filename": "a",
+              "source": "logi",
+              "year": "2024",
+              "month": "07",
+              "difficulty": 2.0,
+              "height": 5,
+              "width": 5
+            }
+            """;
+        String json2 = """
+            {
+              "rowSequences": [[2]],
+              "columnSequences": [[2]],
+              "filename": "b",
+              "source": "logi",
+              "year": "2024",
+              "month": "07",
+              "difficulty": 2.5,
+              "height": 5,
+              "width": 5
+            }
+            """;
+
+        Files.writeString(tempDir.resolve(f1), json1);
+        Files.writeString(tempDir.resolve(f2), json2);
+
+        when(commonService.listFilesUsingJavaIO(anyString()))
+                .thenReturn(Set.of(f1, f2));
+        when(repository.existsNonogramByGivenParamsFromFile(anyString(), anyString(), anyString(), anyString(), anyDouble(), anyInt(), anyInt()))
+                .thenReturn(Optional.empty());
+
+        // when
+        initializer.run();
+
+        // then
+        List<List<String>> combos = getSourceMonthCombinations();
+        assertThat(combos).containsExactly(List.of("logi", "07"));
+    }
+
+    @Test
+    @DisplayName("Incorrect property order is detected and file is added to filesToCorrect")
+    void analyzeFlagsIncorrectPropertyOrder() throws Exception {
+        // given
+        String filename = "wrongOrder.json";
+        List<String> lines = List.of(
+                "{",
+                "  \"filename\": \"wrongOrder\",",
+                "  \"source\": \"s\",",
+                "  \"year\": \"2024\",",
+                "  \"month\": \"08\",",
+                "  \"difficulty\": 1.0,",
+                "  \"width\": 5,",
+                "  \"height\": 5,",
+                "  \"rowSequences\": [[1]],",
+                "  \"columnSequences\": [[1]]",
+                "}",                        // to 11 linii…
+                "", "", "", ""              // …+4 puste = 15 (wymagana liczba)
+        );
+        Files.writeString(tempDir.resolve(filename), String.join("\n", lines));
+
+        when(commonService.listFilesUsingJavaIO(anyString()))
+                .thenReturn(Set.of(filename));
+        when(repository.existsNonogramByGivenParamsFromFile(
+                eq("wrongOrder"), eq("s"), eq("2024"), eq("08"), eq(1.0), eq(5), eq(5)))
+                .thenReturn(Optional.empty());
+
+        // when
+        initializer.run();
+
+        // then
+        assertThat(getFilesToCorrect()).contains("wrongOrder");
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<List<String>> getSourceMonthCombinations() throws Exception {
+        Field f = NonogramsDataInitializer.class.getDeclaredField("sourceMonthCombinations");
+        f.setAccessible(true);
+        return (List<List<String>>) f.get(null);
+    }
+
+    // small helper to peek filesToCorrect static list
+    @SuppressWarnings("unchecked")
+    private List<String> getFilesToCorrect() throws Exception {
+        Field f = NonogramsDataInitializer.class.getDeclaredField("filesToCorrect");
+        f.setAccessible(true);
+        return (List<String>) f.get(null);
     }
 }
