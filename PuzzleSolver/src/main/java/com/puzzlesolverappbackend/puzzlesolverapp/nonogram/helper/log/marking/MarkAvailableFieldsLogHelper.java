@@ -5,18 +5,19 @@ import lombok.experimental.UtilityClass;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.toMutableStringListLiteral;
 
 @UtilityClass
 public class MarkAvailableFieldsLogHelper {
 
     public static String generateLog(
+            boolean isRow,
             int index,
-            List<String> initialLine,
-            List<String> updatedLine,
             int sequenceIndex,
             String marker,
-            boolean isRow
+            List<String> initialLine,
+            List<String> updatedLine
     ) {
         return String.format(
                 """
@@ -65,7 +66,7 @@ public class MarkAvailableFieldsLogHelper {
                 sequenceIndex,
                 marker,
                 toMutableStringListLiteral(initialLine),
-                toImmutableStringListLiteral(updatedLine)
+                toMutableStringListLiteral(updatedLine)
         );
     }
 }

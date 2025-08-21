@@ -172,12 +172,12 @@ public class NonogramFieldMarkHelper {
     private static void logMarkChange(BoardContext board, MarkOperationContext ops,
                                       int seqIdx, String marker, List<String> before, List<String> after) {
         String log = MarkAvailableFieldsLogHelper.generateLog(
+                board.isRow(),
                 board.getLineIdx(),
-                before,
-                after,
                 seqIdx,
                 marker,
-                board.isRow()
+                before,
+                after
         );
         ops.getSetTmpLogConsumer().accept(log);
         ops.getAddLogRunnable().run();
