@@ -5,7 +5,7 @@ import lombok.experimental.UtilityClass;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
 public class SequenceRangeCorrectionWhenMetColouredFieldsLogHelper {
@@ -18,7 +18,6 @@ public class SequenceRangeCorrectionWhenMetColouredFieldsLogHelper {
             List<List<Integer>> initialRanges,
             List<List<Integer>> updatedRanges
     ) {
-
         return String.format(
                 """
                         SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS_IN_%s: %s=%d
@@ -60,14 +59,14 @@ public class SequenceRangeCorrectionWhenMetColouredFieldsLogHelper {
                             %s,
                             %s,
                             %s
-                        ),""",
+                        )""",
                 fileName,
                 isRow ? ROW : COLUMN,
                 index,
-                line,
-                sequencesLengths,
-                initialRanges,
-                updatedRanges
+                toMutableStringListLiteral(line),
+                toImmutableIntListLiteral(sequencesLengths),
+                toMutableRangesListLiteral(initialRanges),
+                toMutableRangesListLiteral(updatedRanges)
         );
     }
 }
