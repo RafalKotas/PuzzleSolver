@@ -5,7 +5,10 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BoardUtilsTest {
@@ -24,5 +27,20 @@ class BoardUtilsTest {
         Throwable cause = exception.getCause();
         assertInstanceOf(UnsupportedOperationException.class, cause);
         assertEquals("This is a utility class and cannot be instantiated", cause.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should calculate new marked range")
+    void shouldCalculateNewMarkedRange() {
+        // given
+        List<Integer> oldRange = new ArrayList<>(List.of(1, 9));
+        List<Integer> coloured = new ArrayList<>(List.of(3, 7));
+        int length = 7;
+
+        // when
+        List<Integer> newMarkedRange = BoardUtils.calculateNewMarkedRange(oldRange, coloured, length);
+
+        // then
+        assertThat(newMarkedRange).isEqualTo(new ArrayList<>(List.of(1, 9)));
     }
 }

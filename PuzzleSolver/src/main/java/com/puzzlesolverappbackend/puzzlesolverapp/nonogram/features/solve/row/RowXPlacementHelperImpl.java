@@ -5,7 +5,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.xplacement.NonogramFieldPlacingXHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.SequenceRangeCorrectionWhenPlacingXsLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAroundLongestSequenceLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAroundLongestSequencesLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAtTooShortEmptySequencesLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAtUnreachableFieldsLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper;
@@ -183,7 +183,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
         List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
         if (anyXPlaced) {
-            String tmpLog = PlaceXsAroundLongestSequenceLogHelper.generateLog(
+            String tmpLog = PlaceXsAroundLongestSequencesLogHelper.generateLog(
                     true,
                     rowIdx,
                     xEdges,
@@ -208,7 +208,6 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
         if (!updatedRange.equals(oldRange)) {
             nonogramRowLogic.changeRowSequenceRange(rowIdx, sequenceIndex, updatedRange);
 
-            List<List<Integer>> allRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
             List<Integer> rowSequencesLengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
             List<String> boardRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
@@ -216,7 +215,7 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
                     true,
                     rowIdx,
                     sequenceIndex,
-                    allRanges,
+                    oldRange,
                     updatedRange,
                     boardRow,
                     rowSequencesLengths

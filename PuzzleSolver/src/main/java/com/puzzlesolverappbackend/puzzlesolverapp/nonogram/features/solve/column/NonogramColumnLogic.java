@@ -637,13 +637,21 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         this.columnsSequencesRanges.get(columnIndex).set(sequenceIndex, updatedRange);
     }
 
-    private String generateColourStepDescription(int columnIndex, int rowIndex, String actionType) {
-        return String.format("COLUMN %d, ROW %d - field colouring - %s.", columnIndex, rowIndex, actionType);
-    }
+    public void setNonogramSolutionBoardColumn(int columnIndex, List<String> column) {
+        if (nonogramSolutionBoard == null || nonogramSolutionBoard.isEmpty()) {
+            throw new IllegalStateException("nonogramSolutionBoard is not initialized");
+        }
+        if (column.size() != nonogramSolutionBoard.size()) {
+            throw new IllegalArgumentException("Column size must match board height");
+        }
 
-    private String generateCorrectingColumnSequenceRangeStepDescription(int columnIndex, int sequenceIndex, List<Integer> oldRange, List<Integer> correctedRange, String actionType) {
-        return String.format("COLUMN %d, SEQUENCE %d - range correcting - from [%d, %d] to [%d, %d] - %s", columnIndex, sequenceIndex,
-                oldRange.get(0), oldRange.get(1), correctedRange.get(0), correctedRange.get(1), actionType);
+        for (int row = 0; row < nonogramSolutionBoard.size(); row++) {
+            List<String> currentRow = nonogramSolutionBoard.get(row);
+            if (columnIndex >= currentRow.size()) {
+                throw new IllegalArgumentException("Column index out of bounds");
+            }
+            currentRow.set(columnIndex, column.get(row));
+        }
     }
 
     protected List<List<Integer>> getColumnSequencesRangesCopy(int columnIdx) {

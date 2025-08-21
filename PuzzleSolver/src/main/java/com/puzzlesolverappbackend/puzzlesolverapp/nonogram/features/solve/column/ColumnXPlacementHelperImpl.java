@@ -289,7 +289,6 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
         if (!newRange.equals(oldRange)) {
             nonogramColumnLogic.changeColumnSequenceRange(columnIdx, sequenceIndex, newRange);
 
-            List<List<Integer>> allRanges = nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx);
             List<Integer> sequencesLengths = nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
             List<String> columnState = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
 
@@ -297,7 +296,7 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
                     false,
                     columnIdx,
                     sequenceIndex,
-                    allRanges,
+                    oldRange,
                     newRange,
                     columnState,
                     sequencesLengths

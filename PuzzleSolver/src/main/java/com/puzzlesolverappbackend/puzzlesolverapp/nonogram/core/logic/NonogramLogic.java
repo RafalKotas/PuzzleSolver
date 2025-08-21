@@ -998,23 +998,6 @@ public class NonogramLogic extends NonogramLogicParams {
         return this;
     }
 
-    public boolean areRowsSequencesIdenticalWithColumnsSequences() {
-        if (this.getNonogramRules().getRowSequencesLengths().size() != this.getNonogramRules().getColumnSequencesLengths().size()) {
-            return false;
-        }
-
-        for (int i = 0; i < this.getNonogramRules().getRowSequencesLengths().size(); i++) {
-            List<Integer> rowSequences = this.getNonogramRules().getRowSequencesLengths().get(i);
-            List<Integer> columnSequences = this.getNonogramRules().getColumnSequencesLengths().get(i);
-
-            if (!rowSequences.equals(columnSequences)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public boolean nonogramIsFullyAndCorrectSolved() {
         if (fieldsFilled(this) != areaInFields(this)) {
             return false;

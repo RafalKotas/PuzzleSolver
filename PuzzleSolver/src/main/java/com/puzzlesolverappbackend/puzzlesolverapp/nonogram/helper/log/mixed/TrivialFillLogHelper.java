@@ -18,11 +18,6 @@ public class TrivialFillLogHelper {
             List<String> initialLine,
             List<String> updatedLine
     ) {
-        if (isRow) {
-            System.out.println("IS ROW");
-        } else {
-            System.out.println("IS COLUMN");
-        }
         return String.format(
                 """
                         FILL_TRIVIAL_SEQUENCE_IN_%s: %s=%d
