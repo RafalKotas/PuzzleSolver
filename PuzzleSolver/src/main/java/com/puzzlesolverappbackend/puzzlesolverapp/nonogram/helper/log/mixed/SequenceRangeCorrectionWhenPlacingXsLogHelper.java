@@ -50,7 +50,7 @@ public class SequenceRangeCorrectionWhenPlacingXsLogHelper {
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
 
-        String fileName = solutionName.startsWith("r") ? solutionName.substring(1) : solutionName;
+        String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
 
         String sequenceIndex = lines[1].replace("sequenceIndex=", "").trim();
         String initialRange = lines[2].replace("initialRange=", "").trim();
