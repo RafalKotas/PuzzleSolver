@@ -17,7 +17,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.clear
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.NonogramColumnLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.NonogramRowLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.debug.NonogramPrinter;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.TrivialFillLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.TrivialFillLogHelper;
 import jakarta.persistence.Transient;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -277,13 +277,13 @@ public class NonogramLogic extends NonogramLogicParams {
                 List<Integer> sequencesLengths = getNonogramRules().getRowSequencesLengths().get(rowIdx);
                 List<List<Integer>> sequencesRanges = getRowsSequencesRanges().get(rowIdx);
 
-                this.tmpLog = TrivialFillLogHelper.generateTrivialLineLog(
+                this.tmpLog = TrivialFillLogHelper.generateLog(
                         true,
                         rowIdx,
-                        initialRow,
-                        updatedRow,
                         sequencesLengths,
-                        sequencesRanges
+                        sequencesRanges,
+                        initialRow,
+                        updatedRow
                 );
                 addLog();
             }
@@ -415,13 +415,13 @@ public class NonogramLogic extends NonogramLogicParams {
                 List<Integer> sequencesLengths = getNonogramRules().getColumnSequencesLengths().get(columnIdx);
                 List<List<Integer>> sequencesRanges = getColumnsSequencesRanges().get(columnIdx);
 
-                this.tmpLog = TrivialFillLogHelper.generateTrivialLineLog(
+                this.tmpLog = TrivialFillLogHelper.generateLog(
                         false,
                         columnIdx,
-                        initialColumn,
-                        updatedColumn,
                         sequencesLengths,
-                        sequencesRanges
+                        sequencesRanges,
+                        initialColumn,
+                        updatedColumn
                 );
                 addLog();
             }

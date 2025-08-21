@@ -1,37 +1,42 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed;
 
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
 public class TrivialFillLogHelper {
 
-    public static String generateTrivialLineLog(
+    public static String generateLog(
             boolean isRow,
             int index,
-            List<String> initialLine,
-            List<String> updatedLine,
             List<Integer> sequencesLengths,
-            List<List<Integer>> sequencesRanges
+            List<List<Integer>> sequencesRanges,
+            List<String> initialLine,
+            List<String> updatedLine
     ) {
+        if (isRow) {
+            System.out.println("IS ROW");
+        } else {
+            System.out.println("IS COLUMN");
+        }
         return String.format(
                 """
                         FILL_TRIVIAL_SEQUENCE_IN_%s: %s=%d
-                        initialLine=%s
                         sequencesLengths=%s
                         sequencesRanges=%s
+                        initialLine=%s
                         updatedLine=%s
                         """,
                 isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
                 isRow ? ROW : COLUMN,
                 index,
-                initialLine.toString(),
                 sequencesLengths.toString(),
                 sequencesRanges.toString(),
+                initialLine.toString(),
                 updatedLine.toString()
         );
     }
@@ -63,10 +68,10 @@ public class TrivialFillLogHelper {
                 isRow ? ROW : COLUMN,
                 index,
                 isRow ? ROW : COLUMN,
-                initialLine,
-                lengthsLine,
-                rangesLine,
-                updatedLine
+                toImmutableIntListLiteral(lengthsLine),
+                toMutableRangesListLiteral(rangesLine),
+                toMutableStringListLiteral(initialLine),
+                toMutableStringListLiteral(updatedLine)
         );
     }
 }
