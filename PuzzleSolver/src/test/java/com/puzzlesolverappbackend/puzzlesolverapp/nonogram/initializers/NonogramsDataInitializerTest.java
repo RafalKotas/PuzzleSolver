@@ -128,7 +128,7 @@ class NonogramsDataInitializerTest {
         when(commonService.listFilesUsingJavaIO(anyString()))
                 .thenReturn(Set.of(filename));
         when(repository.existsNonogramByGivenParamsFromFile(
-                eq("to-save"), eq("logi"), eq("2024"), eq("07"), eq(4.5), eq(5), eq(5)))
+                "to-save", "logi", "2024", "07", 4.5, 5, 5))
                 .thenReturn(Optional.empty());
 
         // when
@@ -253,7 +253,7 @@ class NonogramsDataInitializerTest {
         when(commonService.listFilesUsingJavaIO(anyString()))
                 .thenReturn(Set.of(filename));
         when(repository.existsNonogramByGivenParamsFromFile(
-                eq("ok"), eq("s"), eq("2024"), eq("08"), eq(1.5), eq(6), eq(7)))
+                "ok", "s", "2024", "08", 1.5, 6, 7))
                 .thenReturn(Optional.empty());
 
         // when
@@ -337,7 +337,7 @@ class NonogramsDataInitializerTest {
         when(commonService.listFilesUsingJavaIO(anyString()))
                 .thenReturn(Set.of(filename));
         when(repository.existsNonogramByGivenParamsFromFile(
-                eq("wrongOrder"), eq("s"), eq("2024"), eq("08"), eq(1.0), eq(5), eq(5)))
+                "wrongOrder", "s", "2024", "08", 1.0, 5, 5))
                 .thenReturn(Optional.empty());
 
         // when
