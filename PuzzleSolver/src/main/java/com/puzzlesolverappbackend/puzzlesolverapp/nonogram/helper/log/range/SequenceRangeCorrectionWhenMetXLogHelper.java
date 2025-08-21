@@ -5,7 +5,7 @@ import lombok.experimental.UtilityClass;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
 public class SequenceRangeCorrectionWhenMetXLogHelper {
@@ -20,6 +20,11 @@ public class SequenceRangeCorrectionWhenMetXLogHelper {
             List<Integer> excludedSequencesIndexes
 
     ) {
+        if (isRow) {
+            System.out.println("ROW");
+        } else {
+            System.out.println("COLUMN");
+        }
         return String.format(
                 """
                         SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY_IN_%s: %s=%d
@@ -68,10 +73,10 @@ public class SequenceRangeCorrectionWhenMetXLogHelper {
                 fileName,
                 isRow ? ROW : COLUMN,
                 index,
-                initialRanges,
-                updatedRanges,
-                sequenceLengths,
-                excludedSequencesIndexes
+                toMutableRangesListLiteral(initialRanges),
+                toMutableRangesListLiteral(updatedRanges),
+                toImmutableIntListLiteral(sequenceLengths),
+                toMutableIntListLiteral(excludedSequencesIndexes)
         );
     }
 
