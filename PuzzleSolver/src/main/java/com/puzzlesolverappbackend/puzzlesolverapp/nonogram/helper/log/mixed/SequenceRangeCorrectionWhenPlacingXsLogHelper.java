@@ -14,7 +14,7 @@ public class SequenceRangeCorrectionWhenPlacingXsLogHelper {
             boolean isRow,
             int rowIdx,
             int sequenceIndex,
-            List<List<Integer>> sequencesRanges,
+            List<Integer> initialRange,
             List<Integer> updatedRange,
             List<String> line,
             List<Integer> sequencesLengths
@@ -23,7 +23,7 @@ public class SequenceRangeCorrectionWhenPlacingXsLogHelper {
                 """
                         SEQUENCE_CORRECTION_WHEN_PLACING_X_IN_%s: %s=%d
                         sequenceIndex=%d
-                        sequencesRanges=%s
+                        initialRange=%s
                         updatedRange=%s
                         line=%s
                         sequencesLengths=%s
@@ -32,7 +32,7 @@ public class SequenceRangeCorrectionWhenPlacingXsLogHelper {
                 isRow ? ROW : COLUMN,
                 rowIdx,
                 sequenceIndex,
-                sequencesRanges,
+                initialRange,
                 updatedRange,
                 line,
                 sequencesLengths
@@ -53,7 +53,7 @@ public class SequenceRangeCorrectionWhenPlacingXsLogHelper {
         String fileName = solutionName.startsWith("r") ? solutionName.substring(1) : solutionName;
 
         String sequenceIndex = lines[1].replace("sequenceIndex=", "").trim();
-        String sequencesRanges = lines[2].replace("sequencesRanges=", "").trim();
+        String initialRange = lines[2].replace("initialRange=", "").trim();
         String updatedRange = lines[3].replace("updatedRange=", "").trim();
         String line = lines[4].replace("line=", "").trim();
         String sequencesLengths = lines[5].replace("sequencesLengths=", "").trim();
@@ -71,9 +71,9 @@ public class SequenceRangeCorrectionWhenPlacingXsLogHelper {
                 isRow ? ROW : COLUMN,
                 index,
                 sequenceIndex,
-                toMutableRangesList(sequencesRanges),
-                toImmutableIntListLiteral(updatedRange),
-                toImmutableStringListLiteral(line),
+                toMutableIntListLiteral(initialRange),
+                toMutableIntListLiteral(updatedRange),
+                toMutableStringListLiteral(line),
                 toImmutableIntListLiteral(sequencesLengths)
         );
     }
