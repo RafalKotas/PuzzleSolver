@@ -151,7 +151,7 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
                     true, // isRow
                     rowIdx,
                     nonogramRowLogic.getNonogramBoardRow(rowIdx),
-                    nonogramRowLogic.getNonogramRules().getColumnSequencesLengths().get(rowIdx),
+                    nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
                     initialRanges,
                     updatedRanges
             );
@@ -248,31 +248,31 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
     }
 
     @Override
-    public void correctRowSequencesRangesIfXOnWay(int rowIdx, boolean changeLogicDetails) {
-        var sequencesRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
-        var sequencesLengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
-        var excluded = nonogramRowLogic.getRowsSequencesIdsNotToInclude().get(rowIdx);
+    public void correctRowSequencesRangesIfXOnWay(int rowIndex, boolean changeLogicDetails) {
+        var sequencesRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIndex);
+        var sequencesLengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIndex);
+        var excluded = nonogramRowLogic.getRowsSequencesIdsNotToInclude().get(rowIndex);
 
-        var boardRow = nonogramRowLogic.getNonogramSolutionBoard().get(rowIdx);
+        var boardRow = nonogramRowLogic.getNonogramSolutionBoard().get(rowIndex);
 
         boolean changed = false;
 
         List<List<Integer>> initialRanges = deepCopy(sequencesRanges);
 
-        for (int seqIdx = 0; seqIdx < sequencesRanges.size(); seqIdx++) {
-            if (excluded.contains(seqIdx)) continue;
+        for (int sequenceIdx = 0; sequenceIdx < sequencesRanges.size(); sequenceIdx++) {
+            if (excluded.contains(sequenceIdx)) continue;
 
-            List<Integer> currentRange = sequencesRanges.get(seqIdx);
-            int length = sequencesLengths.get(seqIdx);
+            List<Integer> currentRange = sequencesRanges.get(sequenceIdx);
+            int length = sequencesLengths.get(sequenceIdx);
 
             List<Integer> corrected = SequenceRangeCorrectionWhenMetXHelper.calculateCorrectedRangeWithoutX(
-                    currentRange, length, rowIdx, false, nonogramRowLogic.getNonogramSolutionBoard());
+                    false, rowIndex, currentRange, length,  nonogramRowLogic.getNonogramSolutionBoard());
 
             if (!currentRange.equals(corrected)) {
-                nonogramRowLogic.updateRowSequenceRange(rowIdx, seqIdx, corrected);
+                nonogramRowLogic.updateRowSequenceRange(rowIndex, sequenceIdx, corrected);
 
-                if (changeLogicDetails && shouldExcludeSequence(rowIdx, corrected, length)) {
-                    nonogramRowLogic.excludeSequenceInRow(rowIdx, seqIdx);
+                if (changeLogicDetails && shouldExcludeSequence(rowIndex, corrected, length)) {
+                    nonogramRowLogic.excludeSequenceInRow(rowIndex, sequenceIdx);
                 }
 
                 changed = true;
@@ -280,11 +280,11 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
         }
 
         if (changed && changeLogicDetails) {
-            List<List<Integer>> updatedRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
+            List<List<Integer>> updatedRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIndex);
 
             String tmpLog = SequenceRangeCorrectionWhenMetXLogHelper.generateLog(
                     true,
-                    rowIdx,
+                    rowIndex,
                     boardRow,
                     initialRanges,
                     updatedRanges,
@@ -295,7 +295,7 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
 
             nonogramRowLogic.getNonogramState().increaseMadeSteps();
             nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(
-                    new Field(rowIdx, 0), NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IF_X_ON_WAY_IN_ROW);
+                    new Field(rowIndex, 0), NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IF_X_ON_WAY_IN_ROW);
         }
     }
 

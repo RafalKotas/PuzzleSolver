@@ -126,8 +126,6 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
             );
             nonogramRowLogic.setTmpLog(tmpLog);
             nonogramRowLogic.addLog();
-        } else {
-            System.out.println("nothing coloured");
         }
     }
 

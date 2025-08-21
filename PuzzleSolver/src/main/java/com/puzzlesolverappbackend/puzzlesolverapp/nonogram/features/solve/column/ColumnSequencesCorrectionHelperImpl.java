@@ -247,31 +247,31 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
     }
 
     @Override
-    public void correctColumnSequencesRangesIfXOnWay(int columnIdx, boolean changeLogicDetails) {
-        var ranges = nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx);
-        var lengths = nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
-        var excluded = nonogramColumnLogic.getColumnsSequencesIdsNotToInclude().get(columnIdx);
+    public void correctColumnSequencesRangesIfXOnWay(int columnIndex, boolean changeLogicDetails) {
+        var ranges = nonogramColumnLogic.getColumnsSequencesRanges().get(columnIndex);
+        var lengths = nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIndex);
+        var excluded = nonogramColumnLogic.getColumnsSequencesIdsNotToInclude().get(columnIndex);
 
-        var column = nonogramColumnLogic.getNonogramBoardColumn(columnIdx);
+        var column = nonogramColumnLogic.getNonogramBoardColumn(columnIndex);
 
         boolean changed = false;
 
         List<List<Integer>> initialRanges = deepCopy(ranges);
 
-        for (int seqIdx = 0; seqIdx < ranges.size(); seqIdx++) {
-            if (excluded.contains(seqIdx)) continue;
+        for (int sequenceIndex = 0; sequenceIndex < ranges.size(); sequenceIndex++) {
+            if (excluded.contains(sequenceIndex)) continue;
 
-            List<Integer> currentRange = ranges.get(seqIdx);
-            int length = lengths.get(seqIdx);
+            List<Integer> currentRange = ranges.get(sequenceIndex);
+            int length = lengths.get(sequenceIndex);
 
-            List<Integer> corrected = SequenceRangeCorrectionWhenMetXHelper.calculateCorrectedRangeWithoutX(
-                    currentRange, length, columnIdx, true, nonogramColumnLogic.getNonogramSolutionBoard());
+            List<Integer> updatedRange = SequenceRangeCorrectionWhenMetXHelper.calculateCorrectedRangeWithoutX(
+                    true, columnIndex, currentRange, length, nonogramColumnLogic.getNonogramSolutionBoard());
 
-            if (!currentRange.equals(corrected)) {
-                nonogramColumnLogic.updateColumnSequenceRange(columnIdx, seqIdx, corrected);
+            if (!currentRange.equals(updatedRange)) {
+                nonogramColumnLogic.updateColumnSequenceRange(columnIndex, sequenceIndex, updatedRange);
 
-                if (changeLogicDetails && shouldExcludeSequence(columnIdx, corrected, length)) {
-                    nonogramColumnLogic.excludeSequenceInColumn(columnIdx, seqIdx);
+                if (changeLogicDetails && shouldExcludeSequence(columnIndex, updatedRange, length)) {
+                    nonogramColumnLogic.excludeSequenceInColumn(columnIndex, sequenceIndex);
                 }
 
                 changed = true;
@@ -279,11 +279,11 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
         }
 
         if (changed && changeLogicDetails) {
-            List<List<Integer>> updatedRanges = nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx);
+            List<List<Integer>> updatedRanges = nonogramColumnLogic.getColumnsSequencesRanges().get(columnIndex);
 
             String tmpLog = SequenceRangeCorrectionWhenMetXLogHelper.generateLog(
                     false,
-                    columnIdx,
+                    columnIndex,
                     column,
                     initialRanges,
                     updatedRanges,
@@ -294,7 +294,7 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
 
             nonogramColumnLogic.getNonogramState().increaseMadeSteps();
             nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(
-                    new Field(0, columnIdx), NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IF_X_ON_WAY_IN_COLUMN);
+                    new Field(0, columnIndex), NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IF_X_ON_WAY_IN_COLUMN);
         }
     }
 

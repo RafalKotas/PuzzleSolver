@@ -68,8 +68,6 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
             );
             nonogramColumnLogic.setTmpLog(tmpLog);
             nonogramColumnLogic.addLog();
-        } else {
-            //System.out.println("Nothing Coloured");
         }
     }
 

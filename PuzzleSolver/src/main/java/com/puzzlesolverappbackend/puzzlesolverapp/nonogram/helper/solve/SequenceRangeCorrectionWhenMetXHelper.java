@@ -11,22 +11,22 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.Bo
 public class SequenceRangeCorrectionWhenMetXHelper {
 
     public static List<Integer> calculateCorrectedRangeWithoutX(
+            boolean isVertical,
+            int index,
             List<Integer> currentRange,
             int sequenceLength,
-            int fixedIdx,
-            boolean isVertical,
             List<List<String>> board
     ) {
         int newStart = findFirstValidSequenceStartIndexWithoutX(
-                currentRange.get(0), currentRange.get(1), sequenceLength, fixedIdx, isVertical, board);
+                currentRange.get(0), currentRange.get(1), sequenceLength, index, isVertical, board);
 
         int newEnd = findLastValidSequenceEndIndexWithoutX(
-                currentRange.get(0), currentRange.get(1), sequenceLength, fixedIdx, isVertical, board);
+                currentRange.get(0), currentRange.get(1), sequenceLength, index, isVertical, board);
 
         return List.of(newStart, newEnd);
     }
 
-    public static int findFirstValidSequenceStartIndexWithoutX(
+    private static int findFirstValidSequenceStartIndexWithoutX(
             int sequenceStart, int sequenceEnd, int sequenceLength,
             int fixedIdx, boolean isVertical, List<List<String>> board) {
 
@@ -45,7 +45,7 @@ public class SequenceRangeCorrectionWhenMetXHelper {
         return sequenceStart;
     }
 
-    public static int findLastValidSequenceEndIndexWithoutX(
+    private static int findLastValidSequenceEndIndexWithoutX(
             int sequenceStart, int sequenceEnd, int sequenceLength,
             int fixedIdx, boolean isVertical, List<List<String>> board) {
 
