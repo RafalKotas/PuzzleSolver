@@ -45,7 +45,7 @@ public class ExcludedSequenceLogHelper {
         boolean isRow = lines[0].contains(ROW_ACTION_NAME);
         String axisLabel = isRow ? ROW : COLUMN;
 
-        String fileName = solutionName.startsWith("r") ? solutionName.substring(1) : solutionName;
+        String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
         int sequenceIndex = Integer.parseInt(lines[1].split("sequenceIndex=")[1].trim());
@@ -56,7 +56,7 @@ public class ExcludedSequenceLogHelper {
         return String.format(
                 """
                         Arguments.of("%s / %s=%d - excluding sequence",
-                            %d
+                            %d,
                             %s,
                             %s,
                             %s)

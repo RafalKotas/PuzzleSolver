@@ -540,7 +540,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 .forEach(columnIdx -> markRowBoardField(this.getNonogramSolutionBoardWithMarks(), rowIdx, columnIdx, marker));
 
         tmpLog = ExcludedSequenceLogHelper.generateLog(
-                false,
+                true,
                 rowIdx,
                 seqIdx,
                 this.getRowCopy(rowIdx),
