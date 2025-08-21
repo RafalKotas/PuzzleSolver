@@ -20,11 +20,6 @@ public class SequenceRangeCorrectionWhenMetXLogHelper {
             List<Integer> excludedSequencesIndexes
 
     ) {
-        if (isRow) {
-            System.out.println("ROW");
-        } else {
-            System.out.println("COLUMN");
-        }
         return String.format(
                 """
                         SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY_IN_%s: %s=%d
