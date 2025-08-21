@@ -18,6 +18,11 @@ public class SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper {
             List<List<Integer>> initialRanges,
             List<List<Integer>> updatedRanges
     ) {
+        if (isRow) {
+            System.out.println("ROW");
+        } else {
+            System.out.println("COLUMN");
+        }
         return String.format(
                 """
                         CORRECTING_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES_IN_%s: %s=%d
@@ -64,9 +69,9 @@ public class SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper {
                 isRow ? ROW : COLUMN,
                 index,
                 toImmutableIntListLiteral(sequencesLengths),
-                toImmutableStringListLiteral(line),
+                toMutableStringListLiteral(line),
                 toMutableRangesListLiteral(initialRanges),
-                toImmutableRangesListLiteral(updatedRanges)
+                toMutableRangesListLiteral(updatedRanges)
         );
     }
 }
