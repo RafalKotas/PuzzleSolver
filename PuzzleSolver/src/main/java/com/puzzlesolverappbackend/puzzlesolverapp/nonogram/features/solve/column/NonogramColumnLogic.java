@@ -419,7 +419,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
     }
 
     private void preventExtendingColouredSequenceToExcessLengthInColumnToBottom(int columnIdx) {
-        List<String> columnBefore = getRowCopy(columnIdx);
+        List<String> columnBefore = getColumnCopy(columnIdx);
         List<List<Integer>> columnRangesBefore = getColumnSequencesRangesCopy(columnIdx);
 
         List<Integer> columnSequencesLengths = this.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
