@@ -3,7 +3,6 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.json;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramFileDetails;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramSolution;
 import lombok.experimental.UtilityClass;
@@ -36,9 +35,9 @@ public class NonogramJsonWriter {
         }
     }
 
-    public static void saveSolutionBoard(NonogramLogic nonogramSolutionLogic, String filePath) throws IOException {
+    public static void saveSolutionBoard(List<List<String>> board, String filePath) throws IOException {
         NonogramSolution solution = new NonogramSolution();
-        solution.setNonogramBoard(nonogramSolutionLogic.getNonogramSolutionBoard());
+        solution.setNonogramBoard(board);
 
         StringBuilder jsonBuilder = new StringBuilder();
         jsonBuilder.append("{\n");
