@@ -20,20 +20,20 @@ public class BoardUtils {
                 .toList();
     }
 
+    public static boolean allFieldsAreColouredInRowRange(int columnIndex, List<Integer> range, List<List<String>> board) {
+        int startRow = range.get(0);
+        int endRow = range.get(1);
+
+        return IntStream.rangeClosed(startRow, endRow)
+                .allMatch(rowIdx -> isFieldColoured(board, new Field(rowIdx, columnIndex)));
+    }
+
     public static boolean allFieldsAreColouredInColumnRange(int rowIdx, List<Integer> range, List<List<String>> board) {
         int startColumnIdx = range.get(0);
         int endColumnIdx = range.get(1);
 
         return IntStream.rangeClosed(startColumnIdx, endColumnIdx)
                 .allMatch(columnIdx -> isFieldColoured(board, new Field(rowIdx, columnIdx)));
-    }
-
-    public static boolean allFieldsAreColouredInRowRange(int colIdx, List<Integer> range, List<List<String>> board) {
-        int startRow = range.get(0);
-        int endRow = range.get(1);
-
-        return IntStream.rangeClosed(startRow, endRow)
-                .allMatch(rowIdx -> isFieldColoured(board, new Field(rowIdx, colIdx)));
     }
 
     public static boolean isFieldColoured(List<List<String>> board, Field field) {
@@ -92,24 +92,53 @@ public class BoardUtils {
         return result;
     }
 
-    public static List<Integer> findColouredSequenceRange(List<List<String>> board, Field startField, boolean isRow, NonogramRules rules) {
-        int start = isRow ? startField.getColumnIdx() : startField.getRowIdx();
-        int end = start;
+    public static List<Integer> findColouredSequenceRange(
+            List<List<String>> board,
+            Field startField,
+            boolean isRow,
+            NonogramRules rules
+    ) {
+        final int lineLimit = isRow ? rules.getWidth() : rules.getHeight();
+        final int fixedIdx  = isRow ? startField.getRowIdx() : startField.getColumnIdx();
+        final int pos       = isRow ? startField.getColumnIdx() : startField.getRowIdx();
 
-        while (start > 0) {
-            Field prev = isRow ? new Field(startField.getRowIdx(), start - 1) : new Field(start - 1, startField.getColumnIdx());
-            if (!isFieldColoured(board, prev)) break;
-            start--;
+        // guard-rails
+        if (pos < 0 || pos >= lineLimit) return List.of();
+        if (!isFieldColoured(board, startField)) return List.of();
+
+        final int startIdx = scanBoundary(board, isRow, fixedIdx, pos, -1, lineLimit);
+        final int endIdx   = scanBoundary(board, isRow, fixedIdx, pos, +1, lineLimit);
+
+        return List.of(startIdx, endIdx);
+    }
+
+    private static int scanBoundary(
+            List<List<String>> board,
+            boolean isRow,
+            int fixedIdx,
+            int startExclusive,
+            int step,
+            int lineLimit
+    ) {
+        int last = startExclusive;
+        int i = startExclusive + step;
+
+        while (i >= 0 && i < lineLimit && isColouredAt(board, isRow, fixedIdx, i)) {
+            last = i;
+            i += step;
         }
+        return last;
+    }
 
-        int limit = isRow ? rules.getWidth() : rules.getHeight();
-        while (end + 1 < limit) {
-            Field next = isRow ? new Field(startField.getRowIdx(), end + 1) : new Field(end + 1, startField.getColumnIdx());
-            if (!isFieldColoured(board, next)) break;
-            end++;
-        }
-
-        return List.of(start, end);
+    private static boolean isColouredAt(
+            List<List<String>> board,
+            boolean isRow,
+            int fixedIdx,
+            int idx
+    ) {
+        final int r = isRow ? fixedIdx : idx;
+        final int c = isRow ? idx      : fixedIdx;
+        return isFieldColoured(board, new Field(r, c));
     }
 
     // === Sequence Ranges + Merge ===
