@@ -39,8 +39,8 @@ public class NonogramController {
     public ResponseEntity<String> saveNonogramToJsonFile(@RequestParam String fileName,
                                                          @Valid @RequestBody NonogramFileDetails nonogramFileDetails) {
         log.info("Saving nonogram with name {}", fileName);
-        String responeMessage = nonogramService.saveCreatedNonogramToFile(fileName, nonogramFileDetails);
-        return new ResponseEntity<>(responeMessage, HttpStatus.OK);
+        String responseMessage = nonogramService.saveCreatedNonogramToFile(fileName, nonogramFileDetails);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @GetMapping("/getNonogramsUsingFilters")
