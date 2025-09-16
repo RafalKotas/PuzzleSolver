@@ -11,6 +11,8 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAc
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.clearing.NonogramFieldClearingHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.NonogramColumnLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.NonogramRowLogic;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.debug.NonogramPrinter;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -18,20 +20,24 @@ import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramConstants.EMPTY_FIELD;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramConstants.X_FIELD;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldEmpty;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction.COLOUR_FIELD_GUESS_OR_RECURSIVE;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction.PLACE_X_FIELD_GUESS_OR_RECURSIVE;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class NonogramLogicTest {
 
     @Test
     void shouldSetAndGetAllFields() {
+        // given
         NonogramLogic logic = new NonogramLogic();
 
         List<List<String>> board = List.of(List.of("O", "X"));
         List<List<List<Integer>>> ranges3D = List.of(List.of(List.of(1, 2)));
         List<List<Integer>> ranges2D = List.of(List.of(0, 1));
 
+        // when
         logic.setCorrectSolutionBoard(board);
         logic.setCorrectRowRanges(ranges3D);
         logic.setCorrectColumnRanges(ranges3D);
@@ -43,6 +49,7 @@ class NonogramLogicTest {
         logic.setRowsSequencesRanges(ranges3D);
         logic.setColumnsSequencesRanges(ranges3D);
 
+        // then
         assertEquals(board, logic.getCorrectSolutionBoard());
         assertEquals(ranges3D, logic.getCorrectRowRanges());
         assertEquals(ranges3D, logic.getCorrectColumnRanges());
@@ -56,11 +63,27 @@ class NonogramLogicTest {
     }
 
     @Test
+    void shouldSetAndGetNonogramPrinter() {
+        // given
+        List<List<Integer>> rowSequences = List.of(List.of(1, 1, 1));
+        List<List<Integer>> columnSequences = List.of(List.of(1), List.of(1), List.of(1));
+        NonogramRules rules = new NonogramRules(rowSequences, columnSequences, 1, 5);
+
+        NonogramLogic nonogramLogic = new NonogramLogic(rules, GuessMode.DISABLED);
+
+        // when
+        NonogramPrinter nonogramPrinter = nonogramLogic.getPrinter();
+
+        // then
+        assertThat(nonogramPrinter).isNotNull();
+    }
+
+    @Test
     void testDeepCopyCreatesIndependentClone() {
         // given
-        List<List<Integer>> rowSequences = List.of(List.of(3));
-        List<List<Integer>> columnSequences = List.of(List.of(3));
-        NonogramRules rules = new NonogramRules(rowSequences, columnSequences, 1, 1);
+        List<List<Integer>> rowSequences = List.of(List.of(1, 1, 1));
+        List<List<Integer>> columnSequences = List.of(List.of(1), List.of(1), List.of(1));
+        NonogramRules rules = new NonogramRules(rowSequences, columnSequences, 1, 5);
 
         NonogramLogic original = new NonogramLogic(rules, GuessMode.DISABLED);
         original.getNonogramSolutionBoard().get(0).set(0, "O");
@@ -116,7 +139,6 @@ class NonogramLogicTest {
         assertInstanceOf(NonogramActionScheduler.class, logic.getActionScheduler());
     }
 
-
     @Test
     void fillTrivialRowsAndColumns() {
         // given
@@ -163,6 +185,93 @@ class NonogramLogicTest {
                 assertNotNull(field);
             }
         }
+    }
+
+    @Test
+    @DisplayName("Should clear all logs if exist")
+    void shouldClearLogs() {
+        // given
+        NonogramLogic nonogramLogic = new NonogramLogic();
+        String exampleLogX = "action X made";
+        String exampleLogY = "action Y made";
+        String exampleLogZ = "action Z made";
+
+        // when && then
+        assertThat(nonogramLogic.getLogs()).isEmpty();
+
+        // add some logs
+        nonogramLogic.setTmpLog(exampleLogX);
+        nonogramLogic.addLog();
+        nonogramLogic.setTmpLog(exampleLogY);
+        nonogramLogic.addLog();
+        nonogramLogic.setTmpLog(exampleLogZ);
+        nonogramLogic.addLog();
+        assertThat(nonogramLogic.getLogs()).isNotEmpty().hasSize(3);
+
+        // clear logs
+        nonogramLogic.clearLogs();
+        assertThat(nonogramLogic.getLogs()).isEmpty();
+    }
+
+    @Test
+    void shouldNotColourFieldIfIndexesNotValid() {
+        // given
+        NonogramRules rules = new NonogramRules();
+        rules.setHeight(3);
+        rules.setWidth(3);
+        rules.setRowSequencesLengths(List.of(List.of(0), List.of(1), List.of(0)));
+        rules.setColumnSequencesLengths(List.of(List.of(0), List.of(1), List.of(0)));
+
+        NonogramLogic logic = new NonogramLogic(rules, GuessMode.DISABLED);
+
+        Field wrongField = new Field(-1, -2);
+
+        // when
+        logic.colourFieldAtGivenPosition(wrongField);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                Field field = new Field(i, j);
+                assertThat(isFieldEmpty(logic.getNonogramSolutionBoard(), field)).isTrue(); // all fields are empty
+            }
+        }
+    }
+
+    @Test
+    void shouldNotAddRowFieldToExcludedIfWrongField() {
+        // given
+        NonogramRules rules = new NonogramRules();
+        rules.setHeight(3);
+        rules.setWidth(3);
+        rules.setRowSequencesLengths(List.of(List.of(0), List.of(1), List.of(0)));
+        rules.setColumnSequencesLengths(List.of(List.of(0), List.of(1), List.of(0)));
+        List<List<Integer>> rowSequenceRanges = new ArrayList<>();
+        rowSequenceRanges.add(new ArrayList<>(List.of(-1, -1)));
+        // wrong
+        rowSequenceRanges.add(new ArrayList<>(List.of(0, 3)));
+        rowSequenceRanges.add(new ArrayList<>(List.of(-1, -1)));
+
+
+        NonogramLogic logic = new NonogramLogic(rules, GuessMode.DISABLED);
+        logic.getRowsSequencesRanges().set(1, rowSequenceRanges);
+
+        // when
+        logic.fillTrivialRowsAndColumns();
+    }
+
+    @Test
+    void shouldNotAddRowFieldToExcludedIfFieldIsInList() {
+        // given
+        NonogramRules rules = new NonogramRules();
+        rules.setHeight(3);
+        rules.setWidth(3);
+        rules.setRowSequencesLengths(List.of(List.of(0), List.of(1), List.of(0)));
+        rules.setColumnSequencesLengths(List.of(List.of(0), List.of(1), List.of(0)));
+
+        NonogramLogic logic = new NonogramLogic(rules, GuessMode.DISABLED);
+        logic.addRowFieldToExcluded(new Field(0, 0));
+
+        // when
+        logic.fillTrivialRowsAndColumns();
     }
 
     // TODO - add some real case

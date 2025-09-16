@@ -19,7 +19,8 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.No
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.debug.NonogramPrinter;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.TrivialFillLogHelper;
 import jakarta.persistence.Transient;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -44,12 +45,8 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.utils.Nonogram
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.utils.NonogramStatsUtils.fieldsFilled;
 
 
-@Data
-@Builder
 @Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 @Slf4j
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NonogramLogic extends NonogramLogicParams {
@@ -94,8 +91,6 @@ public class NonogramLogic extends NonogramLogicParams {
     @JsonIgnore
     private NonogramFieldClearingHelper fieldClearingHelper;
 
-    private boolean logChanges = false;
-
     @Expose(serialize = false)
     @Transient
     @JsonIgnore
@@ -137,11 +132,10 @@ public class NonogramLogic extends NonogramLogicParams {
 
         this.nonogramColumnLogic = new NonogramColumnLogic(this);
 
-        if (logChanges) {
-            log.info("CREATED NonogramLogic object from rules and guessMode");
-        }
-
         this.printer = new NonogramPrinter(this);
+    }
+
+    public NonogramLogic() {
     }
 
     public NonogramLogic deepCopy() {
@@ -634,7 +628,7 @@ public class NonogramLogic extends NonogramLogicParams {
             NonogramActionDetails currentAction = this.actionsToDoList.get(actionListIndex);
 
             if (!executeSingleActionWithValidation(actionListIndex, currentAction)
-            || (this.guessMode == GuessMode.ENABLED && this.nonogramState.isInvalidSolution())) {
+                    || (this.guessMode == GuessMode.ENABLED && this.nonogramState.isInvalidSolution())) {
                 break;
             }
 
@@ -954,7 +948,7 @@ public class NonogramLogic extends NonogramLogicParams {
         Iterator<List<String>> subsolutionNonogramBoardIterator = subSolutionNonogramBoard.iterator();
         Iterator<List<String>> solutionNonogramBoardIterator = solutionNonogramBoard.iterator();
 
-        while(subsolutionNonogramBoardIterator.hasNext() && solutionNonogramBoardIterator.hasNext()) {
+        while (subsolutionNonogramBoardIterator.hasNext() && solutionNonogramBoardIterator.hasNext()) {
 
             List<String> subSolutionNonogramBoardRow = subsolutionNonogramBoardIterator.next();
             List<String> solutionNonogramBoardRow = solutionNonogramBoardIterator.next();
@@ -966,7 +960,7 @@ public class NonogramLogic extends NonogramLogicParams {
             Iterator<String> subsolutionNonogramBoardRowIterator = subSolutionNonogramBoardRow.iterator();
             Iterator<String> solutionNonogramBoardRowIterator = solutionNonogramBoardRow.iterator();
 
-            while(subsolutionNonogramBoardRowIterator.hasNext() && solutionNonogramBoardRowIterator.hasNext()) {
+            while (subsolutionNonogramBoardRowIterator.hasNext() && solutionNonogramBoardRowIterator.hasNext()) {
                 String subSolutionNonogramBoardField = subsolutionNonogramBoardRowIterator.next();
                 String solutionNonogramBoardField = solutionNonogramBoardRowIterator.next();
 
