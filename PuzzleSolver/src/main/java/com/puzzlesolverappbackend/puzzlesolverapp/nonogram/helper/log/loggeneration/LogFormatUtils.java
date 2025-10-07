@@ -53,37 +53,9 @@ public class LogFormatUtils {
         return result;
     }
 
-    /**
-     * Parses literal "[[0, 14], [3, 16], [18, 18]]"
-     * & returns a *deeply immutable* structure:
-     * - each inner list is List.copyOf(...)
-     * - outer list is List.copyOf(...)
-     */
-    public static List<List<Integer>> toImmutableRangesList(String arrayLiteral) {
-        List<List<Integer>> mutable = toMutableRangesList(arrayLiteral);
-        List<List<Integer>> frozenInner = mutable.stream()
-                .map(List::copyOf)
-                .toList();
-        return List.copyOf(frozenInner);
-    }
-
     // =====================================================================================
     //  FORMATTERS FROM PARSED LIST STRUCTURES → "List.of(...)" LITERALS
     // =====================================================================================
-
-    /**
-     * Formats List<List<Integer>> into a literal:
-     * "List.of(List.of(a, b), List.of(c, d), ...)".
-     */
-    public static String toListOfLiteral(List<List<Integer>> ranges) {
-        String inner = ranges.stream()
-                .map(innerList -> LIST_OF_PREFIX + innerList.stream()
-                        .map(String::valueOf)
-                        .reduce((a, b) -> a + ", " + b).orElse("") + ")")
-                .reduce((a, b) -> a + ", " + b)
-                .orElse("");
-        return LIST_OF_PREFIX + inner + ")";
-    }
 
     /**
      * Extracts the value from a log line starting with "prefix=".
