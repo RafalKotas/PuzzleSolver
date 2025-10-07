@@ -34,10 +34,22 @@ public final class ColouringHelper {
     public static List<Integer> findPossibleSequenceLengths(List<List<Integer>> ranges, List<Integer> colouredRange, List<Integer> lengths) {
         List<Integer> result = new ArrayList<>();
         for (int i = 0; i < ranges.size(); i++) {
+            // old
+            /*
             if (rangeInsideAnotherRange(colouredRange, ranges.get(i))
                     && lengths.get(i) >= rangeLength(colouredRange)) {
                 result.add(lengths.get(i));
-            }
+            }*/
+            // temp
+            if (rangeInsideAnotherRange(colouredRange, ranges.get(i)) && lengths.get(i) >= rangeLength(colouredRange)) {
+                result.add(lengths.get(i));
+            } /*else if (rangeInsideAnotherRange(colouredRange, ranges.get(i)) && lengths.get(i) < rangeLength(colouredRange)) {
+                System.out.println("2nd case");
+            } else if (!rangeInsideAnotherRange(colouredRange, ranges.get(i)) && lengths.get(i) >= rangeLength(colouredRange)) {
+                System.out.println("3rd case");
+            } else if (!rangeInsideAnotherRange(colouredRange, ranges.get(i)) && lengths.get(i) < rangeLength(colouredRange)) {
+                System.out.println("4th case");
+            }*/
         }
         return result;
     }
@@ -85,12 +97,12 @@ public final class ColouringHelper {
     public static int findDistanceFromBottomX(List<List<String>> board, int columnIdx, List<Integer> colouredRange, int maxDist) {
         for (int offset = rangeLength(colouredRange); offset < maxDist; offset++) {
             int idxToCheck = colouredRange.get(0) + offset;
-            if (idxToCheck >= board.size()) break;
+            if (idxToCheck == board.size()) {
+                break;
+            }
 
             Field fieldToCheck = new Field(idxToCheck, columnIdx);
-            if (isFieldWithX(board, fieldToCheck)) {
-                return offset;
-            }
+            if (isFieldWithX(board, fieldToCheck)) return offset;
         }
         return 0;
     }
@@ -202,7 +214,9 @@ public final class ColouringHelper {
     public static int findDistanceFromLeftX(List<List<String>> board, int rowIdx, List<Integer> colouredRange, int maxDist) {
         for (int offset = rangeLength(colouredRange); offset < maxDist; offset++) {
             int columnIdxToCheck = colouredRange.get(1) - offset;
-            if (columnIdxToCheck < 0) break;
+            if (columnIdxToCheck < 0) {
+                break;
+            }
 
             Field fieldToCheck = new Field(rowIdx, columnIdxToCheck);
             if (isFieldWithX(board, fieldToCheck)) {
@@ -215,7 +229,9 @@ public final class ColouringHelper {
     public static int findDistanceFromRightX(List<List<String>> board, int rowIdx, List<Integer> colouredRange, int maxDist) {
         for (int offset = rangeLength(colouredRange); offset < maxDist; offset++) {
             int columnIdxToCheck = colouredRange.get(0) + offset;
-            if (!board.get(0).isEmpty() && columnIdxToCheck >= board.get(0).size()) break;
+            if (columnIdxToCheck == board.get(0).size()) {
+                break;
+            }
 
             Field fieldToCheck = new Field(rowIdx, columnIdxToCheck);
             if (isFieldWithX(board, fieldToCheck)) {
@@ -227,18 +243,31 @@ public final class ColouringHelper {
 
     public static List<Integer> findColouredSequenceRangeLeft(List<List<String>> board, int rowIdx, int startColIdx) {
         int start = startColIdx;
-        while (start - 1 >= 0 && isFieldColoured(board, new Field(rowIdx, start - 1))) {
-            start--;
+        while (start > 0) {
+            int before = start - 1;
+            if (isFieldColoured(board, new Field(rowIdx, before))) {
+                start--;
+            } else {
+                break;
+            }
         }
+
         return List.of(start, startColIdx);
     }
 
     public static List<Integer> findColouredSequenceRangeRight(List<List<String>> board, int rowIdx, int startColumnIdx) {
-        int endColumnIdx = startColumnIdx;
-        while (endColumnIdx + 1 < board.get(0).size() && isFieldColoured(board, new Field(rowIdx, endColumnIdx + 1))) {
-            endColumnIdx++;
+        int end = startColumnIdx;
+
+        // TODO IndexOutOfBoundsException (end < board.size() - 2)? + others
+        while (end < board.size() - 1) {
+            int after = end + 1;
+            if (isFieldColoured(board, new Field(rowIdx, after))) {
+                end++;
+            } else {
+                break;
+            }
         }
-        return List.of(startColumnIdx, endColumnIdx);
+        return List.of(startColumnIdx, end);
     }
 }
 
