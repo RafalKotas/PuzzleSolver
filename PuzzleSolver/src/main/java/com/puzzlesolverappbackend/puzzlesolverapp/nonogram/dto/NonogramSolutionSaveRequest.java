@@ -1,19 +1,18 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class NonogramSolutionSaveRequest {
 
     private String fileName;
     private List<List<String>> board;
     private List<List<Integer>> rowSequences;
     private List<List<Integer>> columnSequences;
-
 }
