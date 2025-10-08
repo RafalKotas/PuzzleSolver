@@ -27,6 +27,6 @@ public class NonogramParametersComparatorHelper {
      * range_B in format [B_1, B_2]
      ***/
     public static boolean rangesNotEqual(List<Integer> firstRange, List<Integer> secondRange) {
-        return !Objects.equals(firstRange.get(0), secondRange.get(0)) || !Objects.equals(firstRange.get(1), secondRange.get(1));
+        return !(Objects.equals(firstRange.get(0), secondRange.get(0)) && Objects.equals(firstRange.get(1), secondRange.get(1)));
     }
 }
