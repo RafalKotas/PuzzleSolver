@@ -1,10 +1,12 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solutions;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
@@ -16,8 +18,8 @@ public class NonogramSolutionDecision {
     public String toString() {
         return "dec.{" +
                 "'" + decisionMarker + '\'' +
-                ", r" + decisionField.getRowIdx() +
-                ", c" + decisionField.getColumnIdx() +
+                ", r=" + decisionField.getRowIdx() +
+                ", c=" + decisionField.getColumnIdx() +
                 '}';
     }
 
