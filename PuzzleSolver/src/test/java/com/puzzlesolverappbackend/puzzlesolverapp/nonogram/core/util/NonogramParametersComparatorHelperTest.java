@@ -58,11 +58,11 @@ class NonogramParametersComparatorHelperTest {
     }
 
     @Test
-    @DisplayName("Should return true if first sequence range is not equal to second sequence range - o06005 row 3")
-    void shouldReturnTrueIfFirstSequenceRangeIsNotEqualToSecondSequenceRange() {
+    @DisplayName("rangesNotEqual - should return true when ranges first elements are not equal")
+    void shouldReturnTrueIfFirstSequenceRangeFirstElementIsNotEqualToSecondSequenceRangeFirstElement() {
         // given
-        List<Integer> firstRange = new ArrayList<>(List.of(0, 9));
-        List<Integer> secondRange = new ArrayList<>(List.of(-1, -1));
+        List<Integer> firstRange = new ArrayList<>(List.of(1, 3));
+        List<Integer> secondRange = new ArrayList<>(List.of(2, 3));
 
         // when
         boolean rangesNotEqual = rangesNotEqual(firstRange, secondRange);
@@ -72,11 +72,39 @@ class NonogramParametersComparatorHelperTest {
     }
 
     @Test
-    @DisplayName("Should return false if first sequence range is equal to second sequence range - o06005 column 3")
-    void shouldReturnFalseIfFirstSequenceRangeIsNotEqualToSecondSequenceRange() {
+    @DisplayName("rangesNotEqual - should return true when ranges second elements are not equal")
+    void shouldReturnTrueIfFirstSequenceRangeSecondElementIsNotEqualToSecondSequenceRangeSecondElement() {
         // given
-        List<Integer> firstRange = new ArrayList<>(List.of(2, 7));
-        List<Integer> secondRange = new ArrayList<>(List.of(2, 7));
+        List<Integer> firstRange = new ArrayList<>(List.of(2, 3));
+        List<Integer> secondRange = new ArrayList<>(List.of(2, 4));
+
+        // when
+        boolean rangesNotEqual = rangesNotEqual(firstRange, secondRange);
+
+        // then
+        assertThat(rangesNotEqual).isTrue();
+    }
+
+    @Test
+    @DisplayName("rangesNotEqual - should return true if both 1st and 2nd elements of ranges are different")
+    void shouldReturnTrueIfBothRangesElementsAreEqual() {
+        // given
+        List<Integer> firstRange = new ArrayList<>(List.of(1, 2));
+        List<Integer> secondRange = new ArrayList<>(List.of(3, 4));
+
+        // when
+        boolean rangesNotEqual = rangesNotEqual(firstRange, secondRange);
+
+        // then
+        assertThat(rangesNotEqual).isTrue();
+    }
+
+    @Test
+    @DisplayName("rangesNotEqual - should return false when ranges are equal")
+    void shouldReturnTrueIfFirstSequenceRangeIsNotEqualToSecondSequenceRange() {
+        // given
+        List<Integer> firstRange = new ArrayList<>(List.of(12, 17));
+        List<Integer> secondRange = new ArrayList<>(List.of(12, 17));
 
         // when
         boolean rangesNotEqual = rangesNotEqual(firstRange, secondRange);
