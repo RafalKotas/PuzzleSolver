@@ -1,18 +1,54 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramState;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRules;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.config.GuessMode;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramActionScheduler;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramBoardAccessHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.colouring.NonogramFieldColouringHelper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.RowColouringHelperImplUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(MockitoExtension.class)
 class RowColouringHelperImplTest {
+
+    @Mock
+    NonogramRowLogic nonogramRowLogic;
+
+    @Mock
+    NonogramFieldColouringHelper colouringHelper;
+
+    @Mock
+    NonogramActionScheduler scheduler;
+
+    @Mock
+    NonogramState state;
+
+    @Mock
+    NonogramRules rules;
+
+    @Mock
+    NonogramBoardAccessHelper boardAccessHelper;
+
+    @InjectMocks
+    private RowColouringHelperImpl subject;
+
+    @BeforeEach
+    void setUp() {
+        subject = new RowColouringHelperImpl(nonogramRowLogic);
+    }
 
     @DisplayName("Should not colour any field in row if there isn't overlapping fields - o06005 row 0")
     @Test
@@ -160,58 +196,132 @@ class RowColouringHelperImplTest {
         assertThat(logic.getLogs().size()).isEqualTo(logsBefore + 1);
     }
 
-    private NonogramLogic buildLogic_o06005() {
-        List<List<Integer>> rowsSequences = List.of(
-                List.of(1, 1, 1),
-                List.of(1, 1, 1, 1, 1),
-                List.of(1, 5, 1),
-                List.of(9),
-                List.of(9),
-                List.of(7, 1),
-                List.of(9),
-                List.of(10),
-                List.of(1, 1),
-                List.of(2, 2)
-        );
+    @DisplayName("extendColouredFieldsToLeftNearX - only extending case")
+    @Test // o07836
+    void shouldExtendLeft_Row2_WithRealSequencesAndBoard() {
+        // given: logic with real sequences
+        NonogramLogic logic = buildLogic_o07836();
 
-        List<List<Integer>> colsSequences = List.of(
-                List.of(7), List.of(7), List.of(8, 1),
-                List.of(6), List.of(8), List.of(6),
-                List.of(10), List.of(2, 2, 1), List.of(7), List.of(1)
-        );
+        // board (row-major); row 2 = [-, -, X, O, -, -, O, O, X, -]
+        List<List<String>> board = new ArrayList<>(List.of(
+                new ArrayList<>(List.of("-", "-", "-", "X", "-", "-", "-", "-", "-", "-")), // 0
+                new ArrayList<>(List.of("-", "-", "-", "O", "-", "-", "-", "-", "-", "-")), // 1
+                new ArrayList<>(List.of("-", "-", "X", "O", "-", "-", "O", "O", "X", "-")), // 2  <-- target
+                new ArrayList<>(List.of("-", "-", "-", "O", "O", "-", "-", "-", "-", "-")), // 3
+                new ArrayList<>(List.of("-", "-", "-", "O", "O", "-", "-", "-", "-", "-")), // 4
+                new ArrayList<>(List.of("-", "-", "-", "O", "-", "-", "-", "-", "-", "-")), // 5
+                new ArrayList<>(List.of("-", "-", "O", "O", "-", "X", "O", "O", "X", "-")), // 6
+                new ArrayList<>(List.of("-", "-", "X", "O", "X", "X", "O", "O", "X", "-")), // 7
+                new ArrayList<>(List.of("-", "-", "-", "O", "X", "-", "-", "-", "-", "-")), // 8
+                new ArrayList<>(List.of("-", "-", "O", "O", "O", "-", "-", "-", "-", "-"))  // 9
+        ));
+        mountBoard(logic, board);
 
-        NonogramRules rules = new NonogramRules(rowsSequences, colsSequences, 10, 10);
-        return new NonogramLogic(rules, GuessMode.DISABLED);
+        // ranges: row 2 -> [[3,7]]
+        logic.getRowsSequencesRanges().set(2, new ArrayList<>(List.of(List.of(3, 7))));
+
+        // when: build row-logic (wires RowColouringHelperImpl with proper deps) and call public method
+        NonogramRowLogic rowLogic = buildRowLogic(logic);
+        rowLogic.getRowColouringHelper().extendColouredFieldsNearXToMaximumPossibleLengthInRow(2);
+
+        // then: left extension should fill (2,5) and (2,4)
+        List<String> expectedRow2 = List.of("-", "-", "X", "O", "O", "O", "O", "O", "X", "-");
+        assertEquals(expectedRow2, logic.getNonogramSolutionBoard().get(2));
     }
 
-    private NonogramLogic buildLogic_o07836() {
-        List<List<Integer>> rowsSequences = List.of(
-                List.of(3),
-                List.of(2, 3),
-                List.of(5),
-                List.of(4, 1),
-                List.of(4, 1),
-                List.of(4, 1),
-                List.of(3, 2), // 6
-                List.of(1, 2),
-                List.of(1, 2, 2),
-                List.of(5, 2)
+    @DisplayName("o06005: extendColouredFieldsNearXToMaximumPossibleLengthInRow does not extend row 0")
+    @Test // o06005
+    void shouldNotExtendLeft_Row0_o06005() {
+        // given
+        NonogramLogic logic = buildLogic_o06005();
+
+        // board (row-major); row 0 stays unchanged
+        List<List<String>> board = new ArrayList<>(List.of(
+                new ArrayList<>(List.of("-", "-", "O", "-", "-", "-", "O", "-", "-", "-")), // 0  <- target row
+                new ArrayList<>(List.of("-", "-", "O", "-", "-", "-", "O", "-", "-", "-")), // 1
+                new ArrayList<>(List.of("-", "-", "O", "O", "O", "O", "O", "-", "-", "-")), // 2
+                new ArrayList<>(List.of("O", "O", "O", "O", "O", "O", "O", "O", "O", "-")), // 3
+                new ArrayList<>(List.of("O", "O", "O", "O", "O", "O", "O", "O", "O", "-")), // 4
+                new ArrayList<>(List.of("O", "O", "O", "O", "O", "O", "O", "-", "O", "-")), // 5
+                new ArrayList<>(List.of("O", "O", "O", "O", "O", "O", "O", "O", "O", "-")), // 6
+                new ArrayList<>(List.of("O", "O", "O", "O", "O", "O", "O", "O", "O", "O")), // 7
+                new ArrayList<>(List.of("-", "-", "X", "-", "-", "-", "O", "-", "-", "-")), // 8
+                new ArrayList<>(List.of("-", "-", "O", "-", "-", "-", "O", "-", "-", "-"))  // 9
+        ));
+        logic.setNonogramSolutionBoard(board);
+
+        int rowIdx = 0;
+        List<String> rowBefore = new ArrayList<>(logic.getNonogramSolutionBoard().get(rowIdx));
+
+        // ranges for row 0: [[0,2],[2,6],[6,9]]
+        logic.getRowsSequencesRanges().set(rowIdx,
+                new ArrayList<>(List.of(List.of(0, 2), List.of(2, 6), List.of(6, 9))));
+
+        // build row-logic wired to this board
+        NonogramRowLogic rowLogic = new NonogramRowLogic(
+                logic,
+                new NonogramBoardAccessHelper(logic.getNonogramSolutionBoard()),
+                new NonogramActionScheduler(logic.getActionsToDoList())
         );
 
-        List<List<Integer>> colsSequences = List.of(
-                List.of(2),
-                List.of(2, 1),
-                List.of(3, 2),
-                List.of(9),
-                List.of(5, 1),
-                List.of(3),
-                List.of(3, 4),
-                List.of(3, 4),
-                List.of(2),
-                List.of(1, 3)
-        );
+        int logsBefore = logic.getLogs().size();
 
-        NonogramRules rules = new NonogramRules(rowsSequences, colsSequences, 10, 10);
-        return new NonogramLogic(rules, GuessMode.DISABLED);
+        // when
+        rowLogic.getRowColouringHelper().extendColouredFieldsNearXToMaximumPossibleLengthInRow(rowIdx);
+
+        // then: row unchanged; no extension happened
+        assertEquals(rowBefore, logic.getNonogramSolutionBoard().get(rowIdx));
+        // (optional) log count unchanged because anyGlobalFieldColoured == false in both left and right passes
+        assertEquals(logsBefore, logic.getLogs().size());
+    }
+
+    @DisplayName("extendColouredFieldsToRightNearX covers cases: extended, not extended, and distanceFromX == 0 (o06041 row 9)")
+    @Test
+    void shouldHandleExtendedAndNotExtendedCases_o06041() {
+        // given: real sequences (o06041)
+        NonogramLogic logic = buildLogic_o06041();
+
+        // board — 15 columns wide
+        List<List<String>> board = new ArrayList<>(List.of(
+                new ArrayList<>(List.of("-", "-", "-", "-", "O", "O", "O", "O", "O", "O", "O", "-", "-", "-", "-")),
+                new ArrayList<>(List.of("X", "O", "O", "O", "O", "X", "X", "X", "X", "X", "X", "-", "-", "X", "O")),
+                new ArrayList<>(List.of("-", "O", "O", "O", "O", "-", "X", "-", "-", "-", "-", "-", "-", "X", "O")),
+                new ArrayList<>(List.of("-", "O", "-", "X", "O", "X", "O", "O", "O", "O", "O", "O", "O", "X", "O")),
+                new ArrayList<>(List.of("-", "-", "-", "X", "O", "X", "O", "O", "O", "O", "O", "O", "O", "X", "O")),
+                new ArrayList<>(List.of("-", "-", "-", "-", "O", "X", "X", "O", "O", "O", "O", "O", "X", "X", "O")),
+                new ArrayList<>(List.of("-", "-", "O", "O", "O", "-", "-", "X", "O", "O", "O", "X", "-", "X", "O")),
+                new ArrayList<>(List.of("-", "-", "-", "-", "O", "-", "-", "-", "-", "-", "-", "-", "-", "X", "O")),
+                new ArrayList<>(List.of("-", "-", "-", "-", "O", "-", "X", "X", "X", "-", "-", "-", "-", "-", "O")),
+                new ArrayList<>(List.of("-", "-", "-", "-", "X", "-", "O", "O", "O", "-", "-", "-", "-", "-", "-")) // row 9
+        ));
+        mountBoard(logic, board);
+
+        int rowToCheck = 9;
+
+        // mount the board
+        RowColouringHelperImplUtils.mountBoard(logic, board);
+
+        // set ranges for row 9
+        List<List<List<Integer>>> ranges = logic.getRowsSequencesRanges();
+        ranges.set(rowToCheck, new ArrayList<>(List.of(List.of(5, 14))));
+
+        // build row logic (with board access + scheduler)
+        NonogramRowLogic rowLogic = RowColouringHelperImplUtils.buildRowLogic(logic);
+
+        // snapshot before
+        List<String> before = new ArrayList<>(board.get(9));
+        assertEquals(List.of("-", "-", "-", "-", "X", "-", "O", "O", "O", "-", "-", "-", "-", "-", "-"), before);
+
+        // when
+        rowLogic.getRowColouringHelper().extendColouredFieldsNearXToMaximumPossibleLengthInRow(9);
+
+        // then — only right side extended; positions (9,9)–(9,13) coloured
+        List<String> expectedAfter = List.of("-", "-", "-", "-", "X", "-", "O", "O", "O", "O", "O", "O", "O", "O", "-");
+        assertEquals(expectedAfter, board.get(rowToCheck));
+
+        // Optional: assert we covered all three branches
+        // - extended = true (positions 9–13)
+        // - notExtended = true (none to extend after)
+        // - distanceFromX == 0 (for leftmost parts)
     }
 }

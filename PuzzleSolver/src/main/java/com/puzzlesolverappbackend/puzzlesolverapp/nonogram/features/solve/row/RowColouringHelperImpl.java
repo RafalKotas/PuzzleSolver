@@ -261,18 +261,18 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
                     nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx)
             );
 
-            if (possibleLengths.isEmpty()) {
+            if (possibleLengths.isEmpty()) { // TODO - trial and error method
                 nonogramRowLogic.getNonogramState().invalidateSolution();
                 break;
             }
 
             int minSequenceLength = Collections.min(possibleLengths);
-            int distFromX = ColouringHelper.findDistanceFromRightX(
+            int distanceFromX = ColouringHelper.findDistanceFromRightX(
                     nonogramRowLogic.getNonogramSolutionBoard(), rowIdx, colouredRange, minSequenceLength
             );
 
-            if (distFromX > 0) {
-                int minExtensionIdx = colouredRange.get(0) + distFromX - minSequenceLength;
+            if (distanceFromX > 0) {
+                int minExtensionIdx = colouredRange.get(0) + distanceFromX - minSequenceLength;
                 boolean extended = ColouringHelper.extendToLeft(
                         nonogramRowLogic,
                         colouringHelper,
@@ -328,7 +328,7 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
                     nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx)
             );
 
-            if (possibleLengths.isEmpty()) {
+            if (possibleLengths.isEmpty()) { // TODO - trial and error method
                 nonogramRowLogic.getNonogramState().invalidateSolution();
                 break;
             }
@@ -353,6 +353,12 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
             }
 
             colIdx = colouredRange.get(1) + 1;
+            /* TODO - jump to last coloured field when extending (o06041)
+                colouredRange = [6, 8]
+                before = [-, -, -, -, X, -, O, O, O, -, -, -, -, -, -]
+                after  = [-, -, -, -, X, -, O, O, O, O, O, O, O, O, -]
+                colIdx = 9(!) -> 13(last coloured when extending) + 1
+             */
         }
 
         if (anyGlobalFieldColoured) {
