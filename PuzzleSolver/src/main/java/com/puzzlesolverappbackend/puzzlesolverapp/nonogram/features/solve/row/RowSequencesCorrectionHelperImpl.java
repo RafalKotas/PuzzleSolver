@@ -62,7 +62,9 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
 
         for (int seqIdx = 0; seqIdx < ranges.size() - 1; seqIdx++) {
             int nextIdx = seqIdx + 1;
-            if (excludedIds.contains(nextIdx)) continue;
+            if (excludedIds.contains(nextIdx)) {
+                continue;
+            }
 
             List<Integer> updatedNext = excludedIds.contains(seqIdx)
                     ? SequenceRangeCorrectionHelper.calculateUpdatedNextSequenceRangeAfterExcludedSequence(ranges, fieldsNotToInclude, seqIdx, nextIdx)
@@ -101,7 +103,9 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
 
         for (int seqIdx = ranges.size() - 1; seqIdx > 0; seqIdx--) {
             int prevIdx = seqIdx - 1;
-            if (excludedIds.contains(prevIdx)) continue;
+            if (excludedIds.contains(prevIdx)) {
+                continue;
+            }
 
             List<Integer> updatedPrev = excludedIds.contains(seqIdx)
                     ? SequenceRangeCorrectionHelper.calculateUpdatedPreviousSequenceRangeAfterExcludedSequence(ranges, fieldsNotToInclude, seqIdx, prevIdx)
