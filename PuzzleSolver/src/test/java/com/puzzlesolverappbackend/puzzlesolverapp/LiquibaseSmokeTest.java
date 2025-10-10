@@ -24,6 +24,6 @@ class LiquibaseSmokeTest {
                 "SELECT COUNT(*) FROM information_schema.tables " +
                         "WHERE table_schema = DATABASE() AND table_name = 'akari'", Integer.class);
         assertThat(cnt).isNotNull();
-        assertThat(cnt).isGreaterThan(0); // akari table exists
+        assertThat(cnt).isPositive(); // akari table exists
     }
 }

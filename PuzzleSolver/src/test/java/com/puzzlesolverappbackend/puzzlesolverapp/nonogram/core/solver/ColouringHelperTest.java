@@ -361,7 +361,7 @@ class ColouringHelperTest {
         int resultOffset = ColouringHelper.findDistanceFromTopX(board, columnIdx, colouredRange, maxDist);
 
         // then
-        assertThat(resultOffset).isEqualTo(0);
+        assertThat(resultOffset).isZero();
     }
 
     @DisplayName("findDistanceFromBottomX - should return 0 when no 'X' found within maxDist below coloured range")
@@ -443,7 +443,7 @@ class ColouringHelperTest {
         int resultOffset = ColouringHelper.findDistanceFromBottomX(board, columnIdx, colouredRange, maxDist);
 
         // then
-        assertThat(resultOffset).isEqualTo(0);
+        assertThat(resultOffset).isZero();
     }
 
     // extendToTop
@@ -752,7 +752,7 @@ class ColouringHelperTest {
         int resultOffset = ColouringHelper.findDistanceFromLeftX(board, rowIdx, colouredRange, maxDist);
 
         // then
-        assertThat(resultOffset).isEqualTo(0);
+        assertThat(resultOffset).isZero();
     }
 
     @DisplayName("findDistanceFromRightX - should return 0 when no 'X' found within maxDist before coloured range")
@@ -835,7 +835,7 @@ class ColouringHelperTest {
         int resultOffset = ColouringHelper.findDistanceFromRightX(board, rowIdx, colouredRange, maxDist);
 
         // then
-        assertThat(resultOffset).isEqualTo(0);
+        assertThat(resultOffset).isZero();
     }
 
     // findColouredSequenceRangeLeft

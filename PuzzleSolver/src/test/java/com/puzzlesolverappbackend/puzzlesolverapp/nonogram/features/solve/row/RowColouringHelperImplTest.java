@@ -163,7 +163,7 @@ class RowColouringHelperImplTest {
         // then
         assertThat(logic.getNonogramSolutionBoard().get(rowIdx)).isEqualTo(initialRow);
         assertThat(logic.getRowsSequencesRanges().get(rowIdx)).isEqualTo(ranges);
-        assertThat(logic.getLogs().size()).isEqualTo(logsBefore);
+        assertThat(logic.getLogs()).hasSize(logsBefore);
     }
 
     @DisplayName("Should colour fields when X would force overlength — o07836 row 6")
@@ -193,7 +193,7 @@ class RowColouringHelperImplTest {
         // then
         List<String> expectedRow = List.of("-", "-", "O", "O", "-", "-", "O", "O", "-", "-");
         assertThat(logic.getNonogramSolutionBoard().get(rowIdx)).isEqualTo(expectedRow);
-        assertThat(logic.getLogs().size()).isEqualTo(logsBefore + 1);
+        assertThat(logic.getLogs()).hasSize(logsBefore + 1);
     }
 
     @DisplayName("extendColouredFieldsToLeftNearX - only extending case")
