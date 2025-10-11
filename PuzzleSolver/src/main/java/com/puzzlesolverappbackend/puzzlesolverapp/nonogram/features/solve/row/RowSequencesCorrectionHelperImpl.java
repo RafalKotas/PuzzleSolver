@@ -39,7 +39,7 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
             nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(rowField, NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_ROW);
 
             String tmpLog = SequencesRangesCorrectionLogHelper.generateLog(
-                    true, // isRow
+                    true,
                     rowIdx,
                     nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
                     nonogramRowLogic.getRowsFieldsNotToInclude().get(rowIdx),
@@ -152,7 +152,7 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
                     NonogramSolveAction.CORRECT_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS_IN_ROW);
 
             String tmpLog = SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.generateLog(
-                    true, // isRow
+                    true,
                     rowIdx,
                     nonogramRowLogic.getNonogramBoardRow(rowIdx),
                     nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
@@ -169,6 +169,9 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
         var lengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
         boolean changed = false;
 
+        if (lengths.isEmpty()) return false;
+        if (ranges.isEmpty())  return false;
+
         int seqIdx = 0;
         int seqLength = lengths.get(seqIdx);
         int columnIdx = 0;
@@ -181,7 +184,7 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
                 continue;
             }
 
-            List<Integer> oldRange = ranges.get(seqIdx);
+            List<Integer> oldRange = List.copyOf(ranges.get(seqIdx));
             List<Integer> updatedRange = RangeCorrectionHelper.updatedSequenceRangeWhenMetColouredField(
                     oldRange.get(0), oldRange.get(1), columnIdx, seqLength, true);
 
@@ -211,6 +214,9 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
         var ranges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
         var lengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
         boolean changed = false;
+
+        if (lengths.isEmpty()) return false;
+        if (ranges.isEmpty())  return false;
 
         int seqIdx = lengths.size() - 1;
         int seqLength = lengths.get(seqIdx);
@@ -330,7 +336,7 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
             List<List<Integer>> updatedSequencesRanges = deepCopy(rowSequencesRanges);
 
             String tmpLog = SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper.generateLog(
-                    true, // isRow
+                    true,
                     rowIdx,
                     rowSequencesLengths,
                     nonogramRowLogic.getNonogramSolutionBoard().get(rowIdx),
@@ -415,7 +421,7 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
             if (possible == null || possible.isEmpty()) continue;
 
             int seqIdx = possible.size() == 1 ? possible.get(0)
-                    : possible.stream().min(Comparator.naturalOrder()).orElse(possible.get(0));  // fallback
+                    : possible.stream().min(Comparator.naturalOrder()).orElse(possible.get(0));
 
             List<Integer> seqRange = sequenceRanges.get(seqIdx);
             int seqLen = sequenceLengths.get(seqIdx);
@@ -453,7 +459,7 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
             List<Integer> updatedRange = RangeCorrectionHelper.adjustRangeIfColouredAtEdges(
                     currentRange,
                     rowIdx,
-                    false, // isColumn == false → we're in row
+                    false,
                     nonogramRowLogic.getNonogramSolutionBoard(),
                     nonogramRowLogic.getNonogramRules().getWidth()
             );
@@ -471,7 +477,7 @@ public class RowSequencesCorrectionHelperImpl implements RowSequencesCorrectionH
             List<String> line = nonogramRowLogic.getNonogramSolutionBoard().get(rowIdx);
 
             String tmpLog = SequenceRangeCorrectionFromColouredEdgesLogHelper.generateLog(
-                    true, // isRow
+                    true,
                     rowIdx,
                     initialSequencesRanges,
                     updatedSequencesRanges,

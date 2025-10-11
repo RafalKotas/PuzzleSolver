@@ -540,13 +540,403 @@ class RowSequencesCorrectionHelperImplTest {
         // when
         subject.correctRowSequencesRanges(rowIdx);
 
-        // [[0, 7], [2, 9]] -> [[0, 7], [2, 9]] (9 - 1 - 1 = 7, !(7 < 7))
         verify(rowLogic, times(0)).updateRowSequenceRange(anyInt(), anyInt(), anyList());
 
         verify(state, times(0)).increaseMadeSteps();
         verify(scheduler, times(0)).scheduleActionsBasedOnField(any(), any());
         verify(rowLogic, times(0)).setTmpLog(anyString());
         verify(rowLogic, times(0)).addLog();
+    }
+
+    @DisplayName("correctRowSequencesRangesWhenMetColouredFieldFromLeft - should not enter to while loop when lengths size is zero (theoretical case)")
+    @Test
+    void shouldNotEnterToWhileLoopWhenLengthsSizeIsZero() {
+        // given
+        int rowIdx = 0;
+        int height = 1;
+        prepareData(height);
+
+        rowSeqLengths.set(rowIdx, List.of());
+        List<List<Integer>> rangesRow0 = new ArrayList<>();
+        rangesRow0.add(new ArrayList<>(List.of(-1, -1)));
+        rangesAllRows.set(rowIdx, rangesRow0);
+        rowsFieldsNotToInclude.set(rowIdx, new ArrayList<>());
+        rowsExcludedIds.set(rowIdx, new ArrayList<>(List.of()));
+
+        // stubs
+        when(rules.getRowSequencesLengths()).thenReturn(rowSeqLengths);
+        when(rowLogic.getRowsSequencesRanges()).thenReturn(rangesAllRows);
+
+        // when
+        subject.correctRowSequencesRangesWhenMetColouredField(rowIdx);
+
+        // then
+        verify(rowLogic, times(3)).getRowsSequencesRanges();
+        verify(rules, times(2)).getRowSequencesLengths();
+        verify(rules, times(0)).getWidth();
+        verify(rowLogic, times(0)).getNonogramSolutionBoard();
+        verify(rowLogic, times(0)).updateRowSequenceRange(anyInt(), anyInt(), anyList());
+        verify(rowLogic, times(0)).getBoardAccessHelper();
+        verify(nonogramBoardAccessHelper, times(0)).isRowRangeColoured(anyInt(), anyList());
+        verify(rowLogic, times(0)).excludeSequenceInRow(anyInt(), anyInt());
+        verify(state, times(0)).increaseMadeSteps();
+        verify(scheduler, times(0)).scheduleActionsBasedOnField(any(), any());
+        verify(rowLogic, times(0)).setTmpLog(anyString());
+        verify(rowLogic, times(0)).addLog();
+    }
+
+    @DisplayName("correctRowSequencesRangesWhenMetColouredFieldFromLeft - should not enter to while loop when ranges size is zero (theoretical case)")
+    @Test
+    void shouldNotEnterToWhileLoopWhenRangesSizeIsZero() {
+        // given
+        int rowIdx = 0;
+        int height = 1;
+        prepareData(height);
+
+        rowSeqLengths.set(rowIdx, List.of(0));
+        List<List<Integer>> rangesRow0 = new ArrayList<>();
+        rangesAllRows.set(rowIdx, rangesRow0);
+        rowsFieldsNotToInclude.set(rowIdx, new ArrayList<>());
+        rowsExcludedIds.set(rowIdx, new ArrayList<>(List.of()));
+
+        // stubs
+        when(rules.getRowSequencesLengths()).thenReturn(rowSeqLengths);
+        when(rowLogic.getRowsSequencesRanges()).thenReturn(rangesAllRows);
+
+        // when
+        subject.correctRowSequencesRangesWhenMetColouredField(rowIdx);
+
+        // then
+        verify(rowLogic, times(3)).getRowsSequencesRanges();
+        verify(rules, times(2)).getRowSequencesLengths();
+        verify(rules, times(0)).getWidth();
+        verify(rowLogic, times(0)).getNonogramSolutionBoard();
+        verify(rowLogic, times(0)).updateRowSequenceRange(anyInt(), anyInt(), anyList());
+        verify(rowLogic, times(0)).getBoardAccessHelper();
+        verify(nonogramBoardAccessHelper, times(0)).isRowRangeColoured(anyInt(), anyList());
+        verify(rowLogic, times(0)).excludeSequenceInRow(anyInt(), anyInt());
+        verify(state, times(0)).increaseMadeSteps();
+        verify(scheduler, times(0)).scheduleActionsBasedOnField(any(), any());
+        verify(rowLogic, times(0)).setTmpLog(anyString());
+        verify(rowLogic, times(0)).addLog();
+    }
+
+    @DisplayName("correctRowSequencesRangesWhenMetColouredField FromLeft & FromRight - should enter to while loop - enter continue and update")
+    @Test // o06005
+    void shouldEnterToWhileLoopContinueUpdate() {
+        // given
+        int rowIdx = 0;
+        int height = 10;
+        prepareData(height);
+
+        rowSeqLengths.set(rowIdx, List.of(1, 1, 1));
+        List<List<Integer>> rangesRow0 = new ArrayList<>();
+        rangesRow0.add(new ArrayList<>(List.of(0, 5)));
+        rangesRow0.add(new ArrayList<>(List.of(2, 7)));
+        rangesRow0.add(new ArrayList<>(List.of(4, 9)));
+        rangesAllRows.set(rowIdx, rangesRow0);
+        rowsFieldsNotToInclude.set(rowIdx, new ArrayList<>());
+        rowsExcludedIds.set(rowIdx, new ArrayList<>(List.of()));
+        List<List<String>> board = new ArrayList<>(List.of(
+                new ArrayList<>(List.of("-", "-", "O", "-", "-", "-", "O", "-", "-", "-")),
+                new ArrayList<>(List.of("-", "-", "O", "-", "-", "-", "O", "-", "-", "-")),
+                new ArrayList<>(List.of("-", "-", "O", "O", "O", "O", "O", "-", "-", "-")),
+                new ArrayList<>(List.of("O", "O", "O", "O", "O", "O", "O", "O", "O", "-")),
+                new ArrayList<>(List.of("O", "O", "O", "O", "O", "O", "O", "O", "O", "-")),
+                new ArrayList<>(List.of("O", "O", "O", "O", "O", "O", "O", "-", "O", "-")),
+                new ArrayList<>(List.of("O", "O", "O", "O", "O", "O", "O", "O", "O", "-")),
+                new ArrayList<>(List.of("O", "O", "O", "O", "O", "O", "O", "O", "O", "O")),
+                new ArrayList<>(List.of("-", "-", "X", "-", "-", "-", "O", "-", "-", "-")),
+                new ArrayList<>(List.of("-", "-", "O", "-", "-", "-", "O", "-", "-", "-"))
+        ));
+
+        // stubs
+        when(rowLogic.getNonogramState()).thenReturn(state);
+        when(rowLogic.getActionScheduler()).thenReturn(scheduler);
+        when(rowLogic.getRowsSequencesRanges()).thenReturn(rangesAllRows);
+        when(rowLogic.getNonogramSolutionBoard()).thenReturn(board);
+        when(rules.getWidth()).thenReturn(10);
+        when(rules.getRowSequencesLengths()).thenReturn(rowSeqLengths);
+
+
+        // when
+        subject.correctRowSequencesRangesWhenMetColouredField(rowIdx);
+
+        // then
+        verify(rowLogic, times(4)).getRowsSequencesRanges();
+        verify(rules, times(3)).getRowSequencesLengths();
+        verify(rules, times(12)).getWidth();
+        verify(rowLogic, times(20)).getNonogramSolutionBoard();
+        verify(rowLogic, times(3)).updateRowSequenceRange(anyInt(), anyInt(), anyList());
+        verify(rowLogic, times(0)).getBoardAccessHelper();
+        verify(rowLogic, times(0)).excludeSequenceInRow(anyInt(), anyInt());
+        verify(state, times(1)).increaseMadeSteps();
+        verify(scheduler, times(1)).scheduleActionsBasedOnField(any(), any());
+        verify(rowLogic, times(1)).setTmpLog(anyString());
+        verify(rowLogic, times(1)).addLog();
+    }
+
+    @DisplayName("correctRowSequencesRangesWhenMetColouredField FromLeft - should try to exclude when range matches length and is coloured")
+    @Test
+    void shouldTryToExcludeSequenceFromLeft() {
+        // given
+        int rowIdx = 4;
+        int height  = 10;
+        prepareData(height);
+
+        rowSeqLengths.set(rowIdx, List.of(9));
+
+        List<List<Integer>> rangesRow4 = new ArrayList<>();
+        rangesRow4.add(new ArrayList<>(List.of(0, 9)));
+        rangesAllRows.set(rowIdx, rangesRow4);
+
+        rowsFieldsNotToInclude.set(rowIdx, new ArrayList<>());
+        rowsExcludedIds.set(rowIdx, new ArrayList<>());
+
+        List<List<String>> board = new ArrayList<>(List.of(
+                new ArrayList<>(List.of("-", "-", "O", "-", "-", "-", "O", "-", "-", "-")),
+                new ArrayList<>(List.of("-", "-", "O", "-", "-", "-", "O", "-", "-", "-")),
+                new ArrayList<>(List.of("-", "-", "O", "O", "O", "O", "O", "-", "-", "-")),
+                new ArrayList<>(List.of("O", "O", "O", "O", "O", "O", "O", "O", "O", "-")),
+                new ArrayList<>(List.of("O", "O", "O", "O", "O", "O", "O", "O", "O", "-")),
+                new ArrayList<>(List.of("O", "O", "O", "O", "O", "O", "O", "-", "O", "-")),
+                new ArrayList<>(List.of("O", "O", "O", "O", "O", "O", "O", "O", "O", "-")),
+                new ArrayList<>(List.of("O", "O", "O", "O", "O", "O", "O", "O", "O", "O")),
+                new ArrayList<>(List.of("-", "-", "X", "-", "-", "-", "O", "-", "-", "-")),
+                new ArrayList<>(List.of("-", "-", "O", "-", "-", "-", "O", "-", "-", "-"))
+        ));
+
+        when(rules.getWidth()).thenReturn(10);
+        when(rules.getRowSequencesLengths()).thenReturn(rowSeqLengths);
+
+        when(rowLogic.getRowsSequencesRanges()).thenReturn(rangesAllRows);
+        when(rowLogic.getNonogramSolutionBoard()).thenReturn(board);
+        when(rowLogic.getBoardAccessHelper()).thenReturn(nonogramBoardAccessHelper);
+        when(rowLogic.getNonogramState()).thenReturn(state);
+        when(rowLogic.getActionScheduler()).thenReturn(scheduler);
+
+        when(nonogramBoardAccessHelper.isRowRangeColoured(eq(rowIdx), anyList())).thenReturn(true);
+
+        doAnswer(inv -> {
+            int r = inv.getArgument(0, Integer.class);
+            int s = inv.getArgument(1, Integer.class);
+            @SuppressWarnings("unchecked") List<Integer> nr = inv.getArgument(2, List.class);
+            rangesAllRows.get(r).set(s, new ArrayList<>(nr));
+            return null;
+        }).when(rowLogic).updateRowSequenceRange(anyInt(), anyInt(), anyList());
+
+        // when
+        subject.correctRowSequencesRangesWhenMetColouredField(rowIdx);
+
+        // then
+        verify(rowLogic).updateRowSequenceRange(rowIdx, 0, List.of(0, 8));
+        verify(nonogramBoardAccessHelper, times(1)).isRowRangeColoured(eq(rowIdx), eq(List.of(0, 8)));
+        verify(rowLogic).excludeSequenceInRow(rowIdx, 0);
+        verify(state, atLeastOnce()).increaseMadeSteps();
+
+        assertEquals(List.of(0, 8), rangesAllRows.get(rowIdx).get(0));
+    }
+
+    @DisplayName("correctRowSequencesRangesWhenMetColouredField FromLeft - should not try to exclude when updated range is not coloured")
+    @Test
+    void shouldNotTryToExcludeBecauseOfRowRangeNotColouredFromLeft() {
+        // given
+        int rowIdx = 9;
+        int width = 10;
+        prepareData(width);
+
+        // One row with two sequences: lengths 5 and 2
+        rowSeqLengths.set(rowIdx, List.of(5, 2));
+
+        // Initial ranges for the row
+        List<List<Integer>> r9 = new ArrayList<>();
+        r9.add(new ArrayList<>(List.of(0, 6)));
+        r9.add(new ArrayList<>(List.of(6, 9)));
+        rangesAllRows.set(rowIdx, r9);
+
+        rowsFieldsNotToInclude.set(rowIdx, new ArrayList<>());
+        rowsExcludedIds.set(rowIdx, new ArrayList<>());
+
+        // 10x10 board from provided data
+        List<List<String>> board = List.of(
+                new ArrayList<>(List.of("X","X","X","X","-","X","-","-","-","-")),
+                new ArrayList<>(List.of("X","-","X","O","O","-","-","-","-","-")),
+                new ArrayList<>(List.of("X","X","X","O","O","O","O","O","X","X")),
+                new ArrayList<>(List.of("X","X","X","O","O","O","O","X","X","O")),
+                new ArrayList<>(List.of("X","-","O","O","O","-","-","-","-","O")),
+                new ArrayList<>(List.of("X","O","O","O","-","X","X","X","X","O")),
+                new ArrayList<>(List.of("X","-","O","O","X","X","O","O","X","X")),
+                new ArrayList<>(List.of("X","X","X","O","X","X","O","O","X","X")),
+                new ArrayList<>(List.of("O","X","O","O","X","X","-","-","-","-")),
+                new ArrayList<>(List.of("O","-","O","O","O","X","-","-","-","-"))
+        );
+
+        // mocks
+        when(rules.getWidth()).thenReturn(width);
+        when(rules.getRowSequencesLengths()).thenReturn(rowSeqLengths);
+        when(rowLogic.getRowsSequencesRanges()).thenReturn(rangesAllRows);
+        when(rowLogic.getNonogramSolutionBoard()).thenReturn(board);
+        when(rowLogic.getBoardAccessHelper()).thenReturn(nonogramBoardAccessHelper);
+        when(rowLogic.getNonogramState()).thenReturn(state);
+        when(rowLogic.getActionScheduler()).thenReturn(scheduler);
+
+        // Range has correct length but is not fully coloured → A && !B
+        when(nonogramBoardAccessHelper.isRowRangeColoured(eq(rowIdx), anyList())).thenReturn(false);
+
+        // Simulate that updating a range actually modifies the in-memory structure
+        doAnswer(inv -> {
+            int r = inv.getArgument(0, Integer.class);
+            int s = inv.getArgument(1, Integer.class);
+            @SuppressWarnings("unchecked") List<Integer> nr = inv.getArgument(2, List.class);
+            rangesAllRows.get(r).set(s, new ArrayList<>(nr));
+            return null;
+        }).when(rowLogic).updateRowSequenceRange(anyInt(), anyInt(), anyList());
+
+        // when
+        subject.correctRowSequencesRangesWhenMetColouredField(rowIdx);
+
+        // then
+        verify(rowLogic, atLeastOnce()).updateRowSequenceRange(eq(rowIdx), eq(0), anyList());
+        verify(nonogramBoardAccessHelper, atLeastOnce()).isRowRangeColoured(eq(rowIdx), anyList());
+        verify(rowLogic, never()).excludeSequenceInRow(eq(rowIdx), anyInt());
+
+        // Since at least one range was updated, logging and scheduling should occur
+        verify(state, times(1)).increaseMadeSteps();
+        verify(scheduler, times(1)).scheduleActionsBasedOnField(any(Field.class),
+                eq(NonogramSolveAction.CORRECT_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS_IN_ROW));
+        verify(rowLogic, times(1)).setTmpLog(anyString());
+        verify(rowLogic, times(1)).addLog();
+
+        // Optional assertion: updated range should have exact length 5
+        List<Integer> updated = rangesAllRows.get(rowIdx).get(0);
+        int updatedLen = updated.get(1) - updated.get(0) + 1;
+        assertEquals(5, updatedLen);
+    }
+
+    @DisplayName("correctRowSequencesRangesWhenMetColouredField FromRight - should not try to exclude sequence if range is not coloured")
+    @Test // o06253
+    void shouldNotTryToExcludeSequenceIfRangeIsNotColouredFromRight() {
+        // given
+        int rowIdx = 0;
+        int height = 15;
+        prepareData(height);
+
+        rowSeqLengths.set(rowIdx, List.of(3, 2));
+        List<List<Integer>> rangesRow0 = new ArrayList<>();
+        rangesRow0.add(new ArrayList<>(List.of(0, 6)));
+        rangesRow0.add(new ArrayList<>(List.of(8, 9)));
+        rangesAllRows.set(rowIdx, rangesRow0);
+        List<List<String>> board = new ArrayList<>(List.of(
+                new ArrayList<>(List.of("X", "X", "X", "X", "-", "O", "O", "X", "O", "O")),
+                new ArrayList<>(List.of("X", "X", "X", "X", "O", "X", "O", "X", "O", "X")),
+                new ArrayList<>(List.of("O", "O", "O", "X", "-", "O", "O", "O", "O", "O")),
+                new ArrayList<>(List.of("O", "O", "O", "O", "X", "O", "X", "O", "X", "O")),
+                new ArrayList<>(List.of("O", "X", "O", "O", "O", "O", "O", "O", "O", "O")),
+                new ArrayList<>(List.of("O", "O", "X", "O", "O", "O", "O", "X", "O", "O")),
+                new ArrayList<>(List.of("O", "O", "O", "X", "O", "O", "O", "O", "O", "X")),
+                new ArrayList<>(List.of("X", "O", "O", "O", "O", "O", "O", "O", "X", "X")),
+                new ArrayList<>(List.of("-", "X", "X", "O", "O", "O", "O", "O", "X", "X")),
+                new ArrayList<>(List.of("-", "-", "O", "O", "O", "O", "O", "O", "-", "X")),
+                new ArrayList<>(List.of("-", "O", "O", "X", "O", "O", "O", "X", "-", "X")),
+                new ArrayList<>(List.of("-", "-", "X", "-", "O", "O", "O", "-", "-", "X")),
+                new ArrayList<>(List.of("-", "X", "O", "O", "O", "X", "O", "O", "X", "X")),
+                new ArrayList<>(List.of("-", "-", "O", "-", "O", "-", "X", "O", "-", "X")),
+                new ArrayList<>(List.of("-", "-", "X", "X", "O", "O", "X", "-", "-", "X"))
+        ));
+
+        // stubs
+        when(rules.getRowSequencesLengths()).thenReturn(rowSeqLengths);
+        when(rowLogic.getRowsSequencesRanges()).thenReturn(rangesAllRows);
+        when(rowLogic.getNonogramState()).thenReturn(state);
+        when(rowLogic.getActionScheduler()).thenReturn(scheduler);
+        when(rowLogic.getBoardAccessHelper()).thenReturn(nonogramBoardAccessHelper);
+        when(rowLogic.getNonogramSolutionBoard()).thenReturn(board);
+        when(rules.getWidth()).thenReturn(10);
+
+        when(nonogramBoardAccessHelper.isRowRangeColoured(rowIdx, List.of(4, 6))).thenReturn(false);
+
+        // when
+        subject.correctRowSequencesRangesWhenMetColouredField(rowIdx);
+
+        // then
+        verify(rowLogic, times(4)).getRowsSequencesRanges(); // 1 common + 2x left/right + 1 common
+        verify(rules, times(3)).getRowSequencesLengths(); // 2x left/right + 1 common
+        verify(rules, times(9)).getWidth();
+        verify(rowLogic, times(10)).getNonogramSolutionBoard();
+        verify(rowLogic, times(0)).excludeSequenceInRow(anyInt(), anyInt());
+        verify(state, times(1)).increaseMadeSteps();
+        verify(scheduler, times(1)).scheduleActionsBasedOnField(any(), any());
+        verify(rowLogic, times(1)).setTmpLog(anyString());
+        verify(rowLogic, times(1)).addLog();
+    }
+
+    @DisplayName("correctRowSequencesRangesWhenMetColouredField From Right - should try to exclude when range matches length and is coloured")
+    @Test
+    void shouldTryToExcludeSequenceFromRight() {
+        // given
+        int rowIdx = 1;
+        int height = 10;
+        prepareData(height);
+
+        // lengths: [2, 2, 1]
+        rowSeqLengths.set(rowIdx, List.of(2, 2, 1));
+
+        // ranges row 1: [[0,1], [4,7], [7,9]]
+        List<List<Integer>> rangesRow1 = new ArrayList<>();
+        rangesRow1.add(new ArrayList<>(List.of(0, 1)));
+        rangesRow1.add(new ArrayList<>(List.of(4, 7)));
+        rangesRow1.add(new ArrayList<>(List.of(7, 9)));
+        rangesAllRows.set(rowIdx, rangesRow1);
+
+        rowsFieldsNotToInclude.set(rowIdx, new ArrayList<>());
+        rowsExcludedIds.set(rowIdx, new ArrayList<>());
+
+        // board
+        List<List<String>> board = new ArrayList<>(List.of(
+                new ArrayList<>(List.of("X","X","X","X","-","-","-","-","-","-")),
+                new ArrayList<>(List.of("O","O","X","X","-","-","-","-","-","O")),
+                new ArrayList<>(List.of("O","O","O","X","-","-","-","-","-","O")),
+                new ArrayList<>(List.of("O","O","O","X","-","-","-","-","-","-")),
+                new ArrayList<>(List.of("O","X","X","X","X","X","X","X","X","X")),
+                new ArrayList<>(List.of("X","X","X","X","-","X","X","-","-","X")),
+                new ArrayList<>(List.of("O","O","O","X","X","X","X","X","X","X")),
+                new ArrayList<>(List.of("O","O","O","O","O","O","O","O","O","X")),
+                new ArrayList<>(List.of("O","O","O","O","O","O","O","O","X","O")),
+                new ArrayList<>(List.of("O","O","O","O","O","O","O","O","X","O"))
+        ));
+
+        // rules / logic stubs
+        when(rules.getWidth()).thenReturn(10);
+        when(rules.getRowSequencesLengths()).thenReturn(rowSeqLengths);
+
+        when(rowLogic.getRowsSequencesRanges()).thenReturn(rangesAllRows);
+        when(rowLogic.getNonogramSolutionBoard()).thenReturn(board);
+        when(rowLogic.getBoardAccessHelper()).thenReturn(nonogramBoardAccessHelper);
+        when(rowLogic.getNonogramState()).thenReturn(state);
+        when(rowLogic.getActionScheduler()).thenReturn(scheduler);
+
+        lenient().when(nonogramBoardAccessHelper.isRowRangeColoured(anyInt(), anyList())).thenReturn(true);
+
+        // make updateRowSequenceRange mutate our backing list
+        doAnswer(inv -> {
+            int r = inv.getArgument(0, Integer.class);
+            int s = inv.getArgument(1, Integer.class);
+            @SuppressWarnings("unchecked")
+            List<Integer> nr = inv.getArgument(2, List.class);
+            rangesAllRows.get(r).set(s, new ArrayList<>(nr));
+            return null;
+        }).when(rowLogic).updateRowSequenceRange(anyInt(), anyInt(), anyList());
+
+        // when
+        subject.correctRowSequencesRangesWhenMetColouredField(rowIdx);
+
+        // then
+        verify(rowLogic).updateRowSequenceRange(rowIdx, 2, List.of(9, 9));
+        verify(nonogramBoardAccessHelper).isRowRangeColoured(eq(rowIdx), eq(List.of(9, 9)));
+        verify(rowLogic).excludeSequenceInRow(rowIdx, 2);
+        verify(state, atLeastOnce()).increaseMadeSteps();
+
+        assertEquals(List.of(9, 9), rangesAllRows.get(rowIdx).get(2));
     }
 
     private void prepareData(int height) {
