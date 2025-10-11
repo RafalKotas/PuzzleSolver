@@ -432,7 +432,7 @@ class RowSequencesCorrectionHelperImplTest {
         mockNonogramStateDependent();
         wireRowData(rowSeqLengths, rangesAllRows, rowsFieldsNotToInclude, rowsExcludedIds);
         when(rowLogic.getBoardAccessHelper()).thenReturn(nonogramBoardAccessHelper);
-        when(nonogramBoardAccessHelper.isRowRangeColoured(eq(rowIdx), eq(List.of(0, 1)))).thenReturn(true);
+        when(nonogramBoardAccessHelper.isRowRangeColoured(rowIdx, List.of(0, 1))).thenReturn(true);
 
         // when
         subject.correctRowSequencesRanges(rowIdx);
@@ -730,7 +730,7 @@ class RowSequencesCorrectionHelperImplTest {
 
         // then
         verify(rowLogic).updateRowSequenceRange(rowIdx, 0, List.of(0, 8));
-        verify(nonogramBoardAccessHelper, times(1)).isRowRangeColoured(eq(rowIdx), eq(List.of(0, 8)));
+        verify(nonogramBoardAccessHelper, times(1)).isRowRangeColoured(rowIdx, List.of(0, 8));
         verify(rowLogic).excludeSequenceInRow(rowIdx, 0);
         verify(state, atLeastOnce()).increaseMadeSteps();
 
@@ -932,7 +932,7 @@ class RowSequencesCorrectionHelperImplTest {
 
         // then
         verify(rowLogic).updateRowSequenceRange(rowIdx, 2, List.of(9, 9));
-        verify(nonogramBoardAccessHelper).isRowRangeColoured(eq(rowIdx), eq(List.of(9, 9)));
+        verify(nonogramBoardAccessHelper).isRowRangeColoured(rowIdx, List.of(9, 9));
         verify(rowLogic).excludeSequenceInRow(rowIdx, 2);
         verify(state, atLeastOnce()).increaseMadeSteps();
 
