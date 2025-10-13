@@ -262,8 +262,9 @@ class RowSequencesCorrectionHelperImplTest {
         verify(rowLogic, times(1)).addLog();
     }
 
+    // 1
     @DisplayName("correctRowSequencesRanges(correctFromRight) - should continue when prevIdx(3) is excluded")
-    @Test // o06005
+    @Test // o06005 // 1st parametrized
     void shouldContinueWhenPrevSeqIdxIsExcluded() {
         // given
         int rowIdx = 1;
@@ -297,73 +298,7 @@ class RowSequencesCorrectionHelperImplTest {
         verify(rowLogic, times(1)).addLog();
     }
 
-    @DisplayName("correctRowSequencesRanges(correctFromRight) - should calculate updated previous sequence range - seqIdx(1) is not excluded")
-    @Test // o06005
-    void shouldCalculateUpdatedPreviousSequenceRangeAfterIncludedSequenceIfSeqIdxIsNotExcluded() {
-        // given
-        int rowIdx = 8;
-        int height = 10;
-        prepareData(height);
-
-        rowSeqLengths.set(rowIdx, List.of(1, 1));
-        List<List<Integer>> rangesRow8 = new ArrayList<>();
-        rangesRow8.add(new ArrayList<>(List.of(0, 7)));
-        rangesRow8.add(new ArrayList<>(List.of(2, 9)));
-        rangesAllRows.set(rowIdx, rangesRow8);
-        rowsFieldsNotToInclude.set(rowIdx, new ArrayList<>(2));
-        rowsExcludedIds.set(rowIdx, new ArrayList<>(List.of()));
-
-        // stubs
-        wireRowData(rowSeqLengths, rangesAllRows, rowsFieldsNotToInclude, rowsExcludedIds);
-
-        // when
-        subject.correctRowSequencesRanges(rowIdx);
-
-        // then
-        verify(rowLogic, times(0)).updateRowSequenceRange(anyInt(), anyInt(), anyList());
-
-        verify(state, times(0)).increaseMadeSteps();
-        verify(scheduler, times(0)).scheduleActionsBasedOnField(any(), any());
-        verify(rowLogic, times(0)).setTmpLog(anyString());
-        verify(rowLogic, times(0)).addLog();
-    }
-
-    @DisplayName("correctRowSequencesRanges(correctFromRight) - should calculate updated previous sequence range - seqIdx(3) is excluded")
-    @Test // o06005
-    void shouldCalculateUpdatedPreviousSequenceRangeAfterIncludedSequenceIfSeqIdxIsExcluded() {
-        // given
-        int rowIdx = 1;
-        int height = 10;
-        prepareData(height);
-
-        rowSeqLengths.set(rowIdx, List.of(1, 1, 1, 1, 1));
-        List<List<Integer>> rangesRow1 = new ArrayList<>();
-        rangesRow1.add(new ArrayList<>(List.of(0, 1)));
-        rangesRow1.add(new ArrayList<>(List.of(2, 2)));
-        rangesRow1.add(new ArrayList<>(List.of(4, 5)));
-        rangesRow1.add(new ArrayList<>(List.of(6, 6)));
-        rangesRow1.add(new ArrayList<>(List.of(8, 9)));
-        rangesAllRows.set(rowIdx, rangesRow1);
-        rowsFieldsNotToInclude.set(rowIdx, new ArrayList<>(2));
-        rowsExcludedIds.set(rowIdx, new ArrayList<>(List.of(1, 3)));
-
-        // stubs
-        mockNonogramStateDependent();
-        wireRowData(rowSeqLengths, rangesAllRows, rowsFieldsNotToInclude, rowsExcludedIds);
-
-        // when
-        subject.correctRowSequencesRanges(rowIdx);
-
-        // then
-        verify(rowLogic, times(2)).updateRowSequenceRange(anyInt(), anyInt(), anyList());
-
-        verify(state, times(1)).increaseMadeSteps();
-        verify(scheduler, times(1)).scheduleActionsBasedOnField(any(), any());
-        verify(rowLogic, times(1)).setTmpLog(anyString());
-        verify(rowLogic, times(1)).addLog();
-    }
-
-    /*
+        /*
         A = !oldRange.get(1).equals(newRange.get(1));
         B = rangeLength(newRange) == lengths.get(sequenceIdx);
         C = nonogramRowLogic.getBoardAccessHelper().isRowRangeColoured(rowIdx, newRange);
@@ -376,7 +311,7 @@ class RowSequencesCorrectionHelperImplTest {
      */
 
     @DisplayName("correctRowSequencesRanges (tryCorrectFromRight) - updateRowSequenceRange when old and new ranges second elements differ")
-    @Test // 1. A (o06005)
+    @Test // 1. A (o06005) // 2nd parametrized
     void tryCorrectFromRightShouldUpdateRowSequenceRange() {
         // given
         int rowIdx = 1;
@@ -449,7 +384,7 @@ class RowSequencesCorrectionHelperImplTest {
     }
 
     @DisplayName("correctRowSequencesRanges (tryCorrectFromRight) - updateRowSequenceRange with only first excluding condition met")
-    @Test // 3. A && B && !C
+    @Test // 3. A && B && !C // 3rd parametrized
     void tryCorrectFromRightShouldUpdateRowSequenceRangeWithFirstExcludingConditionMetSecondExcludingConditionNotMet() {
         // given
         int rowIdx = 1;
@@ -475,7 +410,6 @@ class RowSequencesCorrectionHelperImplTest {
         subject.correctRowSequencesRanges(rowIdx);
 
         // then
-        // [0, 1] -> [0, 0], [4, 5] > [4, 4]
         verify(rowLogic, times(2)).updateRowSequenceRange(anyInt(), anyInt(), anyList());
 
         verify(state, times(1)).increaseMadeSteps();
@@ -546,6 +480,72 @@ class RowSequencesCorrectionHelperImplTest {
         verify(scheduler, times(0)).scheduleActionsBasedOnField(any(), any());
         verify(rowLogic, times(0)).setTmpLog(anyString());
         verify(rowLogic, times(0)).addLog();
+    }
+
+    @DisplayName("correctRowSequencesRanges(correctFromRight) - should calculate updated previous sequence range - seqIdx(1) is not excluded")
+    @Test // o06005
+    void shouldCalculateUpdatedPreviousSequenceRangeAfterIncludedSequenceIfSeqIdxIsNotExcluded() {
+        // given
+        int rowIdx = 8;
+        int height = 10;
+        prepareData(height);
+
+        rowSeqLengths.set(rowIdx, List.of(1, 1));
+        List<List<Integer>> rangesRow8 = new ArrayList<>();
+        rangesRow8.add(new ArrayList<>(List.of(0, 7)));
+        rangesRow8.add(new ArrayList<>(List.of(2, 9)));
+        rangesAllRows.set(rowIdx, rangesRow8);
+        rowsFieldsNotToInclude.set(rowIdx, new ArrayList<>(2));
+        rowsExcludedIds.set(rowIdx, new ArrayList<>(List.of()));
+
+        // stubs
+        wireRowData(rowSeqLengths, rangesAllRows, rowsFieldsNotToInclude, rowsExcludedIds);
+
+        // when
+        subject.correctRowSequencesRanges(rowIdx);
+
+        // then
+        verify(rowLogic, times(0)).updateRowSequenceRange(anyInt(), anyInt(), anyList());
+
+        verify(state, times(0)).increaseMadeSteps();
+        verify(scheduler, times(0)).scheduleActionsBasedOnField(any(), any());
+        verify(rowLogic, times(0)).setTmpLog(anyString());
+        verify(rowLogic, times(0)).addLog();
+    }
+
+    @DisplayName("correctRowSequencesRanges(correctFromRight) - should calculate updated previous sequence range - seqIdx(3) is excluded")
+    @Test // o06005
+    void shouldCalculateUpdatedPreviousSequenceRangeAfterIncludedSequenceIfSeqIdxIsExcluded() {
+        // given
+        int rowIdx = 1;
+        int height = 10;
+        prepareData(height);
+
+        rowSeqLengths.set(rowIdx, List.of(1, 1, 1, 1, 1));
+        List<List<Integer>> rangesRow1 = new ArrayList<>();
+        rangesRow1.add(new ArrayList<>(List.of(0, 1)));
+        rangesRow1.add(new ArrayList<>(List.of(2, 2)));
+        rangesRow1.add(new ArrayList<>(List.of(4, 5)));
+        rangesRow1.add(new ArrayList<>(List.of(6, 6)));
+        rangesRow1.add(new ArrayList<>(List.of(8, 9)));
+        rangesAllRows.set(rowIdx, rangesRow1);
+        rowsFieldsNotToInclude.set(rowIdx, new ArrayList<>(2));
+        rowsExcludedIds.set(rowIdx, new ArrayList<>(List.of(1, 3)));
+
+        // stubs
+        mockNonogramStateDependent();
+        wireRowData(rowSeqLengths, rangesAllRows, rowsFieldsNotToInclude, rowsExcludedIds);
+
+        // when
+        subject.correctRowSequencesRanges(rowIdx);
+
+        // then
+        verify(rowLogic, times(2)).updateRowSequenceRange(anyInt(), anyInt(), anyList());
+
+        verify(state, times(1)).increaseMadeSteps();
+        verify(scheduler, times(1)).scheduleActionsBasedOnField(any(), any());
+        verify(rowLogic, times(1)).setTmpLog(anyString());
+        verify(rowLogic, times(1)).addLog();
     }
 
     @DisplayName("correctRowSequencesRangesWhenMetColouredFieldFromLeft - should not enter to while loop when lengths size is zero (theoretical case)")
@@ -859,8 +859,8 @@ class RowSequencesCorrectionHelperImplTest {
         subject.correctRowSequencesRangesWhenMetColouredField(rowIdx);
 
         // then
-        verify(rowLogic, times(4)).getRowsSequencesRanges(); // 1 common + 2x left/right + 1 common
-        verify(rules, times(3)).getRowSequencesLengths(); // 2x left/right + 1 common
+        verify(rowLogic, times(4)).getRowsSequencesRanges();
+        verify(rules, times(3)).getRowSequencesLengths();
         verify(rules, times(9)).getWidth();
         verify(rowLogic, times(10)).getNonogramSolutionBoard();
         verify(rowLogic, times(0)).excludeSequenceInRow(anyInt(), anyInt());
