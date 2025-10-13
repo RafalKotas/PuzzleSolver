@@ -17,7 +17,7 @@ public class LogFormatUtils {
 
     // Pattern to match an inner integer list: [0, 14], [3, 16], ...
     private static final Pattern INNER_LIST = Pattern.compile(
-            "\\[(\\s*-?\\d+(?:\\s*,\\s*-?\\d+)*)\\]"
+            "\\[\\s*(?<body>-?\\d++(?:(?>\\s*,\\s*-?\\d++))*)\\s*\\]"
     );
 
     // =====================================================================================
@@ -29,7 +29,7 @@ public class LogFormatUtils {
      * to a mutable, deep-copied List<List<Integer>> structure.
      */
     public static List<List<Integer>> toMutableRangesList(String arrayLiteral) {
-        if (arrayLiteral == null) throw new IllegalArgumentException("arrayLiteral is null");
+        throwIllegalArgumentExceptionIfArrayIsNull(arrayLiteral);
         String s = arrayLiteral.trim();
         if (!s.startsWith("[[") || !s.endsWith("]]")) {
             throw new IllegalArgumentException("Unsupported format (expected [[...]]): " + arrayLiteral);
@@ -37,16 +37,14 @@ public class LogFormatUtils {
 
         List<List<Integer>> result = new ArrayList<>();
         Matcher m = INNER_LIST.matcher(s);
-
         while (m.find()) {
-            String body = m.group(1); // e.g. "0, 14"
+            String body = m.group("body"); // e.g. "0, 14"
             String[] parts = body.split(",");
             List<Integer> inner = new ArrayList<>(parts.length);
             for (String p : parts) {
                 String t = p.trim();
                 if (!t.isEmpty()) inner.add(Integer.parseInt(t));
             }
-            // add mutable list
             result.add(inner);
         }
 
@@ -116,7 +114,7 @@ public class LogFormatUtils {
 
     /** Minimal parser for a flat integer list from a literal "[...]" (allows spaces). */
     private static List<Integer> parseFlatIntArrayLiteral(String arrayLiteral) {
-        if (arrayLiteral == null) throw new IllegalArgumentException("arrayLiteral is null");
+        throwIllegalArgumentExceptionIfArrayIsNull(arrayLiteral);
         String s = arrayLiteral.trim();
         if (!s.startsWith("[") || !s.endsWith("]")) {
             throw new IllegalArgumentException("Unsupported format (expected [...]): " + arrayLiteral);
@@ -127,7 +125,7 @@ public class LogFormatUtils {
                 .map(String::trim)
                 .filter(t -> !t.isEmpty())
                 .map(Integer::parseInt)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -135,7 +133,7 @@ public class LogFormatUtils {
      * into immutable List.of("-", "-", "X", "-", ...)
      */
     public static String toImmutableStringListLiteral(String arrayLiteral) {
-        if (arrayLiteral == null) throw new IllegalArgumentException("arrayLiteral is null");
+        throwIllegalArgumentExceptionIfArrayIsNull(arrayLiteral);
         String trimmed = arrayLiteral.trim();
         if (!trimmed.startsWith("[") || !trimmed.endsWith("]")) {
             throw new IllegalArgumentException("Unsupported format (expected [ ... ]): " + arrayLiteral);
@@ -143,7 +141,7 @@ public class LogFormatUtils {
 
         String body = trimmed.substring(1, trimmed.length() - 1).trim();
         if (body.isEmpty()) {
-            return LIST_OF_PREFIX;
+            return LIST_OF_PREFIX + ")";
         }
 
         String elements = Arrays.stream(body.split(","))
@@ -152,6 +150,10 @@ public class LogFormatUtils {
                 .collect(Collectors.joining(", "));
 
         return LIST_OF_PREFIX + elements + ")";
+    }
+
+    private void throwIllegalArgumentExceptionIfArrayIsNull(String arrayLiteral) {
+        if (arrayLiteral == null) throw new IllegalArgumentException("arrayLiteral is null");
     }
 
     /**
