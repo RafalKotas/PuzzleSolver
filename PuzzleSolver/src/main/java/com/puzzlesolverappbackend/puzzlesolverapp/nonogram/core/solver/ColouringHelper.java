@@ -34,22 +34,10 @@ public final class ColouringHelper {
     public static List<Integer> findPossibleSequenceLengths(List<List<Integer>> ranges, List<Integer> colouredRange, List<Integer> lengths) {
         List<Integer> result = new ArrayList<>();
         for (int i = 0; i < ranges.size(); i++) {
-            // old
-            /*
             if (rangeInsideAnotherRange(colouredRange, ranges.get(i))
                     && lengths.get(i) >= rangeLength(colouredRange)) {
                 result.add(lengths.get(i));
-            }*/
-            // temp
-            if (rangeInsideAnotherRange(colouredRange, ranges.get(i)) && lengths.get(i) >= rangeLength(colouredRange)) {
-                result.add(lengths.get(i));
-            } /*else if (rangeInsideAnotherRange(colouredRange, ranges.get(i)) && lengths.get(i) < rangeLength(colouredRange)) {
-                System.out.println("2nd case");
-            } else if (!rangeInsideAnotherRange(colouredRange, ranges.get(i)) && lengths.get(i) >= rangeLength(colouredRange)) {
-                System.out.println("3rd case");
-            } else if (!rangeInsideAnotherRange(colouredRange, ranges.get(i)) && lengths.get(i) < rangeLength(colouredRange)) {
-                System.out.println("4th case");
-            }*/
+            }
         }
         return result;
     }
@@ -130,6 +118,7 @@ public final class ColouringHelper {
                     anyFieldColoured = true;
                 }
             } catch (IndexOutOfBoundsException e) {
+                // TODO - trial and error method
                 onInvalidation.run();
             }
         }

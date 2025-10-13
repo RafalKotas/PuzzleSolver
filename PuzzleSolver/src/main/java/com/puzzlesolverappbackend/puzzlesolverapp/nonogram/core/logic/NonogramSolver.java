@@ -38,7 +38,7 @@ public class NonogramSolver {
     private static final boolean RECURSION_MODE_ENABLED = false;
 
     private static final boolean LOG_STEPS_SOLVER = false;
-    private static final boolean LOG_HEURISTICS_RESULTS = true;
+    private static final boolean LOG_HEURISTICS_RESULTS = false;
     private boolean printNodeCompletionPercentage = true;
 
     private boolean oneOfTwoDecisionsWrong;

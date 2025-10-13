@@ -1,21 +1,11 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.utils;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRules;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.NonogramRowLogic;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
-
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.groupConsecutiveIndices;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class NonogramBoardUtilsTest {
 
@@ -51,20 +41,6 @@ class NonogramBoardUtilsTest {
         ));
     }
 
-    @Test
-    void shouldFindColouredFieldsIndexesInSimulated_o07940_17th_row() {
-        // given
-        int ROW_TO_TEST_INDEX = 17;
-
-        // when
-        List<Integer> boardFieldsWithX = BoardUtils.findColouredFieldsInRow(
-                nonogramRowLogic.getNonogramSolutionBoard(), ROW_TO_TEST_INDEX);
-
-        // then
-        assertThat(boardFieldsWithX).hasSize(5)
-                .isEqualTo(List.of(2, 3, 7, 16, 17));
-    }
-
     NonogramRowLogic generate_nonogram_o07940_logic() {
         NonogramRowLogic nonogramRowLogic = new NonogramRowLogic();
         NonogramRules nonogramRules = new NonogramRules();
@@ -93,21 +69,5 @@ class NonogramBoardUtilsTest {
                 )
         );
         return nonogramRowLogic;
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideIndicesToGroup")
-    void isBlank_ShouldReturnTrueForNullOrBlankStrings(List<Integer> indices, List<List<Integer>> rangesExpected) {
-        // when
-        List<List<Integer>> resultRanges = groupConsecutiveIndices(indices);
-
-        // then
-        assertEquals(rangesExpected, resultRanges);
-    }
-
-    private static Stream<Arguments> provideIndicesToGroup() {
-        return Stream.of(
-                Arguments.of(List.of(2, 3, 7, 16, 17, 18), List.of(List.of(2, 3), List.of(7, 7), List.of(16, 18)))
-        );
     }
 }

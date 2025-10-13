@@ -117,7 +117,7 @@ class NonogramSolutionDecisionTest {
         assertNotEquals(d1, d3);
         // sanity: equals is reflexive and not equal to null
         assertEquals(d1, d1);
-        assertNotEquals(d1, null);
+        assertNotEquals(null, d1);
     }
 
     @Test
@@ -127,7 +127,7 @@ class NonogramSolutionDecisionTest {
         NonogramSolutionDecision decision = new NonogramSolutionDecision("X", new Field(1, 1));
 
         // when / then
-        assertNotEquals(decision, "some string");
+        assertNotEquals("some string", decision);
         assertNotEquals(decision, new Object());
     }
 

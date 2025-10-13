@@ -11,6 +11,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRu
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solutions.NonogramSolutionNode;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.config.GuessMode;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramCorrectnessIndicator;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.initializers.NonogramSolveInitializer;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.repository.NonogramRepository;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.NonogramService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -28,7 +31,8 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@SpringBootTest(properties = "nonogram.init.enabled=false")
+@ActiveProfiles("test")
 @Slf4j
 class NonogramSolverTest {
 
@@ -40,6 +44,9 @@ class NonogramSolverTest {
     @Autowired
     private NonogramService nonogramService;
 
+    @MockBean
+    private NonogramSolveInitializer initializer;
+
     private final GuessMode guessMode = GuessMode.DISABLED;
 
     @Disabled("Test temporarily skipped due to long runtime")
@@ -48,7 +55,7 @@ class NonogramSolverTest {
     void shouldSolveAllLogiNonogramsHeuristically() {
         Map<Double, List<String>> notSolvedByDifficulty = new HashMap<>();
 
-        for (double difficulty : List.of(1.0/*, 2.0, 3.0*/)) {
+        for (double difficulty : List.of(1.0, 2.0/*, 3.0*/)) {
             solveNonogramsAtDifficulty(difficulty, notSolvedByDifficulty);
         }
 

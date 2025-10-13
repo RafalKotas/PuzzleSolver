@@ -4,6 +4,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLo
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.NonogramColumnLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.RefreshableColumnHelper;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldColoured;
 
+@Getter
 public class NonogramBoardAccessHelper implements RefreshableColumnHelper {
 
     private final NonogramLogic logic;
