@@ -18,7 +18,12 @@
 		<sonar.exclusions>
 			**/NonogramSolveInitializer.java,
 			**/nonogram/core/guess/**,
-			**/nonogram/initializers/SymmetricNonogramLoggerInitializer.java
+			<!-- temporary exclusions -->
+			**/nonogram/helper/log/colouring/AssignmentConflictLogHelper.java
+			**/nonogram/helper/log/colouring/PlaceXsIfONearXWillMergeNearFieldsToTooLongColouredSequenceLogHelper.java
+			**/nonogram/helper/log/colouring/PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper.java
+			**/nonogram/helper/log/colouring/PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLogHelper.java
+			**/nonogram/helper/log/colouring/PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper.java
 		</sonar.exclusions>
 	</properties>
 	<dependencies>
@@ -168,7 +173,6 @@
 						<configuration>
 							<excludes>
 								<exclude>**/nonogram/core/guess/*</exclude>
-								<exclude>**/nonogram/initializers/SymmetricNonogramLoggerInitializer*</exclude>
 							</excludes>
 						</configuration>
 					</execution>
@@ -181,7 +185,6 @@
 						<configuration>
 							<excludes>
 								<exclude>**/nonogram/core/guess/*</exclude>
-								<exclude>**/nonogram/initializers/SymmetricNonogramLoggerInitializer*</exclude>
 							</excludes>
 						</configuration>
 					</execution>
