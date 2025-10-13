@@ -3,7 +3,6 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service;
 import com.puzzlesolverappbackend.puzzlesolverapp.common.CommonService;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.exception.NonogramFileReadException;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.exception.NonogramFileSaveException;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Nonogram;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramFileDetails;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramFiltersResponse;
@@ -30,6 +29,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -428,33 +428,42 @@ class NonogramServiceTest {
     @Test
     @DisplayName("Should save solution board successfully")
     void savesSuccessfully() throws Exception {
-        try (MockedStatic<com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.json.NonogramJsonWriter> mocked =
-                     mockStatic(com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.json.NonogramJsonWriter.class)) {
-
-            NonogramLogic dummyLogic = mock(NonogramLogic.class);
+        try (MockedStatic<NonogramJsonWriter> mocked =
+                     mockStatic(NonogramJsonWriter.class)) {
+            // given
+            List<List<String>> board = sampleBoard();
 
             // when
-            subject.saveSolutionToFile("myFile", dummyLogic);
+            subject.saveSolutionToFile("myFile", board);
 
             // then
-            mocked.verify(() -> saveSolutionBoard(eq(dummyLogic), contains("myFile")));
+            mocked.verify(() -> saveSolutionBoard(eq(board), contains("myFile")), times(1));
         }
     }
 
     @Test
     @DisplayName("Should throw NonogramFileSaveException when IOException occurs")
     void throwsWhenIOException() throws Exception {
-        try (MockedStatic<com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.json.NonogramJsonWriter> mocked =
-                     mockStatic(com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.json.NonogramJsonWriter.class)) {
+        try (MockedStatic<NonogramJsonWriter> mocked =
+                     mockStatic(NonogramJsonWriter.class)) {
+            // given
+            List<List<String>> board = sampleBoard();
 
-            NonogramLogic dummyLogic = mock(NonogramLogic.class);
-
-            mocked.when(() -> saveSolutionBoard(any(), anyString()))
+            mocked.when(() -> saveSolutionBoard(eq(board), anyString()))
                     .thenThrow(new IOException("disk full"));
 
             // when / then
             assertThrows(NonogramFileSaveException.class,
-                    () -> subject.saveSolutionToFile("badFile", dummyLogic));
+                    () -> subject.saveSolutionToFile("badFile", board));
+
+            mocked.verify(() -> saveSolutionBoard(eq(board), contains("badFile")), times(1));
         }
+    }
+
+    private static List<List<String>> sampleBoard() {
+        return new ArrayList<>(Arrays.asList(
+                new ArrayList<>(Arrays.asList("X", "O", "X")),
+                new ArrayList<>(Arrays.asList("O", "X", "O"))
+        ));
     }
 }
