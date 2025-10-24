@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.akari;
 
+import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.Dimensions;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,8 +25,8 @@ class AkariTest {
         assertEquals("akari_01.txt", akari.getFilename());
         assertEquals("example_source", akari.getSource());
         assertEquals(3.5, akari.getDifficulty());
-        assertEquals(8, akari.getHeight());
-        assertEquals(5, akari.getWidth());
+        assertEquals(8, akari.getSize().getHeight());
+        assertEquals(5, akari.getSize().getWidth());
     }
 
     @Test
@@ -52,15 +53,14 @@ class AkariTest {
         akari.setFilename(filename);
         akari.setSource(source);
         akari.setDifficulty(difficulty);
-        akari.setHeight(height);
-        akari.setWidth(width);
+        akari.setSize(new Dimensions(height, width));
 
         // then
         assertEquals("test.txt", akari.getFilename());
         assertEquals("generated", akari.getSource());
         assertEquals(2.0, akari.getDifficulty());
-        assertEquals(10, akari.getHeight());
-        assertEquals(15, akari.getWidth());
+        assertEquals(10, akari.getSize().getHeight());
+        assertEquals(15, akari.getSize().getWidth());
     }
 
     @Test

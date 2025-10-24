@@ -1,5 +1,7 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model;
 
+import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.Dimensions;
+import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.Publication;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,11 +25,11 @@ class NonogramTest {
         // then
         assertThat(nonogram.getFilename()).isEqualTo(filename);
         assertThat(nonogram.getSource()).isEqualTo(source);
-        assertThat(nonogram.getYear()).isEqualTo(year);
-        assertThat(nonogram.getMonth()).isEqualTo(month);
+        assertThat(nonogram.getPublication().getYear()).isEqualTo(year);
+        assertThat(nonogram.getPublication().getMonth()).isEqualTo(month);
         assertThat(nonogram.getDifficulty()).isEqualTo(difficulty);
-        assertThat(nonogram.getHeight()).isEqualTo(height);
-        assertThat(nonogram.getWidth()).isEqualTo(width);
+        assertThat(nonogram.getSize().getHeight()).isEqualTo(height);
+        assertThat(nonogram.getSize().getWidth()).isEqualTo(width);
     }
 
     @Test
@@ -55,20 +57,18 @@ class NonogramTest {
         // when
         nonogram.setFilename(filename);
         nonogram.setSource(source);
-        nonogram.setYear(year);
-        nonogram.setMonth(month);
+        nonogram.setPublication(new Publication(year, month));
         nonogram.setDifficulty(difficulty);
-        nonogram.setHeight(height);
-        nonogram.setWidth(width);
+        nonogram.setSize(new Dimensions(height, width));
 
         // then
         assertThat(nonogram.getFilename()).isEqualTo(filename);
         assertThat(nonogram.getSource()).isEqualTo(source);
-        assertThat(nonogram.getYear()).isEqualTo(year);
-        assertThat(nonogram.getMonth()).isEqualTo(month);
+        assertThat(nonogram.getPublication().getYear()).isEqualTo(year);
+        assertThat(nonogram.getPublication().getMonth()).isEqualTo(month);
         assertThat(nonogram.getDifficulty()).isEqualTo(difficulty);
-        assertThat(nonogram.getHeight()).isEqualTo(height);
-        assertThat(nonogram.getWidth()).isEqualTo(width);
+        assertThat(nonogram.getSize().getHeight()).isEqualTo(height);
+        assertThat(nonogram.getSize().getWidth()).isEqualTo(width);
     }
 
     @Test

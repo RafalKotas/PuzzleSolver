@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.common;
 
+import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.BasePuzzleEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@Deprecated
 @MappedSuperclass
 @NoArgsConstructor
 @Getter

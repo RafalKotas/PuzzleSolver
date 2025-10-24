@@ -1,6 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.architect;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.common.TimedPuzzleEntity;
+import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.SizedPublishedEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.metamodel.StaticMetamodel;
@@ -12,15 +12,15 @@ import lombok.ToString;
 @Entity
 @Table(name = "architect")
 @StaticMetamodel(Architect.class)
-@NoArgsConstructor
 @Setter
 @Getter
+@NoArgsConstructor
 @ToString(callSuper = true)
-public class Architect extends TimedPuzzleEntity {
+public class Architect extends SizedPublishedEntity {
 
     public Architect(String filename, String source, String year, String month,
                      Double difficulty, Integer height, Integer width) {
-        super(filename, source, year, month, difficulty, height, width);
+        super(filename, source, difficulty, height, width, year, month);
     }
 }
 

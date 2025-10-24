@@ -1,7 +1,9 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.sudoku;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.common.BasePuzzleEntity;
+import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.BasePuzzleEntity;
+import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.Publication;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.metamodel.StaticMetamodel;
@@ -19,11 +21,8 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class Sudoku extends BasePuzzleEntity {
 
-    @Column(name = "year")
-    private String year;
-
-    @Column(name = "month")
-    private String month;
+    @Embedded
+    private Publication publication;
 
     @Column(name = "filled")
     private Integer filled;
@@ -31,8 +30,7 @@ public class Sudoku extends BasePuzzleEntity {
     public Sudoku(String filename, String source, String year, String month,
                   Double difficulty, Integer filled) {
         super(filename, source, difficulty);
-        this.year = year;
-        this.month = month;
+        this.publication = new Publication(year, month);
         this.filled = filled;
     }
 }

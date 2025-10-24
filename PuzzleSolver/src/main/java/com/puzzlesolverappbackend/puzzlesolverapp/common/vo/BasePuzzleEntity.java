@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.common;
+package com.puzzlesolverappbackend.puzzlesolverapp.common.vo;
 
 import jakarta.persistence.*;
 import lombok.Getter;

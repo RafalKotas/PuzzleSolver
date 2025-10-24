@@ -1,6 +1,8 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.akari;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.common.SizedPuzzleEntity;
+import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.BasePuzzleEntity;
+import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.Dimensions;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.metamodel.StaticMetamodel;
@@ -16,10 +18,14 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString(callSuper = true)
-public class Akari extends SizedPuzzleEntity {
+public class Akari extends BasePuzzleEntity {
+
+    @Embedded
+    private Dimensions size;
 
     public Akari(String filename, String source, Double difficulty,
                  Integer height, Integer width) {
-        super(filename, source, difficulty, height, width);
+        super(filename, source, difficulty);
+        this.size = new Dimensions(height, width);
     }
 }

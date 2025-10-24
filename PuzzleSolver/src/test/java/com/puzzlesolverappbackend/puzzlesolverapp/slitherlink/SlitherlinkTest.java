@@ -1,5 +1,7 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.slitherlink;
 
+import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.Dimensions;
+import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.Publication;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,11 +24,11 @@ class SlitherlinkTest {
         // then
         assertThat(slitherlink.getFilename()).isEqualTo(filename);
         assertThat(slitherlink.getSource()).isEqualTo(source);
-        assertThat(slitherlink.getYear()).isEqualTo(year);
-        assertThat(slitherlink.getMonth()).isEqualTo(month);
+        assertThat(slitherlink.getPublication().getYear()).isEqualTo(year);
+        assertThat(slitherlink.getPublication().getMonth()).isEqualTo(month);
         assertThat(slitherlink.getDifficulty()).isEqualTo(difficulty);
-        assertThat(slitherlink.getHeight()).isEqualTo(height);
-        assertThat(slitherlink.getWidth()).isEqualTo(width);
+        assertThat(slitherlink.getSize().getHeight()).isEqualTo(height);
+        assertThat(slitherlink.getSize().getWidth()).isEqualTo(width);
     }
 
     @Test
@@ -54,20 +56,18 @@ class SlitherlinkTest {
         // when
         slitherlink.setFilename(filename);
         slitherlink.setSource(source);
-        slitherlink.setYear(year);
-        slitherlink.setMonth(month);
+        slitherlink.setPublication(new Publication(year, month));
         slitherlink.setDifficulty(difficulty);
-        slitherlink.setHeight(height);
-        slitherlink.setWidth(width);
+        slitherlink.setSize(new Dimensions(height, width));
 
         // then
         assertThat(slitherlink.getFilename()).isEqualTo(filename);
         assertThat(slitherlink.getSource()).isEqualTo(source);
-        assertThat(slitherlink.getYear()).isEqualTo(year);
-        assertThat(slitherlink.getMonth()).isEqualTo(month);
+        assertThat(slitherlink.getPublication().getYear()).isEqualTo(year);
+        assertThat(slitherlink.getPublication().getMonth()).isEqualTo(month);
         assertThat(slitherlink.getDifficulty()).isEqualTo(difficulty);
-        assertThat(slitherlink.getHeight()).isEqualTo(height);
-        assertThat(slitherlink.getWidth()).isEqualTo(width);
+        assertThat(slitherlink.getSize().getHeight()).isEqualTo(height);
+        assertThat(slitherlink.getSize().getWidth()).isEqualTo(width);
     }
 
     @Test

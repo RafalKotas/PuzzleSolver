@@ -627,6 +627,7 @@ class RowSequencesCorrectionHelperImplTest {
         // given
         int rowIdx = 0;
         int height = 10;
+        int width = 10;
         prepareData(height);
 
         rowSeqLengths.set(rowIdx, List.of(1, 1, 1));
@@ -655,7 +656,7 @@ class RowSequencesCorrectionHelperImplTest {
         when(rowLogic.getActionScheduler()).thenReturn(scheduler);
         when(rowLogic.getRowsSequencesRanges()).thenReturn(rangesAllRows);
         when(rowLogic.getNonogramSolutionBoard()).thenReturn(board);
-        when(rules.getWidth()).thenReturn(10);
+        when(rules.getWidth()).thenReturn(width);
         when(rules.getRowSequencesLengths()).thenReturn(rowSeqLengths);
 
 
@@ -682,6 +683,7 @@ class RowSequencesCorrectionHelperImplTest {
         // given
         int rowIdx = 4;
         int height  = 10;
+        int width = 10;
         prepareData(height);
 
         rowSeqLengths.set(rowIdx, List.of(9));
@@ -706,7 +708,7 @@ class RowSequencesCorrectionHelperImplTest {
                 new ArrayList<>(List.of("-", "-", "O", "-", "-", "-", "O", "-", "-", "-"))
         ));
 
-        when(rules.getWidth()).thenReturn(10);
+        when(rules.getWidth()).thenReturn(width);
         when(rules.getRowSequencesLengths()).thenReturn(rowSeqLengths);
 
         when(rowLogic.getRowsSequencesRanges()).thenReturn(rangesAllRows);
@@ -742,8 +744,9 @@ class RowSequencesCorrectionHelperImplTest {
     void shouldNotTryToExcludeBecauseOfRowRangeNotColouredFromLeft() {
         // given
         int rowIdx = 9;
+        int height = 10;
         int width = 10;
-        prepareData(width);
+        prepareData(height);
 
         // One row with two sequences: lengths 5 and 2
         rowSeqLengths.set(rowIdx, List.of(5, 2));
@@ -819,6 +822,7 @@ class RowSequencesCorrectionHelperImplTest {
         // given
         int rowIdx = 0;
         int height = 15;
+        int width = 10;
         prepareData(height);
 
         rowSeqLengths.set(rowIdx, List.of(3, 2));
@@ -851,7 +855,7 @@ class RowSequencesCorrectionHelperImplTest {
         when(rowLogic.getActionScheduler()).thenReturn(scheduler);
         when(rowLogic.getBoardAccessHelper()).thenReturn(nonogramBoardAccessHelper);
         when(rowLogic.getNonogramSolutionBoard()).thenReturn(board);
-        when(rules.getWidth()).thenReturn(10);
+        when(rules.getWidth()).thenReturn(width);
 
         when(nonogramBoardAccessHelper.isRowRangeColoured(rowIdx, List.of(4, 6))).thenReturn(false);
 
@@ -876,6 +880,7 @@ class RowSequencesCorrectionHelperImplTest {
         // given
         int rowIdx = 1;
         int height = 10;
+        int width = 10;
         prepareData(height);
 
         // lengths: [2, 2, 1]
@@ -906,7 +911,7 @@ class RowSequencesCorrectionHelperImplTest {
         ));
 
         // rules / logic stubs
-        when(rules.getWidth()).thenReturn(10);
+        when(rules.getWidth()).thenReturn(width);
         when(rules.getRowSequencesLengths()).thenReturn(rowSeqLengths);
 
         when(rowLogic.getRowsSequencesRanges()).thenReturn(rangesAllRows);

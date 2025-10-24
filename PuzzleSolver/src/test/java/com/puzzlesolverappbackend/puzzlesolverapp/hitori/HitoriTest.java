@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.hitori;
 
+import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.Dimensions;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,8 +23,8 @@ class HitoriTest {
         assertThat(hitori.getFilename()).isEqualTo(filename);
         assertThat(hitori.getSource()).isEqualTo(source);
         assertThat(hitori.getDifficulty()).isEqualTo(difficulty);
-        assertThat(hitori.getHeight()).isEqualTo(height);
-        assertThat(hitori.getWidth()).isEqualTo(width);
+        assertThat(hitori.getSize().getHeight()).isEqualTo(height);
+        assertThat(hitori.getSize().getWidth()).isEqualTo(width);
     }
 
     @Test
@@ -50,15 +51,14 @@ class HitoriTest {
         hitori.setFilename(filename);
         hitori.setSource(source);
         hitori.setDifficulty(difficulty);
-        hitori.setHeight(height);
-        hitori.setWidth(width);
+        hitori.setSize(new Dimensions(height, width));
 
         // then
         assertThat(hitori.getFilename()).isEqualTo(filename);
         assertThat(hitori.getSource()).isEqualTo(source);
         assertThat(hitori.getDifficulty()).isEqualTo(difficulty);
-        assertThat(hitori.getHeight()).isEqualTo(height);
-        assertThat(hitori.getWidth()).isEqualTo(width);
+        assertThat(hitori.getSize().getHeight()).isEqualTo(height);
+        assertThat(hitori.getSize().getWidth()).isEqualTo(width);
     }
 
     @Test

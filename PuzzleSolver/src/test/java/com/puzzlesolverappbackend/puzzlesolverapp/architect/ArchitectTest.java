@@ -1,5 +1,7 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.architect;
 
+import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.Dimensions;
+import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.Publication;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,11 +25,11 @@ class ArchitectTest {
         // then
         assertThat(architect.getFilename()).isEqualTo(filename);
         assertThat(architect.getSource()).isEqualTo(source);
-        assertThat(architect.getYear()).isEqualTo(year);
-        assertThat(architect.getMonth()).isEqualTo(month);
+        assertThat(architect.getPublication().getYear()).isEqualTo(year);
+        assertThat(architect.getPublication().getMonth()).isEqualTo(month);
         assertThat(architect.getDifficulty()).isEqualTo(difficulty);
-        assertThat(architect.getHeight()).isEqualTo(height);
-        assertThat(architect.getWidth()).isEqualTo(width);
+        assertThat(architect.getSize().getHeight()).isEqualTo(height);
+        assertThat(architect.getSize().getWidth()).isEqualTo(width);
     }
 
     @Test
@@ -55,20 +57,18 @@ class ArchitectTest {
         // when
         architect.setFilename(filename);
         architect.setSource(source);
-        architect.setYear(year);
-        architect.setMonth(month);
+        architect.setPublication(new Publication(year, month));
         architect.setDifficulty(difficulty);
-        architect.setHeight(height);
-        architect.setWidth(width);
+        architect.setSize(new Dimensions(height, width));
 
         // then
         assertThat(architect.getFilename()).isEqualTo(filename);
         assertThat(architect.getSource()).isEqualTo(source);
-        assertThat(architect.getYear()).isEqualTo(year);
-        assertThat(architect.getMonth()).isEqualTo(month);
+        assertThat(architect.getPublication().getYear()).isEqualTo(year);
+        assertThat(architect.getPublication().getMonth()).isEqualTo(month);
         assertThat(architect.getDifficulty()).isEqualTo(difficulty);
-        assertThat(architect.getHeight()).isEqualTo(height);
-        assertThat(architect.getWidth()).isEqualTo(width);
+        assertThat(architect.getSize().getHeight()).isEqualTo(height);
+        assertThat(architect.getSize().getWidth()).isEqualTo(width);
     }
 
     @Test

@@ -9,68 +9,64 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, JpaSpecificationExecutor<Nonogram> {
 
-    @Query(value = "SELECT distinct(npd.source)" +
-            " FROM nonogram npd",
-            nativeQuery = true)
+    @Query("SELECT DISTINCT n.source FROM Nonogram n ORDER BY n.source ASC")
     List<String> selectNonogramSources();
 
-    @Query(value = "SELECT distinct(npd.year)" +
-            " FROM nonogram npd",
-            nativeQuery = true)
+    @Query("SELECT DISTINCT n.publication.year FROM Nonogram n ORDER BY n.publication.year ASC")
     List<String> selectNonogramYears();
 
-    @Query(value = "SELECT distinct(npd.month)" +
-            " FROM nonogram npd",
-            nativeQuery = true)
+    @Query("SELECT DISTINCT n.publication.month FROM Nonogram n ORDER BY n.publication.month ASC")
     List<String> selectNonogramMonths();
 
-    @Query(value = "SELECT distinct(npd.difficulty)" +
-            " FROM nonogram npd",
-            nativeQuery = true)
+    @Query("SELECT DISTINCT n.difficulty FROM Nonogram n ORDER BY n.difficulty ASC")
     List<Double> selectNonogramDifficulties();
 
-    @Query(value = "SELECT distinct(npd.width)" +
-            " FROM nonogram npd",
-            nativeQuery = true)
+    @Query("SELECT DISTINCT n.size.width FROM Nonogram n ORDER BY n.size.width ASC")
     List<Integer> selectNonogramWidths();
 
-    @Query(value = "SELECT distinct(npd.height)" +
-            " FROM nonogram npd",
-            nativeQuery = true)
+    @Query("SELECT DISTINCT n.size.height FROM Nonogram n ORDER BY n.size.height ASC")
     List<Integer> selectNonogramHeights();
 
-    @Query(value = "SELECT *" +
-            " FROM nonogram npd" +
-            " WHERE source IN :sources" +
-            " AND npd.difficulty BETWEEN :minDifficulty and :maxDifficulty",
-            nativeQuery = true)
-    List<Nonogram> selectNonogramBySourceAndDifficulty(@Param("sources") Collection<String> sources,
-                                                      @Param("minDifficulty") Double minDifficulty,
-                                                      @Param("maxDifficulty") Double maxDifficulty);
+    @Query("""
+           SELECT n
+           FROM Nonogram n
+           WHERE n.source IN :sources
+             AND n.difficulty BETWEEN :minDifficulty AND :maxDifficulty
+           """)
+    List<Nonogram> selectNonogramBySourceAndDifficulty(
+            @Param("sources") Collection<String> sources,
+            @Param("minDifficulty") Double minDifficulty,
+            @Param("maxDifficulty") Double maxDifficulty);
 
-    @Query(value = "SELECT *" +
-            " FROM nonogram npd" +
-            " WHERE (npd.filename=:filename" + //LIKE %:filename% +
-            " AND npd.source LIKE %:source%" +
-            " AND npd.year LIKE %:year%" +
-            " AND npd.month LIKE %:month%" +
-            " AND npd.height = :height" +
-            " AND npd.width = :width" +
-            " AND npd.difficulty = :difficulty)",
-            nativeQuery = true)
-    Optional<Nonogram> existsNonogramByGivenParamsFromFile(@Param("filename") String filename,
-                                                            @Param("source") String source,
-                                                            @Param("year") String year,
-                                                            @Param("month") String month,
-                                                            @Param("difficulty") Double difficulty,
-                                                            @Param("height") Integer height,
-                                                            @Param("width") Integer width);
-
-    @Query("SELECT n.filename FROM Nonogram n WHERE n.difficulty = :difficulty AND source LIKE '%logi%' ORDER BY n.height * n.width ASC")
+    @Query("""
+           SELECT CASE WHEN COUNT(n) > 0 THEN TRUE ELSE FALSE END
+           FROM Nonogram n
+           WHERE (:filename  IS NULL OR n.filename = :filename)
+             AND (:source    IS NULL OR LOWER(n.source) LIKE LOWER(CONCAT('%', :source, '%')))
+             AND (:year      IS NULL OR n.publication.year  LIKE CONCAT('%', :year, '%'))
+             AND (:month     IS NULL OR n.publication.month LIKE CONCAT('%', :month, '%'))
+             AND (:height    IS NULL OR n.size.height = :height)
+             AND (:width     IS NULL OR n.size.width  = :width)
+             AND (:difficulty IS NULL OR n.difficulty = :difficulty)
+           """)
+    boolean existsNonogramByGivenParamsFromFile(
+            @Param("filename") String filename,
+            @Param("source") String source,
+            @Param("year")   String year,
+            @Param("month")  String month,
+            @Param("difficulty") Double difficulty,
+            @Param("height") Integer height,
+            @Param("width")  Integer width);
+    @Query("""
+           SELECT n.filename
+           FROM Nonogram n
+           WHERE n.difficulty = :difficulty
+             AND LOWER(n.source) LIKE '%logi%'
+           ORDER BY (n.size.height * n.size.width) ASC
+           """)
     List<String> findLogiNonogramsNamesByDifficultySortedByArea(@Param("difficulty") double difficulty);
 }

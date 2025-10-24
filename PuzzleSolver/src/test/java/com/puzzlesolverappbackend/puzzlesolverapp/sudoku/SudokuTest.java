@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.sudoku;
 
+import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.Publication;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,8 +23,8 @@ class SudokuTest {
         // then
         assertThat(sudoku.getFilename()).isEqualTo(filename);
         assertThat(sudoku.getSource()).isEqualTo(source);
-        assertThat(sudoku.getYear()).isEqualTo(year);
-        assertThat(sudoku.getMonth()).isEqualTo(month);
+        assertThat(sudoku.getPublication().getYear()).isEqualTo(year);
+        assertThat(sudoku.getPublication().getMonth()).isEqualTo(month);
         assertThat(sudoku.getDifficulty()).isEqualTo(difficulty);
         assertThat(sudoku.getFilled()).isEqualTo(filled);
     }
@@ -52,16 +53,15 @@ class SudokuTest {
         // when
         sudoku.setFilename(filename);
         sudoku.setSource(source);
-        sudoku.setYear(year);
-        sudoku.setMonth(month);
+        sudoku.setPublication(new Publication(year, month));
         sudoku.setDifficulty(difficulty);
         sudoku.setFilled(filled);
 
         // then
         assertThat(sudoku.getFilename()).isEqualTo(filename);
         assertThat(sudoku.getSource()).isEqualTo(source);
-        assertThat(sudoku.getYear()).isEqualTo(year);
-        assertThat(sudoku.getMonth()).isEqualTo(month);
+        assertThat(sudoku.getPublication().getYear()).isEqualTo(year);
+        assertThat(sudoku.getPublication().getMonth()).isEqualTo(month);
         assertThat(sudoku.getDifficulty()).isEqualTo(difficulty);
         assertThat(sudoku.getFilled()).isEqualTo(filled);
     }

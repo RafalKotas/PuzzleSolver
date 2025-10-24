@@ -17,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -96,7 +95,7 @@ class NonogramsDataInitializerTest {
 
         when(repository.existsNonogramByGivenParamsFromFile(
                 anyString(), anyString(), anyString(), anyString(), anyDouble(), anyInt(), anyInt()))
-                .thenReturn(Optional.of(new Nonogram()));
+                .thenReturn(true);
 
         // when
         initializer.run();
@@ -129,7 +128,7 @@ class NonogramsDataInitializerTest {
                 .thenReturn(Set.of(filename));
         when(repository.existsNonogramByGivenParamsFromFile(
                 "to-save", "logi", "2024", "07", 4.5, 5, 5))
-                .thenReturn(Optional.empty());
+                .thenReturn(false);
 
         // when
         initializer.run();
@@ -254,7 +253,7 @@ class NonogramsDataInitializerTest {
                 .thenReturn(Set.of(filename));
         when(repository.existsNonogramByGivenParamsFromFile(
                 "ok", "s", "2024", "08", 1.5, 6, 7))
-                .thenReturn(Optional.empty());
+                .thenReturn(false);
 
         // when
         initializer.run();
@@ -303,7 +302,7 @@ class NonogramsDataInitializerTest {
         when(commonService.listFilesUsingJavaIO(anyString()))
                 .thenReturn(Set.of(f1, f2));
         when(repository.existsNonogramByGivenParamsFromFile(anyString(), anyString(), anyString(), anyString(), anyDouble(), anyInt(), anyInt()))
-                .thenReturn(Optional.empty());
+                .thenReturn(false);
 
         // when
         initializer.run();
@@ -338,7 +337,7 @@ class NonogramsDataInitializerTest {
                 .thenReturn(Set.of(filename));
         when(repository.existsNonogramByGivenParamsFromFile(
                 "wrongOrder", "s", "2024", "08", 1.0, 5, 5))
-                .thenReturn(Optional.empty());
+                .thenReturn(false);
 
         // when
         initializer.run();

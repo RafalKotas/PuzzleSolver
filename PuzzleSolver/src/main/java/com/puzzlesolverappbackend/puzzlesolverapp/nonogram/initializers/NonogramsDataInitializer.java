@@ -108,7 +108,7 @@ public class NonogramsDataInitializer implements CommandLineRunner {
                 boolean exists = nonogramRepository.existsNonogramByGivenParamsFromFile(
                         nameWithoutExtension, details.getSource(), details.getYear(), details.getMonth(),
                         details.getDifficulty(), details.getHeight(), details.getWidth()
-                ).isPresent();
+                );
 
                 if (exists) {
                     nonogramsRepeated++;
