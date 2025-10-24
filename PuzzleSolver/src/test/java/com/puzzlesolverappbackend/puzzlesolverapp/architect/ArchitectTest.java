@@ -91,6 +91,6 @@ class ArchitectTest {
                         "difficulty=2.5",
                         "height=15",
                         "width=20")
-                .startsWith("Architect(super=TimedPuzzleEntity(");
+                .startsWith("Architect(super=SizedPublishedEntity(");
     }
 }
