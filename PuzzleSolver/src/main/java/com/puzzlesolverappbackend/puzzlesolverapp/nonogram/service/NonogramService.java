@@ -55,7 +55,7 @@ public class NonogramService {
         this.nonogramRepository = nonogramRepository;
     }
 
-    public List<Integer> inferDimensionRange(List<Integer> integerList) {
+    private List<Integer> inferDimensionRange(List<Integer> integerList) {
         List<Integer> bounds = new ArrayList<>(List.of(DEFAULT_MIN_DIMENSION, DEFAULT_MAX_DIMENSION));
         if (integerList.size() >= 2) {
             bounds.set(0, integerList.get(0));
@@ -69,7 +69,7 @@ public class NonogramService {
      * @param  difficultiesList list of possible difficulties
      * @return range created from difficultiesList (2 elements)
      * **/
-    public List<Double> inferDifficulties(List<Double> difficultiesList) {
+    private List<Double> inferDifficulties(List<Double> difficultiesList) {
         List<Double> difficulties = new ArrayList<>();
         if (difficultiesList.size() >= 2) {
             difficulties.add(difficultiesList.get(0));
@@ -162,8 +162,6 @@ public class NonogramService {
         return NonogramCorrectnessIndicator.VALID;
     }
 
-
-
     public String saveCreatedNonogramToFile(String fileName, NonogramFileDetails nonogramFileDetails) {
         nonogramFileDetails.setFilename(fileName + JSON_EXTENSION);
 
@@ -190,7 +188,7 @@ public class NonogramService {
         }
     }
 
-
+    // TODO - only used in tests (remove/change)
     public NonogramFileDetails getNonogramDetailsFromFile(String filePath) {
 
         Gson gson = new Gson();

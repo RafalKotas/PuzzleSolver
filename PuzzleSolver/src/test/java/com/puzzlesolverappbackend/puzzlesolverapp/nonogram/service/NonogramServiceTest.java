@@ -335,7 +335,7 @@ class NonogramServiceTest {
 
     @Test
     @DisplayName("Should return exception message when writeToFile throws IOException")
-    void writerThrowsIOException() throws Exception {
+    void writerThrowsIOException() {
         NonogramFileDetails nonogramFileDetails = generateNonogramFileDetailsForTest();
         when(commonService.listFilesUsingJavaIO(any()))
                 .thenReturn(Set.of("other.json"));
@@ -353,7 +353,7 @@ class NonogramServiceTest {
 
     @Test
     @DisplayName("Should save successfully when file does not exist and writer works")
-    void writerSucceeds() throws Exception {
+    void writerSucceeds() {
         // given
         NonogramFileDetails nonogramFileDetails = generateNonogramFileDetailsForTest();
         when(commonService.listFilesUsingJavaIO(any()))
@@ -427,7 +427,7 @@ class NonogramServiceTest {
 
     @Test
     @DisplayName("Should save solution board successfully")
-    void savesSuccessfully() throws Exception {
+    void savesSuccessfully() {
         try (MockedStatic<NonogramJsonWriter> mocked =
                      mockStatic(NonogramJsonWriter.class)) {
             // given
@@ -443,7 +443,7 @@ class NonogramServiceTest {
 
     @Test
     @DisplayName("Should throw NonogramFileSaveException when IOException occurs")
-    void throwsWhenIOException() throws Exception {
+    void throwsWhenIOException() {
         try (MockedStatic<NonogramJsonWriter> mocked =
                      mockStatic(NonogramJsonWriter.class)) {
             // given
