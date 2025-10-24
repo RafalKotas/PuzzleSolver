@@ -76,6 +76,6 @@ class HitoriTest {
                         "difficulty=3.3",
                         "height=6",
                         "width=6")
-                .startsWith("Hitori(super=SizedPuzzleEntity(");
+                .startsWith("Hitori(super=BasePuzzleEntity(");
     }
 }

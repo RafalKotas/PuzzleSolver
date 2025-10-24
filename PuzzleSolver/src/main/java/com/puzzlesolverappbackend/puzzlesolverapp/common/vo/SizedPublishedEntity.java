@@ -5,10 +5,12 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @MappedSuperclass
 @Getter
 @Setter
+@ToString(callSuper = true)
 @NoArgsConstructor
 public abstract class SizedPublishedEntity extends BasePuzzleEntity {
 

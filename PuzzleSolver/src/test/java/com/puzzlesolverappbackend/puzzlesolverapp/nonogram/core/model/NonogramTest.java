@@ -88,6 +88,6 @@ class NonogramTest {
                         "difficulty=1.1",
                         "height=5",
                         "width=5")
-                .startsWith("Nonogram(super=TimedPuzzleEntity(");
+                .startsWith("Nonogram(super=SizedPublishedEntity(");
     }
 }

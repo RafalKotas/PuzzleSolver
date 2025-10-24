@@ -10,7 +10,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 public abstract class BasePuzzleEntity {
 
     @Id

@@ -78,6 +78,6 @@ class AkariTest {
                         "difficulty=1.0",
                         "height=10",
                         "width=10")
-                .startsWith("Akari(super=SizedPuzzleEntity(");
+                .startsWith("Akari(super=BasePuzzleEntity(");
     }
 }

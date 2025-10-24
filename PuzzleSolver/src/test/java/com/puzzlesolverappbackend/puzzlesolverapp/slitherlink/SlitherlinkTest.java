@@ -87,6 +87,6 @@ class SlitherlinkTest {
                         "difficulty=4.0",
                         "height=12",
                         "width=12")
-                .startsWith("Slitherlink(super=TimedPuzzleEntity(");
+                .startsWith("Slitherlink(super=SizedPublishedEntity(");
     }
 }
