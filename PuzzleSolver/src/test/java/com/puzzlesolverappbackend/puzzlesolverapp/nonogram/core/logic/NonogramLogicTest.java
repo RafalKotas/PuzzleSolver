@@ -269,9 +269,18 @@ class NonogramLogicTest {
 
         NonogramLogic logic = new NonogramLogic(rules, GuessMode.DISABLED);
         logic.addRowFieldToExcluded(new Field(0, 0));
+        List<Integer> excludedFieldsInRow0Before = new ArrayList<>(
+          logic.getRowsFieldsNotToInclude().get(0)
+        );
 
         // when
         logic.fillTrivialRowsAndColumns();
+
+        // then
+        List<Integer> excludedFieldsInRow0After = new ArrayList<>(
+                logic.getRowsFieldsNotToInclude().get(0)
+        );
+        assertThat(excludedFieldsInRow0Before).hasSize(excludedFieldsInRow0After.size() - 2); // only [1, 2] added
     }
 
     // TODO - add some real case
