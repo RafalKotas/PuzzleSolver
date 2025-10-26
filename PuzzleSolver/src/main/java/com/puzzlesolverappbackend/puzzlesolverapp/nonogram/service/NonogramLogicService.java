@@ -24,8 +24,6 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.rangeInsideAnotherRange;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramConstants.COLOURED_FIELD_MARKED_BOARD;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramConstants.EMPTY_FIELD_MARKED_BOARD;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.utils.NonogramStatsUtils.isSolved;
 
 @Service
@@ -59,7 +57,7 @@ public class NonogramLogicService {
      * @return the updated {@link NonogramLogic} with applied column overlap fills
      */
     public NonogramLogic fillOverlappingFieldsInColumnsRange(NonogramLogic logic, int columnBegin, int columnEnd) {
-        for (int columnIdx = columnBegin; columnIdx < columnEnd; columnIdx++) {
+        for (int columnIdx = columnBegin; columnIdx <= columnEnd; columnIdx++) {
             logic = fillOverlappingFieldsInColumn(logic, columnIdx);
         }
         return logic;
@@ -93,40 +91,6 @@ public class NonogramLogicService {
     }
 
     /**
-     * <p>
-     * Updates a field in the column with the appropriate mark and colours it if not already coloured.
-     * </p>
-     *
-     * <p>
-     * Steps:
-     * <ol>
-     *     <li>Check if the field in the solution board is uncoloured (value equals {@code EMPTY_FIELD_MARKED_BOARD}).</li>
-     *     <li>If so, replace it with {@code COLOURED_FIELD_MARKED_BOARD}.</li>
-     *     <li>Update the field's mark in the board with marks by prepending {@code "C"} and the sequence marker.</li>
-     *     <li>Increment the step counter in the logic state to reflect the modification.</li>
-     * </ol>
-     * </p>
-     *
-     * @param logic the current nonogram logic object
-     * @param colIdx the column index of the field to be coloured and marked
-     * @param rowIdx the row index of the field to be coloured and marked
-     * @param currentMarker the current marker string at that position
-     * @param marker the new marker to apply (e.g. "a", "b", etc.)
-     */
-    private void markAndColourFieldInColumn(NonogramLogic logic, int colIdx, int rowIdx, String currentMarker, String marker) {
-        logic.getNonogramSolutionBoardWithMarks()
-                .get(rowIdx)
-                .set(colIdx, currentMarker.substring(0, 2) + "C" + marker);
-
-        List<String> boardRow = logic.getNonogramSolutionBoard().get(rowIdx);
-        if (boardRow.get(colIdx).equals(EMPTY_FIELD_MARKED_BOARD)) {
-            boardRow.set(colIdx, COLOURED_FIELD_MARKED_BOARD);
-        }
-
-        logic.getNonogramState().increaseMadeSteps();
-    }
-
-    /**
      * Applies the overlapping field fill logic for each column in the given range.
      *
      * @param logic the {@link NonogramLogic} object representing the current puzzle state
@@ -135,8 +99,8 @@ public class NonogramLogicService {
      * @return the updated {@link NonogramLogic} with applied row overlap fills
      */
     public NonogramLogic fillOverLappingFieldsInRowsRange(NonogramLogic logic, int rowBegin, int rowEnd) {
-        for (int rowIdx = rowBegin; rowIdx < rowEnd; rowIdx++) {
-            logic = fillOverlappingFieldsInRow(logic, rowIdx);
+        for (int rowIdx = rowBegin; rowIdx <= rowEnd; rowIdx++) {
+            fillOverlappingFieldsInRow(logic, rowIdx);
         }
         return logic;
     }
@@ -160,7 +124,7 @@ public class NonogramLogicService {
      * @param rowIdx the row index to apply the operation on
      * @return updated {@link NonogramLogic} with overlapping row fields filled
      */
-    public NonogramLogic fillOverlappingFieldsInRow(NonogramLogic logic, int rowIdx) {
+    private NonogramLogic fillOverlappingFieldsInRow(NonogramLogic logic, int rowIdx) {
         RowColouringHelperImpl rowColouringHelper = new RowColouringHelperImpl(
                 logic.getNonogramRowLogic()
         );
@@ -174,7 +138,7 @@ public class NonogramLogicService {
     public NonogramLogic markAvailableSequencesInRows(NonogramLogic nonogramLogicObject, int rowBegin, int rowEnd) {
         NonogramLogic nonogramLogicDataToChange = nonogramLogicObject;
 
-        for (int rowIdx = rowBegin; rowIdx < rowEnd; rowIdx++) {
+        for (int rowIdx = rowBegin; rowIdx <= rowEnd; rowIdx++) {
             nonogramLogicDataToChange = markAvailableSequencesInRow(nonogramLogicDataToChange, rowIdx);
         }
 
@@ -191,7 +155,7 @@ public class NonogramLogicService {
     public NonogramLogic markAvailableSequencesInColumns(NonogramLogic nonogramLogicObject, int columnBegin, int columnEnd) {
         NonogramLogic nonogramLogicDataToChange = nonogramLogicObject;
 
-        for (int columnIdx = columnBegin; columnIdx < columnEnd; columnIdx++) {
+        for (int columnIdx = columnBegin; columnIdx <= columnEnd; columnIdx++) {
             nonogramLogicDataToChange = markAvailableSequencesInColumn(nonogramLogicDataToChange, columnIdx);
         }
 
@@ -208,7 +172,7 @@ public class NonogramLogicService {
     public NonogramLogic placeXsAroundLongestSequencesInRowsRange(NonogramLogic nonogramLogicObject, int rowBegin, int rowEnd) {
         NonogramLogic nonogramLogicDataToChange = nonogramLogicObject;
 
-        for (int rowIdx = rowBegin; rowIdx < rowEnd; rowIdx++) {
+        for (int rowIdx = rowBegin; rowIdx <= rowEnd; rowIdx++) {
             nonogramLogicDataToChange = placeXsAroundLongestSequencesInRow(nonogramLogicDataToChange, rowIdx);
         }
 
@@ -229,14 +193,14 @@ public class NonogramLogicService {
     public NonogramLogic placeXsAroundLongestSequencesInColumnsRange(NonogramLogic nonogramLogicObject, int columnBegin, int columnEnd) {
         NonogramLogic nonogramLogicDataToChange = nonogramLogicObject;
 
-        for (int columnIdx = columnBegin; columnIdx < columnEnd; columnIdx++) {
+        for (int columnIdx = columnBegin; columnIdx <= columnEnd; columnIdx++) {
             nonogramLogicDataToChange = placeXsAroundLongestSequencesInColumn(nonogramLogicDataToChange, columnIdx);
         }
 
         return nonogramLogicDataToChange;
     }
 
-    public NonogramLogic placeXsAroundLongestSequencesInColumn(NonogramLogic nonogramLogicObject, int columnIdx) {
+    private NonogramLogic placeXsAroundLongestSequencesInColumn(NonogramLogic nonogramLogicObject, int columnIdx) {
         ColumnXPlacementHelperImpl columnXPlacementHelper = new ColumnXPlacementHelperImpl(
                 nonogramLogicObject.getNonogramColumnLogic()
         );
@@ -250,14 +214,14 @@ public class NonogramLogicService {
     public NonogramLogic placeXsAtUnreachableFieldsInRowsRange(NonogramLogic nonogramLogicObject, int rowBegin, int rowEnd) {
         NonogramLogic nonogramLogicDataToChange = nonogramLogicObject;
 
-        for (int rowIdx = rowBegin; rowIdx < rowEnd; rowIdx++) {
+        for (int rowIdx = rowBegin; rowIdx <= rowEnd; rowIdx++) {
             nonogramLogicDataToChange = placeXsAtUnreachableFieldsInRow(nonogramLogicDataToChange, rowIdx);
         }
 
         return nonogramLogicDataToChange;
     }
 
-    public NonogramLogic placeXsAtUnreachableFieldsInRow(NonogramLogic nonogramLogicObject, int rowIdx) {
+    private NonogramLogic placeXsAtUnreachableFieldsInRow(NonogramLogic nonogramLogicObject, int rowIdx) {
         RowXPlacementHelperImpl rowXPlacementHelper = new RowXPlacementHelperImpl(
                 nonogramLogicObject.getNonogramRowLogic()
         );
@@ -271,14 +235,14 @@ public class NonogramLogicService {
     public NonogramLogic placeXsAtUnreachableFieldsInColumnsRange(NonogramLogic nonogramLogicObject, int columnBegin, int columnEnd) {
         NonogramLogic nonogramLogicDataToChange = nonogramLogicObject;
 
-        for (int columnIdx = columnBegin; columnIdx < columnEnd; columnIdx++) {
+        for (int columnIdx = columnBegin; columnIdx <= columnEnd; columnIdx++) {
             nonogramLogicDataToChange = placeXsAtUnreachableFieldsInColumn(nonogramLogicDataToChange, columnIdx);
         }
 
         return nonogramLogicObject;
     }
 
-    public NonogramLogic placeXsAtUnreachableFieldsInColumn(NonogramLogic nonogramLogicObject, int columnIdx) {
+    private NonogramLogic placeXsAtUnreachableFieldsInColumn(NonogramLogic nonogramLogicObject, int columnIdx) {
         ColumnXPlacementHelperImpl columnXPlacementHelper = new ColumnXPlacementHelperImpl(
                 nonogramLogicObject.getNonogramColumnLogic()
         );
@@ -292,7 +256,7 @@ public class NonogramLogicService {
     public NonogramLogic correctRowsSequencesRanges (NonogramLogic nonogramLogicObject, int rowBegin, int rowEnd) {
         NonogramLogic nonogramLogicChanged = nonogramLogicObject;
 
-        for (int rowIdx = rowBegin; rowIdx < rowEnd; rowIdx++) {
+        for (int rowIdx = rowBegin; rowIdx <= rowEnd; rowIdx++) {
             nonogramLogicChanged = correctRowSequencesRanges(nonogramLogicChanged, rowIdx);
             nonogramLogicChanged = correctRowSequencesWhenMetColouredField(nonogramLogicChanged, rowIdx);
             nonogramLogicChanged = changeRowRangeIndexesIfXOnWay(nonogramLogicChanged, rowIdx);
@@ -301,7 +265,7 @@ public class NonogramLogicService {
         return  nonogramLogicChanged;
     }
 
-    public NonogramLogic correctRowSequencesRanges (NonogramLogic nonogramLogicObject, int rowIdx) {
+    private NonogramLogic correctRowSequencesRanges (NonogramLogic nonogramLogicObject, int rowIdx) {
         RowSequencesCorrectionHelperImpl rowSequencesCorrectionHelper = new RowSequencesCorrectionHelperImpl(
                 nonogramLogicObject.getNonogramRowLogic()
         );
@@ -311,7 +275,8 @@ public class NonogramLogicService {
         return nonogramLogicObject;
     }
 
-    public NonogramLogic correctRowSequencesWhenMetColouredField(NonogramLogic nonogramLogicObject, int rowIdx) {
+    // TODO - create test just for this action
+    private NonogramLogic correctRowSequencesWhenMetColouredField(NonogramLogic nonogramLogicObject, int rowIdx) {
         RowSequencesCorrectionHelperImpl rowSequencesCorrectionHelper = new RowSequencesCorrectionHelperImpl(
                 nonogramLogicObject.getNonogramRowLogic()
         );
@@ -321,12 +286,13 @@ public class NonogramLogicService {
         return nonogramLogicObject;
     }
 
-    public NonogramLogic changeRowRangeIndexesIfXOnWay (NonogramLogic nonogramLogicObject, int rowIdx) {
+    // TODO - create test just for this action
+    private NonogramLogic changeRowRangeIndexesIfXOnWay (NonogramLogic nonogramLogicObject, int rowIdx) {
         RowSequencesCorrectionHelperImpl rowSequencesCorrectionHelper = new RowSequencesCorrectionHelperImpl(
                 nonogramLogicObject.getNonogramRowLogic()
         );
 
-        rowSequencesCorrectionHelper.correctRowSequencesRanges(rowIdx);
+        rowSequencesCorrectionHelper.correctRowSequencesRangesIfXOnWay(rowIdx, true);
 
         return nonogramLogicObject;
     }
@@ -335,7 +301,7 @@ public class NonogramLogicService {
     public NonogramLogic correctColumnsSequencesRanges (NonogramLogic nonogramLogicObject, int columnBegin, int columnEnd) {
         NonogramLogic nonogramLogicChanged = nonogramLogicObject;
 
-        for (int columnIdx = columnBegin; columnIdx < columnEnd; columnIdx++) {
+        for (int columnIdx = columnBegin; columnIdx <= columnEnd; columnIdx++) {
             nonogramLogicChanged = correctColumnSequencesRanges(nonogramLogicChanged, columnIdx);
             nonogramLogicChanged = changeColumnRangeIndexesIfXOnWay(nonogramLogicChanged, columnIdx);
             nonogramLogicChanged = correctColumnSequencesWhenMetColouredField(nonogramLogicChanged, columnIdx);
@@ -354,7 +320,7 @@ public class NonogramLogicService {
         return nonogramLogicObject;
     }
 
-    // iterations through all columns
+    // TODO - create test just for this action
     public NonogramLogic changeColumnRangeIndexesIfXOnWay(NonogramLogic nonogramLogicObject, int columnIdx) {
         ColumnSequencesCorrectionHelperImpl columnSequencesCorrectionHelper = new ColumnSequencesCorrectionHelperImpl(
                 nonogramLogicObject.getNonogramColumnLogic()
@@ -365,6 +331,7 @@ public class NonogramLogicService {
         return nonogramLogicObject;
     }
 
+    // TODO - create test just for this action
     public NonogramLogic correctColumnSequencesWhenMetColouredField(NonogramLogic nonogramLogicObject, int columnIdx) {
         ColumnSequencesCorrectionHelperImpl columnSequencesCorrectionHelper = new ColumnSequencesCorrectionHelperImpl(
                 nonogramLogicObject.getNonogramColumnLogic()
@@ -374,8 +341,6 @@ public class NonogramLogicService {
 
         return nonogramLogicObject;
     }
-
-
 
     public static boolean rangesListIncludingAnotherRange (List<List<Integer>> listOfRanges, List<Integer> range) {
         for (List<Integer> listOfRange : listOfRanges) {

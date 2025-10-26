@@ -13,8 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class NonogramLogicFactoryTest {
 
@@ -107,6 +106,40 @@ class NonogramLogicFactoryTest {
         assertThat(copy.getNonogramGuessDecisions()).hasSize(2);
         assertThat(copy.getNonogramLogic().getNonogramSolutionBoard().get(0).get(0)).isEqualTo("O");
     }
+
+    @Test
+    void shouldCopyNonogramLogicProperly() {
+        NonogramLogic original = create_o08311_logic();
+        NonogramLogicFactory factory = new NonogramLogicFactory();
+
+        NonogramLogic copy = factory.copy(original);
+
+        assertNotSame(original, copy);
+        assertNotNull(copy.getNonogramRules());
+        assertNotNull(copy.getNonogramSolutionBoard());
+        assertEquals(original.getNonogramRules().getHeight(), copy.getNonogramRules().getHeight());
+        assertEquals(original.getNonogramSolutionBoard().size(), copy.getNonogramSolutionBoard().size());
+    }
+
+    private NonogramLogic create_o08311_logic() {
+        List<List<Integer>> rowSequences = List.of(
+                List.of(7, 5), List.of(6, 3), List.of(4, 1, 3), List.of(4, 2), List.of(3, 5),
+                List.of(3, 10), List.of(3, 5), List.of(4, 1), List.of(9), List.of(1, 6),
+                List.of(5), List.of(4, 2), List.of(7), List.of(1, 8), List.of(2, 2),
+                List.of(4, 4, 2), List.of(7, 3, 3), List.of(7, 1, 3), List.of(8, 3), List.of(8, 4)
+        );
+
+        List<List<Integer>> columnSequences = List.of(
+                List.of(10, 7), List.of(9, 6), List.of(9, 1, 5), List.of(4, 2, 3, 5), List.of(2, 1, 3, 4),
+                List.of(2, 1, 1, 3, 4), List.of(1, 2, 1, 3, 5), List.of(2, 2, 2, 1, 2), List.of(1, 2, 2, 2, 2), List.of(2, 2, 1, 3),
+                List.of(1, 3, 2, 1, 1), List.of(1, 2, 2, 1, 1), List.of(3, 2, 3, 6), List.of(4, 2, 2, 5), List.of(4, 3, 4)
+        );
+
+        NonogramRules rules = new NonogramRules(rowSequences, columnSequences, 20, 15);
+
+        return new NonogramLogic(rules, GuessMode.DISABLED);
+    }
+
 
     private NonogramRules rules3x3() {
         List<List<Integer>> rows = List.of(List.of(3), List.of(1), List.of(3));

@@ -50,8 +50,7 @@ public class NonogramLogicFactory {
     }
 
     public NonogramLogic copy(NonogramLogic original) {
-        NonogramLogic logic = new NonogramLogic();
-        logic.setNonogramRules(original.getNonogramRules());
+        NonogramLogic logic = new NonogramLogic(original.getNonogramRules(), original.getGuessMode());
 
         logic.setNonogramSolutionBoard(deepCopyStrings(original.getNonogramSolutionBoard()));
         logic.setNonogramSolutionBoardWithMarks(deepCopyStrings(original.getNonogramSolutionBoardWithMarks()));
@@ -69,7 +68,6 @@ public class NonogramLogicFactory {
         );
 
         logic.setNonogramState(buildInitialEmptyNonogramState());
-
         logic.initializeHelpers();
 
         return logic;
