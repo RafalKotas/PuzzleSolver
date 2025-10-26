@@ -57,7 +57,7 @@ class SequenceRangeCorrectionWhenMetColouredFieldsLogHelperTest {
 
         // then
         String expected =
-                "SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS_IN_COLUMN: column=6\n" +
+                "SEQUENCES_RANGES_CORRECTION_WHEN_MET_COLOURED_FIELDS_COLUMN: column=6\n" +
                         "line=[-, -, X, X, -, -, -, X, X, -, -, -, -, -, -]\n" +
                         "sequencesLengths=[2, 2, 2, 2, 2]\n" +
                         "initialRanges=[[0, 2], [3, 5], [6, 8], [9, 11], [12, 14]]\n" +
@@ -71,7 +71,7 @@ class SequenceRangeCorrectionWhenMetColouredFieldsLogHelperTest {
     void shouldConvertGeneratedLogToTestArgumentsColumnCase() {
         // given
         String generatedLog =
-                "SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS_IN_COLUMN: column=6\n" +
+                "SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS_COLUMN: column=6\n" +
                         "line=[-, -, X, X, -, -, -, X, X, -, -, -, -, -, -]\n" +
                         "sequencesLengths=[2, 2, 2, 2, 2]\n" +
                         "initialRanges=[[0, 2], [3, 5], [6, 8], [9, 11], [12, 14]]\n" +
@@ -123,7 +123,7 @@ class SequenceRangeCorrectionWhenMetColouredFieldsLogHelperTest {
 
         // then
         String expected =
-                "SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS_IN_ROW: row=2\n" +
+                "SEQUENCES_RANGES_CORRECTION_WHEN_MET_COLOURED_FIELDS_ROW: row=2\n" +
                         "line=[-, -, O, -, -, -, -, -, -, -, -, -, -, -, -]\n" +
                         "sequencesLengths=[4, 5, 2]\n" +
                         "initialRanges=[[0, 9], [2, 11], [4, 14]]\n" +
@@ -137,7 +137,7 @@ class SequenceRangeCorrectionWhenMetColouredFieldsLogHelperTest {
     void shouldConvertGeneratedLogToTestArgumentsRowCase() {
         // given
         String generatedLog =
-                "SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS_IN_ROW: row=2\n" +
+                "SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS_ROW: row=2\n" +
                         "line=[-, -, O, -, -, -, -, -, -, -, -, -, -, -, -]\n" +
                         "sequencesLengths=[4, 5, 2]\n" +
                         "initialRanges=[[0, 9], [2, 11], [4, 14]]\n" +

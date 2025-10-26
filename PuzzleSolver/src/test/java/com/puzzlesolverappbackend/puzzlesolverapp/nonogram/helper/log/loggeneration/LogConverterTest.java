@@ -242,7 +242,7 @@ class LogConverterTest {
         void detects_corrections() {
             assertThat(LogConverter.detectActionTypeFromRawLog("SEQUENCES_RANGES_CORRECTION_IN ..."))
                     .isEqualTo("SEQUENCES_RANGES_CORRECTION");
-            assertThat(LogConverter.detectActionTypeFromRawLog("SEQUENCE_CORRECTION_WHEN_MET_COLOURED_FIELDS ..."))
+            assertThat(LogConverter.detectActionTypeFromRawLog("SEQUENCES_RANGES_CORRECTION_WHEN_MET_COLOURED_FIELDS ..."))
                     .isEqualTo("SEQUENCES_RANGES_CORRECTION_WHEN_MET_COLOURED_FIELDS");
             assertThat(LogConverter.detectActionTypeFromRawLog("SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY ..."))
                     .isEqualTo("SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY");
