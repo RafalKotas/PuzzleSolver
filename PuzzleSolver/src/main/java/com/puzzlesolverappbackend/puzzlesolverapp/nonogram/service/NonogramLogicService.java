@@ -34,8 +34,6 @@ public class NonogramLogicService {
 
     private final NonogramSolutionSaver nonogramSolutionSaver;
 
-    private static final boolean SHOW_REPETITIONS = false;
-
     public NonogramLogicService(NonogramSolutionSaver nonogramSolutionSaver,
                                 NonogramLogicFactory logicFactory) {
         this.nonogramSolutionSaver = nonogramSolutionSaver;
