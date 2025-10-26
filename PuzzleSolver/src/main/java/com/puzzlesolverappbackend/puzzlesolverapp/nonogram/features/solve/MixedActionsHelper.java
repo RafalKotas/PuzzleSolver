@@ -36,16 +36,6 @@ public class MixedActionsHelper {
             boolean touchesOrOverlaps = startNew <= end + 1;
             boolean extendsAboveStart = start < startNew;
 
-//            if (!touchesOrOverlaps && !extendsAboveStart) {
-//                System.out.println("40 not covered");
-//            } else if (!touchesOrOverlaps && extendsAboveStart) {
-//                System.out.println("42 not covered");
-//            } else if (touchesOrOverlaps && !extendsAboveStart) {
-//                System.out.println("44 not covered");
-//            } else if (touchesOrOverlaps && extendsAboveStart) {
-//                System.out.println("46 not covered");
-//            }
-
             return touchesOrOverlaps && extendsAboveStart;
         });
     }
