@@ -23,7 +23,7 @@ class LiquibaseSmokeTest {
         Integer cnt = jdbc.queryForObject(
                 "SELECT COUNT(*) FROM information_schema.tables " +
                         "WHERE table_schema = DATABASE() AND table_name = 'akari'", Integer.class);
-        assertThat(cnt).isNotNull();
-        assertThat(cnt).isPositive(); // akari table exists
+        assertThat(cnt).isNotNull()
+                .isPositive(); // akari table exists
     }
 }
