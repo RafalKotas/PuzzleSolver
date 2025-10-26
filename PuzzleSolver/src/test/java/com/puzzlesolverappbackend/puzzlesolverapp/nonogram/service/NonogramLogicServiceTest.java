@@ -196,40 +196,31 @@ class NonogramLogicServiceTest {
 
         // then
         // columns [0, 1]
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(2).get(0)).isEqualTo("--Ca");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(3).get(0)).isEqualTo("--Ca");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(4).get(0)).isEqualTo("--Ca");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(5).get(0)).isEqualTo("--Ca");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(6).get(0)).isEqualTo("--Ca");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(7).get(0)).isEqualTo("--Ca");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(8).get(0)).isEqualTo("--Ca");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(9).get(0)).isEqualTo("--Ca");
+        int[] rowsCaCol0 = {2,3,4,5,6,7,8,9};
+        for (int r : rowsCaCol0) {
+            assertThat(logic.getNonogramSolutionBoardWithMarks().get(r).get(0)).isEqualTo("--Ca");
+        }
 
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(13).get(0)).isEqualTo("--Cb");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(14).get(0)).isEqualTo("--Cb");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(15).get(0)).isEqualTo("--Cb");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(16).get(0)).isEqualTo("--Cb");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(17).get(0)).isEqualTo("--Cb");
+        int[] rowsCbCol0 = {13,14,15,16,17};
+        for (int r : rowsCbCol0) {
+            assertThat(logic.getNonogramSolutionBoardWithMarks().get(r).get(0)).isEqualTo("--Cb");
+        }
 
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(4).get(1)).isEqualTo("--Ca");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(5).get(1)).isEqualTo("--Ca");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(6).get(1)).isEqualTo("--Ca");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(7).get(1)).isEqualTo("--Ca");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(8).get(1)).isEqualTo("--Ca");
+        int[] rowsCaCol1 = {4,5,6,7,8};
+        for (int r : rowsCaCol1) {
+            assertThat(logic.getNonogramSolutionBoardWithMarks().get(r).get(1)).isEqualTo("--Ca");
+        }
 
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(14).get(1)).isEqualTo("--Cb");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(15).get(1)).isEqualTo("--Cb");
+        int[] rowsCbCol1 = {14,15};
+        for (int r : rowsCbCol1) {
+            assertThat(logic.getNonogramSolutionBoardWithMarks().get(r).get(1)).isEqualTo("--Cb");
+        }
 
         // column 2 (coloured, but not marked)
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(3).get(2)).isEqualTo("--C-");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(4).get(2)).isEqualTo("--C-");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(5).get(2)).isEqualTo("--C-");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(6).get(2)).isEqualTo("--C-");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(7).get(2)).isEqualTo("--C-");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(8).get(2)).isEqualTo("--C-");
-
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(15).get(2)).isEqualTo("--C-");
-        assertThat(logic.getNonogramSolutionBoardWithMarks().get(16).get(2)).isEqualTo("--C-");
+        int[] rowsCol2 = {3,4,5,6,7,8,15,16};
+        for (int r : rowsCol2) {
+            assertThat(logic.getNonogramSolutionBoardWithMarks().get(r).get(2)).isEqualTo("--C-");
+        }
     }
 
     @DisplayName("placeXsAroundLongestSequencesInRowsRange - should place X around longest sequences in rows [11, 12]")
