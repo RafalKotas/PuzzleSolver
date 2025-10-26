@@ -132,7 +132,7 @@ class NonogramPrinterTest {
         // then
         assertThat(appender.getLogs()).isNotEmpty();
         // minimal sanity check — at least as many logs as board rows
-        assertThat(appender.getLogs().size()).isGreaterThanOrEqualTo(logic.getNonogramRules().getHeight());
+        assertThat(appender.getLogs()).hasSizeGreaterThanOrEqualTo(logic.getNonogramRules().getHeight());
 
         // optional — check a specific expected substring
         assertThat(appender.getLogs()).anyMatch(line -> line.contains("Nonogram board:"));
