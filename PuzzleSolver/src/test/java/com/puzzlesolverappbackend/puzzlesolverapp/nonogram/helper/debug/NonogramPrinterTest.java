@@ -3,10 +3,13 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.debug;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.AppenderBase;
 import ch.qos.logback.core.read.ListAppender;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRules;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.config.GuessMode;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
@@ -18,6 +21,23 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 class NonogramPrinterTest {
 
+    NonogramPrinter subject;
+
+    private TestLogAppender appender;
+
+    @BeforeEach
+    void setup() {
+        appender = new TestLogAppender();
+        Logger root = (Logger) LoggerFactory.getLogger(NonogramPrinter.class);
+        root.addAppender(appender);
+        appender.start();
+    }
+
+    @AfterEach
+    void tearDown() {
+        appender.stop();
+    }
+
     @DisplayName("NonogramPrinter keeps provided NonogramLogic")
     @Test
     void printerKeepsLogicInstance() {
@@ -25,10 +45,10 @@ class NonogramPrinterTest {
         NonogramLogic logic = buildLogic_o06005_withBoardAndRanges();
 
         // when
-        NonogramPrinter printer = new NonogramPrinter(logic);
+        subject = new NonogramPrinter(logic);
 
         // then
-        assertThat(printer.getLogic()).isSameAs(logic);
+        assertThat(subject.getLogic()).isSameAs(logic);
     }
 
     private NonogramLogic buildLogic_o06005_withBoardAndRanges() {
@@ -94,20 +114,29 @@ class NonogramPrinterTest {
         return logic;
     }
 
-    @DisplayName("NonogramPrinter: print* should not throw (smoke, o06005)")
     @Test
+    @DisplayName("NonogramPrinter: print* should log expected number of lines (smoke, o06005)")
     void smokePrintCalls_o06005() {
         // given
         NonogramLogic logic = buildLogic_o06005_withBoardAndRanges();
-        NonogramPrinter printer = new NonogramPrinter(logic);
+        subject = new NonogramPrinter(logic);
 
-        // when // then (no exceptions)
-        printer.printNonogramBoard();
-        printer.printNonogramBoardWithMarks();
-        printer.printRowsSequencesRanges();
-        printer.printColumnsSequencesRanges();
-        printer.printLogs();
-        printer.printStats();
+        // when
+        subject.printNonogramBoard();
+        subject.printNonogramBoardWithMarks();
+        subject.printRowsSequencesRanges();
+        subject.printColumnsSequencesRanges();
+        subject.printLogs();
+        subject.printStats();
+
+        // then
+        assertThat(appender.getLogs()).isNotEmpty();
+        // minimal sanity check — at least as many logs as board rows
+        assertThat(appender.getLogs().size()).isGreaterThanOrEqualTo(logic.getNonogramRules().getHeight());
+
+        // optional — check a specific expected substring
+        assertThat(appender.getLogs()).anyMatch(line -> line.contains("Nonogram board:"));
+        assertThat(appender.getLogs()).anyMatch(line -> line.contains("completion percentage"));
     }
 
     @DisplayName("NonogramPrinter: printNonogramBoard logs one line per row with index prefix (o06005)")
@@ -115,7 +144,7 @@ class NonogramPrinterTest {
     void printNonogramBoard_shouldLogRows_o06005() {
         // given
         NonogramLogic logic = buildLogic_o06005_withBoardAndRanges();
-        NonogramPrinter printer = new NonogramPrinter(logic);
+        subject = new NonogramPrinter(logic);
 
         Logger logger = (Logger) LoggerFactory.getLogger(NonogramPrinter.class);
         ListAppender<ILoggingEvent> appender = new ListAppender<>();
@@ -125,7 +154,7 @@ class NonogramPrinterTest {
         logger.addAppender(appender);
 
         // when
-        printer.printNonogramBoard();
+        subject.printNonogramBoard();
 
         // then
         List<ILoggingEvent> events = appender.list;
@@ -150,7 +179,7 @@ class NonogramPrinterTest {
     void shouldLogRangesAndOverlapLog_o06005() {
         // given
         NonogramLogic logic = buildLogic_o06005_withBoardAndRanges();
-        NonogramPrinter printer = new NonogramPrinter(logic);
+        subject = new NonogramPrinter(logic);
 
         Logger logger = (Logger) LoggerFactory.getLogger(NonogramPrinter.class);
         ListAppender<ILoggingEvent> appender = new ListAppender<>();
@@ -160,9 +189,9 @@ class NonogramPrinterTest {
         logger.addAppender(appender);
 
         // when
-        printer.printRowsSequencesRanges();
-        printer.printColumnsSequencesRanges();
-        printer.printLogs();
+        subject.printRowsSequencesRanges();
+        subject.printColumnsSequencesRanges();
+        subject.printLogs();
 
         // then
         List<String> lines = appender.list.stream().map(ILoggingEvent::getFormattedMessage).toList();
@@ -179,5 +208,18 @@ class NonogramPrinterTest {
         logger.detachAppender(appender);
         logger.setLevel(prev);
         appender.stop();
+    }
+
+    static class TestLogAppender extends AppenderBase<ILoggingEvent> {
+        private final List<String> logs = new ArrayList<>();
+
+        @Override
+        protected void append(ILoggingEvent eventObject) {
+            logs.add(eventObject.getFormattedMessage());
+        }
+
+        List<String> getLogs() {
+            return logs;
+        }
     }
 }
