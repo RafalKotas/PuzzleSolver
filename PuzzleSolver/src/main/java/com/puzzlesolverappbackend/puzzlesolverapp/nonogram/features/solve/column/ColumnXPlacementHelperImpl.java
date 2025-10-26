@@ -671,28 +671,34 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
     private List<Integer> getFieldRange(Field startField,
                                         IntUnaryOperator directionFn,
                                         Predicate<Field> matchCondition) {
+        Range range = computeMinMaxRowRange(startField, directionFn, matchCondition);
+        if (range.isEmpty()) {
+            return List.of(-1, -1);
+        }
+        return List.of(range.min(), range.max());
+    }
+
+    private Range computeMinMaxRowRange(Field startField,
+                                        IntUnaryOperator directionFn,
+                                        Predicate<Field> matchCondition) {
         int min = Integer.MAX_VALUE;
         int max = Integer.MIN_VALUE;
 
         Field f = new Field(startField.getRowIdx(), startField.getColumnIdx());
         while (nonogramColumnLogic.getBoardAccessHelper().areFieldIndexesValid(f) && matchCondition.test(f)) {
-            int r = f.getRowIdx();
-            if (r < min) min = r;
-            if (r > max) max = r;
-            f.setRowIdx(directionFn.applyAsInt(r));
+            int row = f.getRowIdx();
+            min = Math.min(min, row);
+            max = Math.max(max, row);
+            f.setRowIdx(directionFn.applyAsInt(row));
         }
 
-        if (min != Integer.MAX_VALUE && max != Integer.MIN_VALUE) {
-            System.out.println("FF");
-        } else if (min != Integer.MAX_VALUE && max == Integer.MIN_VALUE) {
-            System.out.println("FT");
-        } else if (min == Integer.MAX_VALUE && max != Integer.MIN_VALUE) {
-            System.out.println("TF");
-        } else if (min == Integer.MAX_VALUE && max == Integer.MIN_VALUE) {
-            System.out.println("TT");
+        return new Range(min, max);
+    }
+
+    private record Range(int min, int max) {
+        boolean isEmpty() {
+            return min == Integer.MAX_VALUE && max == Integer.MIN_VALUE;
         }
-        if (min == Integer.MAX_VALUE && max == Integer.MIN_VALUE) return List.of(-1, -1);
-        return List.of(min, max);
     }
 
     private void evaluateAndMaybePlaceX(int columnIdx, List<Integer> emptyRange, List<Integer> colouredRange, boolean isFromTop) {
