@@ -58,7 +58,7 @@ public final class ColouringHelper {
 
     public static List<Integer> findColouredSequenceRangeBottom(List<List<String>> board, int columnIdx, int startRowIdx) {
         int end = startRowIdx;
-        while (end < board.size() - 1) {
+        while (end < board.size() - 2) {
             int below = end + 1;
             if (isFieldColoured(board, new Field(below, columnIdx))) {
                 end++;
@@ -247,8 +247,7 @@ public final class ColouringHelper {
     public static List<Integer> findColouredSequenceRangeRight(List<List<String>> board, int rowIdx, int startColumnIdx) {
         int end = startColumnIdx;
 
-        // TODO IndexOutOfBoundsException (end < board.size() - 2)? + others
-        while (end < board.size() - 1) {
+        while (end < board.get(0).size() - 2) {
             int after = end + 1;
             if (isFieldColoured(board, new Field(rowIdx, after))) {
                 end++;
