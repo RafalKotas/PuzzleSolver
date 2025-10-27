@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldColoured;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldEmpty;
 
 @Getter
 public class NonogramBoardAccessHelper implements RefreshableColumnHelper {
@@ -40,6 +41,16 @@ public class NonogramBoardAccessHelper implements RefreshableColumnHelper {
 
     public List<String> getRowCopy(int rowIdx) {
         return new ArrayList<>(logic.getNonogramSolutionBoard().get(rowIdx));
+    }
+
+    public boolean isColumnFilled(int columnIdx) {
+        int height = logic.getNonogramRules().getHeight();
+
+        return IntStream.range(0, height)
+                .noneMatch(rowIdx -> isFieldEmpty(
+                        logic.getNonogramSolutionBoard(),
+                        new Field(rowIdx, columnIdx)
+                ));
     }
 
     public boolean areFieldIndexesValid (Field fieldToValidate) {

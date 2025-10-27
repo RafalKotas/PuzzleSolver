@@ -3,6 +3,7 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.colum
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRules;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.config.GuessMode;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,12 +14,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ColumnColouringHelperImplTest {
 
+    ColumnColouringHelperImpl subject;
+
+    NonogramLogic logic;
+
+    @BeforeEach
+    void setup() {
+        logic = prepareNonogramLogic();
+    }
+
     @Test
-    @DisplayName("colourOverlappingFieldsInColumn – o06005, col=0: powinno pokolorować overlap (4 pola) i zwiększyć kroki o 4")
+    @DisplayName("colourOverlappingFieldsInColumn – o06005, col=0: should overlap 4 fields and increase steps made by 4")
     void shouldColourOverlappingFieldsInColumn_o06005_col0() {
         // given
-        NonogramLogic logic = getNonogramLogic();
-
         List<List<String>> board = new ArrayList<>();
         for (int r = 0; r < 10; r++) {
             List<String> row = new ArrayList<>();
@@ -44,11 +52,13 @@ class ColumnColouringHelperImplTest {
         List<String> expectedAfter = List.of("-", "-", "-", "O", "O", "O", "O", "O", "-", "-");
         int stepsBefore = logic.getNonogramState().getNewStepsMade();
 
+        subject = new ColumnColouringHelperImpl(columnLogic);
+
         // when
-        columnLogic.colourOverlappingFieldsInColumn(columnIdx);
+        subject.colourOverlappingFieldsInColumn(columnIdx);
 
         // then
-        List<String> after = columnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
+        List<String> after = subject.getNonogramColumnLogic().getBoardAccessHelper().getColumnCopy(columnIdx);
         assertThat(after).isEqualTo(expectedAfter);
 
         int stepsAfter = logic.getNonogramState().getNewStepsMade();
@@ -56,11 +66,9 @@ class ColumnColouringHelperImplTest {
     }
 
     @Test
-    @DisplayName("colourOverlappingFieldsInColumn – kolumna już pokolorowana, brak zmian (anyFieldColoured = false)")
+    @DisplayName("colourOverlappingFieldsInColumn – column already coloured, no changes (anyFieldColoured = false)")
     void shouldNotColourAnythingWhenAlreadyColoured() {
         // given
-        NonogramLogic logic = getNonogramLogic();
-
         List<List<String>> board = new ArrayList<>();
         for (int r = 0; r < 10; r++) {
             List<String> row = new ArrayList<>();
@@ -89,8 +97,10 @@ class ColumnColouringHelperImplTest {
         List<String> before = columnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
         int stepsBefore = logic.getNonogramState().getNewStepsMade();
 
+        subject = new ColumnColouringHelperImpl(columnLogic);
+
         // when
-        columnLogic.colourOverlappingFieldsInColumn(columnIdx);
+        subject.colourOverlappingFieldsInColumn(columnIdx);
 
         // then
         List<String> after = columnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
@@ -99,7 +109,7 @@ class ColumnColouringHelperImplTest {
         assertThat(stepsAfter - stepsBefore).isZero();
     }
 
-    private static NonogramLogic getNonogramLogic() {
+    private static NonogramLogic prepareNonogramLogic() {
         List<List<Integer>> rowSequences = List.of(
                 List.of(1, 1, 1),
                 List.of(1, 1, 1, 1, 1),
