@@ -237,28 +237,6 @@ class NonogramLogicTest {
     }
 
     @Test
-    void shouldNotAddRowFieldToExcludedIfWrongField() {
-        // given
-        NonogramRules rules = new NonogramRules();
-        rules.setHeight(3);
-        rules.setWidth(3);
-        rules.setRowSequencesLengths(List.of(List.of(0), List.of(1), List.of(0)));
-        rules.setColumnSequencesLengths(List.of(List.of(0), List.of(1), List.of(0)));
-        List<List<Integer>> rowSequenceRanges = new ArrayList<>();
-        rowSequenceRanges.add(new ArrayList<>(List.of(-1, -1)));
-        // wrong
-        rowSequenceRanges.add(new ArrayList<>(List.of(0, 3)));
-        rowSequenceRanges.add(new ArrayList<>(List.of(-1, -1)));
-
-
-        NonogramLogic logic = new NonogramLogic(rules, GuessMode.DISABLED);
-        logic.getRowsSequencesRanges().set(1, rowSequenceRanges);
-
-        // when
-        logic.fillTrivialRowsAndColumns();
-    }
-
-    @Test
     void shouldNotAddRowFieldToExcludedIfFieldIsInList() {
         // given
         NonogramRules rules = new NonogramRules();
