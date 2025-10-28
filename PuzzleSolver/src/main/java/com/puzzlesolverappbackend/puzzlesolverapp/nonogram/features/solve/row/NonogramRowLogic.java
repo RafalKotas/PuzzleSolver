@@ -233,7 +233,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             handleValidOverextensionCase(context, rowBefore, rowSequencesRanges, rowSequencesLengths);
 
             // --- step 3: update sequence ranges ---
-            updateSequenceRangeIfNeeded(context, rowIdx, rowBefore, rowRangesBefore);
+            updateSequenceRangeIfNeededLeft(context, rowIdx, rowBefore, rowRangesBefore);
         }
     }
 
@@ -334,7 +334,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             handleValidRightOverextensionCase(context, rowBefore, rowSequencesRanges, rowSequencesLengths);
 
             // --- step 3: update sequence ranges ---
-            updateSequenceRangeIfNeeded(context, rowIdx, rowBefore, rowRangesBefore);
+            updateSequenceRangeIfNeededRight(context, rowIdx, rowBefore, rowRangesBefore);
         }
     }
 
@@ -410,9 +410,10 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         }
     }
 
-    // === PRIVATE HELPERS: COMMON ===
+    // === RANGES UPDATES: LEFT & RIGHT ===
 
-    private void updateSequenceRangeIfNeeded(
+    // LEFT  → [start = col - len + 1, end = col]
+    private void updateSequenceRangeIfNeededLeft(
             OverextensionContext context,
             int rowIdx,
             List<String> rowBefore,
@@ -420,29 +421,65 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
     ) {
         if (context.validSequenceIds().size() != 1) return;
 
-        int matchingSeqId = context.validSequenceIds().get(0);
-        List<Integer> oldRange = context.rowSequencesRanges().get(matchingSeqId);
+        int seqId = context.validSequenceIds().get(0);
+        int len   = context.validSequenceLengths().get(0);
+        int end   = context.potentiallyColouredFieldColumn();
+        int start = end - len + 1;
 
-        int sequenceLength = context.validSequenceLengths().get(0);
-        int newStart = context.potentiallyColouredFieldColumn() - sequenceLength + 1;
-        List<Integer> updatedRange = List.of(newStart, context.potentiallyColouredFieldColumn());
+        applyRowRangeUpdate(rowIdx, seqId, start, end, context, rowBefore, rowRangesBefore);
+    }
 
-        if (!rangesNotEqual(oldRange, updatedRange)) return;
+    // RIGHT → [start = col, end = col + len - 1]
+    private void updateSequenceRangeIfNeededRight(
+            OverextensionContext context,
+            int rowIdx,
+            List<String> rowBefore,
+            List<List<Integer>> rowRangesBefore
+    ) {
+        if (context.validSequenceIds().size() != 1) return;
 
-        this.updateRowSequenceRange(rowIdx, matchingSeqId, updatedRange);
-        this.nonogramState.increaseMadeSteps();
+        int seqId = context.validSequenceIds().get(0);
+        int len   = context.validSequenceLengths().get(0);
+        int start = context.potentiallyColouredFieldColumn();
+        int end   = start + len - 1;
 
-        if (sequenceShouldBeExcluded(rowIdx, matchingSeqId)) {
-            excludeSequenceInRow(rowIdx, matchingSeqId);
-            this.nonogramState.increaseMadeSteps();
+        applyRowRangeUpdate(rowIdx, seqId, start, end, context, rowBefore, rowRangesBefore);
+    }
+
+    private void applyRowRangeUpdate(
+            int rowIdx,
+            int seqId,
+            int start,
+            int end,
+            OverextensionContext context,
+            List<String> rowBefore,
+            List<List<Integer>> rowRangesBefore
+    ) {
+        List<Integer> oldRange = context.rowSequencesRanges().get(seqId);
+        List<Integer> updated  = List.of(start, end);
+        if (!rangesNotEqual(oldRange, updated)) return;
+
+        updateRowSequenceRange(rowIdx, seqId, updated);
+        nonogramState.increaseMadeSteps();
+
+        if (sequenceShouldBeExcluded(rowIdx, seqId)) {
+            excludeSequenceInRow(rowIdx, seqId);
+            nonogramState.increaseMadeSteps();
         }
 
         Field rowField = new Field(rowIdx, 0);
         actionScheduler.scheduleActionsBasedOnField(rowField,
                 NonogramSolveAction.PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART_IN_ROW);
 
-        tmpLog = generateLog(true, rowIdx, context.sequencesLengths(), rowBefore,
-                getRowCopy(rowIdx), rowRangesBefore, this.getRowsSequencesRanges().get(rowIdx));
+        tmpLog = generateLog(
+                true,
+                rowIdx,
+                context.sequencesLengths(),
+                rowBefore,
+                getRowCopy(rowIdx),
+                rowRangesBefore,
+                getRowsSequencesRanges().get(rowIdx)
+        );
         addLog();
     }
 

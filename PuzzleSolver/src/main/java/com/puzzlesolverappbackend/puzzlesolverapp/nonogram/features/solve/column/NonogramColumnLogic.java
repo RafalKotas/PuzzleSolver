@@ -307,7 +307,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             if (context == null || context.validSequenceLengths().isEmpty()) continue;
 
             handleValidTopOverextensionCase(context, columnBefore, columnSequencesRanges, columnSequencesLengths);
-            updateColumnSequenceRangeIfNeeded(context, columnIdx, columnBefore, columnRangesBefore);
+            updateColumnSequenceRangeIfNeededTop(context, columnIdx, columnBefore, columnRangesBefore);
         }
     }
 
@@ -335,7 +335,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             if (context == null || context.validSequenceLengths().isEmpty()) continue;
 
             handleValidBottomOverextensionCase(context, columnBefore, columnSequencesRanges, columnSequencesLengths);
-            updateColumnSequenceRangeIfNeeded(context, columnIdx, columnBefore, columnRangesBefore);
+            updateColumnSequenceRangeIfNeededBottom(context, columnIdx, columnBefore, columnRangesBefore);
         }
     }
 
@@ -483,38 +483,54 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
     // 🧾 Sequence range update
     // ------------------------------------------------------------------------
 
-    private void updateColumnSequenceRangeIfNeeded(OverextensionColumnContext context,
-                                                   int columnIdx,
-                                                   List<String> columnBefore,
-                                                   List<List<Integer>> columnRangesBefore) {
+    // TOP
+    private void updateColumnSequenceRangeIfNeededTop(OverextensionColumnContext ctx, int colIdx,
+                                                      List<String> colBefore, List<List<Integer>> rangesBefore) {
+        if (ctx.validSequenceIds().size() != 1) return;
 
-        if (context.validSequenceIds().size() != 1) return;
+        int seqId = ctx.validSequenceIds().get(0);
+        int len   = ctx.validSequenceLengths().get(0);
+        int end   = ctx.potentiallyColouredFieldRow();
+        int start = end - len + 1;
 
-        int matchingSeqId = context.validSequenceIds().get(0);
-        List<Integer> oldRange = context.columnSequencesRanges().get(matchingSeqId);
+        applyColumnRangeUpdate(colIdx, seqId, start, end, ctx, colBefore, rangesBefore);
+    }
 
-        int sequenceLength = context.validSequenceLengths().get(0);
-        int newStart = context.potentiallyColouredFieldRow() - sequenceLength + 1;
-        List<Integer> updatedRange = List.of(newStart, context.potentiallyColouredFieldRow());
+    // BOTTOM
+    private void updateColumnSequenceRangeIfNeededBottom(OverextensionColumnContext ctx, int colIdx,
+                                                         List<String> colBefore, List<List<Integer>> rangesBefore) {
+        if (ctx.validSequenceIds().size() != 1) return;
 
-        if (!rangesNotEqual(oldRange, updatedRange)) return;
+        int seqId = ctx.validSequenceIds().get(0);
+        int len   = ctx.validSequenceLengths().get(0);
+        int start = ctx.potentiallyColouredFieldRow();
+        int end   = start + len - 1;
 
-        this.updateColumnSequenceRange(columnIdx, matchingSeqId, updatedRange);
-        this.nonogramState.increaseMadeSteps();
+        applyColumnRangeUpdate(colIdx, seqId, start, end, ctx, colBefore, rangesBefore);
+    }
 
-        if (sequenceShouldBeExcluded(columnIdx, matchingSeqId)) {
-            excludeSequenceInColumn(columnIdx, matchingSeqId);
-            this.nonogramState.increaseMadeSteps();
+    private void applyColumnRangeUpdate(int colIdx, int seqId, int start, int end,
+                                        OverextensionColumnContext ctx,
+                                        List<String> colBefore, List<List<Integer>> rangesBefore) {
+        List<Integer> oldRange = ctx.columnSequencesRanges().get(seqId);
+        List<Integer> updated  = List.of(start, end);
+
+        if (!rangesNotEqual(oldRange, updated)) return;
+
+        updateColumnSequenceRange(colIdx, seqId, updated);
+        nonogramState.increaseMadeSteps();
+
+        if (sequenceShouldBeExcluded(colIdx, seqId)) {
+            excludeSequenceInColumn(colIdx, seqId);
+            nonogramState.increaseMadeSteps();
         }
 
-        Field colField = new Field(0, columnIdx);
+        Field colField = new Field(0, colIdx);
         actionScheduler.scheduleActionsBasedOnField(colField,
                 NonogramSolveAction.PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART_IN_COLUMN);
 
-        tmpLog = generateLog(
-                false, columnIdx, context.sequencesLengths(),
-                columnBefore, getColumnCopy(columnIdx),
-                columnRangesBefore, this.getColumnsSequencesRanges().get(columnIdx));
+        tmpLog = generateLog(false, colIdx, ctx.sequencesLengths(),
+                colBefore, getColumnCopy(colIdx), rangesBefore, getColumnsSequencesRanges().get(colIdx));
         addLog();
     }
 
