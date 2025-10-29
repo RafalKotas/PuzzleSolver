@@ -86,9 +86,9 @@ class OverlappingLogHelperTest {
         // then
         String expected = "Arguments.of(\"o08007 / column=2 - colour overlapping fields\",\n" +
                 "    new ArrayList<>(List.of(\"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\")),\n" +
-                "    List.of(List.of(0, 5), List.of(5, 11), List.of(11, 14)),\n" +
+                "    new ArrayList<>(List.of(new ArrayList<>(List.of(0, 5)), new ArrayList<>(List.of(5, 11)), new ArrayList<>(List.of(11, 14)))),\n" +
                 "    List.of(4, 5, 2),\n" +
-                "    List.of(\"-\", \"-\", \"O\", \"O\", \"-\", \"-\", \"-\", \"O\", \"O\", \"O\", \"-\", \"-\", \"-\", \"-\", \"-\"))\n" +
+                "    new ArrayList<>(List.of(\"-\", \"-\", \"O\", \"O\", \"-\", \"-\", \"-\", \"O\", \"O\", \"O\", \"-\", \"-\", \"-\", \"-\", \"-\")))\n" +
                 ")";
         assertThat(convertedLog).isEqualTo(expected);
     }
@@ -148,9 +148,9 @@ class OverlappingLogHelperTest {
         // then
         String expected = "Arguments.of(\"o08007 / row=9 - colour overlapping fields\",\n" +
                 "    new ArrayList<>(List.of(\"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\")),\n" +
-                "    List.of(List.of(0, 14)),\n" +
+                "    new ArrayList<>(List.of(new ArrayList<>(List.of(0, 14)))),\n" +
                 "    List.of(9),\n" +
-                "    List.of(\"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"O\", \"O\", \"O\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\"))\n" +
+                "    new ArrayList<>(List.of(\"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"O\", \"O\", \"O\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\")))\n" +
                 ")";
         assertThat(convertedLog).isEqualTo(expected);
     }

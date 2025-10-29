@@ -5,7 +5,6 @@ import lombok.experimental.UtilityClass;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
 public class ExtendLogHelper {
@@ -40,19 +39,7 @@ public class ExtendLogHelper {
     }
 
     public static String convertLogToTestArguments(String log, String solutionName) {
-        String[] lines = log.split("\\n");
-
-        boolean isRow = lines[0].contains(ROW_ACTION_NAME);
-        String axisLabel = isRow ? ROW : COLUMN;
-
-        int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
-
-        String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
-
-        String initialLine = extractValue(lines, "initialLine");
-        String sequencesRanges = extractValue(lines, "sequencesRanges");
-        String sequencesLengths = extractValue(lines, "sequencesLengths");
-        String updatedLine = extractValue(lines, "updatedLine");
+        ColouringLogContext colouringLogContext = new ColouringLogContext(log, solutionName);
 
         return String.format(
                 """
@@ -62,13 +49,13 @@ public class ExtendLogHelper {
                             %s,
                             %s
                         )""",
-                fileName,
-                isRow ? ROW : COLUMN,
-                index,
-                toMutableStringListLiteral(initialLine),
-                toImmutableRangesListLiteral(sequencesRanges),
-                toImmutableIntListLiteral(sequencesLengths),
-                toImmutableStringListLiteral(updatedLine)
+                colouringLogContext.getFileName(),
+                colouringLogContext.getAxisLabel(),
+                colouringLogContext.getIndex(),
+                colouringLogContext.getInitialLine(),
+                colouringLogContext.getSequencesRanges(),
+                colouringLogContext.getSequencesLengths(),
+                colouringLogContext.getUpdatedLine()
         );
     }
 }

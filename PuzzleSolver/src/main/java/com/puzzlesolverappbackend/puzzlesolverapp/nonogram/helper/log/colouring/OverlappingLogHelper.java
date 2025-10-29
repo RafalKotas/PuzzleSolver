@@ -5,7 +5,6 @@ import lombok.experimental.UtilityClass;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
 public class OverlappingLogHelper {
@@ -40,19 +39,7 @@ public class OverlappingLogHelper {
             String log,
             String solutionName
     ) {
-        String[] lines = log.split("\\n");
-
-        boolean isRow = lines[0].contains(ROW_ACTION_NAME);
-        String axisLabel = isRow ? ROW : COLUMN;
-
-        int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
-
-        String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
-
-        String initialLine = lines[1].replace("initialLine=", "").trim();
-        String sequencesRanges = lines[2].replace("sequencesRanges=", "").trim();
-        String sequencesLengths = lines[3].replace("sequencesLengths=", "").trim();
-        String updatedLine = lines[4].replace("updatedLine=", "").trim();
+        ColouringLogContext colouringLogContext = new ColouringLogContext(log, solutionName);
 
         return String.format(
                 """
@@ -62,13 +49,13 @@ public class OverlappingLogHelper {
                             %s,
                             %s)
                         )""",
-                fileName,
-                isRow ? ROW : COLUMN,
-                index,
-                toMutableStringListLiteral(initialLine),
-                toImmutableRangesListLiteral(sequencesRanges),
-                toImmutableIntListLiteral(sequencesLengths),
-                toImmutableStringListLiteral(updatedLine)
+                colouringLogContext.getFileName(),
+                colouringLogContext.getAxisLabel(),
+                colouringLogContext.getIndex(),
+                colouringLogContext.getInitialLine(),
+                colouringLogContext.getSequencesRanges(),
+                colouringLogContext.getSequencesLengths(),
+                colouringLogContext.getUpdatedLine()
         );
     }
 }

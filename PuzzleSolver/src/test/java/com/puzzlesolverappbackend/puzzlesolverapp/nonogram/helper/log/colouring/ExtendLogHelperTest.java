@@ -92,9 +92,9 @@ class ExtendLogHelperTest {
         // then
         String expected = "Arguments.of(\"o08007 / column=3 - extending coloured fields near X\",\n" +
                 "    new ArrayList<>(List.of(\"-\", \"-\", \"X\", \"-\", \"-\", \"-\", \"-\", \"-\", \"X\", \"O\", \"-\", \"-\", \"-\", \"-\", \"-\")),\n" +
-                "    List.of(List.of(0, 5), List.of(3, 7), List.of(9, 10), List.of(10, 14)),\n" +
+                "    new ArrayList<>(List.of(new ArrayList<>(List.of(0, 5)), new ArrayList<>(List.of(3, 7)), new ArrayList<>(List.of(9, 10)), new ArrayList<>(List.of(10, 14)))),\n" +
                 "    List.of(2, 3, 2, 1),\n" +
-                "    List.of(\"-\", \"-\", \"X\", \"-\", \"-\", \"-\", \"-\", \"-\", \"X\", \"O\", \"O\", \"-\", \"-\", \"-\", \"-\")\n" +
+                "    new ArrayList<>(List.of(\"-\", \"-\", \"X\", \"-\", \"-\", \"-\", \"-\", \"-\", \"X\", \"O\", \"O\", \"-\", \"-\", \"-\", \"-\"))\n" +
                 ")";
         assertThat(convertedLog).isEqualTo(expected);
     }
@@ -161,9 +161,9 @@ class ExtendLogHelperTest {
         // then
         String expected = "Arguments.of(\"o07942 / row=12 - extending coloured fields near X\",\n" +
                 "    new ArrayList<>(List.of(\"-\", \"-\", \"-\", \"-\", \"-\", \"O\", \"O\", \"O\", \"O\", \"O\", \"O\", \"O\", \"O\", \"-\", \"-\", \"X\", \"O\", \"X\", \"O\", \"X\")),\n" +
-                "    List.of(List.of(2, 14), List.of(16, 16), List.of(18, 18)),\n" +
+                "    new ArrayList<>(List.of(new ArrayList<>(List.of(2, 14)), new ArrayList<>(List.of(16, 16)), new ArrayList<>(List.of(18, 18)))),\n" +
                 "    List.of(11, 1, 1),\n" +
-                "    List.of(\"-\", \"-\", \"-\", \"-\", \"O\", \"O\", \"O\", \"O\", \"O\", \"O\", \"O\", \"O\", \"O\", \"-\", \"-\", \"X\", \"O\", \"X\", \"O\", \"X\")\n" +
+                "    new ArrayList<>(List.of(\"-\", \"-\", \"-\", \"-\", \"O\", \"O\", \"O\", \"O\", \"O\", \"O\", \"O\", \"O\", \"O\", \"-\", \"-\", \"X\", \"O\", \"X\", \"O\", \"X\"))\n" +
                 ")";
         assertThat(convertedLog).isEqualTo(expected);
     }
