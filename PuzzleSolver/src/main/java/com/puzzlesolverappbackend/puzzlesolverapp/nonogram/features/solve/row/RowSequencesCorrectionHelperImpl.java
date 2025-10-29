@@ -8,9 +8,13 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.*;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.solve.SequenceRangeCorrectionHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.solve.SequenceRangeCorrectionWhenMetXHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
-import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.*;
+import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.deepCopy;
+import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.rangeLength;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldColoured;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.TooLongMergeFieldHelper.collectColouredSequencesRanges;
 
@@ -63,9 +67,7 @@ public class RowSequencesCorrectionHelperImpl extends CommonRangeCorrectionHelpe
 
         for (int seqIdx = 0; seqIdx < ranges.size() - 1; seqIdx++) {
             int nextIdx = seqIdx + 1;
-            if (excludedIds.contains(nextIdx)) {
-                continue;
-            }
+            if (excludedIds.contains(nextIdx)) continue;
 
             List<Integer> updatedNext = excludedIds.contains(seqIdx)
                     ? SequenceRangeCorrectionHelper.calculateUpdatedNextSequenceRangeAfterExcludedSequence(ranges, fieldsNotToInclude, seqIdx, nextIdx)
@@ -104,9 +106,7 @@ public class RowSequencesCorrectionHelperImpl extends CommonRangeCorrectionHelpe
 
         for (int seqIdx = ranges.size() - 1; seqIdx > 0; seqIdx--) {
             int prevIdx = seqIdx - 1;
-            if (excludedIds.contains(prevIdx)) {
-                continue;
-            }
+            if (excludedIds.contains(prevIdx)) continue;
 
             List<Integer> updatedPrev = excludedIds.contains(seqIdx)
                     ? SequenceRangeCorrectionHelper.calculateUpdatedPreviousSequenceRangeAfterExcludedSequence(ranges, fieldsNotToInclude, seqIdx, prevIdx)
@@ -362,33 +362,6 @@ public class RowSequencesCorrectionHelperImpl extends CommonRangeCorrectionHelpe
         return updateRanges(colouredToSeqs, colouredRanges, rowSequencesRanges, rowSequencesLengths);
     }
 
-    private Map<Integer, List<Integer>> collectMatchingSequences(List<List<Integer>> colouredRanges, List<List<Integer>> sequenceRanges,
-                                                                 List<Integer> sequenceLengths, boolean fromRight) {
-        Map<Integer, List<Integer>> result = new HashMap<>();
-        int start = fromRight ? 0 : colouredRanges.size() - 1;
-        int end = fromRight ? colouredRanges.size() : -1;
-        int step = fromRight ? 1 : -1;
-
-        for (int i = start; i != end; i += step) {
-            List<Integer> coloured = colouredRanges.get(i);
-            int colouredLen = rangeLength(coloured);
-
-            List<Integer> possible = new ArrayList<>();
-            for (int seqIdx = 0; seqIdx < sequenceRanges.size(); seqIdx++) {
-                List<Integer> seqRange = sequenceRanges.get(seqIdx);
-                int seqLen = sequenceLengths.get(seqIdx);
-
-                if (rangeInsideAnotherRange(coloured, seqRange) && seqLen >= colouredLen) {
-                    possible.add(seqIdx);
-                }
-            }
-
-            result.put(i, possible);
-        }
-
-        return result;
-    }
-
     private void filterSequences(Map<Integer, List<Integer>> colouredToSeqs, int totalSequences, boolean fromRight) {
         int boundary = fromRight ? -1 : totalSequences;
         List<Integer> keys = new ArrayList<>(colouredToSeqs.keySet());
@@ -462,6 +435,8 @@ public class RowSequencesCorrectionHelperImpl extends CommonRangeCorrectionHelpe
 
     @Override
     public void refreshFrom(NonogramRowLogic logicToCopy) {
+        nonogramRowLogic.setLogs(logicToCopy.getLogs());
+
         nonogramRowLogic.setNonogramSolutionBoard(logicToCopy.getNonogramSolutionBoard());
         nonogramRowLogic.setRowsSequencesRanges(logicToCopy.getRowsSequencesRanges());
         nonogramRowLogic.setRowsFieldsNotToInclude(logicToCopy.getRowsFieldsNotToInclude());
