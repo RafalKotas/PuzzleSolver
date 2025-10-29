@@ -41,7 +41,7 @@ public interface RowOverextensionPrevention {
         int currentColumnIdx = possibleColouredSequencesEndIndexesRange.get(1);
         int potentiallyColouredSequenceColumnIdx;
 
-        while (currentColumnIdx >= possibleColouredSequencesEndIndexesRange.get(0)) {
+        while (currentColumnIdx >= possibleColouredSequencesEndIndexesRange.get(0) && !fieldWithXFound) {
 
             if (isFieldColoured(solutionBoard, new Field(rowIdx, currentColumnIdx))) {
                 potentiallyColouredSequenceColumnIdx = currentColumnIdx;
@@ -53,19 +53,11 @@ public interface RowOverextensionPrevention {
 
                 currentColumnIdx = potentiallyColouredSequenceColumnIdx - 1; // field with this columnIdx is not coloured ("X"/"-")
 
-                if (currentColumnIdx < 0) {
-                    break;
-                }
-
                 if (isFieldWithX(solutionBoard, new Field(rowIdx, currentColumnIdx))) {
                     fieldWithXFound = true;
                 }
             } else if (isFieldWithX(solutionBoard, new Field(rowIdx, currentColumnIdx))) {
                 fieldWithXFound = true;
-            }
-
-            if (fieldWithXFound) {
-                break;
             }
 
             currentColumnIdx--;
@@ -74,44 +66,47 @@ public interface RowOverextensionPrevention {
         return colouredSequencesRangesInRowNotFurtherThanMaxSequenceLength;
     }
 
-    static List<List<Integer>> getColouredSequencesRangesInRowInRangeOnRight(List<List<String>> solutionBoard, int rowIdx, int potentiallyColouredFieldColumnIndex, int maxSequenceLength) {
+    static List<List<Integer>> getColouredSequencesRangesInRowInRangeOnRight(
+            List<List<String>> solutionBoard,
+            int rowIdx,
+            int potentiallyColouredFieldColumnIndex,
+            int maxSequenceLength
+    ) {
         int width = solutionBoard.get(0).size();
-
         List<List<Integer>> colouredSequencesRangesNotFurtherThanMaxSequenceLength = new ArrayList<>();
-        List<Integer> colouredSequenceRangeInRowInRange;
 
-        List<Integer> possibleColouredSequencesStartIndexesRange = Arrays.asList(potentiallyColouredFieldColumnIndex + DISTANCE_WITH_ONE_EMPTY_FIELD_TO_POSSIBLE_COLOURED,
-                potentiallyColouredFieldColumnIndex + maxSequenceLength);
+        List<Integer> possibleColouredSequencesStartIndexesRange = Arrays.asList(
+                potentiallyColouredFieldColumnIndex + DISTANCE_WITH_ONE_EMPTY_FIELD_TO_POSSIBLE_COLOURED,
+                potentiallyColouredFieldColumnIndex + maxSequenceLength
+        );
 
         boolean fieldWithXFound = false;
         int currentColumnIdx = possibleColouredSequencesStartIndexesRange.get(0);
-        int potentiallyColouredSequenceColumnIdx;
 
-        while (currentColumnIdx <= possibleColouredSequencesStartIndexesRange.get(1) && currentColumnIdx < solutionBoard.get(0).size()) {
+        while (currentColumnIdx <= possibleColouredSequencesStartIndexesRange.get(1) && !fieldWithXFound) {
 
             if (isFieldColoured(solutionBoard, new Field(rowIdx, currentColumnIdx))) {
-                potentiallyColouredSequenceColumnIdx = currentColumnIdx;
-                while (potentiallyColouredSequenceColumnIdx < width && isFieldColoured(solutionBoard, new Field(rowIdx, potentiallyColouredSequenceColumnIdx))) {
+                int potentiallyColouredSequenceColumnIdx = currentColumnIdx;
+
+                while (potentiallyColouredSequenceColumnIdx < width &&
+                        isFieldColoured(solutionBoard, new Field(rowIdx, potentiallyColouredSequenceColumnIdx))) {
                     potentiallyColouredSequenceColumnIdx++;
                 }
-                colouredSequenceRangeInRowInRange = new ArrayList<>(Arrays.asList(currentColumnIdx, potentiallyColouredSequenceColumnIdx - 1));
+
+                List<Integer> colouredSequenceRangeInRowInRange = List.of(
+                        currentColumnIdx,
+                        potentiallyColouredSequenceColumnIdx - 1
+                );
                 colouredSequencesRangesNotFurtherThanMaxSequenceLength.add(colouredSequenceRangeInRowInRange);
 
-                currentColumnIdx = potentiallyColouredSequenceColumnIdx + 1; // field with this columnIdx is not coloured ("X"/"-")
+                currentColumnIdx = potentiallyColouredSequenceColumnIdx + 1;
 
-                if (currentColumnIdx > width - 1) {
-                    break;
-                }
-
-                if (isFieldWithX(solutionBoard, new Field(rowIdx, currentColumnIdx))) {
+                if (currentColumnIdx < width &&
+                        isFieldWithX(solutionBoard, new Field(rowIdx, currentColumnIdx))) {
                     fieldWithXFound = true;
                 }
             } else if (isFieldWithX(solutionBoard, new Field(rowIdx, currentColumnIdx))) {
                 fieldWithXFound = true;
-            }
-
-            if (fieldWithXFound) {
-                break;
             }
 
             currentColumnIdx++;
