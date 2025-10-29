@@ -3,6 +3,7 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.colum
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.RangeCorrectionHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.common.CommonRangeCorrectionHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.*;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.solve.SequenceRangeCorrectionHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.solve.SequenceRangeCorrectionWhenMetXHelper;
@@ -13,7 +14,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldColoured;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.TooLongMergeFieldHelper.collectColouredSequencesRanges;
 
-public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorrectionHelper, RefreshableColumnHelper {
+public class ColumnSequencesCorrectionHelperImpl extends CommonRangeCorrectionHelper implements ColumnSequencesCorrectionHelper, RefreshableColumnHelper {
 
     private final NonogramColumnLogic nonogramColumnLogic;
 
@@ -398,40 +399,6 @@ public class ColumnSequencesCorrectionHelperImpl implements ColumnSequencesCorre
         return sequenceIds.stream()
                 .filter(seqId -> fromTop ? seqId >= boundary : seqId <= boundary)
                 .toList();
-    }
-
-    private boolean updateRanges(Map<Integer, List<Integer>> colouredToSequences, List<List<Integer>> colouredRanges,
-                                 List<List<Integer>> sequenceRanges, List<Integer> sequenceLengths) {
-        boolean hasChanged = false;
-
-        for (Map.Entry<Integer, List<Integer>> entry : colouredToSequences.entrySet()) {
-            List<Integer> possible = entry.getValue();
-            if (possible == null || possible.isEmpty()) continue;
-
-            int seqIdx = possible.size() == 1 ? possible.get(0)
-                    : possible.stream().min(Comparator.naturalOrder()).orElse(possible.get(0));  // fallback
-
-            List<Integer> seqRange = sequenceRanges.get(seqIdx);
-            int seqLen = sequenceLengths.get(seqIdx);
-            List<Integer> coloured = colouredRanges.get(entry.getKey());
-
-            int newStart = coloured.get(1) - seqLen + 1;
-            int newEnd = coloured.get(0) + seqLen - 1;
-
-            int updatedStart = possible.size() == 1 ? Math.max(newStart, seqRange.get(0)) : seqRange.get(0);
-            int updatedEnd = possible.size() == 1 ? Math.min(newEnd, seqRange.get(1)) : seqRange.get(1);
-
-            boolean inside = rangeInsideAnotherRange(coloured, seqRange);
-            boolean valid = newStart <= newEnd;
-
-            if (inside && valid && (updatedStart != seqRange.get(0) || updatedEnd != seqRange.get(1))) {
-                seqRange.set(0, updatedStart);
-                seqRange.set(1, updatedEnd);
-                hasChanged = true;
-            }
-        }
-
-        return hasChanged;
     }
 
     @Override
