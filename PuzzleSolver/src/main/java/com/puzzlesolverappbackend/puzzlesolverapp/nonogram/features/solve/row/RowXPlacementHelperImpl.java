@@ -4,6 +4,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLo
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.xplacement.NonogramFieldPlacingXHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.common.CommonXPlacementHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.SequenceRangeCorrectionWhenPlacingXsLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAroundLongestSequencesLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAtTooShortEmptySequencesLogHelper;
@@ -27,14 +28,13 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.Nonogr
 @Slf4j
 @Getter
 @Setter
-public class RowXPlacementHelperImpl implements RowXPlacementHelper, RefreshableRowHelper {
+public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements RowXPlacementHelper, RefreshableRowHelper {
 
     private final NonogramRowLogic nonogramRowLogic;
 
     private final NonogramFieldPlacingXHelper nonogramFieldPlacingXHelper;
 
     private static final List<Integer> NOT_FOUND_EMPTY_FIELDS_RANGE_VALUE = List.of(-1, -1);
-
     private static final List<Integer> NOT_FOUND_COLOURED_FIELDS_RANGE_VALUE = List.of(-1, -1);
 
     public RowXPlacementHelperImpl(NonogramRowLogic nonogramRowLogic) {
@@ -341,46 +341,6 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
         }
 
         return cursor;
-    }
-
-    /**
-     * Determines whether the given empty range can only fit sequences that are
-     * too long for it. Used to decide whether the range should be filled with Xs.
-     * <ul>
-     *     <li>Filters out excluded sequences.</li>
-     *     <li>Checks if any non-excluded sequence has a range containing this range.</li>
-     *     <li>Verifies if all matching sequences are too long for the range.</li>
-     * </ul>
-     *
-     * @param sequenceRanges list of allowed ranges for each sequence
-     * @param sequenceLengths list of sequence lengths
-     * @param excludedSequenceIds list of sequence indices that should be ignored
-     * @param emptyRange the range of empty cells to evaluate
-     * @return {@code true} if only too-long sequences match this range
-     */
-    private boolean onlyTooLongSequencesFitInRange(
-            List<List<Integer>> sequenceRanges,
-            List<Integer> sequenceLengths,
-            List<Integer> excludedSequenceIds,
-            List<Integer> emptyRange
-    ) {
-        int emptyRangeLength = rangeLength(emptyRange);
-        List<Integer> fittingSequences = new ArrayList<>();
-        List<Integer> tooLongSequences = new ArrayList<>();
-
-        for (int seqIdx = 0; seqIdx < sequenceLengths.size(); seqIdx++) {
-            if (excludedSequenceIds.contains(seqIdx)) continue;
-
-            List<Integer> seqRange = sequenceRanges.get(seqIdx);
-            if (rangeInsideAnotherRange(emptyRange, seqRange)) {
-                fittingSequences.add(seqIdx);
-                if (sequenceLengths.get(seqIdx) > emptyRangeLength) {
-                    tooLongSequences.add(seqIdx);
-                }
-            }
-        }
-
-        return !fittingSequences.isEmpty() && fittingSequences.equals(tooLongSequences);
     }
 
     /**

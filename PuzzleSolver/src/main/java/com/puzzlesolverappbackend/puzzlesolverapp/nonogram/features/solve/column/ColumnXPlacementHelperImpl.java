@@ -4,6 +4,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLo
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.xplacement.NonogramFieldPlacingXHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.common.CommonXPlacementHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.SequenceRangeCorrectionWhenPlacingXsLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAroundLongestSequencesLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAtTooShortEmptySequencesLogHelper;
@@ -27,7 +28,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.Nonogr
 @Slf4j
 @Getter
 @Setter
-public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, RefreshableColumnHelper {
+public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implements ColumnXPlacementHelper, RefreshableColumnHelper {
 
     private final NonogramColumnLogic nonogramColumnLogic;
 
@@ -438,45 +439,6 @@ public class ColumnXPlacementHelperImpl implements ColumnXPlacementHelper, Refre
         }
 
         return cursor;
-    }
-
-    /**
-     * Determines if all non-excluded sequences that fit into the given empty range
-     * are too long to actually fit.
-     * <p>
-     * A sequence is considered "fitting" if its range fully contains the empty range.
-     * Among fitting sequences, all must have a length greater than the range length
-     * for this method to return {@code true}.
-     *
-     * @param sequenceRanges     list of start/end ranges for each sequence
-     * @param sequenceLengths    list of sequence lengths for the column
-     * @param excludedSequenceIds sequence indexes to exclude from consideration
-     * @param emptyRange         the range of empty fields to evaluate
-     * @return {@code true} if only too-long sequences can fit in the empty range; otherwise {@code false}
-     */
-    private boolean onlyTooLongSequencesFitInRange(
-            List<List<Integer>> sequenceRanges,
-            List<Integer> sequenceLengths,
-            List<Integer> excludedSequenceIds,
-            List<Integer> emptyRange
-    ) {
-        int emptyRangeLength = rangeLength(emptyRange);
-        List<Integer> fittingSequences = new ArrayList<>();
-        List<Integer> tooLongSequences = new ArrayList<>();
-
-        for (int seqIdx = 0; seqIdx < sequenceLengths.size(); seqIdx++) {
-            if (excludedSequenceIds.contains(seqIdx)) continue;
-
-            List<Integer> seqRange = sequenceRanges.get(seqIdx);
-            if (rangeInsideAnotherRange(emptyRange, seqRange)) {
-                fittingSequences.add(seqIdx);
-                if (sequenceLengths.get(seqIdx) > emptyRangeLength) {
-                    tooLongSequences.add(seqIdx);
-                }
-            }
-        }
-
-        return !fittingSequences.isEmpty() && fittingSequences.equals(tooLongSequences);
     }
 
     /**
