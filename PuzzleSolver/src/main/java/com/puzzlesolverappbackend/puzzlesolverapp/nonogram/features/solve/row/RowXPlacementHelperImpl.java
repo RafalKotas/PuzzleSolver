@@ -508,32 +508,45 @@ public class RowXPlacementHelperImpl implements RowXPlacementHelper, Refreshable
     }
 
     private void checkDirectionAndPlaceXsInRow(int rowIdx, boolean fromLeft) {
-        int start = fromLeft ? 0 : nonogramRowLogic.getNonogramRules().getWidth() - 1;
-        int end = fromLeft ? nonogramRowLogic.getNonogramRules().getWidth() : -1;
+        int width = nonogramRowLogic.getNonogramRules().getWidth();
+        int start = fromLeft ? 0 : width - 1;
+        int end = fromLeft ? width : -1;
         int step = fromLeft ? 1 : -1;
 
         for (int columnIdx = start; fromLeft ? columnIdx < end : columnIdx > end; columnIdx += step) {
             Field xField = new Field(rowIdx, columnIdx);
-            if (!isFieldWithX(nonogramRowLogic.getNonogramSolutionBoard(), xField)) continue;
+            if (!isFieldWithX(nonogramRowLogic.getNonogramSolutionBoard(), xField)) {
+                continue;
+            }
 
-            List<Integer> emptyRange = fromLeft
-                    ? getEmptyFieldsRangeFromXToFirstColouredFieldFromLeft(xField)
-                    : getEmptyFieldsRangeFromXToFirstColouredFieldToLeft(xField);
+            List<Integer> emptyRange = getEmptyRange(xField, fromLeft);
+            if (emptyRange.equals(NOT_FOUND_EMPTY_FIELDS_RANGE_VALUE)) {
+                continue;
+            }
 
-            if (emptyRange.equals(NOT_FOUND_EMPTY_FIELDS_RANGE_VALUE)) continue;
-
-            Field colouredStart = fromLeft
-                    ? new Field(rowIdx, emptyRange.get(1) + 1)
-                    : new Field(rowIdx, emptyRange.get(0) - 1);
-
-            List<Integer> colouredRange = fromLeft
-                    ? getColouredFieldsRangeNearEmptySequenceFromLeft(colouredStart)
-                    : getColouredFieldsRangeNearEmptySequenceToLeft(colouredStart);
-
-            if (colouredRange.equals(NOT_FOUND_COLOURED_FIELDS_RANGE_VALUE)) continue;
+            List<Integer> colouredRange = getColouredRange(rowIdx, emptyRange, fromLeft);
+            if (colouredRange.equals(NOT_FOUND_COLOURED_FIELDS_RANGE_VALUE)) {
+                continue;
+            }
 
             evaluateAndMaybePlaceX(rowIdx, emptyRange, colouredRange, fromLeft);
         }
+    }
+
+    private List<Integer> getEmptyRange(Field xField, boolean fromLeft) {
+        return fromLeft
+                ? getEmptyFieldsRangeFromXToFirstColouredFieldFromLeft(xField)
+                : getEmptyFieldsRangeFromXToFirstColouredFieldToLeft(xField);
+    }
+
+    private List<Integer> getColouredRange(int rowIdx, List<Integer> emptyRange, boolean fromLeft) {
+        Field colouredStart = fromLeft
+                ? new Field(rowIdx, emptyRange.get(1) + 1)
+                : new Field(rowIdx, emptyRange.get(0) - 1);
+
+        return fromLeft
+                ? getColouredFieldsRangeNearEmptySequenceFromLeft(colouredStart)
+                : getColouredFieldsRangeNearEmptySequenceToLeft(colouredStart);
     }
 
     private List<Integer> getEmptyFieldsRangeFromXToFirstColouredFieldFromLeft(Field xField) {
