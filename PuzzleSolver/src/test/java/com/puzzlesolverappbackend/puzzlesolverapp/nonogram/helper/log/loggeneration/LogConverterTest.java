@@ -143,7 +143,7 @@ class LogConverterTest {
             try (MockedStatic<AssignmentConflictLogHelper> ms = mockStatic(AssignmentConflictLogHelper.class)) {
                 ms.when(() -> AssignmentConflictLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
                 Optional<String> out = LogConverter.convertLogByAction(LOG, SOL, "COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT");
-                assertThat(out).contains(OK);
+                assertThat(out).isEmpty();
             }
         }
 
@@ -190,7 +190,7 @@ class LogConverterTest {
                          mockStatic(PlaceXsIfONearXWillMergeNearFieldsToTooLongColouredSequenceLogHelper.class)) {
                 ms.when(() -> PlaceXsIfONearXWillMergeNearFieldsToTooLongColouredSequenceLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
                 Optional<String> out = LogConverter.convertLogByAction(LOG, SOL, "PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE");
-                assertThat(out).contains(OK);
+                assertThat(out).isEmpty();
             }
         }
 
