@@ -1,10 +1,9 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.common;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.rangeInsideAnotherRange;
+import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.rangeLength;
 
 public class CommonRangeCorrectionHelper {
 
@@ -40,5 +39,32 @@ public class CommonRangeCorrectionHelper {
         }
 
         return hasChanged;
+    }
+
+    protected Map<Integer, List<Integer>> collectMatchingSequences(List<List<Integer>> colouredRanges, List<List<Integer>> sequenceRanges,
+                                                                 List<Integer> sequenceLengths, boolean fromRight) {
+        Map<Integer, List<Integer>> result = new HashMap<>();
+        int start = fromRight ? 0 : colouredRanges.size() - 1;
+        int end = fromRight ? colouredRanges.size() : -1;
+        int step = fromRight ? 1 : -1;
+
+        for (int i = start; i != end; i += step) {
+            List<Integer> coloured = colouredRanges.get(i);
+            int colouredLen = rangeLength(coloured);
+
+            List<Integer> possible = new ArrayList<>();
+            for (int seqIdx = 0; seqIdx < sequenceRanges.size(); seqIdx++) {
+                List<Integer> seqRange = sequenceRanges.get(seqIdx);
+                int seqLen = sequenceLengths.get(seqIdx);
+
+                if (rangeInsideAnotherRange(coloured, seqRange) && seqLen >= colouredLen) {
+                    possible.add(seqIdx);
+                }
+            }
+
+            result.put(i, possible);
+        }
+
+        return result;
     }
 }

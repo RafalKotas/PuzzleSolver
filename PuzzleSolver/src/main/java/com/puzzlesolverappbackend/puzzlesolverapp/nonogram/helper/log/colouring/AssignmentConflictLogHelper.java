@@ -8,6 +8,10 @@ import java.util.List;
 @UtilityClass
 public class AssignmentConflictLogHelper {
 
+    private final String ASSIGNMENT_CONFLICT_RAW_LOG_TODO = "TODO ASSIGNMENT CONFLICT RAW LOG - TODO";
+
+    private final String ASSIGNMENT_CONFLICT_CONVERTED_LOG_TODO = "TODO ASSIGNMENT CONFLICT CONVERTED LOG - TODO";
+
     public static String generateLog(
             int index,
             boolean isRow,
@@ -17,13 +21,13 @@ public class AssignmentConflictLogHelper {
             List<String> initialLine,
             List<String> updatedLine
     ) {
-        return "TODO ASSIGNMENT CONFLICT RAW LOG - TODO";
+        return ASSIGNMENT_CONFLICT_RAW_LOG_TODO;
     }
 
     public static String convertLogToTestArguments(
             String log,
             String solutionName
     ) {
-        return "TODO ASSIGNMENT CONFLICT CONVERTED LOG - TODO";
+        return ASSIGNMENT_CONFLICT_CONVERTED_LOG_TODO;
     }
 }

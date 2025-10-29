@@ -8,9 +8,13 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.*;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.solve.SequenceRangeCorrectionHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.solve.SequenceRangeCorrectionWhenMetXHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
-import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.*;
+import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.deepCopy;
+import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.rangeLength;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldColoured;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.TooLongMergeFieldHelper.collectColouredSequencesRanges;
 
@@ -166,6 +170,9 @@ public class ColumnSequencesCorrectionHelperImpl extends CommonRangeCorrectionHe
         var lengths = nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
         boolean changed = false;
 
+        if (lengths.isEmpty()) return false;
+        if (ranges.isEmpty())  return false;
+
         int seqIdx = 0;
         int seqLength = lengths.get(seqIdx);
         int rowIdx = 0;
@@ -300,7 +307,8 @@ public class ColumnSequencesCorrectionHelperImpl extends CommonRangeCorrectionHe
     }
 
     private boolean shouldExcludeSequence(int columnIdx, List<Integer> range, int length) {
-        return rangeLength(range) == length && nonogramColumnLogic.getBoardAccessHelper().isColumnRangeColoured(columnIdx, range);
+        return rangeLength(range) == length &&
+                nonogramColumnLogic.getBoardAccessHelper().isColumnRangeColoured(columnIdx, range);
     }
 
     @Override
@@ -348,33 +356,6 @@ public class ColumnSequencesCorrectionHelperImpl extends CommonRangeCorrectionHe
         filterSequences(colouredToSequences, columnSequencesRanges.size(), fromTop);
 
         return updateRanges(colouredToSequences, colouredRanges, columnSequencesRanges, columnSequencesLengths);
-    }
-
-    private Map<Integer, List<Integer>> collectMatchingSequences(List<List<Integer>> colouredRanges, List<List<Integer>> sequenceRanges,
-                                                                 List<Integer> sequenceLengths, boolean fromTop) {
-        Map<Integer, List<Integer>> result = new HashMap<>();
-        int start = fromTop ? 0 : colouredRanges.size() - 1;
-        int end = fromTop ? colouredRanges.size() : -1;
-        int step = fromTop ? 1 : -1;
-
-        for (int i = start; i != end; i += step) {
-            List<Integer> coloured = colouredRanges.get(i);
-            int colouredLen = rangeLength(coloured);
-
-            List<Integer> possible = new ArrayList<>();
-            for (int seqIdx = 0; seqIdx < sequenceRanges.size(); seqIdx++) {
-                List<Integer> seqRange = sequenceRanges.get(seqIdx);
-                int seqLen = sequenceLengths.get(seqIdx);
-
-                if (rangeInsideAnotherRange(coloured, seqRange) && seqLen >= colouredLen) {
-                    possible.add(seqIdx);
-                }
-            }
-
-            result.put(i, possible);
-        }
-
-        return result;
     }
 
     private void filterSequences(Map<Integer, List<Integer>> colouredToSequences, int totalSequences, boolean fromTop) {
@@ -442,6 +423,7 @@ public class ColumnSequencesCorrectionHelperImpl extends CommonRangeCorrectionHe
             nonogramColumnLogic.setTmpLog(tmpLog);
             nonogramColumnLogic.addLog();
 
+            nonogramColumnLogic.getNonogramState().increaseMadeSteps();
             Field columnField = new Field(0, columnIdx);
             nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(columnField, NonogramSolveAction.CORRECT_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE_IN_COLUMN);
         }
