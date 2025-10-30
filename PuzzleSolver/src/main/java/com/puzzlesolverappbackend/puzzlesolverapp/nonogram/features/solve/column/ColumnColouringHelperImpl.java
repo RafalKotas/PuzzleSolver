@@ -7,6 +7,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.TooLongMe
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.colouring.NonogramFieldColouringHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringGenerateLogBaseContext;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ExtendLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.OverlappingLogHelper;
 import lombok.Getter;
@@ -41,7 +42,7 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
 
     @Override
     public void colourOverlappingFieldsInColumn(int columnIdx) {
-        List<String> columnBefore = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
+        List<String> initialColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
         boolean anyFieldColoured = false;
 
         List<Integer> sequenceLengths = nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
@@ -57,14 +58,17 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
         }
 
         if (anyFieldColoured) {
-            List<String> columnAfter = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
-            String tmpLog = OverlappingLogHelper.generateLog(
+            List<String> updatedColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
+            ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
                     false,
                     columnIdx,
-                    columnBefore,
+                    initialColumn,
+                    updatedColumn,
                     sequenceRanges,
-                    sequenceLengths,
-                    columnAfter
+                    sequenceLengths
+            );
+            String tmpLog = OverlappingLogHelper.generateLog(
+                    colouringGenerateLogBaseContext
             );
             nonogramColumnLogic.setTmpLog(tmpLog);
             nonogramColumnLogic.addLog();
@@ -109,25 +113,28 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
      */
     @Override
     public void colourFieldsInColumnIfXWouldForceTooLongColouredFieldsSequence(int columnIdx) {
-        List<String> columnBefore = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
+        List<String> initialColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
         boolean anyFieldColoured = false;
 
         List<Integer> sequenceLengths = nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
-        List<List<Integer>> originalRanges = cloneAndMakeImmutable2DList(nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx));
+        List<List<Integer>> sequencesRanges = cloneAndMakeImmutable2DList(nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx));
         List<List<Integer>> colouredSequences = TooLongMergeFieldHelper.collectColouredSequencesRanges(nonogramColumnLogic.getNonogramSolutionBoard(), columnIdx, false);
 
-        anyFieldColoured |= handleTopMergeScenarios(columnIdx, sequenceLengths, originalRanges, colouredSequences);
-        anyFieldColoured |= handleBottomMergeScenarios(columnIdx, sequenceLengths, originalRanges, colouredSequences);
+        anyFieldColoured |= handleTopMergeScenarios(columnIdx, sequenceLengths, sequencesRanges, colouredSequences);
+        anyFieldColoured |= handleBottomMergeScenarios(columnIdx, sequenceLengths, sequencesRanges, colouredSequences);
 
         if (anyFieldColoured) {
-            List<String> columnAfter = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
-            String tmpLog = ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.generateLog(
+            List<String> updatedColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
+            ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
                     false,
                     columnIdx,
-                    columnBefore,
-                    nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx),
-                    nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
-                    columnAfter
+                    initialColumn,
+                    updatedColumn,
+                    sequencesRanges,
+                    sequenceLengths
+            );
+            String tmpLog = ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.generateLog(
+                    colouringGenerateLogBaseContext
             );
             nonogramColumnLogic.setTmpLog(tmpLog);
             nonogramColumnLogic.addLog();
@@ -145,12 +152,12 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
      *
      * @param columnIdx      the index of the column being evaluated
      * @param seqLens        list of required sequence lengths for the column
-     * @param originalRanges original column sequence ranges before mutation
+     * @param sequencesRanges original column sequence ranges before mutation
      * @param colouredSeqs   list of currently identified colored sequences in the column
      * @return true if any field was colored as a result of this analysis; false otherwise
      */
     private boolean handleTopMergeScenarios(int columnIdx, List<Integer> seqLens,
-                                            List<List<Integer>> originalRanges, List<List<Integer>> colouredSeqs) {
+                                            List<List<Integer>> sequencesRanges, List<List<Integer>> colouredSeqs) {
         boolean anyFieldColoured = false;
 
         for (int i = 0; i < colouredSeqs.size() - 1; i++) {
@@ -181,7 +188,7 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
                 }
             }
 
-            nonogramColumnLogic.setColumnSequencesRanges(columnIdx, mutableClone2DList(originalRanges));
+            nonogramColumnLogic.setColumnSequencesRanges(columnIdx, mutableClone2DList(sequencesRanges));
             nonogramColumnLogic.getNonogramFieldExclusionHelper().removeFieldFromExcludedInColumn(tempX);
         }
 
@@ -196,12 +203,12 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
      *
      * @param columnIdx      the index of the column being evaluated
      * @param seqLens        list of required sequence lengths for the column
-     * @param originalRanges original column sequence ranges before mutation
+     * @param sequencesRanges original column sequence ranges before mutation
      * @param colouredSeqs   list of currently identified colored sequences in the column
      * @return true if any field was colored as a result of this analysis; false otherwise
      */
     private boolean handleBottomMergeScenarios(int columnIdx, List<Integer> seqLens,
-                                               List<List<Integer>> originalRanges, List<List<Integer>> colouredSeqs) {
+                                               List<List<Integer>> sequencesRanges, List<List<Integer>> colouredSeqs) {
         boolean anyFieldColoured = false;
 
         for (int i = colouredSeqs.size() - 1; i > 0; i--) {
@@ -232,7 +239,7 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
                 }
             }
 
-            nonogramColumnLogic.setColumnSequencesRanges(columnIdx, mutableClone2DList(originalRanges));
+            nonogramColumnLogic.setColumnSequencesRanges(columnIdx, mutableClone2DList(sequencesRanges));
             nonogramColumnLogic.getNonogramFieldExclusionHelper().removeFieldFromExcludedInColumn(tempX);
         }
 
@@ -289,10 +296,12 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
     }
 
     private void extendColouredFieldsToTopNearX(int columnIdx) {
-        List<String> columnBefore = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
+        List<String> initialColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
         boolean anyGlobalFieldColoured = false;
 
         int rowIdx = nonogramColumnLogic.getNonogramRules().getHeight() - 1;
+        List<Integer> sequenceLengths = nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
+        List<List<Integer>> sequencesRanges = cloneAndMakeImmutable2DList(nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx));
 
         while (rowIdx >= 0) {
             Field currentField = new Field(rowIdx, columnIdx);
@@ -304,9 +313,9 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
                 );
 
                 List<Integer> possibleSequenceLengths = ColouringHelper.findPossibleSequenceLengths(
-                        nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx),
+                        sequencesRanges,
                         colouredRange,
-                        nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx)
+                        sequenceLengths
                 );
 
                 if (possibleSequenceLengths.isEmpty()) {
@@ -342,15 +351,18 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
         }
 
         if (anyGlobalFieldColoured) {
-            List<String> columnAfter = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
-            String tmpLog = ExtendLogHelper.generateLog(
-                    true,
+            List<String> updatedColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
+            ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
+                    false,
                     columnIdx,
-                    "toTop",
-                    columnBefore,
-                    nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx),
-                    nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
-                    columnAfter
+                    initialColumn,
+                    updatedColumn,
+                    sequencesRanges,
+                    sequenceLengths
+            );
+            String tmpLog = ExtendLogHelper.generateLog(
+                    colouringGenerateLogBaseContext,
+                    "toTop"
             );
             nonogramColumnLogic.setTmpLog(tmpLog);
             nonogramColumnLogic.addLog();
@@ -358,11 +370,13 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
     }
 
     private void extendColouredFieldsToBottomNearX(int columnIdx) {
-        List<String> columnBefore = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
+        List<String> initialColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
         boolean anyGlobalFieldColoured = false;
 
         int rowIdx = 0;
         int height = nonogramColumnLogic.getNonogramRules().getHeight();
+        List<Integer> sequenceLengths = nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
+        List<List<Integer>> sequencesRanges = cloneAndMakeImmutable2DList(nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx));
 
         while (rowIdx < height) {
             Field currentField = new Field(rowIdx, columnIdx);
@@ -374,9 +388,9 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
                 );
 
                 List<Integer> possibleSequenceLengths = ColouringHelper.findPossibleSequenceLengths(
-                        nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx),
+                        sequencesRanges,
                         colouredRange,
-                        nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx)
+                        sequenceLengths
                 );
 
                 if (possibleSequenceLengths.isEmpty()) {
@@ -413,15 +427,18 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
         }
 
         if (anyGlobalFieldColoured) {
-            List<String> columnAfter = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
-            String tmpLog = ExtendLogHelper.generateLog(
-                    true,
+            List<String> updatedColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
+            ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
+                    false,
                     columnIdx,
-                    "toBottom",
-                    columnBefore,
-                    nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx),
-                    nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
-                    columnAfter
+                    initialColumn,
+                    updatedColumn,
+                    sequencesRanges,
+                    sequenceLengths
+            );
+            String tmpLog = ExtendLogHelper.generateLog(
+                    colouringGenerateLogBaseContext,
+                    "toBottom"
             );
             nonogramColumnLogic.setTmpLog(tmpLog);
             nonogramColumnLogic.addLog();

@@ -47,16 +47,19 @@ class ExtendLogHelperTest {
         );
         List<Integer> sequencesLengths = List.of(2, 3, 2, 1);
         List<String> updatedLine = new ArrayList<>(List.of("-", "-", "X", "-", "-", "-", "-", "-", "X", "O", "O", "-", "-", "-", "-"));
+        ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
+                isRow,
+                index,
+                initialLine,
+                updatedLine,
+                sequencesRanges,
+                sequencesLengths
+        );
 
         // when
         String actual = ExtendLogHelper.generateLog(
-                isRow,
-                index,
-                direction,
-                initialLine,
-                sequencesRanges,
-                sequencesLengths,
-                updatedLine
+                colouringGenerateLogBaseContext,
+                direction
         );
 
         // then
@@ -64,9 +67,9 @@ class ExtendLogHelperTest {
                 "EXTEND_COLUMN_SEQUENCE: column=3\n" +
                         "direction=toBottom\n" +
                         "initialLine=[-, -, X, -, -, -, -, -, X, O, -, -, -, -, -]\n" +
+                        "updatedLine=[-, -, X, -, -, -, -, -, X, O, O, -, -, -, -]\n" +
                         "sequencesRanges=[[0, 5], [3, 7], [9, 10], [10, 14]]\n" +
-                        "sequencesLengths=[2, 3, 2, 1]\n" +
-                        "updatedLine=[-, -, X, -, -, -, -, -, X, O, O, -, -, -, -]\n";
+                        "sequencesLengths=[2, 3, 2, 1]\n";
 
         assertEquals(expected, actual);
     }
@@ -79,9 +82,9 @@ class ExtendLogHelperTest {
                 "EXTEND_COLUMN_SEQUENCE: column=3\n" +
                         "direction=toBottom\n" +
                         "initialLine=[-, -, X, -, -, -, -, -, X, O, -, -, -, -, -]\n" +
+                        "updatedLine=[-, -, X, -, -, -, -, -, X, O, O, -, -, -, -]\n" +
                         "sequencesRanges=[[0, 5], [3, 7], [9, 10], [10, 14]]\n" +
-                        "sequencesLengths=[2, 3, 2, 1]\n" +
-                        "updatedLine=[-, -, X, -, -, -, -, -, X, O, O, -, -, -, -]\n";
+                        "sequencesLengths=[2, 3, 2, 1]\n";
 
         // when
         String convertedLog = ExtendLogHelper.convertLogToTestArguments(
@@ -116,16 +119,19 @@ class ExtendLogHelperTest {
         );
         List<Integer> sequencesLengths = List.of(11, 1, 1);
         List<String> updatedLine = new ArrayList<>(List.of("-", "-", "-", "-", "O", "O", "O", "O", "O", "O", "O", "O", "O", "-", "-", "X", "O", "X", "O", "X"));
+        ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
+                isRow,
+                index,
+                initialLine,
+                updatedLine,
+                sequencesRanges,
+                sequencesLengths
+        );
 
         // when
         String actual = ExtendLogHelper.generateLog(
-                isRow,
-                index,
-                direction,
-                initialLine,
-                sequencesRanges,
-                sequencesLengths,
-                updatedLine
+                colouringGenerateLogBaseContext,
+                direction
         );
 
         // then
@@ -133,9 +139,9 @@ class ExtendLogHelperTest {
                 "EXTEND_ROW_SEQUENCE: row=12\n" +
                         "direction=toLeft\n" +
                         "initialLine=[-, -, -, -, -, O, O, O, O, O, O, O, O, -, -, X, O, X, O, X]\n" +
+                        "updatedLine=[-, -, -, -, O, O, O, O, O, O, O, O, O, -, -, X, O, X, O, X]\n" +
                         "sequencesRanges=[[2, 14], [16, 16], [18, 18]]\n" +
-                        "sequencesLengths=[11, 1, 1]\n" +
-                        "updatedLine=[-, -, -, -, O, O, O, O, O, O, O, O, O, -, -, X, O, X, O, X]\n";
+                        "sequencesLengths=[11, 1, 1]\n";
 
         assertEquals(expected, actual);
     }

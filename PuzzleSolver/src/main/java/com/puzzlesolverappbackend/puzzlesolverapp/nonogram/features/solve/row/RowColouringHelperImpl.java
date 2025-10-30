@@ -6,6 +6,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.TooLongMe
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.colouring.NonogramFieldColouringHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringGenerateLogBaseContext;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ExtendLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.OverlappingLogHelper;
 import lombok.Getter;
@@ -59,13 +60,16 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
 
         if (anyFieldColoured) {
             List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
-            String tmpLog = OverlappingLogHelper.generateLog(
+            ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
                     true,
                     rowIdx,
                     initialRow,
+                    updatedRow,
                     sequenceRanges,
-                    sequenceLengths,
-                    updatedRow
+                    sequenceLengths
+            );
+            String tmpLog = OverlappingLogHelper.generateLog(
+                    colouringGenerateLogBaseContext
             );
             nonogramRowLogic.setTmpLog(tmpLog);
             nonogramRowLogic.addLog();
@@ -108,28 +112,31 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
         boolean anyFieldColoured = false;
 
         List<Integer> sequenceLengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
-        List<List<Integer>> originalRanges = cloneAndMakeImmutable2DList(nonogramRowLogic.getRowsSequencesRanges().get(rowIdx));
+        List<List<Integer>> sequencesRanges = cloneAndMakeImmutable2DList(nonogramRowLogic.getRowsSequencesRanges().get(rowIdx));
         List<List<Integer>> colouredSequences = collectColouredSequencesRanges(nonogramRowLogic.getNonogramSolutionBoard(), rowIdx, true);
 
-        anyFieldColoured |= handleLeftMergeScenarios(rowIdx, sequenceLengths, originalRanges, colouredSequences);
-        anyFieldColoured |= handleRightMergeScenarios(rowIdx, sequenceLengths, originalRanges, colouredSequences);
+        anyFieldColoured |= handleLeftMergeScenarios(rowIdx, sequenceLengths, sequencesRanges, colouredSequences);
+        anyFieldColoured |= handleRightMergeScenarios(rowIdx, sequenceLengths, sequencesRanges, colouredSequences);
 
         if (anyFieldColoured) {
             List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
-            String tmpLog = ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.generateLog(
+            ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
                     true,
                     rowIdx,
                     initialRow,
-                    nonogramRowLogic.getRowsSequencesRanges().get(rowIdx),
-                    sequenceLengths,
-                    updatedRow
+                    updatedRow,
+                    sequencesRanges,
+                    sequenceLengths
+            );
+            String tmpLog = ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.generateLog(
+                    colouringGenerateLogBaseContext
             );
             nonogramRowLogic.setTmpLog(tmpLog);
             nonogramRowLogic.addLog();
         }
     }
 
-    private boolean handleLeftMergeScenarios(int rowIdx, List<Integer> seqLens, List<List<Integer>> originalRanges, List<List<Integer>> colouredSequences) {
+    private boolean handleLeftMergeScenarios(int rowIdx, List<Integer> seqLens, List<List<Integer>> sequencesRanges, List<List<Integer>> colouredSequences) {
         boolean anyFieldColoured = false;
 
         for (int i = 0; i < colouredSequences.size() - 1; i++) {
@@ -161,13 +168,13 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
             }
 
             nonogramRowLogic.getNonogramFieldExclusionHelper().removeFieldFromExcludedInRow(tempX);
-            nonogramRowLogic.setRowSequencesRanges(rowIdx, mutableClone2DList(originalRanges));
+            nonogramRowLogic.setRowSequencesRanges(rowIdx, mutableClone2DList(sequencesRanges));
         }
 
         return anyFieldColoured;
     }
 
-    private boolean handleRightMergeScenarios(int rowIdx, List<Integer> seqLens, List<List<Integer>> originalRanges, List<List<Integer>> colouredSequences) {
+    private boolean handleRightMergeScenarios(int rowIdx, List<Integer> seqLens, List<List<Integer>> sequencesRanges, List<List<Integer>> colouredSequences) {
         boolean anyFieldColoured = false;
 
         for (int i = colouredSequences.size() - 1; i > 0; i--) {
@@ -198,7 +205,7 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
                 }
             }
 
-            nonogramRowLogic.setRowSequencesRanges(rowIdx, mutableClone2DList(originalRanges));
+            nonogramRowLogic.setRowSequencesRanges(rowIdx, mutableClone2DList(sequencesRanges));
             nonogramRowLogic.getNonogramFieldExclusionHelper().removeFieldFromExcludedInRow(tempX);
         }
 
@@ -239,10 +246,13 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
     }
 
     private void extendColouredFieldsToLeftNearX(int rowIdx) {
-        List<String> rowBefore = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
+        List<String> initialRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
         boolean anyGlobalFieldColoured = false;
 
         int colIdx = nonogramRowLogic.getNonogramRules().getWidth() - 1;
+        List<Integer> sequenceLengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
+        List<List<Integer>> sequencesRanges = cloneAndMakeImmutable2DList(nonogramRowLogic.getRowsSequencesRanges().get(rowIdx));
+
         while (colIdx >= 0) {
             Field currentField = new Field(rowIdx, colIdx);
 
@@ -289,15 +299,18 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
         }
 
         if (anyGlobalFieldColoured) {
-            List<String> rowAfter = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
-            nonogramRowLogic.setTmpLog(ExtendLogHelper.generateLog(
+            List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
+            ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
                     true,
                     rowIdx,
-                    "toLeft",
-                    rowBefore,
-                    nonogramRowLogic.getRowsSequencesRanges().get(rowIdx),
-                    nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
-                    rowAfter
+                    initialRow,
+                    updatedRow,
+                    sequencesRanges,
+                    sequenceLengths
+            );
+            nonogramRowLogic.setTmpLog(ExtendLogHelper.generateLog(
+                    colouringGenerateLogBaseContext,
+                    "toLeft"
             ));
             nonogramRowLogic.addLog();
         }
@@ -308,6 +321,8 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
         boolean anyGlobalFieldColoured = false;
 
         int colIdx = 0;
+        List<Integer> sequenceLengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
+        List<List<Integer>> sequencesRanges = cloneAndMakeImmutable2DList(nonogramRowLogic.getRowsSequencesRanges().get(rowIdx));
         int width = nonogramRowLogic.getNonogramRules().getWidth();
 
         while (colIdx < width) {
@@ -323,9 +338,9 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
             );
 
             List<Integer> possibleLengths = ColouringHelper.findPossibleSequenceLengths(
-                    nonogramRowLogic.getRowsSequencesRanges().get(rowIdx),
+                    sequencesRanges,
                     colouredRange,
-                    nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx)
+                    sequenceLengths
             );
 
             if (possibleLengths.isEmpty()) { // TODO - trial and error method
@@ -363,14 +378,17 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
 
         if (anyGlobalFieldColoured) {
             List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
-            nonogramRowLogic.setTmpLog(ExtendLogHelper.generateLog(
+            ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
                     true,
                     rowIdx,
-                    "toRight",
                     initialRow,
-                    nonogramRowLogic.getRowsSequencesRanges().get(rowIdx),
-                    nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
-                    updatedRow
+                    updatedRow,
+                    sequencesRanges,
+                    sequenceLengths
+            );
+            nonogramRowLogic.setTmpLog(ExtendLogHelper.generateLog(
+                    colouringGenerateLogBaseContext,
+                    "toRight"
             ));
             nonogramRowLogic.addLog();
         }

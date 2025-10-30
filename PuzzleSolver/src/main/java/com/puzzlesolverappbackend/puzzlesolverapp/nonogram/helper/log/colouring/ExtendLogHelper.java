@@ -2,42 +2,36 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring
 
 import lombok.experimental.UtilityClass;
 
-import java.util.List;
-
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
 
 @UtilityClass
 public class ExtendLogHelper {
 
     public static String generateLog(
-            boolean isRow,
-            int index,
-            String direction,
-            List<String> initialLine,
-            List<List<Integer>> sequencesRanges,
-            List<Integer> sequencesLengths,
-            List<String> updatedLine
+            ColouringGenerateLogBaseContext context,
+            String direction
     ) {
         return String.format(
                 """
                         EXTEND_%s_SEQUENCE: %s=%d
                         direction=%s
                         initialLine=%s
+                        updatedLine=%s
                         sequencesRanges=%s
                         sequencesLengths=%s
-                        updatedLine=%s
                         """,
-                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
-                isRow ? ROW : COLUMN,
-                index,
+                context.isRow() ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                context.isRow() ? ROW : COLUMN,
+                context.getIndex(),
                 direction,
-                initialLine.toString(),
-                sequencesRanges.toString(),
-                sequencesLengths.toString(),
-                updatedLine.toString()
+                context.getInitialLine(),
+                context.getUpdatedLine(),
+                context.getSequencesRanges(),
+                context.getSequencesLengths()
         );
     }
 
+    // TODO - include direction in log
     public static String convertLogToTestArguments(String log, String solutionName) {
         ColouringCovertLogBaseContext colouringCovertLogBaseContext = new ColouringCovertLogBaseContext(log, solutionName);
 

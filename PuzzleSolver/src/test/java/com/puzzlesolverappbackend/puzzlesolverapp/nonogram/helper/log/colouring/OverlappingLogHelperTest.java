@@ -45,24 +45,27 @@ class OverlappingLogHelperTest {
         );
         List<Integer> sequencesLengths = List.of(4, 5, 2);
         List<String> updatedLine = new ArrayList<>(List.of("-", "-", "O", "O", "-", "-", "-", "O", "O", "O", "-", "-", "-", "-", "-"));
-
-        // when
-        String actual = OverlappingLogHelper.generateLog(
+        ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
                 isRow,
                 index,
                 initialLine,
+                updatedLine,
                 sequencesRanges,
-                sequencesLengths,
-                updatedLine
+                sequencesLengths
+        );
+
+        // when
+        String actual = OverlappingLogHelper.generateLog(
+                colouringGenerateLogBaseContext
         );
 
         // then
         String expected =
                 "COLOUR_OVERLAPPING_FIELDS_IN_COLUMN: column=2\n" +
                         "initialLine=[-, -, -, -, -, -, -, -, -, -, -, -, -, -, -]\n" +
+                        "updatedLine=[-, -, O, O, -, -, -, O, O, O, -, -, -, -, -]\n" +
                         "sequencesRanges=[[0, 5], [5, 11], [11, 14]]\n" +
-                        "sequencesLengths=[4, 5, 2]\n" +
-                        "updatedLine=[-, -, O, O, -, -, -, O, O, O, -, -, -, -, -]\n";
+                        "sequencesLengths=[4, 5, 2]\n";
         assertEquals(expected, actual);
     }
 
@@ -73,9 +76,9 @@ class OverlappingLogHelperTest {
         String generatedLog =
                 "COLOUR_OVERLAPPING_FIELDS_IN_COLUMN: column=2\n" +
                         "initialLine=[-, -, -, -, -, -, -, -, -, -, -, -, -, -, -]\n" +
+                        "updatedLine=[-, -, O, O, -, -, -, O, O, O, -, -, -, -, -]\n" +
                         "sequencesRanges=[[0, 5], [5, 11], [11, 14]]\n" +
-                        "sequencesLengths=[4, 5, 2]\n" +
-                        "updatedLine=[-, -, O, O, -, -, -, O, O, O, -, -, -, -, -]\n";
+                        "sequencesLengths=[4, 5, 2]\n";
 
         // when
         String convertedLog = OverlappingLogHelper.convertLogToTestArguments(
@@ -107,24 +110,27 @@ class OverlappingLogHelperTest {
         );
         List<Integer> sequencesLengths = List.of(9);
         List<String> updatedLine = new ArrayList<>(List.of("-", "-", "-", "-", "-", "-", "O", "O", "O", "-", "-", "-", "-", "-", "-"));
-
-        // when
-        String actual = OverlappingLogHelper.generateLog(
+        ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
                 isRow,
                 index,
                 initialLine,
+                updatedLine,
                 sequencesRanges,
-                sequencesLengths,
-                updatedLine
+                sequencesLengths
+        );
+
+        // when
+        String actual = OverlappingLogHelper.generateLog(
+                colouringGenerateLogBaseContext
         );
 
         // then
         String expected =
                 "COLOUR_OVERLAPPING_FIELDS_IN_ROW: row=9\n" +
                         "initialLine=[-, -, -, -, -, -, -, -, -, -, -, -, -, -, -]\n" +
+                        "updatedLine=[-, -, -, -, -, -, O, O, O, -, -, -, -, -, -]\n" +
                         "sequencesRanges=[[0, 14]]\n" +
-                        "sequencesLengths=[9]\n" +
-                        "updatedLine=[-, -, -, -, -, -, O, O, O, -, -, -, -, -, -]\n";
+                        "sequencesLengths=[9]\n";
         assertEquals(expected, actual);
     }
 
@@ -135,9 +141,9 @@ class OverlappingLogHelperTest {
         String generatedLog =
                 "COLOUR_OVERLAPPING_FIELDS_IN_ROW: row=9\n" +
                         "initialLine=[-, -, -, -, -, -, -, -, -, -, -, -, -, -, -]\n" +
+                        "updatedLine=[-, -, -, -, -, -, O, O, O, -, -, -, -, -, -]\n" +
                         "sequencesRanges=[[0, 14]]\n" +
-                        "sequencesLengths=[9]\n" +
-                        "updatedLine=[-, -, -, -, -, -, O, O, O, -, -, -, -, -, -]\n";
+                        "sequencesLengths=[9]\n";
 
         // when
         String convertedLog = OverlappingLogHelper.convertLogToTestArguments(

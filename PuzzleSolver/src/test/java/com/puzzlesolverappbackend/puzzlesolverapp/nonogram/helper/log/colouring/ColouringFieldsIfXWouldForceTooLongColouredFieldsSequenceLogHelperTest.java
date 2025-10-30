@@ -46,24 +46,28 @@ class ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelperTest {
         );
         List<Integer> sequencesLengths = List.of(3, 4, 2);
         List<String> updatedLine = new ArrayList<>(List.of("-", "-", "-", "-", "-", "-", "-", "-", "O", "O", "-", "-", "-", "O", "-"));
-
-        // when
-        String actual = ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.generateLog(
+        ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
                 isRow,
                 index,
                 initialLine,
+                updatedLine,
                 sequencesRanges,
-                sequencesLengths,
-                updatedLine
+                sequencesLengths
+        );
+
+        // when
+        String actual = ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.generateLog(
+                colouringGenerateLogBaseContext
         );
 
         // then
         String expected =
                 "COLOURING_FIELDS_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE_IN_COLUMN: column=5\n" +
                         "initialLine=[-, -, -, -, -, -, -, -, -, O, -, -, -, O, -]\n" +
+                        "updatedLine=[-, -, -, -, -, -, -, -, O, O, -, -, -, O, -]\n" +
                         "sequencesRanges=[[0, 6], [6, 11], [12, 14]]\n" +
-                        "sequencesLengths=[3, 4, 2]\n" +
-                        "updatedLine=[-, -, -, -, -, -, -, -, O, O, -, -, -, O, -]\n";
+                        "sequencesLengths=[3, 4, 2]\n";
+
 
         assertEquals(expected, actual);
     }
@@ -75,9 +79,9 @@ class ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelperTest {
         String generatedLog =
                 "COLOURING_FIELDS_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE_IN_COLUMN: column=5\n" +
                         "initialLine=[-, -, -, -, -, -, -, -, -, O, -, -, -, O, -]\n" +
+                        "updatedLine=[-, -, -, -, -, -, -, -, O, O, -, -, -, O, -]\n" +
                         "sequencesRanges=[[0, 6], [6, 11], [12, 14]]\n" +
-                        "sequencesLengths=[3, 4, 2]\n" +
-                        "updatedLine=[-, -, -, -, -, -, -, -, O, O, -, -, -, O, -]\n";
+                        "sequencesLengths=[3, 4, 2]\n";
 
         // when
         String convertedLog = ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.convertLogToTestArguments(
@@ -111,24 +115,27 @@ class ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelperTest {
         );
         List<Integer> sequencesLengths = List.of(11, 1, 1);
         List<String> updatedLine = new ArrayList<>(List.of("-", "-", "-", "-", "-", "O", "O", "O", "O", "O", "O", "O", "O", "-", "-", "-", "O", "-", "O", "-"));
-
-        // when
-        String actual = ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.generateLog(
+        ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
                 isRow,
                 index,
                 initialLine,
+                updatedLine,
                 sequencesRanges,
-                sequencesLengths,
-                updatedLine
+                sequencesLengths
+        );
+
+        // when
+        String actual = ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.generateLog(
+                colouringGenerateLogBaseContext
         );
 
         // then
         String expected =
                 "COLOURING_FIELDS_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE_IN_ROW: row=12\n" +
                         "initialLine=[-, -, -, -, -, O, O, O, O, O, O, -, O, -, -, -, O, -, O, -]\n" +
+                        "updatedLine=[-, -, -, -, -, O, O, O, O, O, O, O, O, -, -, -, O, -, O, -]\n" +
                         "sequencesRanges=[[2, 14], [16, 16], [18, 18]]\n" +
-                        "sequencesLengths=[11, 1, 1]\n" +
-                        "updatedLine=[-, -, -, -, -, O, O, O, O, O, O, O, O, -, -, -, O, -, O, -]\n";
+                        "sequencesLengths=[11, 1, 1]\n";
 
         assertEquals(expected, actual);
     }
@@ -140,9 +147,9 @@ class ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelperTest {
         String generatedLog =
                 "COLOURING_FIELDS_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE_IN_ROW: row=12\n" +
                         "initialLine=[-, -, -, -, -, O, O, O, O, O, O, -, O, -, -, -, O, -, O, -]\n" +
+                        "updatedLine=[-, -, -, -, -, O, O, O, O, O, O, O, O, -, -, -, O, -, O, -]\n" +
                         "sequencesRanges=[[2, 14], [16, 16], [18, 18]]\n" +
-                        "sequencesLengths=[11, 1, 1]\n" +
-                        "updatedLine=[-, -, -, -, -, O, O, O, O, O, O, O, O, -, -, -, O, -, O, -]\n";
+                        "sequencesLengths=[11, 1, 1]\n";
 
         // when
         String convertedLog = ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.convertLogToTestArguments(

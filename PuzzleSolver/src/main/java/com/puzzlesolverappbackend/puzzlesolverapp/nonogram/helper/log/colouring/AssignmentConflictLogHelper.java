@@ -2,20 +2,13 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring
 
 import lombok.experimental.UtilityClass;
 
-import java.util.List;
-
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
 
 @UtilityClass
 public class AssignmentConflictLogHelper {
 
     public static String generateLog(
-            int index,
-            boolean isRow,
-            List<String> initialLine,
-            List<String> updatedLine,
-            List<Integer> sequencesLengths,
-            List<List<Integer>> sequencesRanges
+            ColouringGenerateLogBaseContext context
     ) {
         return String.format(
                 """
@@ -25,13 +18,13 @@ public class AssignmentConflictLogHelper {
                         sequencesRanges=%s
                         sequencesLengths=%s
                         """,
-                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
-                isRow ? ROW : COLUMN,
-                index,
-                initialLine.toString(),
-                updatedLine.toString(),
-                sequencesRanges.toString(),
-                sequencesLengths.toString()
+                context.isRow() ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                context.isRow() ? ROW : COLUMN,
+                context.getIndex(),
+                context.getInitialLine(),
+                context.getUpdatedLine(),
+                context.getSequencesRanges(),
+                context.getSequencesLengths()
         );
     }
 

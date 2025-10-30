@@ -1,28 +1,57 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed;
 
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringCovertLogBaseContext;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringGenerateLogBaseContext;
 import lombok.experimental.UtilityClass;
 
-import java.util.List;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
 
 @UtilityClass
 public class PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper {
 
     public static String generateLog(
-            boolean isRow,
-            int index,
-            String direction,
-            List<Integer> sequencesLengths,
-            List<List<Integer>> sequencesRanges,
-            List<String> initialLine,
-            List<String> updatedLine
+            ColouringGenerateLogBaseContext context,
+            String direction
     ) {
-        return "PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART_IN_ROW - RAW LOG TODO";
+        return String.format(
+                """
+                        PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART_IN_%s: %s=%d
+                        direction=%s
+                        initialLine=%s
+                        updatedLine=%s
+                        sequencesRanges=%s
+                        sequencesLengths=%s
+                        """,
+                context.isRow() ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                context.isRow() ? ROW : COLUMN,
+                context.getIndex(),
+                direction,
+                context.getInitialLine(),
+                context.getUpdatedLine(),
+                context.getSequencesRanges(),
+                context.getSequencesLengths()
+        );
     }
 
-    public static String convertLogToTestArguments(
-            String logText,
-            String solutionName
-    ) {
-        return "PREVENT EXTENDING COLOURED SEQUENCE TO EXCESS LENGTH COLOURING PART - CONVERTED LOG TODO";
+    // TODO - include direction in log
+    public static String convertLogToTestArguments(String log, String solutionName) {
+        ColouringCovertLogBaseContext colouringCovertLogBaseContext = new ColouringCovertLogBaseContext(log, solutionName);
+
+        return String.format(
+                """
+                        Arguments.of("%s / %s=%d - prevent extending coloured sequence to excess length colouring part",
+                            %s,
+                            %s,
+                            %s,
+                            %s
+                        )""",
+                colouringCovertLogBaseContext.getFileName(),
+                colouringCovertLogBaseContext.getAxisLabel(),
+                colouringCovertLogBaseContext.getIndex(),
+                colouringCovertLogBaseContext.getInitialLine(),
+                colouringCovertLogBaseContext.getSequencesRanges(),
+                colouringCovertLogBaseContext.getSequencesLengths(),
+                colouringCovertLogBaseContext.getUpdatedLine()
+        );
     }
 }

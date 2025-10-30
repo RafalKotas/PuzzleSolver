@@ -10,6 +10,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramB
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.clearing.NonogramFieldClearingHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark.*;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringGenerateLogBaseContext;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exclusion.ExcludedSequenceLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXGenerateLogBaseContext;
@@ -391,7 +392,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
     // ------------------------------------------------------------------------
 
     private void handleValidTopOverextensionCase(OverextensionColumnContext overextensionColumnContext,
-                                                 List<String> columnBefore,
+                                                 List<String> initialColumn,
                                                  List<List<Integer>> columnSequencesRanges,
                                                  List<Integer> columnSequencesLengths) {
         if (overextensionColumnContext.validSequenceLengths().stream().distinct().count() != 1) return;
@@ -407,9 +408,16 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                 actionScheduler.scheduleActionsBasedOnField(f,
                         NonogramSolveAction.PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART_IN_COLUMN);
 
+                ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
+                        false,
+                        overextensionColumnContext.columnIdx(),
+                        initialColumn,
+                        getColumnCopy(overextensionColumnContext.columnIdx()),
+                        columnSequencesRanges,
+                        columnSequencesLengths
+                );
                 tmpLog = PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper.generateLog(
-                        false, overextensionColumnContext.columnIdx(), "top",
-                        columnSequencesLengths, columnSequencesRanges, columnBefore, getColumnCopy(overextensionColumnContext.columnIdx()));
+                        colouringGenerateLogBaseContext, "top");
                 addLog();
             }
         }
@@ -422,7 +430,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                     false,
                     overextensionColumnContext.columnIdx(),
-                    columnBefore,
+                    initialColumn,
                     getColumnCopy(overextensionColumnContext.columnIdx())
             );
             tmpLog = PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper.generateLog(
@@ -440,7 +448,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
     }
 
     private void handleValidBottomOverextensionCase(OverextensionColumnContext overextensionColumnContext,
-                                                    List<String> columnBefore,
+                                                    List<String> initialColumn,
                                                     List<List<Integer>> columnSequencesRanges,
                                                     List<Integer> columnSequencesLengths) {
         if (overextensionColumnContext.validSequenceLengths().stream().distinct().count() != 1) return;
@@ -456,9 +464,16 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
                 actionScheduler.scheduleActionsBasedOnField(f,
                         NonogramSolveAction.PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART_IN_COLUMN);
 
+                ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
+                        false,
+                        overextensionColumnContext.columnIdx(),
+                        initialColumn,
+                        getColumnCopy(overextensionColumnContext.columnIdx()),
+                        columnSequencesRanges,
+                        columnSequencesLengths
+                );
                 tmpLog = PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper.generateLog(
-                        false, overextensionColumnContext.columnIdx(), "bottom",
-                        columnSequencesLengths, columnSequencesRanges, columnBefore, getColumnCopy(overextensionColumnContext.columnIdx()));
+                        colouringGenerateLogBaseContext, "bottom");
                 addLog();
             }
         }
@@ -473,7 +488,7 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                     false,
                     overextensionColumnContext.columnIdx(),
-                    columnBefore,
+                    initialColumn,
                     getColumnCopy(overextensionColumnContext.columnIdx())
             );
             tmpLog = PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper.generateLog(
