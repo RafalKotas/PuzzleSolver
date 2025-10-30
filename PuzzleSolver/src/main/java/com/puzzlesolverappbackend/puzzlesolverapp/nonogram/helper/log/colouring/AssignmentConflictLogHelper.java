@@ -5,7 +5,6 @@ import lombok.experimental.UtilityClass;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
 public class AssignmentConflictLogHelper {
@@ -40,19 +39,7 @@ public class AssignmentConflictLogHelper {
             String log,
             String solutionName
     ) {
-        String[] lines = log.split("\\n");
-
-        boolean isRow = lines[0].contains(ROW_ACTION_NAME);
-        String axisLabel = isRow ? ROW : COLUMN;
-
-        int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
-
-        String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
-
-        String initialLine = extractValue(lines, "initialLine");
-        String updatedLine = extractValue(lines, "updatedLine");
-        String sequencesRanges = extractValue(lines, "sequencesRanges");
-        String sequencesLengths = extractValue(lines, "sequencesLengths");
+        ColouringCovertLogBaseContext colouringCovertLogBaseContext = new ColouringCovertLogBaseContext(log, solutionName);
 
         return String.format(
                 """
@@ -62,13 +49,13 @@ public class AssignmentConflictLogHelper {
                             %s,
                             %s)
                         )""",
-                fileName,
-                axisLabel,
-                index,
-                toMutableStringListLiteral(initialLine),
-                toMutableStringListLiteral(updatedLine),
-                toMutableRangesListLiteral(sequencesRanges),
-                toImmutableIntListLiteral(sequencesLengths)
+                colouringCovertLogBaseContext.getFileName(),
+                colouringCovertLogBaseContext.getAxisLabel(),
+                colouringCovertLogBaseContext.getIndex(),
+                colouringCovertLogBaseContext.getInitialLine(),
+                colouringCovertLogBaseContext.getUpdatedLine(),
+                colouringCovertLogBaseContext.getSequencesRanges(),
+                colouringCovertLogBaseContext.getSequencesLengths()
         );
     }
 }
