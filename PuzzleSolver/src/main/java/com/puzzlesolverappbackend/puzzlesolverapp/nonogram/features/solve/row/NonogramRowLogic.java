@@ -12,7 +12,8 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.clear
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark.*;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exclusion.ExcludedSequenceLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXBaseLogContext;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.NonogramLogService;
 import lombok.Getter;
 import lombok.Setter;
@@ -298,8 +299,19 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             this.getRowXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(fieldToPlaceX);
             this.nonogramState.increaseMadeSteps();
 
+            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+                    true,
+                    context.rowIdx(),
+                    rowBefore,
+                    getRowCopy(context.rowIdx())
+            );
             tmpLog = PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper.generateLog(
-                    true, context.rowIdx(), "left", rowSequencesLengths, rowSequencesRanges, rowBefore, getRowCopy(context.rowIdx()));
+                    placeXBaseLogContext,
+                    "left",
+                    context.validSequenceIds.get(0),
+                    rowSequencesLengths,
+                    rowSequencesRanges
+            );
             addLog();
 
             this.getNonogramFieldExclusionHelper().excludeFieldInRow(fieldToPlaceX);
@@ -400,8 +412,19 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
             this.getRowXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(fieldToPlaceX);
             this.nonogramState.increaseMadeSteps();
 
+            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+                    true,
+                    context.rowIdx(),
+                    rowBefore,
+                    getRowCopy(context.rowIdx())
+            );
             tmpLog = PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper.generateLog(
-                    true, context.rowIdx(), "right", rowSequencesLengths, rowSequencesRanges, rowBefore, getRowCopy(context.rowIdx()));
+                    placeXBaseLogContext,
+                    "right",
+                    context.validSequenceIds.get(0),
+                    rowSequencesLengths,
+                    rowSequencesRanges
+            );
             addLog();
 
             this.getNonogramFieldExclusionHelper().excludeFieldInRow(fieldToPlaceX);
