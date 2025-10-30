@@ -14,7 +14,6 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exclusion.
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXBaseLogContext;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.NonogramLogService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -43,32 +42,14 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
     protected List<List<Integer>> rowsSequencesIdsNotToInclude;
 
     // === HELPERS AND SERVICES ===
-    @JsonIgnore
-    private final NonogramActionScheduler actionScheduler;
-
-    @JsonIgnore
-    private final NonogramBoardAccessHelper boardAccessHelper;
-
-    @JsonIgnore
-    private final RowColouringHelperImpl rowColouringHelper;
-
-    @JsonIgnore
-    private final RowXPlacementHelperImpl rowXPlacementHelper;
-
-    @JsonIgnore
-    private final RowSequencesCorrectionHelperImpl rowSequencesCorrectionHelper;
-
-    @JsonIgnore
-    private final NonogramFieldClearingHelper nonogramFieldClearingHelper;
-
-    @JsonIgnore
-    private final NonogramFieldExclusionHelperRow nonogramFieldExclusionHelper;
-
-    @JsonIgnore
-    private final List<RefreshableRowHelper> refreshables = new ArrayList<>();
-
-    @JsonIgnore
-    private final NonogramLogService logService;
+    @JsonIgnore private final NonogramActionScheduler actionScheduler;
+    @JsonIgnore private final NonogramBoardAccessHelper boardAccessHelper;
+    @JsonIgnore private final RowColouringHelperImpl rowColouringHelper;
+    @JsonIgnore private final RowXPlacementHelperImpl rowXPlacementHelper;
+    @JsonIgnore private final RowSequencesCorrectionHelperImpl rowSequencesCorrectionHelper;
+    @JsonIgnore private final NonogramFieldClearingHelper nonogramFieldClearingHelper;
+    @JsonIgnore private final NonogramFieldExclusionHelperRow nonogramFieldExclusionHelper;
+    @JsonIgnore private final List<RefreshableRowHelper> refreshables = new ArrayList<>();
 
     // === CONSTRUCTORS ===
 
@@ -113,8 +94,6 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         refreshables.add(rowColouringHelper);
         refreshables.add(rowXPlacementHelper);
         refreshables.add(rowSequencesCorrectionHelper);
-
-        this.logService = new NonogramLogService();
     }
 
     // === PUBLIC METHODS (API) ===

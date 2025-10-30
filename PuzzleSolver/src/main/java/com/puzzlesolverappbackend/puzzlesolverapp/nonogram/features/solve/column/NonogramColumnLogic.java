@@ -14,7 +14,6 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exclusion.
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXBaseLogContext;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.NonogramLogService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -64,7 +63,6 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
     @JsonIgnore private final NonogramFieldClearingHelper nonogramFieldClearingHelper;
     @JsonIgnore private final NonogramFieldExclusionHelperColumn nonogramFieldExclusionHelper;
     @JsonIgnore private final List<RefreshableColumnHelper> refreshables = new ArrayList<>();
-    @JsonIgnore private final NonogramLogService logService;
 
     // ------------------------------------------------------------------------
     // 🔹 Constructors
@@ -106,8 +104,6 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         refreshables.add(columnColouringHelper);
         refreshables.add(columnXPlacementHelper);
         refreshables.add(columnSequencesCorrectionHelper);
-
-        this.logService = new NonogramLogService();
     }
 
     public NonogramColumnLogic(NonogramLogic logic,
@@ -148,8 +144,6 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         refreshables.add(columnColouringHelper);
         refreshables.add(columnXPlacementHelper);
         refreshables.add(columnSequencesCorrectionHelper);
-
-        this.logService = new NonogramLogService();
     }
 
     public NonogramColumnLogic(NonogramColumnLogic original) {
@@ -188,8 +182,6 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
         refreshables.add(columnColouringHelper);
         refreshables.add(columnXPlacementHelper);
         refreshables.add(columnSequencesCorrectionHelper);
-
-        this.logService = new NonogramLogService();
     }
 
     // ------------------------------------------------------------------------
