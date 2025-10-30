@@ -34,6 +34,7 @@ class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelperTest {
     @DisplayName("PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper - generate example log - o08007 column 7")
     void shouldGenerateLogColumnCase() {
         // given
+        boolean isRow = false;
         int index = 7;
         List<String> initialLine = new ArrayList<>(List.of("-", "-", "-", "-", "-", "X", "-", "-", "-", "O", "O", "-", "-", "X", "-"));
         List<String> updatedLine = new ArrayList<>(List.of("-", "-", "-", "-", "-", "X", "X", "X", "X", "O", "O", "-", "-", "X", "-"));
@@ -44,13 +45,17 @@ class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelperTest {
                         new ArrayList<>(List.of(9, 14))
                 )
         );
-
-        // when
-        String actual = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
-                false,
+        PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+                isRow,
                 index,
                 initialLine,
-                updatedLine,
+                updatedLine
+        );
+
+        // when
+
+        String actual = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
+                placeXBaseLogContext,
                 sequencesLengths,
                 sequencesRanges
         );
@@ -102,6 +107,7 @@ class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelperTest {
     @DisplayName("PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper - generate example log - o08007 row 3")
     void shouldGenerateLogRowCase() {
         // given
+        boolean isRow = true;
         int index = 3;
         List<String> initialLine = new ArrayList<>(List.of("-", "-", "O", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"));
         List<String> updatedLine = new ArrayList<>(List.of("-", "X", "O", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"));
@@ -113,13 +119,16 @@ class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelperTest {
                         new ArrayList<>(List.of(5, 14))
                 )
         );
+        PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+                isRow,
+                index,
+                initialLine,
+                updatedLine
+        );
 
         // when
         String actual = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
-                true,
-                index,
-                initialLine,
-                updatedLine,
+                placeXBaseLogContext,
                 sequencesLengths,
                 sequencesRanges
         );

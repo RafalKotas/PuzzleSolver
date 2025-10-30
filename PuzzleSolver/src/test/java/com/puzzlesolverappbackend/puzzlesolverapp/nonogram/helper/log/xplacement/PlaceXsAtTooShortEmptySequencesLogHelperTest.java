@@ -34,6 +34,7 @@ class PlaceXsAtTooShortEmptySequencesLogHelperTest {
     @DisplayName("PlaceXsAtTooShortEmptySequencesLogHelper - generate example log - o07942 column 0")
     void shouldGenerateLogColumnCase() {
         // given
+        boolean isRow = false;
         int index = 0;
         List<String> initialLine = new ArrayList<>(List.of("-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "X", "-", "X", "-", "-", "-", "-", "-", "-", "-"));
         List<String> updatedLine = new ArrayList<>(List.of("-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "X", "X", "X", "-", "-", "-", "-", "-", "-", "-"));
@@ -44,13 +45,16 @@ class PlaceXsAtTooShortEmptySequencesLogHelperTest {
         );
         List<Integer> sequencesLengths = List.of(2);
         List<Integer> excludedSequencesIndexes = new ArrayList<>(List.of());
+        PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+                isRow,
+                index,
+                initialLine,
+                updatedLine
+        );
 
         // when
         String actual = PlaceXsAtTooShortEmptySequencesLogHelper.generateLog(
-                false,
-                index,
-                initialLine,
-                updatedLine,
+                placeXBaseLogContext,
                 sequencesRanges,
                 sequencesLengths,
                 excludedSequencesIndexes
@@ -106,6 +110,7 @@ class PlaceXsAtTooShortEmptySequencesLogHelperTest {
     @DisplayName("PlaceXsAtTooShortEmptySequencesLogHelper - generate example log - o07942 row 7")
     void shouldGenerateLogRowCase() {
         // given
+        boolean isRow = true;
         int index = 7;
         List<String> initialLine = new ArrayList<>(List.of("-", "-", "-", "-", "-", "X", "-", "-", "X", "-", "X", "-", "-", "X", "-", "-", "-", "X", "O", "X"));
         List<String> updatedLine = new ArrayList<>(List.of("-", "-", "-", "-", "-", "X", "-", "-", "X", "X", "X", "-", "-", "X", "-", "-", "-", "X", "O", "X"));
@@ -118,13 +123,16 @@ class PlaceXsAtTooShortEmptySequencesLogHelperTest {
         );
         List<Integer> sequencesLengths = List.of(2, 2, 1);
         List<Integer> excludedSequencesIndexes = new ArrayList<>(List.of(2));
+        PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+                isRow,
+                index,
+                initialLine,
+                updatedLine
+        );
 
         // when
         String actual = PlaceXsAtTooShortEmptySequencesLogHelper.generateLog(
-                true,
-                index,
-                initialLine,
-                updatedLine,
+                placeXBaseLogContext,
                 sequencesRanges,
                 sequencesLengths,
                 excludedSequencesIndexes

@@ -6,10 +6,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAc
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.xplacement.NonogramFieldPlacingXHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.common.CommonXPlacementHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.SequenceRangeCorrectionWhenPlacingXsLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAroundLongestSequencesLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAtTooShortEmptySequencesLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAtUnreachableFieldsLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -61,7 +58,7 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
      */
     @Override
     public void placeXsColumnAtUnreachableFields(int columnIdx) {
-        List<String> initialState = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
+        List<String> initialColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
         List<List<Integer>> initialRanges = cloneAndMakeImmutable2DList(nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx));
 
         List<List<Integer>> colSequencesRanges = nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx);
@@ -83,17 +80,19 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
             }
         }
 
-        List<String> updatedState = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
-        if (!initialState.equals(updatedState)) {
-            String tmpLog = PlaceXsAtUnreachableFieldsLogHelper.generateLog(
+        List<String> updatedColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
+        if (!initialColumn.equals(updatedColumn)) {
+            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
                     false,
                     columnIdx,
-                    initialState,
-                    updatedState,
+                    initialColumn,
+                    updatedColumn
+            );
+            String tmpLog = PlaceXsAtUnreachableFieldsLogHelper.generateLog(
+                    placeXBaseLogContext,
                     initialRanges
             );
-            nonogramColumnLogic.setTmpLog(tmpLog);
-            nonogramColumnLogic.addLog();
+            setAndAddLog(tmpLog);
         }
     }
 
@@ -245,17 +244,19 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
 
         List<String> columnAfter = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
 
+        PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+                false,
+                columnIdx,
+                columnBefore,
+                columnAfter
+        );
         if (anyXPlaced) {
             String tmpLog = PlaceXsAroundLongestSequencesLogHelper.generateLog(
-                    false,
-                    columnIdx,
+                    placeXBaseLogContext,
                     xEdges,
-                    columnBefore,
-                    columnAfter,
                     onlyMatching
             );
-            nonogramColumnLogic.setTmpLog(tmpLog);
-            nonogramColumnLogic.addLog();
+            setAndAddLog(tmpLog);
         }
     }
 
@@ -302,8 +303,7 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
                     columnState,
                     sequencesLengths
             );
-            nonogramColumnLogic.setTmpLog(tmpLog);
-            nonogramColumnLogic.addLog();
+            setAndAddLog(tmpLog);
         }
 
         nonogramColumnLogic.excludeSequenceInColumn(columnIdx, sequenceIndex);
@@ -354,16 +354,18 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
 
         List<String> updatedColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
         if (!initialColumn.equals(updatedColumn)) {
-            String tmpLog = PlaceXsAtTooShortEmptySequencesLogHelper.generateLog(
+            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
                     false,
                     columnIdx,
                     initialColumn,
-                    updatedColumn,
+                    updatedColumn
+            );
+            String tmpLog = PlaceXsAtTooShortEmptySequencesLogHelper.generateLog(
+                    placeXBaseLogContext,
                     sequencesRanges,
                     sequencesLengths,
                     excludedSequenceIndexes);
-            nonogramColumnLogic.setTmpLog(tmpLog);
-            nonogramColumnLogic.addLog();
+            setAndAddLog(tmpLog);
         }
     }
 
@@ -482,16 +484,18 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
         List<String> columnAfter = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
 
         if (!columnBefore.equals(columnAfter)) {
-            String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
-                    false, // isRow == false
+            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+                    false,
                     columnIdx,
                     columnBefore,
-                    columnAfter,
+                    columnAfter
+            );
+            String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
+                    placeXBaseLogContext,
                     nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
                     nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx)
             );
-            nonogramColumnLogic.setTmpLog(tmpLog);
-            nonogramColumnLogic.addLog();
+            setAndAddLog(tmpLog);
         }
     }
 
@@ -552,16 +556,18 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
         List<String> updatedColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
 
         if (!initialColumn.equals(updatedColumn)) {
-            String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
-                    false, // isRow = false
+            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+                    false,
                     columnIdx,
                     initialColumn,
-                    updatedColumn,
+                    updatedColumn
+            );
+            String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
+                    placeXBaseLogContext,
                     nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
                     nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx)
             );
-            nonogramColumnLogic.setTmpLog(tmpLog);
-            nonogramColumnLogic.addLog();
+            setAndAddLog(tmpLog);
         }
     }
 
@@ -708,6 +714,11 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
                                                      int length,
                                                      List<Integer> range) {
         return rangeLength(possibleRange) >= emptyLen && totalLength <= length && rangeInsideAnotherRange(possibleRange, range);
+    }
+
+    private void setAndAddLog(String tmpLog) {
+        nonogramColumnLogic.setTmpLog(tmpLog);
+        nonogramColumnLogic.addLog();
     }
 
     @Override

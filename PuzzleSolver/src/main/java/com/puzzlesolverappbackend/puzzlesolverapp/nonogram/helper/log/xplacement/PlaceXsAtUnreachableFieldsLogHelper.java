@@ -11,25 +11,22 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.log
 public class PlaceXsAtUnreachableFieldsLogHelper {
 
     public static String generateLog(
-            boolean isRow,
-            int index,
-            List<String> initialLine,
-            List<String> updatedLine,
+            PlaceXBaseLogContext context,
             List<List<Integer>> sequencesRanges
     ) {
         return String.format(
                 """
                         PLACE_XS_AT_UNREACHABLE_FIELDS_IN_%s: %s=%d
                         initialLine=%s
-                        sequencesRanges=%s
                         updatedLine=%s
+                        sequencesRanges=%s
                         """,
-                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
-                isRow ? ROW : COLUMN,
-                index,
-                initialLine,
-                sequencesRanges,
-                updatedLine
+                context.isRow() ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                context.isRow() ? ROW : COLUMN,
+                context.getIndex(),
+                context.getInitialLine(),
+                context.getUpdatedLine(),
+                sequencesRanges
         );
     }
 

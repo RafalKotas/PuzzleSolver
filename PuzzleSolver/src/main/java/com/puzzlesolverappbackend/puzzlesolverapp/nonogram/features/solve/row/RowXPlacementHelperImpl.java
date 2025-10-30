@@ -6,10 +6,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAc
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.xplacement.NonogramFieldPlacingXHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.common.CommonXPlacementHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.SequenceRangeCorrectionWhenPlacingXsLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAroundLongestSequencesLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAtTooShortEmptySequencesLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAtUnreachableFieldsLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +47,7 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
     public void placeXsRowAtUnreachableFields(int rowIdx) {
         List<List<Integer>> rowSequencesRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
 
-        List<String> initialState = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
+        List<String> initialRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
         List<List<Integer>> initialRanges = cloneAndMakeImmutable2DList(rowSequencesRanges);
 
         for (int columnIdx = 0; columnIdx < nonogramRowLogic.getNonogramRules().getWidth(); columnIdx++) {
@@ -70,17 +67,19 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
             }
         }
 
-        List<String> updatedState = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
-        if (!initialState.equals(updatedState)) {
-            String tmpLog = PlaceXsAtUnreachableFieldsLogHelper.generateLog(
+        List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
+        if (!initialRow.equals(updatedRow)) {
+            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
                     true,
                     rowIdx,
-                    initialState,
-                    updatedState,
+                    initialRow,
+                    updatedRow
+            );
+            String tmpLog = PlaceXsAtUnreachableFieldsLogHelper.generateLog(
+                    placeXBaseLogContext,
                     initialRanges
             );
-            nonogramRowLogic.setTmpLog(tmpLog);
-            nonogramRowLogic.addLog();
+            setAndAddLog(tmpLog);
         }
     }
 
@@ -183,16 +182,18 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
         List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
         if (anyXPlaced) {
-            String tmpLog = PlaceXsAroundLongestSequencesLogHelper.generateLog(
+            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
                     true,
                     rowIdx,
-                    xEdges,
                     initialRow,
-                    updatedRow,
+                    updatedRow
+            );
+            String tmpLog = PlaceXsAroundLongestSequencesLogHelper.generateLog(
+                    placeXBaseLogContext,
+                    xEdges,
                     onlyMatching
             );
-            nonogramRowLogic.setTmpLog(tmpLog);
-            nonogramRowLogic.addLog();
+            setAndAddLog(tmpLog);
         }
     }
 
@@ -220,8 +221,7 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
                     boardRow,
                     rowSequencesLengths
             );
-            nonogramRowLogic.setTmpLog(tmpLog);
-            nonogramRowLogic.addLog();
+            setAndAddLog(tmpLog);
 
             nonogramRowLogic.excludeSequenceInRow(rowIdx, sequenceIndex);
         }
@@ -259,17 +259,19 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
 
         List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
         if (!initialRow.equals(updatedRow)) {
-            String tmpLog = PlaceXsAtTooShortEmptySequencesLogHelper.generateLog(
+            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
                     true,
                     rowIdx,
                     initialRow,
-                    updatedRow,
+                    updatedRow
+            );
+            String tmpLog = PlaceXsAtTooShortEmptySequencesLogHelper.generateLog(
+                    placeXBaseLogContext,
                     sequenceRanges,
                     sequencesLengths,
                     excludedSequenceIds
             );
-            nonogramRowLogic.setTmpLog(tmpLog);
-            nonogramRowLogic.addLog();
+            setAndAddLog(tmpLog);
         }
     }
 
@@ -385,17 +387,18 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
         List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
         if (!initialRow.equals(updatedRow)) {
-            // TODO - create log helper for this action
-            String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
-                    true, // isRow = true
+            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+                    true,
                     rowIdx,
                     initialRow,
-                    updatedRow,
+                    updatedRow
+            );
+            String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
+                    placeXBaseLogContext,
                     nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
                     nonogramRowLogic.getRowsSequencesRanges().get(rowIdx)
             );
-            nonogramRowLogic.setTmpLog(tmpLog);
-            nonogramRowLogic.addLog();
+            setAndAddLog(tmpLog);
         }
     }
 
@@ -446,24 +449,26 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
 
     @Override
     public void placeXsRowIfONearXWillBeginTooLongPossibleColouredSequence(int rowIdx) {
-        List<String> rowBefore = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
+        List<String> initialRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
         checkDirectionAndPlaceXsInRow(rowIdx, true);  // from left
         checkDirectionAndPlaceXsInRow(rowIdx, false); // from right
 
-        List<String> rowAfter = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
+        List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
-        if (!rowBefore.equals(rowAfter)) {
-            String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
-                    true, //isRow = true
+        if (!initialRow.equals(updatedRow)) {
+            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+                    true,
                     rowIdx,
-                    rowBefore,
-                    rowAfter,
+                    initialRow,
+                    updatedRow
+            );
+            String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
+                    placeXBaseLogContext,
                     nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
                     nonogramRowLogic.getRowsSequencesRanges().get(rowIdx)
             );
-            nonogramRowLogic.setTmpLog(tmpLog);
-            nonogramRowLogic.addLog();
+            setAndAddLog(tmpLog);
         }
     }
 
@@ -491,6 +496,11 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
 
             evaluateAndMaybePlaceX(rowIdx, emptyRange, colouredRange, fromLeft);
         }
+    }
+
+    private void setAndAddLog(String tmpLog) {
+        nonogramRowLogic.setTmpLog(tmpLog);
+        nonogramRowLogic.addLog();
     }
 
     private List<Integer> getEmptyRange(Field xField, boolean fromLeft) {

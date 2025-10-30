@@ -39,14 +39,17 @@ class PlaceXsAroundLongestSequencesLogHelperTest {
         List<String> initialLine = new ArrayList<>(List.of("-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "X", "-", "-", "-", "-", "-", "-", "-", "-", "O"));
         List<String> updatedLine = new ArrayList<>(List.of("-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "X", "-", "-", "-", "-", "-", "-", "-", "X", "O"));
         boolean onlyMatching = true;
+        PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+                isRow,
+                index,
+                initialLine,
+                updatedLine
+        );
 
         // when
         String actual = PlaceXsAroundLongestSequencesLogHelper.generateLog(
-                isRow,
-                index,
+                placeXBaseLogContext,
                 xEdges,
-                initialLine,
-                updatedLine,
                 onlyMatching
         );
 
@@ -54,10 +57,10 @@ class PlaceXsAroundLongestSequencesLogHelperTest {
         String expected =
                 """
                         PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_COLUMN: column=14
-                        xEdges=[18, 20]
-                        onlyMatching=true
                         initialLine=[-, -, -, -, -, -, -, -, -, -, X, -, -, -, -, -, -, -, -, O]
                         updatedLine=[-, -, -, -, -, -, -, -, -, -, X, -, -, -, -, -, -, -, X, O]
+                        xEdges=[18, 20]
+                        onlyMatching=true
                         """;
 
         assertEquals(expected, actual);
@@ -70,10 +73,10 @@ class PlaceXsAroundLongestSequencesLogHelperTest {
         String generatedLog =
                 """
                         PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_COLUMN: column=14
-                        xEdges=[18, 20]
-                        onlyMatching=true
                         initialLine=[-, -, -, -, -, -, -, -, -, -, X, -, -, -, -, -, -, -, -, O]
                         updatedLine=[-, -, -, -, -, -, -, -, -, -, X, -, -, -, -, -, -, -, X, O]
+                        xEdges=[18, 20]
+                        onlyMatching=true
                         """;
 
         // when
@@ -103,14 +106,17 @@ class PlaceXsAroundLongestSequencesLogHelperTest {
         List<String> initialLine = new ArrayList<>(List.of("-", "-", "-", "-", "-", "-", "-", "O", "O", "O", "-", "-", "X", "-", "-", "-", "O", "-", "O", "-"));
         List<String> updatedLine = new ArrayList<>(List.of("-", "-", "-", "-", "-", "-", "-", "O", "O", "O", "-", "-", "X", "-", "-", "X", "O", "X", "O", "-"));
         boolean onlyMatching = true;
+        PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+                isRow,
+                index,
+                initialLine,
+                updatedLine
+        );
 
         // when
         String actual = PlaceXsAroundLongestSequencesLogHelper.generateLog(
-                isRow,
-                index,
+                placeXBaseLogContext,
                 xEdges,
-                initialLine,
-                updatedLine,
                 onlyMatching
         );
 
@@ -118,10 +124,10 @@ class PlaceXsAroundLongestSequencesLogHelperTest {
         String expected =
                 """
                         PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_ROW: row=11
-                        xEdges=[15, 17]
-                        onlyMatching=true
                         initialLine=[-, -, -, -, -, -, -, O, O, O, -, -, X, -, -, -, O, -, O, -]
                         updatedLine=[-, -, -, -, -, -, -, O, O, O, -, -, X, -, -, X, O, X, O, -]
+                        xEdges=[15, 17]
+                        onlyMatching=true
                         """;
 
         assertEquals(expected, actual);
@@ -134,10 +140,10 @@ class PlaceXsAroundLongestSequencesLogHelperTest {
         String generatedLog =
                 """
                         PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_ROW: row=11
-                        xEdges=[15, 17]
-                        onlyMatching=true
                         initialLine=[-, -, -, -, -, -, -, O, O, O, -, -, X, -, -, -, O, -, O, -]
                         updatedLine=[-, -, -, -, -, -, -, O, O, O, -, -, X, -, -, X, O, X, O, -]
+                        xEdges=[15, 17]
+                        onlyMatching=true
                         """;
 
         // when

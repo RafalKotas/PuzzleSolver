@@ -11,28 +11,25 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.log
 public class PlaceXsAroundLongestSequencesLogHelper {
 
     public static String generateLog(
-            boolean isRow,
-            int index,
+            PlaceXBaseLogContext context,
             List<Integer> xEdges,
-            List<String> initialLine,
-            List<String> updatedLine,
             boolean onlyMatching
     ) {
         return String.format(
                 """
                         PLACE_XS_AROUND_LONGEST_SEQUENCES_IN_%s: %s=%d
-                        xEdges=%s
-                        onlyMatching=%b
                         initialLine=%s
                         updatedLine=%s
+                        xEdges=%s
+                        onlyMatching=%b
                         """,
-                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
-                isRow ? ROW : COLUMN,
-                index,
+                context.isRow() ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                context.isRow() ? ROW : COLUMN,
+                context.getIndex(),
+                context.getInitialLine(),
+                context.getUpdatedLine(),
                 xEdges,
-                onlyMatching,
-                initialLine,
-                updatedLine
+                onlyMatching
         );
     }
 
@@ -46,10 +43,10 @@ public class PlaceXsAroundLongestSequencesLogHelper {
 
         String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
 
-        String xEdges = extractValue(lines, "xEdges");
-        String onlyMatching = extractValue(lines, "onlyMatching");
         String initialLine = extractValue(lines, "initialLine");
         String updatedLine = extractValue(lines, "updatedLine");
+        String xEdges = extractValue(lines, "xEdges");
+        String onlyMatching = extractValue(lines, "onlyMatching");
 
         return String.format(
                 """

@@ -11,10 +11,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.log
 public class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper {
 
     public static String generateLog(
-            boolean isRow,
-            int index,
-            List<String> initialLine,
-            List<String> updatedLine,
+            PlaceXBaseLogContext context,
             List<Integer> sequencesLengths,
             List<List<Integer>> sequencesRanges
     ) {
@@ -26,11 +23,11 @@ public class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper {
                         sequencesLengths=%s
                         sequencesRanges=%s
                         """,
-                isRow ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
-                isRow ? ROW : COLUMN,
-                index,
-                initialLine.toString(),
-                updatedLine.toString(),
+                context.isRow() ? ROW_ACTION_NAME : COLUMN_ACTION_NAME,
+                context.isRow() ? ROW : COLUMN,
+                context.getIndex(),
+                context.getInitialLine(),
+                context.getUpdatedLine(),
                 sequencesLengths.toString(),
                 sequencesRanges.toString()
         );

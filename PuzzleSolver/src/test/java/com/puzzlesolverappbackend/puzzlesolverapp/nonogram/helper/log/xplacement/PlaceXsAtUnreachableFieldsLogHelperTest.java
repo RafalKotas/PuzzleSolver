@@ -34,6 +34,7 @@ class PlaceXsAtUnreachableFieldsLogHelperTest {
     @DisplayName("PlaceXsAtUnreachableFieldsLogHelper - generate example log - o08007 column 6")
     void shouldGenerateLogColumnCase() {
         // given
+        boolean isRow = false;
         int index = 6;
         List<String> initialLine = new ArrayList<>(List.of("O", "O", "-", "O", "O", "X", "O", "O", "X", "O", "O", "X", "-", "O", "-"));
         List<String> updatedLine = new ArrayList<>(List.of("O", "O", "X", "O", "O", "X", "O", "O", "X", "O", "O", "X", "-", "O", "-"));
@@ -46,13 +47,16 @@ class PlaceXsAtUnreachableFieldsLogHelperTest {
                         new ArrayList<>(List.of(12, 14))
                 )
         );
+        PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+                isRow,
+                index,
+                initialLine,
+                updatedLine
+        );
 
         // when
         String actual = PlaceXsAtUnreachableFieldsLogHelper.generateLog(
-                false,
-                index,
-                initialLine,
-                updatedLine,
+                placeXBaseLogContext,
                 sequencesRanges
         );
 
@@ -61,8 +65,8 @@ class PlaceXsAtUnreachableFieldsLogHelperTest {
                 """
                         PLACE_XS_AT_UNREACHABLE_FIELDS_IN_COLUMN: column=6
                         initialLine=[O, O, -, O, O, X, O, O, X, O, O, X, -, O, -]
-                        sequencesRanges=[[0, 1], [3, 4], [6, 7], [9, 10], [12, 14]]
                         updatedLine=[O, O, X, O, O, X, O, O, X, O, O, X, -, O, -]
+                        sequencesRanges=[[0, 1], [3, 4], [6, 7], [9, 10], [12, 14]]
                         """;
 
         assertEquals(expected, actual);
@@ -76,8 +80,8 @@ class PlaceXsAtUnreachableFieldsLogHelperTest {
                 """
                         PLACE_XS_AT_UNREACHABLE_FIELDS_IN_COLUMN: column=6
                         initialLine=[O, O, -, O, O, X, O, O, X, O, O, X, -, O, -]
-                        sequencesRanges=[[0, 1], [3, 4], [6, 7], [9, 10], [12, 14]]
                         updatedLine=[O, O, X, O, O, X, O, O, X, O, O, X, -, O, -]
+                        sequencesRanges=[[0, 1], [3, 4], [6, 7], [9, 10], [12, 14]]
                         """;
 
         // when
@@ -100,6 +104,7 @@ class PlaceXsAtUnreachableFieldsLogHelperTest {
     @DisplayName("PlaceXsAtUnreachableFieldsLogHelper - generate example log - o08007 row 9")
     void shouldGenerateLogRowCase() {
         // given
+        boolean isRow = true;
         int index = 9;
         List<String> initialLine = new ArrayList<>(List.of("-", "-", "O", "O", "O", "O", "O", "O", "O", "-", "-", "-", "-", "-", "-"));
         List<String> updatedLine = new ArrayList<>(List.of("-", "-", "O", "O", "O", "O", "O", "O", "O", "-", "-", "X", "X", "X", "X"));
@@ -108,13 +113,16 @@ class PlaceXsAtUnreachableFieldsLogHelperTest {
                         new ArrayList<>(List.of(0, 10))
                 )
         );
+        PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+                isRow,
+                index,
+                initialLine,
+                updatedLine
+        );
 
         // when
         String actual = PlaceXsAtUnreachableFieldsLogHelper.generateLog(
-                true,
-                index,
-                initialLine,
-                updatedLine,
+                placeXBaseLogContext,
                 sequencesRanges
         );
 
@@ -123,8 +131,8 @@ class PlaceXsAtUnreachableFieldsLogHelperTest {
                 """
                         PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW: row=9
                         initialLine=[-, -, O, O, O, O, O, O, O, -, -, -, -, -, -]
-                        sequencesRanges=[[0, 10]]
                         updatedLine=[-, -, O, O, O, O, O, O, O, -, -, X, X, X, X]
+                        sequencesRanges=[[0, 10]]
                         """;
 
         assertEquals(expected, actual);
