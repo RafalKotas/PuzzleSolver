@@ -7,7 +7,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
-public class PlaceXBaseLogContext {
+public class PlaceXGenerateLogBaseContext {
 
     boolean isRow;
     int index;

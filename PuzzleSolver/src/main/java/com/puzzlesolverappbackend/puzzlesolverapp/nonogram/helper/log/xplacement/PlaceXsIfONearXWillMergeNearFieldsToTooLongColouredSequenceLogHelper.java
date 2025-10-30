@@ -11,7 +11,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.log
 public class PlaceXsIfONearXWillMergeNearFieldsToTooLongColouredSequenceLogHelper {
 
     public static String generateLog(
-            PlaceXBaseLogContext context,
+            PlaceXGenerateLogBaseContext context,
             String direction,
             int onlyValidSequenceIdx,
             List<Integer> sequencesLengths,

@@ -69,14 +69,14 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
 
         List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
         if (!initialRow.equals(updatedRow)) {
-            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                     true,
                     rowIdx,
                     initialRow,
                     updatedRow
             );
             String tmpLog = PlaceXsAtUnreachableFieldsLogHelper.generateLog(
-                    placeXBaseLogContext,
+                    placeXGenerateLogBaseContext,
                     initialRanges
             );
             setAndAddLog(tmpLog);
@@ -182,14 +182,14 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
         List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
         if (anyXPlaced) {
-            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                     true,
                     rowIdx,
                     initialRow,
                     updatedRow
             );
             String tmpLog = PlaceXsAroundLongestSequencesLogHelper.generateLog(
-                    placeXBaseLogContext,
+                    placeXGenerateLogBaseContext,
                     xEdges,
                     onlyMatching
             );
@@ -259,14 +259,14 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
 
         List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
         if (!initialRow.equals(updatedRow)) {
-            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                     true,
                     rowIdx,
                     initialRow,
                     updatedRow
             );
             String tmpLog = PlaceXsAtTooShortEmptySequencesLogHelper.generateLog(
-                    placeXBaseLogContext,
+                    placeXGenerateLogBaseContext,
                     sequenceRanges,
                     sequencesLengths,
                     excludedSequenceIds
@@ -387,14 +387,14 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
         List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
         if (!initialRow.equals(updatedRow)) {
-            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                     true,
                     rowIdx,
                     initialRow,
                     updatedRow
             );
             String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
-                    placeXBaseLogContext,
+                    placeXGenerateLogBaseContext,
                     nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
                     nonogramRowLogic.getRowsSequencesRanges().get(rowIdx)
             );
@@ -457,14 +457,14 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
         List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
 
         if (!initialRow.equals(updatedRow)) {
-            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                     true,
                     rowIdx,
                     initialRow,
                     updatedRow
             );
             String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
-                    placeXBaseLogContext,
+                    placeXGenerateLogBaseContext,
                     nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
                     nonogramRowLogic.getRowsSequencesRanges().get(rowIdx)
             );

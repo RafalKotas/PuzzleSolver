@@ -39,7 +39,7 @@ class PlaceXsAroundLongestSequencesLogHelperTest {
         List<String> initialLine = new ArrayList<>(List.of("-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "X", "-", "-", "-", "-", "-", "-", "-", "-", "O"));
         List<String> updatedLine = new ArrayList<>(List.of("-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "X", "-", "-", "-", "-", "-", "-", "-", "X", "O"));
         boolean onlyMatching = true;
-        PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+        PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                 isRow,
                 index,
                 initialLine,
@@ -48,7 +48,7 @@ class PlaceXsAroundLongestSequencesLogHelperTest {
 
         // when
         String actual = PlaceXsAroundLongestSequencesLogHelper.generateLog(
-                placeXBaseLogContext,
+                placeXGenerateLogBaseContext,
                 xEdges,
                 onlyMatching
         );
@@ -106,7 +106,7 @@ class PlaceXsAroundLongestSequencesLogHelperTest {
         List<String> initialLine = new ArrayList<>(List.of("-", "-", "-", "-", "-", "-", "-", "O", "O", "O", "-", "-", "X", "-", "-", "-", "O", "-", "O", "-"));
         List<String> updatedLine = new ArrayList<>(List.of("-", "-", "-", "-", "-", "-", "-", "O", "O", "O", "-", "-", "X", "-", "-", "X", "O", "X", "O", "-"));
         boolean onlyMatching = true;
-        PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+        PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                 isRow,
                 index,
                 initialLine,
@@ -115,7 +115,7 @@ class PlaceXsAroundLongestSequencesLogHelperTest {
 
         // when
         String actual = PlaceXsAroundLongestSequencesLogHelper.generateLog(
-                placeXBaseLogContext,
+                placeXGenerateLogBaseContext,
                 xEdges,
                 onlyMatching
         );

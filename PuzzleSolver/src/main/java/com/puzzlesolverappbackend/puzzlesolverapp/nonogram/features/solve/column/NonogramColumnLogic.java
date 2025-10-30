@@ -12,7 +12,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.clear
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark.*;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exclusion.ExcludedSequenceLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXBaseLogContext;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXGenerateLogBaseContext;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -419,14 +419,14 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             this.getColumnXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(fieldToPlaceX);
             this.nonogramState.increaseMadeSteps();
 
-            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                     false,
                     overextensionColumnContext.columnIdx(),
                     columnBefore,
                     getColumnCopy(overextensionColumnContext.columnIdx())
             );
             tmpLog = PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper.generateLog(
-                    placeXBaseLogContext,
+                    placeXGenerateLogBaseContext,
                     "top",
                     overextensionColumnContext.validSequenceIds.get(0),
                     columnSequencesLengths,
@@ -470,14 +470,14 @@ public class NonogramColumnLogic extends NonogramLogicParams implements ColumnAc
             this.getColumnXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(fieldToPlaceX);
             this.nonogramState.increaseMadeSteps();
 
-            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                     false,
                     overextensionColumnContext.columnIdx(),
                     columnBefore,
                     getColumnCopy(overextensionColumnContext.columnIdx())
             );
             tmpLog = PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper.generateLog(
-                    placeXBaseLogContext,
+                    placeXGenerateLogBaseContext,
                     "bottom",
                     overextensionColumnContext.validSequenceIds.get(0),
                     columnSequencesLengths,

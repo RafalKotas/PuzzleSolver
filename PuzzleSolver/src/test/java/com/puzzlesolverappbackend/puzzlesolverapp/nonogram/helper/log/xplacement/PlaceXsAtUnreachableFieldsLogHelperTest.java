@@ -47,7 +47,7 @@ class PlaceXsAtUnreachableFieldsLogHelperTest {
                         new ArrayList<>(List.of(12, 14))
                 )
         );
-        PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+        PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                 isRow,
                 index,
                 initialLine,
@@ -56,7 +56,7 @@ class PlaceXsAtUnreachableFieldsLogHelperTest {
 
         // when
         String actual = PlaceXsAtUnreachableFieldsLogHelper.generateLog(
-                placeXBaseLogContext,
+                placeXGenerateLogBaseContext,
                 sequencesRanges
         );
 
@@ -113,7 +113,7 @@ class PlaceXsAtUnreachableFieldsLogHelperTest {
                         new ArrayList<>(List.of(0, 10))
                 )
         );
-        PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+        PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                 isRow,
                 index,
                 initialLine,
@@ -122,7 +122,7 @@ class PlaceXsAtUnreachableFieldsLogHelperTest {
 
         // when
         String actual = PlaceXsAtUnreachableFieldsLogHelper.generateLog(
-                placeXBaseLogContext,
+                placeXGenerateLogBaseContext,
                 sequencesRanges
         );
 

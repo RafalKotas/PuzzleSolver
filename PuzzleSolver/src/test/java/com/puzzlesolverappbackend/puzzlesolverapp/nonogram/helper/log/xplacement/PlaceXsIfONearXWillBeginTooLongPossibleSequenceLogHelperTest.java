@@ -45,7 +45,7 @@ class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelperTest {
                         new ArrayList<>(List.of(9, 14))
                 )
         );
-        PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+        PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                 isRow,
                 index,
                 initialLine,
@@ -55,7 +55,7 @@ class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelperTest {
         // when
 
         String actual = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
-                placeXBaseLogContext,
+                placeXGenerateLogBaseContext,
                 sequencesLengths,
                 sequencesRanges
         );
@@ -119,7 +119,7 @@ class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelperTest {
                         new ArrayList<>(List.of(5, 14))
                 )
         );
-        PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+        PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                 isRow,
                 index,
                 initialLine,
@@ -128,7 +128,7 @@ class PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelperTest {
 
         // when
         String actual = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
-                placeXBaseLogContext,
+                placeXGenerateLogBaseContext,
                 sequencesLengths,
                 sequencesRanges
         );

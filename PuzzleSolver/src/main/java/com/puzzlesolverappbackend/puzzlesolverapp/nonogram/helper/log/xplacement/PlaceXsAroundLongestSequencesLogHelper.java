@@ -11,7 +11,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.log
 public class PlaceXsAroundLongestSequencesLogHelper {
 
     public static String generateLog(
-            PlaceXBaseLogContext context,
+            PlaceXGenerateLogBaseContext context,
             List<Integer> xEdges,
             boolean onlyMatching
     ) {

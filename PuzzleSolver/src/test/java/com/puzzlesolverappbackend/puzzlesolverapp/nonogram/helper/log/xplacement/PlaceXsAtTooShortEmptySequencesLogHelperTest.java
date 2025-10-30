@@ -45,7 +45,7 @@ class PlaceXsAtTooShortEmptySequencesLogHelperTest {
         );
         List<Integer> sequencesLengths = List.of(2);
         List<Integer> excludedSequencesIndexes = new ArrayList<>(List.of());
-        PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+        PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                 isRow,
                 index,
                 initialLine,
@@ -54,7 +54,7 @@ class PlaceXsAtTooShortEmptySequencesLogHelperTest {
 
         // when
         String actual = PlaceXsAtTooShortEmptySequencesLogHelper.generateLog(
-                placeXBaseLogContext,
+                placeXGenerateLogBaseContext,
                 sequencesRanges,
                 sequencesLengths,
                 excludedSequencesIndexes
@@ -123,7 +123,7 @@ class PlaceXsAtTooShortEmptySequencesLogHelperTest {
         );
         List<Integer> sequencesLengths = List.of(2, 2, 1);
         List<Integer> excludedSequencesIndexes = new ArrayList<>(List.of(2));
-        PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+        PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                 isRow,
                 index,
                 initialLine,
@@ -132,7 +132,7 @@ class PlaceXsAtTooShortEmptySequencesLogHelperTest {
 
         // when
         String actual = PlaceXsAtTooShortEmptySequencesLogHelper.generateLog(
-                placeXBaseLogContext,
+                placeXGenerateLogBaseContext,
                 sequencesRanges,
                 sequencesLengths,
                 excludedSequencesIndexes

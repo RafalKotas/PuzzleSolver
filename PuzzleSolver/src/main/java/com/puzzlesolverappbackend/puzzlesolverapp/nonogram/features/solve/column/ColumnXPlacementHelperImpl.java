@@ -82,14 +82,14 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
 
         List<String> updatedColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
         if (!initialColumn.equals(updatedColumn)) {
-            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                     false,
                     columnIdx,
                     initialColumn,
                     updatedColumn
             );
             String tmpLog = PlaceXsAtUnreachableFieldsLogHelper.generateLog(
-                    placeXBaseLogContext,
+                    placeXGenerateLogBaseContext,
                     initialRanges
             );
             setAndAddLog(tmpLog);
@@ -244,7 +244,7 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
 
         List<String> columnAfter = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
 
-        PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+        PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                 false,
                 columnIdx,
                 columnBefore,
@@ -252,7 +252,7 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
         );
         if (anyXPlaced) {
             String tmpLog = PlaceXsAroundLongestSequencesLogHelper.generateLog(
-                    placeXBaseLogContext,
+                    placeXGenerateLogBaseContext,
                     xEdges,
                     onlyMatching
             );
@@ -354,14 +354,14 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
 
         List<String> updatedColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
         if (!initialColumn.equals(updatedColumn)) {
-            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                     false,
                     columnIdx,
                     initialColumn,
                     updatedColumn
             );
             String tmpLog = PlaceXsAtTooShortEmptySequencesLogHelper.generateLog(
-                    placeXBaseLogContext,
+                    placeXGenerateLogBaseContext,
                     sequencesRanges,
                     sequencesLengths,
                     excludedSequenceIndexes);
@@ -484,14 +484,14 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
         List<String> columnAfter = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
 
         if (!columnBefore.equals(columnAfter)) {
-            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                     false,
                     columnIdx,
                     columnBefore,
                     columnAfter
             );
             String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
-                    placeXBaseLogContext,
+                    placeXGenerateLogBaseContext,
                     nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
                     nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx)
             );
@@ -556,14 +556,14 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
         List<String> updatedColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
 
         if (!initialColumn.equals(updatedColumn)) {
-            PlaceXBaseLogContext placeXBaseLogContext = new PlaceXBaseLogContext(
+            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
                     false,
                     columnIdx,
                     initialColumn,
                     updatedColumn
             );
             String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
-                    placeXBaseLogContext,
+                    placeXGenerateLogBaseContext,
                     nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
                     nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx)
             );

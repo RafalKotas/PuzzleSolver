@@ -11,7 +11,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.log
 public class PlaceXsAtTooShortEmptySequencesLogHelper {
 
     public static String generateLog(
-            PlaceXBaseLogContext context,
+            PlaceXGenerateLogBaseContext context,
             List<List<Integer>> sequencesRanges,
             List<Integer> sequencesLengths,
             List<Integer> excludedSequencesIndexes
