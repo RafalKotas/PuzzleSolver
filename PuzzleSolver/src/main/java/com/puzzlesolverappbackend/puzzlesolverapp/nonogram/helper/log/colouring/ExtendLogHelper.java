@@ -39,7 +39,7 @@ public class ExtendLogHelper {
     }
 
     public static String convertLogToTestArguments(String log, String solutionName) {
-        ColouringLogContext colouringLogContext = new ColouringLogContext(log, solutionName);
+        ColouringCovertLogBaseContext colouringCovertLogBaseContext = new ColouringCovertLogBaseContext(log, solutionName);
 
         return String.format(
                 """
@@ -49,13 +49,13 @@ public class ExtendLogHelper {
                             %s,
                             %s
                         )""",
-                colouringLogContext.getFileName(),
-                colouringLogContext.getAxisLabel(),
-                colouringLogContext.getIndex(),
-                colouringLogContext.getInitialLine(),
-                colouringLogContext.getSequencesRanges(),
-                colouringLogContext.getSequencesLengths(),
-                colouringLogContext.getUpdatedLine()
+                colouringCovertLogBaseContext.getFileName(),
+                colouringCovertLogBaseContext.getAxisLabel(),
+                colouringCovertLogBaseContext.getIndex(),
+                colouringCovertLogBaseContext.getInitialLine(),
+                colouringCovertLogBaseContext.getSequencesRanges(),
+                colouringCovertLogBaseContext.getSequencesLengths(),
+                colouringCovertLogBaseContext.getUpdatedLine()
         );
     }
 }

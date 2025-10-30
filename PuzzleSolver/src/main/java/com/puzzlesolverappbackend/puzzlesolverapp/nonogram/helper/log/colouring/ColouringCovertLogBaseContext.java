@@ -6,7 +6,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @Getter
-public class ColouringLogContext {
+public class ColouringCovertLogBaseContext {
 
     private final String fileName;
     private final String axisLabel;
@@ -16,7 +16,7 @@ public class ColouringLogContext {
     private final String sequencesLengths;
     private final String updatedLine;
 
-    public ColouringLogContext(String log, String solutionName) {
+    public ColouringCovertLogBaseContext(String log, String solutionName) {
         String[] lines = log.split("\\n");
 
         boolean isRow = lines[0].contains(ROW_ACTION_NAME);
