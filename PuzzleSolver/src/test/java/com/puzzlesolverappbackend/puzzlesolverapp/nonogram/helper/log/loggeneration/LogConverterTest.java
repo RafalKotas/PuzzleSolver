@@ -6,7 +6,10 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.OverlappingLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exclusion.ExcludedSequenceLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.marking.MarkAvailableFieldsLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.*;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.SequenceRangeCorrectionWhenPlacingXsLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.TrivialFillLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.*;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.*;
 import org.junit.jupiter.api.DisplayName;
@@ -143,7 +146,7 @@ class LogConverterTest {
             try (MockedStatic<AssignmentConflictLogHelper> ms = mockStatic(AssignmentConflictLogHelper.class)) {
                 ms.when(() -> AssignmentConflictLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
                 Optional<String> out = LogConverter.convertLogByAction(LOG, SOL, "COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT");
-                assertThat(out).isEmpty();
+                assertThat(out).contains(OK);
             }
         }
 
@@ -190,7 +193,7 @@ class LogConverterTest {
                          mockStatic(PlaceXsIfONearXWillMergeNearFieldsToTooLongColouredSequenceLogHelper.class)) {
                 ms.when(() -> PlaceXsIfONearXWillMergeNearFieldsToTooLongColouredSequenceLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
                 Optional<String> out = LogConverter.convertLogByAction(LOG, SOL, "PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE");
-                assertThat(out).isEmpty();
+                assertThat(out).contains(OK);
             }
         }
 

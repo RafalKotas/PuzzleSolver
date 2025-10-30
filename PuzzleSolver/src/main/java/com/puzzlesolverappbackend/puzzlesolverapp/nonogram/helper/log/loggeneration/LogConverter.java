@@ -1,16 +1,17 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration;
 
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.AssignmentConflictLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ExtendLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.OverlappingLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exclusion.ExcludedSequenceLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.marking.MarkAvailableFieldsLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.*;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.SequenceRangeCorrectionWhenPlacingXsLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.TrivialFillLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.*;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAroundLongestSequencesLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAtTooShortEmptySequencesLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsAtUnreachableFieldsLogHelper;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.*;
 import lombok.experimental.UtilityClass;
 
 import java.util.Optional;
@@ -25,6 +26,8 @@ public class LogConverter {
     private static final String SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY = "SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY";
 
     private static final String COLOUR_OVERLAPPING_FIELDS = "COLOUR_OVERLAPPING_FIELDS";
+
+    private static final String COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT = "COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT";
 
     private static final String PLACE_XS_AT_UNREACHABLE_FIELDS = "PLACE_XS_AT_UNREACHABLE_FIELDS"; // start
 
@@ -80,8 +83,7 @@ public class LogConverter {
             case COLOUR_OVERLAPPING_FIELDS -> Optional.of(OverlappingLogHelper.convertLogToTestArguments(log, solutionName));
             case "TOO_LONG_MERGE" -> Optional.of(ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.convertLogToTestArguments(log, solutionName));
             case "EXTEND" -> Optional.of(ExtendLogHelper.convertLogToTestArguments(log, solutionName));
-            // TODO - implement methods
-            // case "COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT" -> Optional.of(AssignmentConflictLogHelper.convertLogToTestArguments(log, solutionName));
+            case COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT -> Optional.of(AssignmentConflictLogHelper.convertLogToTestArguments(log, solutionName));
 
             // x placing
             case PLACE_XS_AT_UNREACHABLE_FIELDS ->
@@ -92,9 +94,8 @@ public class LogConverter {
                     Optional.of(PlaceXsAtTooShortEmptySequencesLogHelper.convertLogToTestArguments(log, solutionName));
             case PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE ->
                     Optional.of(PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.convertLogToTestArguments(log, solutionName));
-            // TODO - implement methods
-            /* case PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE ->
-                    Optional.of(PlaceXsIfONearXWillMergeNearFieldsToTooLongColouredSequenceLogHelper.convertLogToTestArguments(log, solutionName)); */
+            case PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE ->
+                    Optional.of(PlaceXsIfONearXWillMergeNearFieldsToTooLongColouredSequenceLogHelper.convertLogToTestArguments(log, solutionName));
 
             // mixed
             case PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART ->
@@ -226,7 +227,7 @@ public class LogConverter {
     }
 
     private static boolean isColourFieldsIfXCausesAssignmentConflict(String log) {
-        return log.startsWith("COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT_IN_");
+        return log.startsWith(COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT);
     }
 
     // x placing
