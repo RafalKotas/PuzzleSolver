@@ -21,11 +21,11 @@ import lombok.ToString;
 public class Hitori extends BasePuzzleEntity {
 
     @Embedded
-    private Dimensions size;
+    private Dimensions dimensions;
 
     public Hitori(String filename, String source, Double difficulty,
                   Integer height, Integer width) {
         super(filename, source, difficulty);
-        this.size = new Dimensions(height, width);
+        this.dimensions = new Dimensions(height, width);
     }
 }

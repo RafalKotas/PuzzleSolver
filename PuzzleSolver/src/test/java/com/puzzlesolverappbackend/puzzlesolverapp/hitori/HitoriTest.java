@@ -23,8 +23,8 @@ class HitoriTest {
         assertThat(hitori.getFilename()).isEqualTo(filename);
         assertThat(hitori.getSource()).isEqualTo(source);
         assertThat(hitori.getDifficulty()).isEqualTo(difficulty);
-        assertThat(hitori.getSize().getHeight()).isEqualTo(height);
-        assertThat(hitori.getSize().getWidth()).isEqualTo(width);
+        assertThat(hitori.getDimensions().getHeight()).isEqualTo(height);
+        assertThat(hitori.getDimensions().getWidth()).isEqualTo(width);
     }
 
     @Test
@@ -51,14 +51,14 @@ class HitoriTest {
         hitori.setFilename(filename);
         hitori.setSource(source);
         hitori.setDifficulty(difficulty);
-        hitori.setSize(new Dimensions(height, width));
+        hitori.setDimensions(new Dimensions(height, width));
 
         // then
         assertThat(hitori.getFilename()).isEqualTo(filename);
         assertThat(hitori.getSource()).isEqualTo(source);
         assertThat(hitori.getDifficulty()).isEqualTo(difficulty);
-        assertThat(hitori.getSize().getHeight()).isEqualTo(height);
-        assertThat(hitori.getSize().getWidth()).isEqualTo(width);
+        assertThat(hitori.getDimensions().getHeight()).isEqualTo(height);
+        assertThat(hitori.getDimensions().getWidth()).isEqualTo(width);
     }
 
     @Test

@@ -15,7 +15,7 @@ import lombok.ToString;
 public abstract class SizedPublishedEntity extends BasePuzzleEntity {
 
     @Embedded
-    protected Dimensions size;
+    protected Dimensions dimensions;
 
     @Embedded
     protected Publication publication;
@@ -24,7 +24,7 @@ public abstract class SizedPublishedEntity extends BasePuzzleEntity {
                                    Integer height, Integer width,
                                    String year, String month) {
         super(filename, source, difficulty);
-        this.size = new Dimensions(height, width);
+        this.dimensions = new Dimensions(height, width);
         this.publication = new Publication(year, month);
     }
 }

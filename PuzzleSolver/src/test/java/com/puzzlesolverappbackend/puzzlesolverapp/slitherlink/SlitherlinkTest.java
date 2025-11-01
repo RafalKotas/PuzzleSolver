@@ -27,8 +27,8 @@ class SlitherlinkTest {
         assertThat(slitherlink.getPublication().getYear()).isEqualTo(year);
         assertThat(slitherlink.getPublication().getMonth()).isEqualTo(month);
         assertThat(slitherlink.getDifficulty()).isEqualTo(difficulty);
-        assertThat(slitherlink.getSize().getHeight()).isEqualTo(height);
-        assertThat(slitherlink.getSize().getWidth()).isEqualTo(width);
+        assertThat(slitherlink.getDimensions().getHeight()).isEqualTo(height);
+        assertThat(slitherlink.getDimensions().getWidth()).isEqualTo(width);
     }
 
     @Test
@@ -58,7 +58,7 @@ class SlitherlinkTest {
         slitherlink.setSource(source);
         slitherlink.setPublication(new Publication(year, month));
         slitherlink.setDifficulty(difficulty);
-        slitherlink.setSize(new Dimensions(height, width));
+        slitherlink.setDimensions(new Dimensions(height, width));
 
         // then
         assertThat(slitherlink.getFilename()).isEqualTo(filename);
@@ -66,8 +66,8 @@ class SlitherlinkTest {
         assertThat(slitherlink.getPublication().getYear()).isEqualTo(year);
         assertThat(slitherlink.getPublication().getMonth()).isEqualTo(month);
         assertThat(slitherlink.getDifficulty()).isEqualTo(difficulty);
-        assertThat(slitherlink.getSize().getHeight()).isEqualTo(height);
-        assertThat(slitherlink.getSize().getWidth()).isEqualTo(width);
+        assertThat(slitherlink.getDimensions().getHeight()).isEqualTo(height);
+        assertThat(slitherlink.getDimensions().getWidth()).isEqualTo(width);
     }
 
     @Test

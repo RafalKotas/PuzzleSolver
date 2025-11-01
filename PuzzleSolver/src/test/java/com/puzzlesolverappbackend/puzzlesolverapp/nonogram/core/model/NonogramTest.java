@@ -28,8 +28,8 @@ class NonogramTest {
         assertThat(nonogram.getPublication().getYear()).isEqualTo(year);
         assertThat(nonogram.getPublication().getMonth()).isEqualTo(month);
         assertThat(nonogram.getDifficulty()).isEqualTo(difficulty);
-        assertThat(nonogram.getSize().getHeight()).isEqualTo(height);
-        assertThat(nonogram.getSize().getWidth()).isEqualTo(width);
+        assertThat(nonogram.getDimensions().getHeight()).isEqualTo(height);
+        assertThat(nonogram.getDimensions().getWidth()).isEqualTo(width);
     }
 
     @Test
@@ -59,7 +59,7 @@ class NonogramTest {
         nonogram.setSource(source);
         nonogram.setPublication(new Publication(year, month));
         nonogram.setDifficulty(difficulty);
-        nonogram.setSize(new Dimensions(height, width));
+        nonogram.setDimensions(new Dimensions(height, width));
 
         // then
         assertThat(nonogram.getFilename()).isEqualTo(filename);
@@ -67,8 +67,8 @@ class NonogramTest {
         assertThat(nonogram.getPublication().getYear()).isEqualTo(year);
         assertThat(nonogram.getPublication().getMonth()).isEqualTo(month);
         assertThat(nonogram.getDifficulty()).isEqualTo(difficulty);
-        assertThat(nonogram.getSize().getHeight()).isEqualTo(height);
-        assertThat(nonogram.getSize().getWidth()).isEqualTo(width);
+        assertThat(nonogram.getDimensions().getHeight()).isEqualTo(height);
+        assertThat(nonogram.getDimensions().getWidth()).isEqualTo(width);
     }
 
     @Test

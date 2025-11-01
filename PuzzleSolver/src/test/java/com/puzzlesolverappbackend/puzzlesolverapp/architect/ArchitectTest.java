@@ -28,8 +28,8 @@ class ArchitectTest {
         assertThat(architect.getPublication().getYear()).isEqualTo(year);
         assertThat(architect.getPublication().getMonth()).isEqualTo(month);
         assertThat(architect.getDifficulty()).isEqualTo(difficulty);
-        assertThat(architect.getSize().getHeight()).isEqualTo(height);
-        assertThat(architect.getSize().getWidth()).isEqualTo(width);
+        assertThat(architect.getDimensions().getHeight()).isEqualTo(height);
+        assertThat(architect.getDimensions().getWidth()).isEqualTo(width);
     }
 
     @Test
@@ -59,7 +59,7 @@ class ArchitectTest {
         architect.setSource(source);
         architect.setPublication(new Publication(year, month));
         architect.setDifficulty(difficulty);
-        architect.setSize(new Dimensions(height, width));
+        architect.setDimensions(new Dimensions(height, width));
 
         // then
         assertThat(architect.getFilename()).isEqualTo(filename);
@@ -67,8 +67,8 @@ class ArchitectTest {
         assertThat(architect.getPublication().getYear()).isEqualTo(year);
         assertThat(architect.getPublication().getMonth()).isEqualTo(month);
         assertThat(architect.getDifficulty()).isEqualTo(difficulty);
-        assertThat(architect.getSize().getHeight()).isEqualTo(height);
-        assertThat(architect.getSize().getWidth()).isEqualTo(width);
+        assertThat(architect.getDimensions().getHeight()).isEqualTo(height);
+        assertThat(architect.getDimensions().getWidth()).isEqualTo(width);
     }
 
     @Test
