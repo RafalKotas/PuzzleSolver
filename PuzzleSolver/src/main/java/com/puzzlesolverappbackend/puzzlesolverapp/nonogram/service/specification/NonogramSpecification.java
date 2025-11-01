@@ -19,12 +19,14 @@ public class NonogramSpecification {
             List<Predicate> predicates = new ArrayList<>();
 
             addInPredicateIfPresent(filters.getSources().stream().toList(), root.get("source"), predicates);
-            addInPredicateIfPresent(filters.getYears().stream().toList(), root.get("year"), predicates);
-            addInPredicateIfPresent(filters.getMonths().stream().toList(), root.get("month"), predicates);
+            Path<Object> publication = root.get("publication");
+            addInPredicateIfPresent(filters.getYears().stream().toList(), publication.get("year"), predicates);
+            addInPredicateIfPresent(filters.getMonths().stream().toList(), publication.get("month"), predicates);
 
             addRangePredicateIfPresent(filters.getMinDifficulty(), filters.getMaxDifficulty(), root.get("difficulty"), cb, predicates);
-            addRangePredicateIfPresent(filters.getMinWidth(), filters.getMaxWidth(), root.get("width"), cb, predicates);
-            addRangePredicateIfPresent(filters.getMinHeight(), filters.getMaxHeight(), root.get("height"), cb, predicates);
+            Path<Object> dimensions = root.get("size");
+            addRangePredicateIfPresent(filters.getMinWidth(), filters.getMaxWidth(), dimensions.get("width"), cb, predicates);
+            addRangePredicateIfPresent(filters.getMinHeight(), filters.getMaxHeight(), dimensions.get("height"), cb, predicates);
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };
