@@ -146,39 +146,4 @@ public class NonogramSolverUtils {
 
         return false;
     }
-
-    public static boolean rangeContains(List<Integer> container, List<Integer> contained) {
-        if (container.size() != 2 || contained.size() != 2) return false;
-        return contained.get(0) >= container.get(0) && contained.get(1) <= container.get(1);
-    }
-
-
-    public static boolean rangesContainCorrectRanges(
-            List<List<List<Integer>>> correctRanges,
-            List<List<List<Integer>>> currentRanges
-    ) {
-        if (correctRanges.size() != currentRanges.size()) {
-            return false;
-        }
-
-        for (int i = 0; i < correctRanges.size(); i++) {
-            List<List<Integer>> correctRow = correctRanges.get(i);
-            List<List<Integer>> currentRow = currentRanges.get(i);
-
-            if (correctRow.size() != currentRow.size()) {
-                return false;
-            }
-
-            for (int j = 0; j < correctRow.size(); j++) {
-                List<Integer> correctRange = correctRow.get(j);
-                List<Integer> currentRange = currentRow.get(j);
-
-                if (!rangeContains(currentRange, correctRange)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
 }
