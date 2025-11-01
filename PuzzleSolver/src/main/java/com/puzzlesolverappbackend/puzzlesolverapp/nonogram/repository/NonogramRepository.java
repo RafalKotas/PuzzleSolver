@@ -25,10 +25,10 @@ public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, Jp
     @Query("SELECT DISTINCT n.difficulty FROM Nonogram n ORDER BY n.difficulty ASC")
     List<Double> selectNonogramDifficulties();
 
-    @Query("SELECT DISTINCT n.size.width FROM Nonogram n ORDER BY n.size.width ASC")
+    @Query("SELECT DISTINCT n.dimensions.width FROM Nonogram n ORDER BY n.dimensions.width ASC")
     List<Integer> selectNonogramWidths();
 
-    @Query("SELECT DISTINCT n.size.height FROM Nonogram n ORDER BY n.size.height ASC")
+    @Query("SELECT DISTINCT n.dimensions.height FROM Nonogram n ORDER BY n.dimensions.height ASC")
     List<Integer> selectNonogramHeights();
 
     @Query("""
@@ -49,8 +49,8 @@ public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, Jp
              AND (:source    IS NULL OR LOWER(n.source) LIKE LOWER(CONCAT('%', :source, '%')))
              AND (:year      IS NULL OR n.publication.year  LIKE CONCAT('%', :year, '%'))
              AND (:month     IS NULL OR n.publication.month LIKE CONCAT('%', :month, '%'))
-             AND (:height    IS NULL OR n.size.height = :height)
-             AND (:width     IS NULL OR n.size.width  = :width)
+             AND (:height    IS NULL OR n.dimensions.height = :height)
+             AND (:width     IS NULL OR n.dimensions.width  = :width)
              AND (:difficulty IS NULL OR n.difficulty = :difficulty)
            """)
     boolean existsNonogramByGivenParamsFromFile(
@@ -66,7 +66,7 @@ public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, Jp
            FROM Nonogram n
            WHERE n.difficulty = :difficulty
              AND LOWER(n.source) LIKE '%logi%'
-           ORDER BY (n.size.height * n.size.width) ASC
+           ORDER BY (n.dimensions.height * n.dimensions.width) ASC
            """)
     List<String> findLogiNonogramsNamesByDifficultySortedByArea(@Param("difficulty") double difficulty);
 }

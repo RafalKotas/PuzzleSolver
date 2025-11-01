@@ -25,8 +25,8 @@ class AkariTest {
         assertEquals("akari_01.txt", akari.getFilename());
         assertEquals("example_source", akari.getSource());
         assertEquals(3.5, akari.getDifficulty());
-        assertEquals(8, akari.getSize().getHeight());
-        assertEquals(5, akari.getSize().getWidth());
+        assertEquals(8, akari.getDimensions().getHeight());
+        assertEquals(5, akari.getDimensions().getWidth());
     }
 
     @Test
@@ -53,14 +53,14 @@ class AkariTest {
         akari.setFilename(filename);
         akari.setSource(source);
         akari.setDifficulty(difficulty);
-        akari.setSize(new Dimensions(height, width));
+        akari.setDimensions(new Dimensions(height, width));
 
         // then
         assertEquals("test.txt", akari.getFilename());
         assertEquals("generated", akari.getSource());
         assertEquals(2.0, akari.getDifficulty());
-        assertEquals(10, akari.getSize().getHeight());
-        assertEquals(15, akari.getSize().getWidth());
+        assertEquals(10, akari.getDimensions().getHeight());
+        assertEquals(15, akari.getDimensions().getWidth());
     }
 
     @Test

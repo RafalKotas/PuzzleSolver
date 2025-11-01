@@ -84,7 +84,7 @@ public class NonogramSolveInitializer implements CommandLineRunner {
 
         selectedNonogramsList = selectedNonogramsList
                 .stream()
-                .filter(nonogram1 -> nonogram1.getSize().getHeight().equals(30) && nonogram1.getSize().getWidth().equals(30))
+                .filter(nonogram1 -> nonogram1.getDimensions().getHeight().equals(30) && nonogram1.getDimensions().getWidth().equals(30))
                 .toList();
 
         int selectedCount = 0;
@@ -624,10 +624,10 @@ public class NonogramSolveInitializer implements CommandLineRunner {
         for (Nonogram selectedNonogram : selectedNonogramsList) {
             difficulty = selectedNonogram.getDifficulty();
             filename = selectedNonogram.getFilename();
-            height = selectedNonogram.getSize().getHeight();
+            height = selectedNonogram.getDimensions().getHeight();
             month = selectedNonogram.getPublication().getMonth();
             source = selectedNonogram.getSource();
-            width = selectedNonogram.getSize().getWidth();
+            width = selectedNonogram.getDimensions().getWidth();
             year = selectedNonogram.getPublication().getYear();
 
             ObjectMapper objectMapper = new ObjectMapper();
