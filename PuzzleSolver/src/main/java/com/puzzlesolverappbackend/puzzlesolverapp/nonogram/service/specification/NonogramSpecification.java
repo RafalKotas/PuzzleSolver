@@ -24,7 +24,7 @@ public class NonogramSpecification {
             addInPredicateIfPresent(filters.getMonths().stream().toList(), publication.get("month"), predicates);
 
             addRangePredicateIfPresent(filters.getMinDifficulty(), filters.getMaxDifficulty(), root.get("difficulty"), cb, predicates);
-            Path<Object> dimensions = root.get("size");
+            Path<Object> dimensions = root.get("dimensions");
             addRangePredicateIfPresent(filters.getMinWidth(), filters.getMaxWidth(), dimensions.get("width"), cb, predicates);
             addRangePredicateIfPresent(filters.getMinHeight(), filters.getMaxHeight(), dimensions.get("height"), cb, predicates);
 
