@@ -73,11 +73,11 @@ const NonogramSelectSectionPaginationPagination : React.FC<NonogramSelectSection
     const hasMatchingFilters = (nonogram: nonogramInformation) => {
         //if length(of selected options) === 0 match all
         let matchesSource = includeMatchString(selectionFilters.selectedSources, nonogram.source)
-        let matchesYear = includeMatchString(selectionFilters.selectedYears, nonogram.year)
-        let matchesMonth = includeMatchString(selectionFilters.selectedMonths, nonogram.month)
+        let matchesYear = includeMatchString(selectionFilters.selectedYears, nonogram.publication.year)
+        let matchesMonth = includeMatchString(selectionFilters.selectedMonths, nonogram.publication.month)
         let matchesDifficulties = includeMatchNumber(selectionFilters.selectedDifficulties, nonogram.difficulty)
-        let matchesWidths = includeMatchNumber(selectionFilters.selectedWidths, nonogram.width)
-        let matchesHeights = includeMatchNumber(selectionFilters.selectedHeights, nonogram.height)
+        let matchesWidths = includeMatchNumber(selectionFilters.selectedWidths, nonogram.dimensions.width)
+        let matchesHeights = includeMatchNumber(selectionFilters.selectedHeights, nonogram.dimensions.height)
         return matchesSource && matchesYear && matchesMonth && matchesDifficulties && matchesWidths && matchesHeights
     }
 
