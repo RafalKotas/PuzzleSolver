@@ -3,13 +3,17 @@ export type correctnessIndicator = -1 | 0 | 1
 export type modes = "READ" | "CREATE"
 
 export interface nonogramInformation {
-    filename: string,
-    source : string,
-    year : string,
-    month : string,
-    difficulty : number,
-    height: number,
+  filename: string
+  source: string
+  difficulty: number
+  publication: {
+    year: string
+    month: string
+  }
+  dimensions: {
+    height: number
     width: number
+  }
 }
 
 export interface selectedNonogramDetails {
@@ -254,8 +258,12 @@ export interface NonogramDataState {
 export const transformNonogramInformationIntoNonogramDetails : (nonogramInfo : nonogramInformation) => selectedNonogramDetails = (nonogramInfo : nonogramInformation) => {
     return {
         ...nonogramInfo,
-        rowSequences: Array.from({length: nonogramInfo.height}, () => [0]),
-        columnSequences: Array.from({length: nonogramInfo.width}, () => [0])
+        year: nonogramInfo.publication.year,
+        month: nonogramInfo.publication.month,
+        height: nonogramInfo.dimensions.height,
+        width: nonogramInfo.dimensions.width,
+        rowSequences: Array.from({length: nonogramInfo.dimensions.height}, () => [0]),
+        columnSequences: Array.from({length: nonogramInfo.dimensions.width}, () => [0])
     }
 }
 
