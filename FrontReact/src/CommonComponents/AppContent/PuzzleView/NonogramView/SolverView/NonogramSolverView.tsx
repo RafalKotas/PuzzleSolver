@@ -50,11 +50,6 @@ const NonogramSolverView : React.FC<NonogramSolverViewProps> = ({ selectedNonogr
     setSelectedNonogram, setNonogramRelatedLogicData
      }) => {
 
-    useEffect(() => {
-
-        //eslint-disable-next-line
-    }, [selectedNonogram?.filename])
-
     const params = useParams()
 
     const nonogramPath = "/resources/Nonograms/" + params.filename + ".json"
@@ -127,10 +122,7 @@ const NonogramSolverView : React.FC<NonogramSolverViewProps> = ({ selectedNonogr
                             fileName={nextNonogramFilename}
                         />
                         <NonogramActions />
-                    </React.Fragment>
-                    : <React.Fragment>
-
-                    </React.Fragment>
+                    </>
             }
         </div>
     )
