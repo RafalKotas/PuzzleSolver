@@ -50,15 +50,15 @@ public class PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper {
 
         int index = Integer.parseInt(lines[0].split(axisLabel + "=")[1].trim());
 
-        String direction = lines[2].replace("direction=", "").trim();
-
         String fileName = solutionName.replaceFirst("^r", "").replaceFirst("\\.json$", "");
 
-        String onlyValidSequenceIdx = lines[2].replace("onlyValidSequenceIdx=", "").trim();
-        String sequencesLengths = lines[3].replace("sequencesLengths=", "").trim();
-        String sequencesRanges = lines[4].replace("sequencesRanges=", "").trim();
-        String initialLine = lines[5].replace("initialLine=", "").trim();
-        String updatedLine = lines[6].replace("updatedLine=", "").trim();
+        String initialLine = lines[1].replace("initialLine=", "").trim();
+        String updatedLine = lines[2].replace("updatedLine=", "").trim();
+        String direction = lines[3].replace("direction=", "").trim();
+        String onlyValidSequenceIdx = lines[4].replace("onlyValidSequenceIdx=", "").trim();
+        String sequencesLengths = lines[5].replace("sequencesLengths=", "").trim();
+        String sequencesRanges = lines[6].replace("sequencesRanges=", "").trim();
+
 
         return String.format(
                 """
@@ -71,7 +71,7 @@ public class PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper {
                             %s)
                         )""",
                 fileName,
-                isRow ? ROW : COLUMN,
+                axisLabel,
                 index,
                 direction,
                 onlyValidSequenceIdx,
