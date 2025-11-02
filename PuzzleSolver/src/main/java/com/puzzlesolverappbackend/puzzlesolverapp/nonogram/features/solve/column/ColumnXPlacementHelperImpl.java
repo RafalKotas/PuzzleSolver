@@ -394,12 +394,11 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
             if (rowIdx >= height - 1) break;
 
             int endRowX = findEndRowWithXAfterEmpty(rowIdx + 1, columnIdx, height);
-            if (endRowX != -1 && endRowX > rowIdx + 1) {
-                emptyRanges.add(List.of(rowIdx + 1, endRowX - 1));
-                rowIdx = endRowX;
-            } else {
-                rowIdx = (endRowX == -1) ? height : endRowX;
+            List<Integer> potentiallyEmptyRange = List.of(rowIdx + 1, endRowX - 1);
+            if (!isColouredFieldInRange(potentiallyEmptyRange, columnIdx)) {
+                emptyRanges.add(potentiallyEmptyRange);
             }
+            rowIdx = endRowX;
         }
 
         return emptyRanges;
@@ -432,15 +431,18 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
      */
     private int findEndRowWithXAfterEmpty(int startIdx, int colIdx, int height) {
         int cursor = startIdx;
-        while (cursor < height && isFieldEmpty(nonogramColumnLogic.getNonogramSolutionBoard(), new Field(cursor, colIdx))) {
+        while (cursor < height && !isFieldWithX(nonogramColumnLogic.getNonogramSolutionBoard(), new Field(cursor, colIdx))) {
             cursor++;
         }
 
-        if (cursor >= height || !isFieldWithX(nonogramColumnLogic.getNonogramSolutionBoard(), new Field(cursor, colIdx))) {
-            return -1;
-        }
-
         return cursor;
+    }
+
+    private boolean isColouredFieldInRange(List<Integer> rowRange, int columnIdx) {
+        for (int rowIdx = rowRange.get(0); rowIdx <= rowRange.get(1); rowIdx++) {
+            if (isFieldColoured(nonogramColumnLogic.getNonogramSolutionBoard(), new Field(rowIdx, columnIdx))) return true;
+        }
+        return false;
     }
 
     /**
