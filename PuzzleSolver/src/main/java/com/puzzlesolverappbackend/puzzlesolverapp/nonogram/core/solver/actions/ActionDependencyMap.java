@@ -43,6 +43,7 @@ public class ActionDependencyMap {
 
         actionDependencies.put(NonogramSolveAction.CORRECT_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS_IN_ROW, List.of(
                 NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_ROW,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IF_X_ON_WAY_IN_ROW,
                 NonogramSolveAction.CORRECT_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES_IN_ROW,
                 NonogramSolveAction.CORRECT_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE_IN_ROW,
                 NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_ROW,
@@ -56,6 +57,7 @@ public class ActionDependencyMap {
 
         actionDependencies.put(NonogramSolveAction.CORRECT_SEQUENCES_RANGES_WHEN_MET_COLOURED_FIELDS_IN_COLUMN, List.of(
                 NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_COLUMN,
+                NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IF_X_ON_WAY_IN_COLUMN,
                 NonogramSolveAction.CORRECT_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES_IN_COLUMN,
                 NonogramSolveAction.CORRECT_SEQUENCES_RANGES_WHEN_START_FROM_EDGE_INDEX_WILL_CREATE_TOO_LONG_SEQUENCE_IN_COLUMN,
                 NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_COLUMN,
@@ -222,6 +224,7 @@ public class ActionDependencyMap {
                 NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_ROW,
                 NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_ROW,
                 NonogramSolveAction.PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW,
+                NonogramSolveAction.PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE_IN_ROW,
 
                 NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IF_X_ON_WAY_IN_COLUMN,
                 NonogramSolveAction.CORRECT_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES_IN_COLUMN,
@@ -234,6 +237,7 @@ public class ActionDependencyMap {
                 NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_COLUMN,
                 NonogramSolveAction.EXTEND_COLOURED_FIELDS_NEAR_X_IN_COLUMN,
                 NonogramSolveAction.PLACE_XS_AT_UNREACHABLE_FIELDS_IN_COLUMN,
+                NonogramSolveAction.PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE_IN_COLUMN,
 
                 NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IF_X_ON_WAY_IN_ROW,
                 NonogramSolveAction.CORRECT_SEQUENCES_RANGES_WHEN_MATCHING_FIELDS_TO_SEQUENCES_IN_ROW,
