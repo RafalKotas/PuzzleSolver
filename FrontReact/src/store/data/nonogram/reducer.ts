@@ -101,6 +101,14 @@ export const nonogramDataReducer: Reducer<NonogramDataState, NonogramDataActionT
                 nextCreatedNonogramFileNumber: state.nextCreatedNonogramFileNumber + 1,
                 createdNonogramsList: [...state.createdNonogramsList, {
                     ...nonogramToSave,
+                    publication: {
+                        year: nonogramToSave.year,
+                        month: nonogramToSave.month,
+                    },
+                    dimensions: {
+                        height: nonogramToSave.height,
+                        width: nonogramToSave.width
+                    },
                     rowSequences: Array.from({length: nonogramToSave.height}, () => [0]),
                     columnSequences: Array.from({length: nonogramToSave.width}, () => [0])
                 }]
@@ -352,7 +360,7 @@ export const selectListFromMode = (displayState: DisplayState , nonogramDataStat
 export const selectColumnsSequencesLength = (state : NonogramDataState) => state.selectedNonogram ? state.selectedNonogram.columnSequences.length : 0
 export const selectRowsSequencesLength = (state : NonogramDataState) => state.selectedNonogram ? state.selectedNonogram.rowSequences.length : 0
 
-export const selectArea = (nonogram : nonogramInformation) => nonogram.height * nonogram.width
+export const selectArea = (nonogram : nonogramInformation) => nonogram.dimensions.height * nonogram.dimensions.width
 
 export const selectedNonogramDifficulty = (state: NonogramDataState) =>  state.selectedNonogram ? state.selectedNonogram.difficulty : 0
 
@@ -415,16 +423,28 @@ export const selectNonogramsWhichMetSelectedFilters = (displayState: DisplayStat
 
         return initialNonogramsList.filter((nonogramInfo : nonogramInformation) => {
             let matchesSource = includeMatchString(selectionFilters.selectedSources, nonogramInfo.source)
-            let matchesYear = includeMatchString(selectionFilters.selectedYears, nonogramInfo.year)
-            let matchesMonth = includeMatchString(selectionFilters.selectedMonths, nonogramInfo.month)
+            let matchesYear = includeMatchString(selectionFilters.selectedYears, nonogramInfo.publication.year)
+            let matchesMonth = includeMatchString(selectionFilters.selectedMonths, nonogramInfo.publication.month)
             let matchesDifficulties = includeMatchNumber(selectionFilters.selectedDifficulties, nonogramInfo.difficulty)
-            let matchesWidths = includeMatchNumber(selectionFilters.selectedWidths, nonogramInfo.width)
-            let matchesHeights = includeMatchNumber(selectionFilters.selectedHeights, nonogramInfo.height)
-            return matchesSource && matchesYear && matchesMonth && matchesDifficulties && matchesWidths && matchesHeights
+            let matchesWidths = includeMatchNumber(selectionFilters.selectedWidths, nonogramInfo.dimensions.width)
+            let matchesHeights = includeMatchNumber(selectionFilters.selectedHeights, nonogramInfo.dimensions.height)
+            let matchesAll = matchesSource && matchesYear && matchesMonth && matchesDifficulties && matchesWidths && matchesHeights
+            return matchesAll
         })
     } else {
         return initialNonogramsList
     }
+}
+
+const sortedNonograms = (nonogramFiltersState : NonogramFiltersState, listOfNonograms : nonogramInformation[]) => {
+
+    let sorted = listOfNonograms.sort((nonogramA, nonogramB) => {
+        let reducedFunc =  nonogramFiltersState.sortFilters.reduce((prevValue, currValue) => {
+            return prevValue || nonogramDetailsSortFunction(currValue.filterName, currValue.sortDirection)(nonogramA, nonogramB)
+        }, 0 as any)
+        return reducedFunc
+    })
+    return sorted
 }
 
 const areaCalculator = (nonogram : nonogramInformation) => selectArea(nonogram)
@@ -446,41 +466,47 @@ const otherSortFilters : Record<string, numberSortFilter | stringSortFilter> = {
     }
 }
 
-const nonogramDetailsSortFunction = (filterKey : string, direction: string) => {
-        
-    return function(nonogramA : nonogramInformation, nonogramB : nonogramInformation) {
-            if (filterKey in nonogramA) {
-                let key = filterKey as keyof nonogramInformation
-                if (typeof(nonogramA[key]) === "string" && typeof(nonogramB[key]) === "string") {
-                    let [nAstr, nBstr] = [nonogramA[key] as string, nonogramB[key] as string]
-                    return direction === "ascending" ? nAstr.localeCompare(nBstr) : nBstr.localeCompare(nAstr) 
-                } else if (typeof(nonogramA[key]) === "number" && typeof(nonogramB[key]) === "number") {
-                    let [nA, nB] = [nonogramA[key] as number, nonogramB[key] as number]
-                    let ascendingValue = nA - nB
-                    let descendingValue = nB - nA
-                    return direction === "ascending" ? ascendingValue : descendingValue
-                }
-            } else if (Object.keys(otherSortFilters).includes(filterKey)) {
-                let filterDetails = otherSortFilters[filterKey]
-                if (filterDetails.type === "number") {
-                    let ascending = filterDetails.sortFunctionNumber(nonogramA) - filterDetails.sortFunctionNumber(nonogramB)
-                    return direction === "ascending" ? ascending : -1 * ascending
-                } else if (filterDetails.type === "string") {
-                    let ascending = filterDetails.sortFunctionString(nonogramA).localeCompare(filterDetails.sortFunctionString(nonogramB))
-                    return direction === "ascending" ? ascending : -1 * ascending
-                }
-            }
-            return 0
+const nonogramDetailsSortFunction = (filterKey: string, direction: string) => {
+  return function (nonogramA: nonogramInformation, nonogramB: nonogramInformation) {
+    // 🔹 Helper function — get even nested value
+    const getValue = (obj: any, key: string): any => {
+      if (key in obj) return obj[key];
+      if (obj.publication && key in obj.publication) return obj.publication[key];
+      if (obj.size && key in obj.size) return obj.size[key];
+      return undefined;
+    };
+
+    const valA = getValue(nonogramA, filterKey);
+    const valB = getValue(nonogramB, filterKey);
+
+    if (valA === undefined || valB === undefined) {
+      return 0;
     }
-}
 
-const sortedNonograms = (nonogramFiltersState : NonogramFiltersState, listOfNonograms : nonogramInformation[]) => {
+    if (typeof valA === "string" && typeof valB === "string") {
+      return direction === "ascending"
+        ? valA.localeCompare(valB)
+        : valB.localeCompare(valA);
+    } else if (typeof valA === "number" && typeof valB === "number") {
+      const diff = valA - valB;
+      return direction === "ascending" ? diff : -diff;
+    }
 
-    let sorted = listOfNonograms.sort((nonogramA, nonogramB) => {
-        let reducedFunc =  nonogramFiltersState.sortFilters.reduce((prevValue, currValue) => {
-            return prevValue || nonogramDetailsSortFunction(currValue.filterName, currValue.sortDirection)(nonogramA, nonogramB)
-        }, 0 as any)
-        return reducedFunc
-    })
-    return sorted
-}
+    if (Object.keys(otherSortFilters).includes(filterKey)) {
+      const filterDetails = otherSortFilters[filterKey];
+      if (filterDetails.type === "number") {
+        const ascending =
+          filterDetails.sortFunctionNumber(nonogramA) -
+          filterDetails.sortFunctionNumber(nonogramB);
+        return direction === "ascending" ? ascending : -ascending;
+      } else if (filterDetails.type === "string") {
+        const ascending = filterDetails
+          .sortFunctionString(nonogramA)
+          .localeCompare(filterDetails.sortFunctionString(nonogramB));
+        return direction === "ascending" ? ascending : -ascending;
+      }
+    }
+
+    return 0;
+  };
+};
