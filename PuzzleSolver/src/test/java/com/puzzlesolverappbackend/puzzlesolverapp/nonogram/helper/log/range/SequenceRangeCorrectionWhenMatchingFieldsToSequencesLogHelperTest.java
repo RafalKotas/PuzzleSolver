@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelperTest {
@@ -93,7 +94,7 @@ class SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelperTest {
                     new ArrayList<>(List.of(new ArrayList<>(List.of(0, 5)), new ArrayList<>(List.of(2, 9)), new ArrayList<>(List.of(7, 14)))),
                     new ArrayList<>(List.of(new ArrayList<>(List.of(0, 5)), new ArrayList<>(List.of(2, 9)), new ArrayList<>(List.of(7, 12))))
                 )""";
-        AssertionsForClassTypes.assertThat(convertedLog).isEqualTo(expected);
+        assertThat(convertedLog).isEqualTo(expected);
     }
 
     @Test
