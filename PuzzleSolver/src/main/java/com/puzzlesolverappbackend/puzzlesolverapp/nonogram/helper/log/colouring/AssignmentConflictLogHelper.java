@@ -32,7 +32,7 @@ public class AssignmentConflictLogHelper {
             String log,
             String solutionName
     ) {
-        ColouringCovertLogBaseContext colouringCovertLogBaseContext = new ColouringCovertLogBaseContext(log, solutionName);
+        ColouringConvertLogBaseContext colouringConvertLogBaseContext = new ColouringConvertLogBaseContext(log, solutionName);
 
         return String.format(
                 """
@@ -42,13 +42,13 @@ public class AssignmentConflictLogHelper {
                             %s,
                             %s)
                         )""",
-                colouringCovertLogBaseContext.getFileName(),
-                colouringCovertLogBaseContext.getAxisLabel(),
-                colouringCovertLogBaseContext.getIndex(),
-                colouringCovertLogBaseContext.getInitialLine(),
-                colouringCovertLogBaseContext.getUpdatedLine(),
-                colouringCovertLogBaseContext.getSequencesRanges(),
-                colouringCovertLogBaseContext.getSequencesLengths()
+                colouringConvertLogBaseContext.getFileName(),
+                colouringConvertLogBaseContext.getAxisLabel(),
+                colouringConvertLogBaseContext.getIndex(),
+                colouringConvertLogBaseContext.getInitialLine(),
+                colouringConvertLogBaseContext.getUpdatedLine(),
+                colouringConvertLogBaseContext.getSequencesRanges(),
+                colouringConvertLogBaseContext.getSequencesLengths()
         );
     }
 }

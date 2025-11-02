@@ -1,6 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringCovertLogBaseContext;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringConvertLogBaseContext;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringGenerateLogBaseContext;
 import lombok.experimental.UtilityClass;
 
@@ -35,7 +35,7 @@ public class PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelpe
 
     // TODO - include direction in log
     public static String convertLogToTestArguments(String log, String solutionName) {
-        ColouringCovertLogBaseContext colouringCovertLogBaseContext = new ColouringCovertLogBaseContext(log, solutionName);
+        ColouringConvertLogBaseContext colouringConvertLogBaseContext = new ColouringConvertLogBaseContext(log, solutionName);
 
         return String.format(
                 """
@@ -45,13 +45,13 @@ public class PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelpe
                             %s,
                             %s
                         )""",
-                colouringCovertLogBaseContext.getFileName(),
-                colouringCovertLogBaseContext.getAxisLabel(),
-                colouringCovertLogBaseContext.getIndex(),
-                colouringCovertLogBaseContext.getInitialLine(),
-                colouringCovertLogBaseContext.getSequencesRanges(),
-                colouringCovertLogBaseContext.getSequencesLengths(),
-                colouringCovertLogBaseContext.getUpdatedLine()
+                colouringConvertLogBaseContext.getFileName(),
+                colouringConvertLogBaseContext.getAxisLabel(),
+                colouringConvertLogBaseContext.getIndex(),
+                colouringConvertLogBaseContext.getInitialLine(),
+                colouringConvertLogBaseContext.getSequencesRanges(),
+                colouringConvertLogBaseContext.getSequencesLengths(),
+                colouringConvertLogBaseContext.getUpdatedLine()
         );
     }
 }

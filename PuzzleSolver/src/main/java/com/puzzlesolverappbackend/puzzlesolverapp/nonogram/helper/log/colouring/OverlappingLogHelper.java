@@ -32,7 +32,7 @@ public class OverlappingLogHelper {
             String log,
             String solutionName
     ) {
-        ColouringCovertLogBaseContext colouringCovertLogBaseContext = new ColouringCovertLogBaseContext(log, solutionName);
+        ColouringConvertLogBaseContext colouringConvertLogBaseContext = new ColouringConvertLogBaseContext(log, solutionName);
 
         return String.format(
                 """
@@ -42,13 +42,13 @@ public class OverlappingLogHelper {
                             %s,
                             %s)
                         )""",
-                colouringCovertLogBaseContext.getFileName(),
-                colouringCovertLogBaseContext.getAxisLabel(),
-                colouringCovertLogBaseContext.getIndex(),
-                colouringCovertLogBaseContext.getInitialLine(),
-                colouringCovertLogBaseContext.getSequencesRanges(),
-                colouringCovertLogBaseContext.getSequencesLengths(),
-                colouringCovertLogBaseContext.getUpdatedLine()
+                colouringConvertLogBaseContext.getFileName(),
+                colouringConvertLogBaseContext.getAxisLabel(),
+                colouringConvertLogBaseContext.getIndex(),
+                colouringConvertLogBaseContext.getInitialLine(),
+                colouringConvertLogBaseContext.getSequencesRanges(),
+                colouringConvertLogBaseContext.getSequencesLengths(),
+                colouringConvertLogBaseContext.getUpdatedLine()
         );
     }
 }
