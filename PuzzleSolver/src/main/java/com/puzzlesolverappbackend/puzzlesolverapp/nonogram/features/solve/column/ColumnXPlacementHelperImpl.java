@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.*;
@@ -439,10 +440,14 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
     }
 
     private boolean isColouredFieldInRange(List<Integer> rowRange, int columnIdx) {
-        for (int rowIdx = rowRange.get(0); rowIdx <= rowRange.get(1); rowIdx++) {
-            if (isFieldColoured(nonogramColumnLogic.getNonogramSolutionBoard(), new Field(rowIdx, columnIdx))) return true;
-        }
-        return false;
+        return IntStream
+                .rangeClosed(rowRange.get(0), rowRange.get(1))
+                .anyMatch(rowIdx ->
+                        isFieldColoured(
+                                nonogramColumnLogic.getNonogramSolutionBoard(),
+                                new Field(rowIdx, columnIdx)
+                        )
+                );
     }
 
     /**

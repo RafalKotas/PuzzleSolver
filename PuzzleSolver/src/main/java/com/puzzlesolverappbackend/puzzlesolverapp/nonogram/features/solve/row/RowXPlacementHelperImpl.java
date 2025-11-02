@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.*;
@@ -341,12 +342,15 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
     }
 
     private boolean isColouredFieldInRange(List<Integer> columnRange, int rowIdx) {
-        for (int colIdx = columnRange.get(0); colIdx <= columnRange.get(1); colIdx++) {
-            if (isFieldColoured(nonogramRowLogic.getNonogramSolutionBoard(), new Field(rowIdx, colIdx))) return true;
-        }
-        return false;
+        return IntStream
+                .rangeClosed(columnRange.get(0), columnRange.get(1))
+                .anyMatch(columnIdx ->
+                        isFieldColoured(
+                                nonogramRowLogic.getNonogramSolutionBoard(),
+                                new Field(rowIdx, columnIdx)
+                        )
+                );
     }
-
 
     /**
      * Places Xs in all empty cells of the given range in the specified row.
