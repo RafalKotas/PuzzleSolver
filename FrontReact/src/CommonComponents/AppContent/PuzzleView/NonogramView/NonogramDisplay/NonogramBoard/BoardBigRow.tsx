@@ -17,7 +17,6 @@ interface OwnBoardBigRowProps {
 
 const mapStateToProps = (state: AppState) => ({
     selectedNonogram: state.nonogramDataReducer.selectedNonogram,
-    nonogramSolutionBoard: state.nonogramLogicReducer.nonogramRelatedData.nonogramSolutionBoard,
 
     bigSquareAdditionalBorder: state.nonogramLayoutReducer.bigSquareAdditionalBorder,
 
@@ -37,10 +36,12 @@ type BoardBigRowProps = BoardBigRowPropsFromRedux & OwnBoardBigRowProps
 
 //draws row with height in range [1, 5], consisting of big squares with dimension 5x5 or less
 const BoardBigRow : React.FC<BoardBigRowProps> = ({rowNo, 
-    selectedNonogram, nonogramSolutionBoard, boardWidth, cellOverallSize, bigSquareAdditionalBorder}) => {
+    selectedNonogram, boardWidth, cellOverallSize, bigSquareAdditionalBorder}) => {
     
     let bigRowHeightInCells = Math.min(5, selectedNonogram ? selectedNonogram.height - rowNo : 5)
     let bigRowHeightPx = bigRowHeightInCells * cellOverallSize + bigSquareAdditionalBorder
+
+    const renderCond = ((colNo : number) => colNo % 5 == 0)
 
     return (
         <div 
@@ -54,15 +55,14 @@ const BoardBigRow : React.FC<BoardBigRowProps> = ({rowNo,
         >
             {
                 selectedNonogram && Array.from(Array(selectedNonogram.width).keys()).map((colNo : number) => {
-                    if (colNo % 5 === 0) {
-                        return <BigSquare
+                    return renderCond(colNo) && 
+                        <BigSquare
                             key={"big-square-rowNo-" + rowNo + "-colNo-" + colNo}
                             firstRowNoInBigSquare={rowNo} 
                             firstColNoInBigSquare={colNo} 
                             bigSquareHeightInCells={bigRowHeightInCells}
                         />
                         //bigSquare max 5x5 fields, place rows column by column (flexDirection: "column")
-                    } else return <React.Fragment></React.Fragment>
                 })
             }
         </div>  
