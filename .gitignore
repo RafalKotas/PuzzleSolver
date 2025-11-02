@@ -4,15 +4,17 @@
 FrontReact/node_modules
 FrontReact/build/
 FrontReact/build/resources/Nonograms/
-/FrontReact/public/
-/FrontReact/my_notes/
+FrontReact/public/
+FrontReact/my_notes/
 
 # BE
 .idea/
 PuzzleSolver/src/main/tools/MySQL/docker-compose.yml
-/PuzzleSolver/src/test/resources/application.yml
+PuzzleSolver/src/test/resources/application.yml
+PuzzleSolver/data
 
 # other
+/data/
 nCopy
 otherFolders
 
