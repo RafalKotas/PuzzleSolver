@@ -673,7 +673,7 @@ public class NonogramLogic extends NonogramLogicParams {
         copyLogicFromNonogramColumnLogic();
     }
 
-    public boolean validateAgainstCorrectSolution(int actionIndex, NonogramActionDetails currentActionDetails) {
+    private boolean validateAgainstCorrectSolution(int actionIndex, NonogramActionDetails currentActionDetails) {
         if (correctSolutionBoard == null || correctRowRanges == null || correctColumnRanges == null) {
             return true;
         }

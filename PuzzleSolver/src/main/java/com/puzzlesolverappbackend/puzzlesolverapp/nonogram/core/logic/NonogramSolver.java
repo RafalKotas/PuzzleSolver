@@ -61,7 +61,7 @@ public class NonogramSolver {
 
         NonogramRules rules = nonogramLogic.getNonogramRules();
         this.solutionLogic = new NonogramLogic(rules, guessMode);
-        this.solutionFileName = "r" + fileName + JSON_EXTENSION;
+        this.solutionFileName = "r" + fileName;
         this.guessMode = guessMode;
     }
 

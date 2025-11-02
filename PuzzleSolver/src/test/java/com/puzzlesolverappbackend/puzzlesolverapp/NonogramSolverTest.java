@@ -85,7 +85,7 @@ class NonogramSolverTest {
 
                 if (!result.nonogramIsFullyAndCorrectSolved()) {
                     notSolvedMap.computeIfAbsent(difficulty, d -> new ArrayList<>()).add(filename);
-                    log.warn("{} - NOT SOLVED (difficulty {})", filename, difficulty);
+                    log.warn("{} - NOT SOLVED (difficulty {}), percentage: {}", filename, difficulty, getCompletionPercentage(result));
                 } else {
                     log.info("{} - SOLVED! (difficulty {})", filename, difficulty);
                 }
