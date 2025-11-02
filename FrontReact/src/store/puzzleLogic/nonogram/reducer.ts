@@ -159,23 +159,23 @@ export const selectBoardSquare = (
   const board = state?.nonogramRelatedData?.nonogramSolutionBoard;
 
   if (!board) {
-    console.warn("selectBoardSquare: Brak planszy (`nonogramSolutionBoard` jest null/undefined)");
+    //console.warn("selectBoardSquare: Brak planszy (`nonogramSolutionBoard` jest null/undefined)");
     return "-";
   }
 
   const row = board[rowIdx];
   if (!row) {
-    console.warn(`selectBoardSquare: Brak wiersza o indeksie ${rowIdx}`);
+    //console.warn(`selectBoardSquare: Lack of row with index ${rowIdx}`);
     return "-";
   }
 
   const cell = row[columnIdx];
   if (cell === undefined) {
-    console.warn(`selectBoardSquare: Brak komórki w wierszu ${rowIdx} o indeksie ${columnIdx}`);
+    //console.warn(`selectBoardSquare: Lack of cell in row ${rowIdx} o indeksie ${columnIdx}`);
     return "-";
   }
 
-  console.log(`selectBoardSquare: [${rowIdx}, ${columnIdx}] = ${cell}`);
+  //console.log(`selectBoardSquare: [${rowIdx}, ${columnIdx}] = ${cell}`);
   return cell;
 };
 

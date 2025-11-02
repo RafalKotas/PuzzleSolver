@@ -54,7 +54,7 @@ const SingleNonogramSquare: React.FC<SingleNonogramSquareProps> = ({
 }) => {
 
     useEffect(() => {
-        console.log("SingleNonogramSquare squareValue changed!");
+        //console.log("SingleNonogramSquare squareValue changed!");
     }, [squareValue])    
 
   const handleNonogramSquareClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -71,14 +71,14 @@ const SingleNonogramSquare: React.FC<SingleNonogramSquareProps> = ({
   }
 
   const getBackgroundColor = () => {
-    console.log(`squareValue of: [${boardRowIndex}, ${boardColumnIndex}] = ${squareValue}`);
+    //console.log(`squareValue of: [${boardRowIndex}, ${boardColumnIndex}] = ${squareValue}`);
     if (squareValue === "O") return "black"
     if (squareValue === "X") return "white"
     return "#fdf5d9"
   }
 
   const getSquareContent = () => {
-    console.log(`squareValue of: [${boardRowIndex}, ${boardColumnIndex}] = ${squareValue}`);
+    //console.log(`squareValue of: [${boardRowIndex}, ${boardColumnIndex}] = ${squareValue}`);
     if (squareValue === "X" && xsVisible) {
       return <FontAwesomeIcon style={{ fontSize: cellSize }} icon={faXmark} />
     }

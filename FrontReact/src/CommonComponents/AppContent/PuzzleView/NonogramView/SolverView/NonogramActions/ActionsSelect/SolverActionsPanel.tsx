@@ -125,13 +125,13 @@ const SolverActionsPanel: React.FC<Props> = ({
                     .then((res) => {
                         const result = res.data;
                         if (result.verifiedAgainstOriginal === "PASS") {
-                            console.log("Zapisano poprawne rozwiązanie.");
+                            console.log("Correct solution saved to file %s", selectedNonogramName);
                         } else {
-                            console.warn("Rozwiązanie niepoprawne.");
+                            console.warn("Solution incorrect. Can't save.");
                         }
                     })
                     .catch((err) => {
-                        console.error("Błąd podczas zapisu:", err);
+                        console.error("Something went wrong during saving solution:", err);
                     });
             default:
                 return
