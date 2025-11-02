@@ -59,6 +59,7 @@ const NonogramSolverView : React.FC<NonogramSolverViewProps> = ({ selectedNonogr
 
     const nonogramPath = "/resources/Nonograms/" + params.filename + ".json"
 
+    // TODO cache result
     useEffect(() => {
         axios.get(nonogramPath)
             .then((response: { data: selectedNonogramDetails }) => {
@@ -73,8 +74,10 @@ const NonogramSolverView : React.FC<NonogramSolverViewProps> = ({ selectedNonogr
             .catch((error) => {
                 console.error("Error fetching nonogram file (NonogramSolverView):", error)
             });
+        // TODO unsubscribe
     }, [nonogramPath, params.filename, setSelectedNonogram])
 
+    // TODO (2 queries, useEffects - too many)
     useEffect(() => {
         if (!selectedNonogram) return;
 
@@ -96,18 +99,15 @@ const NonogramSolverView : React.FC<NonogramSolverViewProps> = ({ selectedNonogr
 
     }, [selectedNonogram, setNonogramRelatedLogicData]);
 
-    const renderCondition = () => {
-        return !!selectedNonogram &&
-            !!selectedNonogram.rowSequences &&
-            !!selectedNonogram.columnSequences &&
-            selectedNonogram.filename === params.filename
-    }
+    const renderCondition = !!selectedNonogram && !!selectedNonogram.rowSequences &&!!selectedNonogram.columnSequences &&
+            selectedNonogram.filename === params.filename;
+
 
     return (
         <div id="selected-nonogram-view">
             {
-                renderCondition() ?
-                    <React.Fragment>
+                renderCondition &&
+                    <>
                         <SelectNonogramArrow 
                             arrowIcon={faSquareCaretLeft}
                             fileName={previousNonogramFilename}

@@ -38,7 +38,9 @@ type NonogramItemCardProps = NonogramItemCardPropsFromRedux & OwnNonogramItemCar
 
 const NonogramItemCard : React.FC<NonogramItemCardProps> = ({nonogramDetails, displayMode, mode}) => {
 
-  const {filename, source, difficulty, height, width, year, month} = nonogramDetails
+  const {year, month} = nonogramDetails.publication
+  const {height, width} = nonogramDetails.dimensions
+  const {filename, source, difficulty} = nonogramDetails
 
   const difficultyColor = (difficulty : number) => {
       if ( difficulty <= 2.0) {

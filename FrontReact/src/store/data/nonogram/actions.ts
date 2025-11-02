@@ -116,7 +116,7 @@ export const RemoveNonogramDetail = (detail : keyof nonogramTypes.nonogramInform
     }
 }
 
-export const ChangeNonogramDetail = (detail : keyof nonogramTypes.nonogramInformation, value : string | number | number[]) => {
+export const ChangeNonogramDetail = (detail : keyof nonogramTypes.nonogramInformation, value : string | number | number[] | object) => {
     return {
         type: nonogramTypes.CHANGE_NONOGRAM_STRING_DETAIL,
         payload: {

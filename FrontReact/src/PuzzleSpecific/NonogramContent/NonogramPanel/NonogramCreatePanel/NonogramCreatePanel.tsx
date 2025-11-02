@@ -46,7 +46,7 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     addNonogramDetail: (property : keyof nonogramInformation) => dispatch(AddNonogramDetail(property)),
     removeNonogramDetail: (property : keyof nonogramInformation) => dispatch(RemoveNonogramDetail(property)),
-    changeNonogramDetail: (property : keyof nonogramInformation, value: string | number | number[]) => 
+    changeNonogramDetail: (property : keyof nonogramInformation, value: string | number | number[] | object) => 
         dispatch(ChangeNonogramDetail(property, value)),
     saveCreatedTemplate: () => dispatch(SaveTemporaryNonogram()),
     resetNonogramBoard: () => dispatch(ResetNonogramBoard()),

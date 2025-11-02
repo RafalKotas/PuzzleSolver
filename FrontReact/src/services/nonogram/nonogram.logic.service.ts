@@ -1,7 +1,7 @@
 import axios from "axios"
 import { nonogramRelatedLogicData, toSolvePayload } from "../../store/puzzleLogic/nonogram"
 
-const API_URL = "http://localhost:5000/api/nonogram/logic"
+const API_URL = "http://localhost:5003/api/nonogram/logic"
 
 const initializeNonogramLogic = (initData: {
     filename: string,
