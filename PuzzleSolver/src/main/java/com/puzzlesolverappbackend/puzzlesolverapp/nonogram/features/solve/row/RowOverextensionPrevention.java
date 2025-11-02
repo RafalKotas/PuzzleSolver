@@ -40,8 +40,9 @@ public interface RowOverextensionPrevention {
         boolean fieldWithXFound = false;
         int currentColumnIdx = possibleColouredSequencesEndIndexesRange.get(1);
         int potentiallyColouredSequenceColumnIdx;
+        int minColumnIdx = Math.max(possibleColouredSequencesEndIndexesRange.get(0), 0);
 
-        while (currentColumnIdx >= possibleColouredSequencesEndIndexesRange.get(0) && !fieldWithXFound) {
+        while (currentColumnIdx >= minColumnIdx && !fieldWithXFound) {
 
             if (isFieldColoured(solutionBoard, new Field(rowIdx, currentColumnIdx))) {
                 potentiallyColouredSequenceColumnIdx = currentColumnIdx;
@@ -53,7 +54,7 @@ public interface RowOverextensionPrevention {
 
                 currentColumnIdx = potentiallyColouredSequenceColumnIdx - 1; // field with this columnIdx is not coloured ("X"/"-")
 
-                if (isFieldWithX(solutionBoard, new Field(rowIdx, currentColumnIdx))) {
+                if (currentColumnIdx >= minColumnIdx && isFieldWithX(solutionBoard, new Field(rowIdx, currentColumnIdx))) {
                     fieldWithXFound = true;
                 }
             } else if (isFieldWithX(solutionBoard, new Field(rowIdx, currentColumnIdx))) {
@@ -82,8 +83,9 @@ public interface RowOverextensionPrevention {
 
         boolean fieldWithXFound = false;
         int currentColumnIdx = possibleColouredSequencesStartIndexesRange.get(0);
+        int maxColumnIdx = Math.min(possibleColouredSequencesStartIndexesRange.get(1), width - 1);
 
-        while (currentColumnIdx <= possibleColouredSequencesStartIndexesRange.get(1) && !fieldWithXFound) {
+        while (currentColumnIdx <= maxColumnIdx && !fieldWithXFound) {
 
             if (isFieldColoured(solutionBoard, new Field(rowIdx, currentColumnIdx))) {
                 int potentiallyColouredSequenceColumnIdx = currentColumnIdx;
@@ -101,8 +103,7 @@ public interface RowOverextensionPrevention {
 
                 currentColumnIdx = potentiallyColouredSequenceColumnIdx + 1;
 
-                if (currentColumnIdx < width &&
-                        isFieldWithX(solutionBoard, new Field(rowIdx, currentColumnIdx))) {
+                if (currentColumnIdx <= maxColumnIdx && isFieldWithX(solutionBoard, new Field(rowIdx, currentColumnIdx))) {
                     fieldWithXFound = true;
                 }
             } else if (isFieldWithX(solutionBoard, new Field(rowIdx, currentColumnIdx))) {

@@ -296,12 +296,11 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
             if (columnIdx >= width - 1) break;
 
             int endColumnX = findEndColumnWithXAfterEmpty(columnIdx + 1, rowIdx, width);
-            if (endColumnX != -1 && endColumnX > columnIdx + 1) {
-                emptyRanges.add(List.of(columnIdx + 1, endColumnX - 1));
-                columnIdx = endColumnX;
-            } else {
-                columnIdx = (endColumnX == -1) ? width : endColumnX;
+            List<Integer> potentiallyEmptyRange = List.of(columnIdx + 1, endColumnX - 1);
+            if (!isColouredFieldInRange(potentiallyEmptyRange, rowIdx)) {
+                emptyRanges.add(potentiallyEmptyRange);
             }
+            columnIdx = endColumnX;
         }
 
         return emptyRanges;
@@ -334,16 +333,20 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
      */
     private int findEndColumnWithXAfterEmpty(int startIdx, int rowIdx, int width) {
         int cursor = startIdx;
-        while (cursor < width && isFieldEmpty(nonogramRowLogic.getNonogramSolutionBoard(), new Field(rowIdx, cursor))) {
+        while (cursor < width && !isFieldWithX(nonogramRowLogic.getNonogramSolutionBoard(), new Field(rowIdx, cursor))) {
             cursor++;
-        }
-
-        if (cursor >= width || !isFieldWithX(nonogramRowLogic.getNonogramSolutionBoard(), new Field(rowIdx, cursor))) {
-            return -1;
         }
 
         return cursor;
     }
+
+    private boolean isColouredFieldInRange(List<Integer> columnRange, int rowIdx) {
+        for (int colIdx = columnRange.get(0); colIdx <= columnRange.get(1); colIdx++) {
+            if (isFieldColoured(nonogramRowLogic.getNonogramSolutionBoard(), new Field(rowIdx, colIdx))) return true;
+        }
+        return false;
+    }
+
 
     /**
      * Places Xs in all empty cells of the given range in the specified row.

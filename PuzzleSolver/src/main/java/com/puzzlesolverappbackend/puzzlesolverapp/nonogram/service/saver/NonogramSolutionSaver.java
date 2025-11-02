@@ -13,8 +13,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static com.puzzlesolverappbackend.puzzlesolverapp.constants.SharedConstants.JSON_EXTENSION;
-
 @Service
 @RequiredArgsConstructor
 public class NonogramSolutionSaver {
@@ -41,7 +39,8 @@ public class NonogramSolutionSaver {
         Path directory = Paths.get(solutionDir);
         Files.createDirectories(directory);
 
-        Path filePath = directory.resolve("r" + request.getFileName() + JSON_EXTENSION);
+        Path filePath = directory.resolve("r" + request.getFileName());
+
         String formattedJson = SolutionJsonFormatter.format(result);
 
         try (Writer writer = Files.newBufferedWriter(filePath)) {
