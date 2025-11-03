@@ -12,6 +12,7 @@ FrontReact/my_notes/
 PuzzleSolver/src/main/tools/MySQL/docker-compose.yml
 PuzzleSolver/src/test/resources/application.yml
 PuzzleSolver/data
+PuzzleSolver/src/main/java/com/puzzlesolverappbackend/puzzlesolverapp/old
 
 # other
 /data/
