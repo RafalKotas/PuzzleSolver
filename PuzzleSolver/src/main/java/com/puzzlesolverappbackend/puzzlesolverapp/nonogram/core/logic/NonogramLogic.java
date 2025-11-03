@@ -31,8 +31,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.rangeInsideAnotherRange;
-import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.rangeLength;
+import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramConstants.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.indexToSequenceCharMark;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldEmpty;
@@ -905,37 +904,6 @@ public class NonogramLogic extends NonogramLogicParams {
 
         this.nonogramRowLogic.setNonogramSolutionBoardWithMarks(this.getNonogramSolutionBoardWithMarks());
         this.nonogramRowLogic.setNonogramSolutionBoard(this.getNonogramSolutionBoard());
-    }
-
-    private <T> List<List<T>> copyTwoDeepList(List<List<T>> nonogramBoard) {
-        if (nonogramBoard == null) {
-            return new ArrayList<>();
-        }
-
-        List<List<T>> copiedBoard = new ArrayList<>();
-        for (List<T> boardRow : nonogramBoard) {
-            if (boardRow != null) {
-                copiedBoard.add(new ArrayList<>(boardRow));
-            } else {
-                copiedBoard.add(null);
-            }
-        }
-        return copiedBoard;
-    }
-
-    private List<List<List<Integer>>> copySequencesRanges(List<List<List<Integer>>> sequencesRanges) {
-
-        List<List<List<Integer>>> sequencesRangesCopy = new ArrayList<>();
-
-        for (List<List<Integer>> singleSequencesRanges : sequencesRanges) {
-            List<List<Integer>> elementSequencesRangesCopy = new ArrayList<>();
-            for (List<Integer> sequenceRange : singleSequencesRanges) {
-                elementSequencesRangesCopy.add(new ArrayList<>(sequenceRange));
-            }
-            sequencesRangesCopy.add(elementSequencesRangesCopy);
-        }
-
-        return sequencesRangesCopy;
     }
 
     public boolean subSolutionBoardCorrectComparisonWithSolutionBoard(String solutionFileName) {

@@ -9,6 +9,37 @@ import java.util.List;
 @UtilityClass
 public class ArrayUtils {
 
+    public static <T> List<List<T>> copyTwoDeepList(List<List<T>> nonogramBoard) {
+        if (nonogramBoard == null) {
+            return new ArrayList<>();
+        }
+
+        List<List<T>> copiedBoard = new ArrayList<>();
+        for (List<T> boardRow : nonogramBoard) {
+            if (boardRow != null) {
+                copiedBoard.add(new ArrayList<>(boardRow));
+            } else {
+                copiedBoard.add(null);
+            }
+        }
+        return copiedBoard;
+    }
+
+    public static List<List<List<Integer>>> copySequencesRanges(List<List<List<Integer>>> sequencesRanges) {
+
+        List<List<List<Integer>>> sequencesRangesCopy = new ArrayList<>();
+
+        for (List<List<Integer>> singleSequencesRanges : sequencesRanges) {
+            List<List<Integer>> elementSequencesRangesCopy = new ArrayList<>();
+            for (List<Integer> sequenceRange : singleSequencesRanges) {
+                elementSequencesRangesCopy.add(new ArrayList<>(sequenceRange));
+            }
+            sequencesRangesCopy.add(elementSequencesRangesCopy);
+        }
+
+        return sequencesRangesCopy;
+    }
+
     public static boolean rangeInsideAnotherRange(List<Integer> rangeToCheckIfIsInsideAnother, List<Integer> externalRange) {
         if (!rangeToCheckIfIsInsideAnother.isEmpty() && externalRange.size() >= 2) {
             return (externalRange.get(0) <= rangeToCheckIfIsInsideAnother.get(0)
