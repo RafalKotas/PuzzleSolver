@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @UtilityClass
 public class ArrayUtils {
@@ -55,12 +56,10 @@ public class ArrayUtils {
         return rangeEnd - rangeStart + 1;
     }
 
-    public static List<List<Integer>> deepCopy(List<List<Integer>> list) {
-        List<List<Integer>> copy = new ArrayList<>();
-        for (List<Integer> sublist : list) {
-            copy.add(new ArrayList<>(sublist));
-        }
-        return copy;
+    public static List<List<Integer>> deepCopy(List<List<Integer>> original) {
+        return original.stream()
+                .map(ArrayList::new)
+                .collect(Collectors.toList());
     }
 
     public static boolean rangesListNotEqual(List<List<Integer>> a, List<List<Integer>> b) {
