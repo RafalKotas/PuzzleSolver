@@ -750,7 +750,7 @@ public class NonogramLogic extends NonogramLogicParams {
                     }
                 }
                 case CORRECT_SEQUENCES_RANGES_IF_X_ON_WAY_IN_ROW -> {
-                    this.nonogramRowLogic.correctRowSequencesRangesIfXOnWay(rowIdx, true);
+                    this.nonogramRowLogic.correctRowSequencesRangesIfXOnWay(rowIdx);
                     if (this.guessMode == GuessMode.ENABLED) {
                         invalidateSolutionIfRowSequencesWrong(rowIdx);
                     }
@@ -769,6 +769,7 @@ public class NonogramLogic extends NonogramLogicParams {
                 case PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_ROW -> this.nonogramRowLogic.placeXsRowIfOWillMergeNearFieldsToTooLongColouredSequence(rowIdx);
                 case PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE_IN_ROW -> this.nonogramRowLogic.placeXsRowIfONearXWillBeginTooLongPossibleColouredSequence(rowIdx);
                 case PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_IN_ROW -> this.nonogramRowLogic.preventExtendingColouredSequenceToExcessLengthInRow(rowIdx);
+                case PLACE_XS_IF_COLOURING_FIELD_WILL_CAUSE_ASSIGNMENT_CONFLICT_IN_ROW -> this.nonogramRowLogic.placeXsRowIfColouringFieldWillCauseAssignmentConflict(rowIdx);
                 case MARK_AVAILABLE_FIELDS_IN_ROW -> this.nonogramRowLogic.markAvailableFieldsInRow(rowIdx);
                 default -> {
                     // empty

@@ -7,9 +7,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class NonogramRowLogicTest {
 
@@ -62,6 +65,62 @@ class NonogramRowLogicTest {
 
         assertThat(nonogramLogic.getLogs())
                 .anyMatch(log -> log.contains("PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH"));
+    }
+
+    @Test
+    public void shouldPlaceXsRowIfColouringFieldWillCauseAssignmentConflict() {
+        // given
+        int rowSize = 30;
+        List<String> row = Arrays.asList("X", "X", "X", "X", "X",
+                "O", "O", "O", "X", "X",
+                "-", "-", "-", "-", "-",
+                "-", "-", "X", "-", "-",
+                "-", "-", "O", "O", "-",
+                "-", "-", "-", "-", "X");
+        List<List<String>> board = new ArrayList<>();
+        board.add(row);
+        List<List<String>> boardWithMarks = new ArrayList<>();
+        boardWithMarks.add(
+                Arrays.asList("XXXX", "XXXX", "XXXX", "XXXX", "XXXX",
+                        "RaCb", "RaCc", "RaCc", "XXXX", "XXXX",
+                        "----", "----", "----", "----", "----",
+                        "----", "----", "XXXX", "----", "----",
+                        "----", "----", "--Cc", "--Cb", "----",
+                        "----", "----", "----", "----", "XXXX"
+                        )
+        );
+
+        NonogramRules nonogramRules = mock(NonogramRules.class);
+        when(nonogramRules.getWidth()).thenReturn(rowSize);
+        when(nonogramRules.getHeight()).thenReturn(1);
+        when(nonogramRules.getRowSequencesLengths()).thenReturn(List.of(
+           List.of(3, 7, 3)
+        ));
+
+        NonogramLogic nonogramLogic = new NonogramLogic(nonogramRules, GuessMode.DISABLED);
+        nonogramLogic.setNonogramSolutionBoard(board);
+        nonogramLogic.setNonogramSolutionBoardWithMarks(boardWithMarks);
+
+        subject = new NonogramRowLogic(nonogramLogic, nonogramLogic.getBoardAccessHelper(), nonogramLogic.getActionScheduler());
+        List<List<List<Integer>>> rowsSequencesRanges = new ArrayList<>(
+                List.of(
+                        new ArrayList<>(
+                                List.of(
+                                        new ArrayList<>(List.of(5, 7)),
+                                        new ArrayList<>(List.of(10, 24)),
+                                        new ArrayList<>(List.of(21, 28))
+                                )
+                        )
+                )
+        );
+
+        subject.setRowsSequencesRanges(rowsSequencesRanges);
+
+        // when
+        subject.placeXsRowIfColouringFieldWillCauseAssignmentConflict(0);
+
+        // then
+        assertThat(subject.getNonogramSolutionBoard().get(0).get(25)).isEqualTo("X");
     }
 
     private NonogramLogic create_o10401_NonogramLogic() {

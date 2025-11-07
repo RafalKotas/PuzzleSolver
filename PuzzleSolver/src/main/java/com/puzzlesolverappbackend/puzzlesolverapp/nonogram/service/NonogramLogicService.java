@@ -272,7 +272,7 @@ public class NonogramLogicService {
                 nonogramLogicObject.getNonogramRowLogic()
         );
 
-        rowSequencesCorrectionHelper.correctRowSequencesRangesIfXOnWay(rowIdx, true);
+        rowSequencesCorrectionHelper.correctRowSequencesRangesIfXOnWay(rowIdx);
     }
 
     // iterations through all columns

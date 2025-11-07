@@ -152,7 +152,7 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
                     isFieldEmpty(nonogramRowLogic.getNonogramSolutionBoard(), tempX)) {
                 nonogramRowLogic.getRowXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(tempX);
                 nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(tempX);
-                nonogramRowLogic.correctRowSequencesRangesIfXOnWay(rowIdx, false);
+                nonogramRowLogic.correctRowSequencesRangesIfXOnWay(rowIdx);
                 nonogramRowLogic.getNonogramFieldClearingHelper().clearField(tempX);
             }
 
@@ -190,7 +190,7 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
                     isFieldEmpty(nonogramRowLogic.getNonogramSolutionBoard(), tempX)) {
                 nonogramRowLogic.getRowXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(tempX);
                 nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(tempX);
-                nonogramRowLogic.correctRowSequencesRangesIfXOnWay(rowIdx, false);
+                nonogramRowLogic.correctRowSequencesRangesIfXOnWay(rowIdx);
                 nonogramRowLogic.getNonogramFieldClearingHelper().clearField(tempX);
             }
 

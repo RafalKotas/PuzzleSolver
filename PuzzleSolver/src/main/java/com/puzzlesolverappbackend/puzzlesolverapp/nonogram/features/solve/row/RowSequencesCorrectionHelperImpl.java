@@ -259,7 +259,7 @@ public class RowSequencesCorrectionHelperImpl extends CommonRangeCorrectionHelpe
     }
 
     @Override
-    public void correctRowSequencesRangesIfXOnWay(int rowIndex, boolean changeLogicDetails) {
+    public void correctRowSequencesRangesIfXOnWay(int rowIndex) {
         var sequencesRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIndex);
         var sequencesLengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIndex);
         var excluded = nonogramRowLogic.getRowsSequencesIdsNotToInclude().get(rowIndex);
@@ -282,7 +282,7 @@ public class RowSequencesCorrectionHelperImpl extends CommonRangeCorrectionHelpe
             if (!currentRange.equals(corrected)) {
                 nonogramRowLogic.updateRowSequenceRange(rowIndex, sequenceIdx, corrected);
 
-                if (changeLogicDetails && shouldExcludeSequence(rowIndex, corrected, length)) {
+                if (shouldExcludeSequence(rowIndex, corrected, length)) {
                     nonogramRowLogic.excludeSequenceInRow(rowIndex, sequenceIdx);
                 }
 
@@ -290,7 +290,7 @@ public class RowSequencesCorrectionHelperImpl extends CommonRangeCorrectionHelpe
             }
         }
 
-        if (changed && changeLogicDetails) {
+        if (changed) {
             List<List<Integer>> updatedRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIndex);
 
             String tmpLog = SequenceRangeCorrectionWhenMetXLogHelper.generateLog(
@@ -317,8 +317,8 @@ public class RowSequencesCorrectionHelperImpl extends CommonRangeCorrectionHelpe
 
     @Override
     public void correctRowSequencesRangesWhenMatchingFieldsToSequences(int rowIdx) {
-        List<List<Integer>> rowSequencesRanges =  nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
-        List<Integer> rowSequencesLengths =  nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
+        List<List<Integer>> rowSequencesRanges = deepCopy(nonogramRowLogic.getRowsSequencesRanges().get(rowIdx));
+        List<Integer> rowSequencesLengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
         List<List<Integer>> colouredRanges = collectColouredSequencesRanges(nonogramRowLogic.getNonogramSolutionBoard(), rowIdx, true);
 
         List<List<Integer>> initialSequencesRanges = deepCopy(rowSequencesRanges);

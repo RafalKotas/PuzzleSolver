@@ -122,8 +122,8 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
     }
 
     @Override
-    public void correctRowSequencesRangesIfXOnWay(int rowIdx, boolean changeLogicDetails) {
-        rowSequencesCorrectionHelper.correctRowSequencesRangesIfXOnWay(rowIdx, changeLogicDetails);
+    public void correctRowSequencesRangesIfXOnWay(int rowIdx) {
+        rowSequencesCorrectionHelper.correctRowSequencesRangesIfXOnWay(rowIdx);
     }
 
     @Override
@@ -178,6 +178,66 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
     @Override
     public void placeXsRowIfONearXWillBeginTooLongPossibleColouredSequence(int rowIdx) {
         rowXPlacementHelper.placeXsRowIfONearXWillBeginTooLongPossibleColouredSequence(rowIdx);
+    }
+
+    @Override
+    public void placeXsRowIfColouringFieldWillCauseAssignmentConflict(int rowIdx) {
+        // The original ranges before any correction
+        List<List<Integer>> initialRanges = deepCopy(rowsSequencesRanges.get(rowIdx));
+        List<Integer> initialSequencesIdsNotToInclude = copyList(rowsSequencesIdsNotToInclude.get(rowIdx));
+        int initialActionsToDoListSize = actionsToDoList.size();
+        boolean xPlaceBecauseOfConflict = false;
+
+        for (int columnIndex = 0; columnIndex < this.getNonogramRules().getWidth(); columnIndex++) {
+            Field fieldToCheck = new Field(rowIdx, columnIndex);
+            if (isFieldEmpty(this.getNonogramSolutionBoard(), fieldToCheck)) {
+                // 1. Colour field
+                this.getRowColouringHelper().getColouringHelper().colourFieldAtGivenPosition(fieldToCheck, "R---");
+
+                // 2. Apply the series of corrections to the row sequences ranges.
+                correctRowSequencesRangesWhenMetColouredField(rowIdx);
+                correctRowSequencesRangesWhenMatchingFieldsToSequences(rowIdx);
+                correctRowSequencesRangesIfXOnWay(rowIdx);
+                correctRowSequencesRanges(rowIdx);
+                correctRowSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence(rowIdx);
+
+                // 3. Remove the actions added by the scope correction
+                while (actionsToDoList.size() > initialActionsToDoListSize) {
+                    actionsToDoList.remove(actionsToDoList.size() - 1);
+                }
+
+                // 4. Collect all coloured sequences of fields in row.
+                List<List<Integer>> colouredSequencesInRow = collectColouredSequencesRanges(this.getNonogramSolutionBoard(), rowIdx, true);
+
+                // 5. Check if for every sequence from 3. we can assign it to any of the possibleSequencesRanges.
+                for (List<Integer> seq : colouredSequencesInRow) {
+                    boolean canAssign = checkIfColouredSequenceCanBeAssignedToAnyRange(seq, rowIdx);
+                    if (!canAssign) {
+                        // 6. if (!canAssign) {placeXAtField(rowIdx, columnIndex)}
+                        Field fieldToPlaceX = new Field(rowIdx, columnIndex);
+                        this.getRowXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(fieldToPlaceX);
+                        xPlaceBecauseOfConflict = true;
+                        actionScheduler.scheduleActionsBasedOnField(fieldToPlaceX, NonogramSolveAction.PLACE_XS_IF_COLOURING_FIELD_WILL_CAUSE_ASSIGNMENT_CONFLICT_IN_ROW);
+                        this.nonogramState.increaseMadeSteps();
+                        break;
+                    }
+                }
+
+                // 7 Empty field
+                if (!xPlaceBecauseOfConflict) {
+                    nonogramFieldClearingHelper.clearField(fieldToCheck);
+                }
+
+                // 8. Set possibleSequencesRanges before correcting/updating (before action method calls)
+                rowsSequencesRanges.set(rowIdx, new ArrayList<>(initialRanges));
+                rowsSequencesIdsNotToInclude.set(rowIdx, new ArrayList<>(initialSequencesIdsNotToInclude));
+                xPlaceBecauseOfConflict = false;
+            }
+        }
+    }
+
+    private boolean checkIfColouredSequenceCanBeAssignedToAnyRange(List<Integer> colouredSequence, int rowIdx) {
+        return rowsSequencesRanges.get(rowIdx).stream().anyMatch(range -> rangeInsideAnotherRange(colouredSequence, range));
     }
 
     // === ROW ACTIONS: OVEREXTENSION PREVENTION ===

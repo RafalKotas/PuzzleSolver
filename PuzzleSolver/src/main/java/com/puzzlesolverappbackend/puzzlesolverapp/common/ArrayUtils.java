@@ -62,6 +62,10 @@ public class ArrayUtils {
                 .collect(Collectors.toList());
     }
 
+    public static <T> List<T> copyList(List<T> original) {
+        return new ArrayList<>(original);
+    }
+
     public static boolean rangesListNotEqual(List<List<Integer>> a, List<List<Integer>> b) {
         if (a.size() != b.size()) return true;
         for (int i = 0; i < a.size(); i++) {

@@ -112,7 +112,7 @@ public class NonogramSolverUtils {
     public static NonogramFullSolutionData loadFullSolutionData(String filename) {
         Path projectDir = Paths.get(System.getProperty("user.dir")).normalize();
 
-        Path solutionPath = projectDir.resolve(Paths.get("data", "solutions", "Nonograms", filename));
+        Path solutionPath = projectDir.resolve(Paths.get("data", "solutions", "Nonograms", filename + ".json"));
         try (FileReader reader = new FileReader(solutionPath.toFile())) {
             return new Gson().fromJson(JsonParser.parseReader(reader), NonogramFullSolutionData.class);
         } catch (Exception e) {

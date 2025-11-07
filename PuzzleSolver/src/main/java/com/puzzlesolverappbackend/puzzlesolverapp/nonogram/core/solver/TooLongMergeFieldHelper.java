@@ -11,6 +11,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.Bo
 
 public interface TooLongMergeFieldHelper {
 
+    // TODO - extract method to util or more common helper (not only TooLongMergeFieldHelper)
     static List<List<Integer>> collectColouredSequencesRanges(List<List<String>> board, int index, boolean isRow) {
         List<List<Integer>> colouredRanges = new ArrayList<>();
         List<String> line = isRow ? board.get(index) : getColumn(board, index);

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.puzzlesolverappbackend.puzzlesolverapp.constants.SharedConstants.JSON_EXTENSION;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramConstants.COLOURED_FIELD;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramConstants.X_FIELD;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.utils.NonogramStatsUtils.*;
@@ -38,7 +37,8 @@ public class NonogramSolver {
     private static final boolean RECURSION_MODE_ENABLED = false;
 
     private static final boolean LOG_STEPS_SOLVER = false;
-    private static final boolean LOG_HEURISTICS_RESULTS = false;
+    // TODO - create configuration for setting depending on while is needed
+    private boolean LOG_HEURISTICS_RESULTS = false;
     private boolean printNodeCompletionPercentage = true;
 
     private boolean oneOfTwoDecisionsWrong;
