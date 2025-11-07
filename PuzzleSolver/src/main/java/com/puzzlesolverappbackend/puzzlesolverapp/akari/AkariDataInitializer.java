@@ -9,16 +9,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
-@Component
+//@Component
 @Profile("!test")
-@Order(1)
+//@Order(1)
 @Getter
 @Setter
 @Slf4j

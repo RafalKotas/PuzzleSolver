@@ -10,8 +10,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,9 +23,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-@Component
+//@Component
 @Profile("!test")
-@Order(4)
+//@Order(4)
 @Getter
 @Slf4j
 public class NonogramsDataInitializer implements CommandLineRunner {

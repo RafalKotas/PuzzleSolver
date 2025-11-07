@@ -1,7 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.initializers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.puzzlesolverappbackend.puzzlesolverapp.common.CommonService;
 import com.puzzlesolverappbackend.puzzlesolverapp.constants.InitializerConstants;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Nonogram;
@@ -12,12 +11,8 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.repository.NonogramRe
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.NonogramLogicService;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.NonogramService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.*;
@@ -26,14 +21,14 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.constants.SharedConstan
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRules.mapNonogramFileDetailsToNonogramRules;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.utils.NonogramStatsUtils.getCompletionPercentage;
 
-@Component
-@ConditionalOnProperty(
-        prefix = "nonogram.init",
-        name = "enabled",
-        havingValue = "true",
-        matchIfMissing = false
-)
-@Order(7)
+//@Component
+//@ConditionalOnProperty(
+//        prefix = "nonogram.init",
+//        name = "enabled",
+//        havingValue = "true",
+//        matchIfMissing = false
+//)
+//@Order(7)
 @Slf4j
 public class NonogramSolveInitializer implements CommandLineRunner {
 
@@ -71,7 +66,7 @@ public class NonogramSolveInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        initParameters(1.0, 5.0, "logi");
+        initParameters(1.0, 1.0, Arrays.asList("logi", "logiMix"));
         List<Nonogram> selectedNonogramsList = nonogramRepository.selectNonogramBySourceAndDifficulty(sources,
                 difficultyRange.get(0), difficultyRange.get(1));
 
