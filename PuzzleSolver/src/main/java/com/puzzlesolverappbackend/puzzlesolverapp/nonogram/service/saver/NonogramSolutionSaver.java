@@ -39,7 +39,7 @@ public class NonogramSolutionSaver {
         Path directory = Paths.get(solutionDir);
         Files.createDirectories(directory);
 
-        Path filePath = directory.resolve("r" + request.getFileName());
+        Path filePath = directory.resolve("r" + request.getFileName() + ".json");
 
         String formattedJson = SolutionJsonFormatter.format(result);
 
