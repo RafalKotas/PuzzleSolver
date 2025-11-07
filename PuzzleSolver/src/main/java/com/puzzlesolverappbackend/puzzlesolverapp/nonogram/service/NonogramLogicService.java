@@ -337,7 +337,7 @@ public class NonogramLogicService {
             try {
                 NonogramSolutionSaveRequest request = NonogramMapper.toSaveRequest(solvedLogic, fileName);
                 saveIfCorrect(request);
-                log.info("Solved nonogram was successfully saved.");
+                log.info("Solved nonogram ({}) was successfully saved.", fileName);
             } catch (IOException e) {
                 log.error("Failed to save solved nonogram: {}", e.getMessage());
             }
