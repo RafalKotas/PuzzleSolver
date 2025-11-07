@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -138,6 +139,7 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
 
     private boolean handleLeftMergeScenarios(int rowIdx, List<Integer> seqLens, List<List<Integer>> sequencesRanges, List<List<Integer>> colouredSequences) {
         boolean anyFieldColoured = false;
+        List<Integer> initialSequencesIdsNotToInclude = copyList(nonogramRowLogic.getRowsSequencesIdsNotToInclude().get(rowIdx));
 
         for (int i = 0; i < colouredSequences.size() - 1; i++) {
             List<Integer> first = colouredSequences.get(i);
@@ -169,6 +171,7 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
 
             nonogramRowLogic.getNonogramFieldExclusionHelper().removeFieldFromExcludedInRow(tempX);
             nonogramRowLogic.setRowSequencesRanges(rowIdx, mutableClone2DList(sequencesRanges));
+            nonogramRowLogic.getRowsSequencesIdsNotToInclude().set(rowIdx, new ArrayList<>(initialSequencesIdsNotToInclude));
         }
 
         return anyFieldColoured;
@@ -176,6 +179,7 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
 
     private boolean handleRightMergeScenarios(int rowIdx, List<Integer> seqLens, List<List<Integer>> sequencesRanges, List<List<Integer>> colouredSequences) {
         boolean anyFieldColoured = false;
+        List<Integer> initialSequencesIdsNotToInclude = copyList(nonogramRowLogic.getRowsSequencesIdsNotToInclude().get(rowIdx));
 
         for (int i = colouredSequences.size() - 1; i > 0; i--) {
             List<Integer> second = colouredSequences.get(i);
@@ -207,6 +211,7 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
 
             nonogramRowLogic.setRowSequencesRanges(rowIdx, mutableClone2DList(sequencesRanges));
             nonogramRowLogic.getNonogramFieldExclusionHelper().removeFieldFromExcludedInRow(tempX);
+            nonogramRowLogic.getRowsSequencesIdsNotToInclude().set(rowIdx, new ArrayList<>(initialSequencesIdsNotToInclude));
         }
 
         return anyFieldColoured;
