@@ -7,6 +7,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.common
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.*;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.solve.SequenceRangeCorrectionHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.solve.SequenceRangeCorrectionWhenMetXHelper;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -18,6 +19,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.range
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldColoured;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.TooLongMergeFieldHelper.collectColouredSequencesRanges;
 
+@Slf4j
 public class RowSequencesCorrectionHelperImpl extends CommonRangeCorrectionHelper implements RowSequencesCorrectionHelper, RefreshableRowHelper {
 
     private final NonogramRowLogic nonogramRowLogic;
@@ -190,7 +192,7 @@ public class RowSequencesCorrectionHelperImpl extends CommonRangeCorrectionHelpe
                     oldRange.get(0), oldRange.get(1), columnIdx, seqLength, true);
 
             if (!updatedRange.equals(oldRange)) {
-                nonogramRowLogic.updateRowSequenceRange(rowIdx, seqIdx, updatedRange);
+                nonogramRowLogic.updateRowSequenceRange(rowIdx, seqIdx, new ArrayList<>(updatedRange));
 
                 if (rangeLength(updatedRange) == seqLength &&
                         nonogramRowLogic.getBoardAccessHelper().isRowRangeColoured(rowIdx, updatedRange)) {
@@ -240,7 +242,7 @@ public class RowSequencesCorrectionHelperImpl extends CommonRangeCorrectionHelpe
                 nonogramRowLogic.updateRowSequenceRange(rowIdx, seqIdx, updatedRange);
 
                 if (rangeLength(updatedRange) == seqLength &&
-                        nonogramRowLogic.getBoardAccessHelper().isRowRangeColoured(rowIdx, updatedRange)) {
+                        nonogramRowLogic.getBoardAccessHelper().isRowRangeColoured(rowIdx, new ArrayList<>(updatedRange))) {
                     nonogramRowLogic.excludeSequenceInRow(rowIdx, seqIdx);
                     nonogramRowLogic.getNonogramState().increaseMadeSteps();
                 }
@@ -392,22 +394,29 @@ public class RowSequencesCorrectionHelperImpl extends CommonRangeCorrectionHelpe
 
         List<List<Integer>> rowSequencesRanges = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx);
         List<List<Integer>> initialSequencesRanges = deepCopy(rowSequencesRanges);
+        List<Integer> updatedRange;
 
         for (int seqIdx = 0; seqIdx < rowSequencesRanges.size(); seqIdx++) {
             List<Integer> currentRange = rowSequencesRanges.get(seqIdx);
 
-            List<Integer> updatedRange = RangeCorrectionHelper.adjustRangeIfColouredAtEdges(
-                    currentRange,
-                    rowIdx,
-                    false,
-                    nonogramRowLogic.getNonogramSolutionBoard(),
-                    nonogramRowLogic.getNonogramRules().getWidth()
-            );
+            try {
+                updatedRange = RangeCorrectionHelper.adjustRangeIfColouredAtEdges(
+                        currentRange,
+                        rowIdx,
+                        false,
+                        nonogramRowLogic.getNonogramSolutionBoard(),
+                        nonogramRowLogic.getNonogramRules().getWidth()
+                );
 
-            if (!updatedRange.equals(currentRange)) {
-                nonogramRowLogic.updateRowSequenceRange(rowIdx, seqIdx, updatedRange);
-                nonogramRowLogic.getNonogramState().increaseMadeSteps();
-                anyUpdated = true;
+                if (!updatedRange.equals(currentRange)) {
+                    nonogramRowLogic.updateRowSequenceRange(rowIdx, seqIdx, new ArrayList<>(updatedRange));
+                    nonogramRowLogic.getNonogramState().increaseMadeSteps();
+                    anyUpdated = true;
+                }
+            } catch (IndexOutOfBoundsException e) {
+                // TODO - invalidate solution (TRIAL AND ERROR MODE)
+                log.warn("Partial solution invalid (wrong sequencesRanges), row: {}", rowIdx);
+                return;
             }
         }
 
@@ -441,5 +450,30 @@ public class RowSequencesCorrectionHelperImpl extends CommonRangeCorrectionHelpe
         nonogramRowLogic.setRowsSequencesRanges(logicToCopy.getRowsSequencesRanges());
         nonogramRowLogic.setRowsFieldsNotToInclude(logicToCopy.getRowsFieldsNotToInclude());
     }
+
+    // TODO - try to execute all correct ranges methods in loop - for placeXsRowIfColouringFieldWillCauseAssignmentConflict
+//    // === RANGES CORRECTION RUNNABLES ===
+//
+//    Runnable correctRowSequencesRanges = () = this.correctRowSequencesRanges(rowIdx);
+//    Runnable correctRowSequencesRangesWhenMetColouredField = () -> this.correctRowSequencesRangesWhenMetColouredField(rowIdx);
+//    Runnable correctRowSequencesRangesIfXOnWay = () -> this.correctRowSequencesRangesIfXOnWay(rowIdx);
+//    Runnable correctRowSequencesRangesWhenMatchingFieldsToSequences = () -> this.correctRowSequencesRangesWhenMatchingFieldsToSequences(rowIdx);
+//    Runnable correctRowSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence = () -> this.correctRowSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence(rowIdx);
+//
+//    List<Runnable> methods = Arrays.asList(
+//            correctRowSequencesRanges,
+//            correctRowSequencesRangesWhenMetColouredField,
+//            correctRowSequencesRangesIfXOnWay,
+//            correctRowSequencesRangesWhenMatchingFieldsToSequences,
+//            correctRowSequencesRangesWhenStartFromEdgeIndexWillCreateTooLongSequence
+//    );
+//
+//    for (Runnable method : methods) {
+//        method.run();
+//        if (nonogramRowLogic.getNonogramState().isInvalidSolution()) {
+//            restoreAndBreak.run();
+//            break;
+//        }
+//    }
 }
 
