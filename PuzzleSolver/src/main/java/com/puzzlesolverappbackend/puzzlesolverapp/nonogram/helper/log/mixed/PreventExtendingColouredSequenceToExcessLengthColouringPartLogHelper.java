@@ -17,7 +17,7 @@ public class PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelpe
         return String.format(
                 """
                         PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART_IN_%s: %s=%d
-                        direction=%s
+                        direction="%s"
                         initialLine=%s
                         updatedLine=%s
                         sequencesRanges=%s
