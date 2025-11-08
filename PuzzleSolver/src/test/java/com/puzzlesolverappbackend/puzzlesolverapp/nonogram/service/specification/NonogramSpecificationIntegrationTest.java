@@ -56,10 +56,10 @@ class NonogramSpecificationIntegrationTest {
         NonogramFilterRequest filters = new NonogramFilterRequest(
                 List.of("source1"),
                 List.of("2020"),
-                List.of(),
+                List.of("05"),
                 2.0, 4.0, // difficulty range
-                null, null, // width range
-                null, null  // height range
+                9, 27, // width range
+                5, 50  // height range
         );
 
         // when

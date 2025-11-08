@@ -33,15 +33,11 @@ public class NonogramSpecification {
     }
 
     private static <T> void addInPredicateIfPresent(List<T> values, Path<T> path, List<Predicate> predicates) {
-        if (values != null && !values.isEmpty()) {
-            predicates.add(path.in(values));
-        }
+        predicates.add(path.in(values));
     }
 
     private static <N extends Number & Comparable<N>> void addRangePredicateIfPresent(
             N min, N max, Path<N> path, CriteriaBuilder cb, List<Predicate> predicates) {
-        if (min != null && max != null) {
             predicates.add(cb.between(path, min, max));
-        }
     }
 }

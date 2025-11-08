@@ -1,9 +1,7 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.specification;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.repository.NonogramRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -12,11 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NonogramSpecificationTest {
 
-    @Autowired
-    NonogramRepository repository;
-
-    @Test
     @DisplayName("NonogramSpecification constructor should throw UnsupportedOperationException - reflect instantiation")
+    @Test
     void constructor_throwsException_whenInstantiatedReflectively() throws Exception {
         // given
         Constructor<NonogramSpecification> constructor = NonogramSpecification.class.getDeclaredConstructor();
