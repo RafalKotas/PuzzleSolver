@@ -402,25 +402,7 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
         Field field = new Field(rowIdx, col);
 
         if (shouldPlaceX(rowIdx, col, field, merged)) {
-            nonogramFieldPlacingXHelper.placeXAtGivenField(field);
-            List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
-            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
-                    true,
-                    rowIdx,
-                    initialRow,
-                    updatedRow
-            );
-            String tmpLog = PlaceXsIfOWillMergeNearFieldsToTooLongColouredSequenceLogHelper.generateLog(
-                    placeXGenerateLogBaseContext,
-                    "before",
-                    nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
-                    nonogramRowLogic.getRowsSequencesRanges().get(rowIdx)
-            );
-            setAndAddLog(tmpLog);
-
-            nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(field);
-            nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_ROW);
-            nonogramRowLogic.getNonogramState().increaseMadeSteps();
+            processField(field, initialRow, rowIdx, "before");
         } else if (NonogramLogicParams.SHOW_REPETITIONS) {
             log.info("X because \"O\" will create too long sequence in row placed earlier!");
         }
@@ -438,25 +420,7 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
                 : rangeWithExtra;
 
         if (shouldPlaceX(rowIdx, nextCol, field, merged)) {
-            nonogramFieldPlacingXHelper.placeXAtGivenField(field);
-            List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
-            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
-                    true,
-                    rowIdx,
-                    initialRow,
-                    updatedRow
-            );
-            String tmpLog = PlaceXsIfOWillMergeNearFieldsToTooLongColouredSequenceLogHelper.generateLog(
-                    placeXGenerateLogBaseContext,
-                    "after",
-                    nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
-                    nonogramRowLogic.getRowsSequencesRanges().get(rowIdx)
-            );
-            setAndAddLog(tmpLog);
-
-            nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(field);
-            nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_ROW);
-            nonogramRowLogic.getNonogramState().increaseMadeSteps();
+            processField(field, initialRow, rowIdx, "after");
         } else if (NonogramLogicParams.SHOW_REPETITIONS) {
             log.info("X because \"O\" will create too long sequence in row placed earlier!");
         }
@@ -468,6 +432,28 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
                 && !colouredSequenceInRowIsValid(range,
                 nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
                 nonogramRowLogic.getRowsSequencesRanges().get(rowIdx));
+    }
+
+    private void processField(Field field, List<String> initialRow, int rowIdx, String position) {
+        nonogramFieldPlacingXHelper.placeXAtGivenField(field);
+        List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
+        PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
+                true,
+                rowIdx,
+                initialRow,
+                updatedRow
+        );
+        String tmpLog = PlaceXsIfOWillMergeNearFieldsToTooLongColouredSequenceLogHelper.generateLog(
+                placeXGenerateLogBaseContext,
+                position,
+                nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
+                nonogramRowLogic.getRowsSequencesRanges().get(rowIdx)
+        );
+        setAndAddLog(tmpLog);
+
+        nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(field);
+        nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_ROW);
+        nonogramRowLogic.getNonogramState().increaseMadeSteps();
     }
 
     @Override

@@ -499,25 +499,7 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
         Field field = new Field(row, colIdx);
 
         if (shouldPlaceX(row, merged, colIdx, field)) {
-            nonogramFieldPlacingXHelper.placeXAtGivenField(field);
-            List<String> updatedColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(colIdx);
-            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
-                    false,
-                    colIdx,
-                    initialColumn,
-                    updatedColumn
-            );
-            String tmpLog = PlaceXsIfOWillMergeNearFieldsToTooLongColouredSequenceLogHelper.generateLog(
-                    placeXGenerateLogBaseContext,
-                    "before",
-                    nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(colIdx),
-                    nonogramColumnLogic.getColumnsSequencesRanges().get(colIdx)
-            );
-            setAndAddLog(tmpLog);
-
-            nonogramColumnLogic.getNonogramFieldExclusionHelper().excludeFieldInColumn(field);
-            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_COLUMN);
-            nonogramColumnLogic.getNonogramState().increaseMadeSteps();
+            processField(field, initialColumn, colIdx, "before");
         } else if (NonogramLogicParams.SHOW_REPETITIONS) {
             log.info("X because \"O\" will create too long sequence in column placed earlier!");
         }
@@ -535,26 +517,7 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
                 : rangeWithExtra;
 
         if (shouldPlaceX(nextRow, merged, colIdx, field)) {
-            nonogramFieldPlacingXHelper.placeXAtGivenField(field);
-            List<String> updatedColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(colIdx);
-            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
-                    false,
-                    colIdx,
-                    initialColumn,
-                    updatedColumn
-            );
-            String tmpLog = PlaceXsIfOWillMergeNearFieldsToTooLongColouredSequenceLogHelper.generateLog(
-                    placeXGenerateLogBaseContext,
-                    "after",
-                    nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(colIdx),
-                    nonogramColumnLogic.getColumnsSequencesRanges().get(colIdx)
-            );
-            setAndAddLog(tmpLog);
-
-            nonogramFieldPlacingXHelper.placeXAtGivenField(field);
-            nonogramColumnLogic.getNonogramFieldExclusionHelper().excludeFieldInColumn(field);
-            nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_COLUMN);
-            nonogramColumnLogic.getNonogramState().increaseMadeSteps();
+            processField(field, initialColumn, colIdx, "after");
         } else if (NonogramLogicParams.SHOW_REPETITIONS) {
             log.info("X because \"O\" will create too long sequence in column placed earlier!");
         }
@@ -566,6 +529,28 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
                 && !colouredSequenceInColumnIsValid(range,
                 nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
                 nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx));
+    }
+
+    private void processField(Field field, List<String> initialColumn, int colIdx, String position) {
+        nonogramFieldPlacingXHelper.placeXAtGivenField(field);
+        List<String> updatedColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(colIdx);
+        PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
+                false,
+                colIdx,
+                initialColumn,
+                updatedColumn
+        );
+        String tmpLog = PlaceXsIfOWillMergeNearFieldsToTooLongColouredSequenceLogHelper.generateLog(
+                placeXGenerateLogBaseContext,
+                position,
+                nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(colIdx),
+                nonogramColumnLogic.getColumnsSequencesRanges().get(colIdx)
+        );
+        setAndAddLog(tmpLog);
+
+        nonogramColumnLogic.getNonogramFieldExclusionHelper().excludeFieldInColumn(field);
+        nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_COLUMN);
+        nonogramColumnLogic.getNonogramState().increaseMadeSteps();
     }
 
     @Override
