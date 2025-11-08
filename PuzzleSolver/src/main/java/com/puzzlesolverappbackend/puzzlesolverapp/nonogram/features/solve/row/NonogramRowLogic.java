@@ -353,27 +353,15 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         int sequenceLength = context.validSequenceLengths().get(0);
         int colouredSequenceColStartIdx = context.potentiallyColouredFieldColumn() - sequenceLength + 1;
 
-        for (int col = colouredSequenceColStartIdx; col <= context.potentiallyColouredFieldColumn(); col++) {
-            Field f = new Field(context.rowIdx(), col);
-            if (isFieldEmpty(this.getNonogramSolutionBoard(), f)) {
-                this.getRowColouringHelper().getColouringHelper().colourFieldAtGivenPosition(f, "R---");
-                actionScheduler.scheduleActionsBasedOnField(f, NonogramSolveAction.PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART_IN_ROW);
-                this.nonogramState.increaseMadeSteps();
-
-                ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
-                        true,
-                        context.rowIdx(),
-                        initialRow,
-                        getRowCopy(context.rowIdx()),
-                        rowSequencesRanges,
-                        rowSequencesLengths
-                );
-                tmpLog = PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper.generateLog(
-                        colouringGenerateLogBaseContext,
-                        "left"
-                );
-                addLog();
-            }
+        for (int columnIdx = colouredSequenceColStartIdx; columnIdx <= context.potentiallyColouredFieldColumn(); columnIdx++) {
+            processFieldToColourWhenPreventExtendingSequenceToExcessLength(
+                    context,
+                    columnIdx,
+                    initialRow,
+                    rowSequencesRanges,
+                    rowSequencesLengths,
+                    "left"
+            );
         }
 
         Field fieldToPlaceX = new Field(context.rowIdx(), colouredSequenceColStartIdx - 1);
@@ -472,27 +460,17 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         int colouredSequenceEndColumnIdx = context.potentiallyColouredFieldColumn() + sequenceLength - 1;
 
         // Colour fields on the right
-        for (int col = context.potentiallyColouredFieldColumn(); col <= colouredSequenceEndColumnIdx; col++) {
-            Field f = new Field(context.rowIdx(), col);
+        for (int columnIdx = context.potentiallyColouredFieldColumn(); columnIdx <= colouredSequenceEndColumnIdx; columnIdx++) {
+            Field f = new Field(context.rowIdx(), columnIdx);
             if (isFieldEmpty(this.getNonogramSolutionBoard(), f)) {
-                this.getRowColouringHelper().getColouringHelper().colourFieldAtGivenPosition(f, "R---");
-                actionScheduler.scheduleActionsBasedOnField(f,
-                        NonogramSolveAction.PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART_IN_ROW);
-                this.nonogramState.increaseMadeSteps();
-
-                ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
-                        true,
-                        context.rowIdx(),
+                processFieldToColourWhenPreventExtendingSequenceToExcessLength(
+                        context,
+                        columnIdx,
                         initialRow,
-                        getRowCopy(context.rowIdx()),
                         rowSequencesRanges,
-                        rowSequencesLengths
-                );
-                tmpLog = PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper.generateLog(
-                        colouringGenerateLogBaseContext,
+                        rowSequencesLengths,
                         "right"
                 );
-                addLog();
             }
         }
 
@@ -596,6 +574,36 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 getRowsSequencesRanges().get(rowIdx)
         );
         addLog();
+    }
+
+    void processFieldToColourWhenPreventExtendingSequenceToExcessLength(
+            OverextensionContext context,
+            int columnIdx,
+            List<String> initialRow,
+            List<List<Integer>> rowSequencesRanges,
+            List<Integer> rowSequencesLengths,
+            String direction) {
+        Field f = new Field(context.rowIdx(), columnIdx);
+
+        if (isFieldEmpty(this.getNonogramSolutionBoard(), f)) {
+            this.getRowColouringHelper().getColouringHelper().colourFieldAtGivenPosition(f, "R---");
+            actionScheduler.scheduleActionsBasedOnField(f, NonogramSolveAction.PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART_IN_ROW);
+            this.nonogramState.increaseMadeSteps();
+
+            ColouringGenerateLogBaseContext colouringGenerateLogBaseContext = new ColouringGenerateLogBaseContext(
+                    true,
+                    context.rowIdx(),
+                    initialRow,
+                    getRowCopy(context.rowIdx()),
+                    rowSequencesRanges,
+                    rowSequencesLengths
+            );
+            tmpLog = PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper.generateLog(
+                    colouringGenerateLogBaseContext,
+                    direction
+            );
+            addLog();
+        }
     }
 
     // === ROW ACTIONS: MARKING ===
