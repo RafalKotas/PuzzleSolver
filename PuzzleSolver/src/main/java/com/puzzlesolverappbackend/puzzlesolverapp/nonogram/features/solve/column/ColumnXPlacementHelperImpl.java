@@ -479,34 +479,18 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
         List<List<Integer>> colouredRanges = groupConsecutiveIndices(colouredFields);
         List<List<List<Integer>>> rangesWithExtras = createCandidateRangesAroundSequences(colouredRanges);
 
-        List<String> columnBefore = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
-
         for (int i = 0; i < colouredRanges.size(); i++) {
             List<List<Integer>> currentWithExtras = rangesWithExtras.get(i);
 
+            // TODO - check if two directions are necessary and remove one if are not (<- equals -> (?))
             checkAndPlaceXBefore(colouredRanges, currentWithExtras.get(0), i, columnIdx);
             checkAndPlaceXAfter(colouredRanges, currentWithExtras.get(1), i, columnIdx);
-        }
-
-        List<String> columnAfter = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);
-
-        if (!columnBefore.equals(columnAfter)) {
-            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
-                    false,
-                    columnIdx,
-                    columnBefore,
-                    columnAfter
-            );
-            String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
-                    placeXGenerateLogBaseContext,
-                    nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx),
-                    nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx)
-            );
-            setAndAddLog(tmpLog);
         }
     }
 
     private void checkAndPlaceXBefore(List<List<Integer>> colouredRanges, List<Integer> rangeWithExtra, int idx, int colIdx) {
+        List<String> initialColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(colIdx);
+
         List<Integer> merged = (idx > 0)
                 ? mergeWithPreviousIfAdjacent(colouredRanges.get(idx - 1), rangeWithExtra)
                 : rangeWithExtra;
@@ -516,6 +500,21 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
 
         if (shouldPlaceX(row, merged, colIdx, field)) {
             nonogramFieldPlacingXHelper.placeXAtGivenField(field);
+            List<String> updatedColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(colIdx);
+            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
+                    false,
+                    colIdx,
+                    initialColumn,
+                    updatedColumn
+            );
+            String tmpLog = PlaceXsIfOWillMergeNearFieldsToTooLongColouredSequenceLogHelper.generateLog(
+                    placeXGenerateLogBaseContext,
+                    "before",
+                    nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(colIdx),
+                    nonogramColumnLogic.getColumnsSequencesRanges().get(colIdx)
+            );
+            setAndAddLog(tmpLog);
+
             nonogramColumnLogic.getNonogramFieldExclusionHelper().excludeFieldInColumn(field);
             nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_COLUMN);
             nonogramColumnLogic.getNonogramState().increaseMadeSteps();
@@ -525,10 +524,10 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
     }
 
     private void checkAndPlaceXAfter(List<List<Integer>> colouredRanges, List<Integer> rangeWithExtra, int idx, int colIdx) {
+        List<String> initialColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(colIdx);
+
         int nextRow = rangeWithExtra.get(1);
-        if (nextRow == nonogramColumnLogic.getNonogramRules().getHeight()) {
-            return;
-        }
+        if (nextRow == nonogramColumnLogic.getNonogramRules().getHeight()) return;
 
         Field field = new Field(nextRow, colIdx);
         List<Integer> merged = (idx < colouredRanges.size() - 1)
@@ -536,6 +535,22 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
                 : rangeWithExtra;
 
         if (shouldPlaceX(nextRow, merged, colIdx, field)) {
+            nonogramFieldPlacingXHelper.placeXAtGivenField(field);
+            List<String> updatedColumn = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(colIdx);
+            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
+                    false,
+                    colIdx,
+                    initialColumn,
+                    updatedColumn
+            );
+            String tmpLog = PlaceXsIfOWillMergeNearFieldsToTooLongColouredSequenceLogHelper.generateLog(
+                    placeXGenerateLogBaseContext,
+                    "after",
+                    nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(colIdx),
+                    nonogramColumnLogic.getColumnsSequencesRanges().get(colIdx)
+            );
+            setAndAddLog(tmpLog);
+
             nonogramFieldPlacingXHelper.placeXAtGivenField(field);
             nonogramColumnLogic.getNonogramFieldExclusionHelper().excludeFieldInColumn(field);
             nonogramColumnLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_COLUMN);

@@ -95,7 +95,7 @@ public class LogConverter {
             case PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE ->
                     Optional.of(PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.convertLogToTestArguments(log, solutionName));
             case PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE ->
-                    Optional.of(PlaceXsIfONearXWillMergeNearFieldsToTooLongColouredSequenceLogHelper.convertLogToTestArguments(log, solutionName));
+                    Optional.of(PlaceXsIfOWillMergeNearFieldsToTooLongColouredSequenceLogHelper.convertLogToTestArguments(log, solutionName));
 
             // mixed
             case PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_COLOURING_PART ->

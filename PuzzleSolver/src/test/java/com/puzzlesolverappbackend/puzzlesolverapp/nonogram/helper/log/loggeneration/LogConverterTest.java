@@ -189,9 +189,9 @@ class LogConverterTest {
 
         @Test @DisplayName("routes PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE")
         void routes_placeXIfOWillMergeTooLong() {
-            try (MockedStatic<PlaceXsIfONearXWillMergeNearFieldsToTooLongColouredSequenceLogHelper> ms =
-                         mockStatic(PlaceXsIfONearXWillMergeNearFieldsToTooLongColouredSequenceLogHelper.class)) {
-                ms.when(() -> PlaceXsIfONearXWillMergeNearFieldsToTooLongColouredSequenceLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
+            try (MockedStatic<PlaceXsIfOWillMergeNearFieldsToTooLongColouredSequenceLogHelper> ms =
+                         mockStatic(PlaceXsIfOWillMergeNearFieldsToTooLongColouredSequenceLogHelper.class)) {
+                ms.when(() -> PlaceXsIfOWillMergeNearFieldsToTooLongColouredSequenceLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
                 Optional<String> out = LogConverter.convertLogByAction(LOG, SOL, "PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE");
                 assertThat(out).contains(OK);
             }

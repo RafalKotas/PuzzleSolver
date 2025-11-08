@@ -382,34 +382,18 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
         List<List<Integer>> colouredRanges = groupConsecutiveIndices(colouredFields);
         List<List<List<Integer>>> rangesWithExtras = createCandidateRangesAroundSequences(colouredRanges);
 
-        List<String> initialRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
-
         for (int i = 0; i < colouredRanges.size(); i++) {
             List<List<Integer>> currentWithExtras = rangesWithExtras.get(i);
 
-            checkAndPlaceXBeforeInRow(colouredRanges, currentWithExtras.get(0), i, rowIdx);
-            checkAndPlaceXAfterInRow(colouredRanges, currentWithExtras.get(1), i, rowIdx);
-        }
-
-        List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
-
-        if (!initialRow.equals(updatedRow)) {
-            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
-                    true,
-                    rowIdx,
-                    initialRow,
-                    updatedRow
-            );
-            String tmpLog = PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.generateLog(
-                    placeXGenerateLogBaseContext,
-                    nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
-                    nonogramRowLogic.getRowsSequencesRanges().get(rowIdx)
-            );
-            setAndAddLog(tmpLog);
+            // TODO - check if two directions are necessary and remove one if are not (<- equals -> (?))
+            checkAndPlaceXBefore(colouredRanges, currentWithExtras.get(0), i, rowIdx);
+            checkAndPlaceXAfter(colouredRanges, currentWithExtras.get(1), i, rowIdx);
         }
     }
 
-    private void checkAndPlaceXBeforeInRow(List<List<Integer>> colouredRanges, List<Integer> rangeWithExtra, int idx, int rowIdx) {
+    private void checkAndPlaceXBefore(List<List<Integer>> colouredRanges, List<Integer> rangeWithExtra, int idx, int rowIdx) {
+        List<String> initialRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
+
         List<Integer> merged = (idx > 0)
                 ? mergeWithPreviousIfAdjacent(colouredRanges.get(idx - 1), rangeWithExtra)
                 : rangeWithExtra;
@@ -417,8 +401,23 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
         int col = rangeWithExtra.get(0);
         Field field = new Field(rowIdx, col);
 
-        if (shouldPlaceXInRow(rowIdx, col, field, merged)) {
+        if (shouldPlaceX(rowIdx, col, field, merged)) {
             nonogramFieldPlacingXHelper.placeXAtGivenField(field);
+            List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
+            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
+                    true,
+                    rowIdx,
+                    initialRow,
+                    updatedRow
+            );
+            String tmpLog = PlaceXsIfOWillMergeNearFieldsToTooLongColouredSequenceLogHelper.generateLog(
+                    placeXGenerateLogBaseContext,
+                    "before",
+                    nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
+                    nonogramRowLogic.getRowsSequencesRanges().get(rowIdx)
+            );
+            setAndAddLog(tmpLog);
+
             nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(field);
             nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_ROW);
             nonogramRowLogic.getNonogramState().increaseMadeSteps();
@@ -427,7 +426,9 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
         }
     }
 
-    private void checkAndPlaceXAfterInRow(List<List<Integer>> colouredRanges, List<Integer> rangeWithExtra, int idx, int rowIdx) {
+    private void checkAndPlaceXAfter(List<List<Integer>> colouredRanges, List<Integer> rangeWithExtra, int idx, int rowIdx) {
+        List<String> initialRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
+
         int nextCol = rangeWithExtra.get(1);
         if (nextCol == nonogramRowLogic.getNonogramRules().getWidth()) return;
 
@@ -436,8 +437,23 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
                 ? mergeWithNextIfAdjacent(rangeWithExtra, colouredRanges.get(idx + 1))
                 : rangeWithExtra;
 
-        if (shouldPlaceXInRow(rowIdx, nextCol, field, merged)) {
+        if (shouldPlaceX(rowIdx, nextCol, field, merged)) {
             nonogramFieldPlacingXHelper.placeXAtGivenField(field);
+            List<String> updatedRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);
+            PlaceXGenerateLogBaseContext placeXGenerateLogBaseContext = new PlaceXGenerateLogBaseContext(
+                    true,
+                    rowIdx,
+                    initialRow,
+                    updatedRow
+            );
+            String tmpLog = PlaceXsIfOWillMergeNearFieldsToTooLongColouredSequenceLogHelper.generateLog(
+                    placeXGenerateLogBaseContext,
+                    "after",
+                    nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx),
+                    nonogramRowLogic.getRowsSequencesRanges().get(rowIdx)
+            );
+            setAndAddLog(tmpLog);
+
             nonogramRowLogic.getNonogramFieldExclusionHelper().excludeFieldInRow(field);
             nonogramRowLogic.getActionScheduler().scheduleActionsBasedOnField(field, NonogramSolveAction.PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE_IN_ROW);
             nonogramRowLogic.getNonogramState().increaseMadeSteps();
@@ -446,7 +462,7 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
         }
     }
 
-    private boolean shouldPlaceXInRow(int rowIdx, int columnIdx, Field field, List<Integer> range) {
+    private boolean shouldPlaceX(int rowIdx, int columnIdx, Field field, List<Integer> range) {
         return nonogramRowLogic.getBoardAccessHelper().isColumnIndexValid(columnIdx)
                 && isFieldEmpty(nonogramRowLogic.getNonogramSolutionBoard(), field)
                 && !colouredSequenceInRowIsValid(range,
