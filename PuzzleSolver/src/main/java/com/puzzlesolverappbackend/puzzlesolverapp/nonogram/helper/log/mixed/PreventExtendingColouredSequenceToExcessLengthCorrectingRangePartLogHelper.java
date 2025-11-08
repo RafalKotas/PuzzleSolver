@@ -5,7 +5,7 @@ import lombok.experimental.UtilityClass;
 import java.util.List;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.extractValue;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration.LogFormatUtils.*;
 
 @UtilityClass
 public class PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLogHelper {
@@ -23,8 +23,8 @@ public class PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLo
                 """
                         PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART_IN_%s: %s=%d
                         sequencesLengths=%s
-                        initialLine=%s,
-                        updatedLine=%s,
+                        initialLine=%s
+                        updatedLine=%s
                         initialRanges=%s
                         updatedRanges=%s
                         """,
@@ -69,11 +69,11 @@ public class PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLo
                 solutionName,
                 isRow ? ROW : COLUMN,
                 index,
-                sequencesLengths,
-                initialLine,
-                updatedLine,
-                initialRanges,
-                updatedRanges
+                toImmutableIntListLiteral(sequencesLengths),
+                toMutableStringListLiteral(initialLine),
+                toMutableStringListLiteral(updatedLine),
+                toMutableRangesListLiteral(initialRanges),
+                toMutableRangesListLiteral(updatedRanges)
         );
     }
 }
