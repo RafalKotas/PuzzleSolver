@@ -16,6 +16,7 @@ PuzzleSolver/src/main/java/com/puzzlesolverappbackend/puzzlesolverapp/old
 
 # other
 /data/
+/solutionsBackup/
 nCopy
 otherFolders
 
