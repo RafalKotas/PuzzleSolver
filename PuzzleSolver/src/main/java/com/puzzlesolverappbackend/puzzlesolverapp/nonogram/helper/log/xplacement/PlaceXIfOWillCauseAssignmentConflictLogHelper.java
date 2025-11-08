@@ -1,18 +1,20 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement;
 
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringConvertLogBaseContext;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringGenerateLogBaseContext;
 import lombok.experimental.UtilityClass;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.common.HelpersConstants.*;
 
 @UtilityClass
-public class AssignmentConflictLogHelper {
+public class PlaceXIfOWillCauseAssignmentConflictLogHelper {
 
     public static String generateLog(
             ColouringGenerateLogBaseContext context
     ) {
         return String.format(
                 """
-                        COLOURING_FIELDS_IF_X_WILL_CAUSE_ASSIGNMENT_CONFLICT_IN_%s: %s=%d
+                        PLACING_X_IF_O_WILL_CAUSE_ASSIGNMENT_CONFLICT_IN_%s: %s=%d
                         initialLine=%s
                         updatedLine=%s
                         sequencesRanges=%s
@@ -36,7 +38,7 @@ public class AssignmentConflictLogHelper {
 
         return String.format(
                 """
-                        Arguments.of("%s / %s=%d - colouring fields if X will cause assignment conflict",
+                        Arguments.of("%s / %s=%d - placing X if O will cause assignment conflict",
                             %s,
                             %s,
                             %s,

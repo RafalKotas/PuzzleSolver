@@ -14,6 +14,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.exclusion.ExcludedSequenceLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXGenerateLogBaseContext;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PlaceXIfOWillCauseAssignmentConflictLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper;
 import lombok.Getter;
 import lombok.Setter;
@@ -191,6 +192,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
     @Override
     public void placeXsRowIfColouringFieldWillCauseAssignmentConflict(int rowIdx) {
+        List<String> initialRow = getRowCopy(rowIdx);
         List<List<Integer>> initialSequencesRanges = deepCopy(rowsSequencesRanges.get(rowIdx));
         List<Integer> initialSequencesIdsNotToInclude = copyList(rowsSequencesIdsNotToInclude.get(rowIdx));
         int initialActionsToDoListSize = actionsToDoList.size();
@@ -211,7 +213,22 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                     nonogramFieldClearingHelper.clearField(fieldToCheck);
                 } else {
                     this.getRowXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(fieldToCheck);
+                    List<String> updatedRow = getRowCopy(rowIdx);
+
                     actionScheduler.scheduleActionsBasedOnField(fieldToCheck, NonogramSolveAction.PLACE_XS_IF_COLOURING_FIELD_WILL_CAUSE_ASSIGNMENT_CONFLICT_IN_ROW);
+
+                    ColouringGenerateLogBaseContext logContext = new ColouringGenerateLogBaseContext(
+                            true,
+                            rowIdx,
+                            initialRow,
+                            updatedRow,
+                            initialSequencesRanges,
+                            getNonogramRules().getRowSequencesLengths().get(rowIdx)
+                    );
+                    String tmpLog = PlaceXIfOWillCauseAssignmentConflictLogHelper.generateLog(
+                            logContext
+                    );
+                    setAndAddLog(tmpLog);
                     this.nonogramState.increaseMadeSteps();
                 }
 
@@ -671,6 +688,11 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
         return this.getRowsSequencesRanges().get(rowIdx).stream()
                 .map(ArrayList::new)
                 .collect(Collectors.toList());
+    }
+
+    private void setAndAddLog(String tmpLog) {
+        setTmpLog(tmpLog);
+        addLog();
     }
 
     // === INTERNAL RECORDS ===

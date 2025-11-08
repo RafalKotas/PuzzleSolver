@@ -1,6 +1,5 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.AssignmentConflictLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ExtendLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.OverlappingLogHelper;
@@ -83,7 +82,7 @@ public class LogConverter {
             case COLOUR_OVERLAPPING_FIELDS -> Optional.of(OverlappingLogHelper.convertLogToTestArguments(log, solutionName));
             case "TOO_LONG_MERGE" -> Optional.of(ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.convertLogToTestArguments(log, solutionName));
             case "EXTEND" -> Optional.of(ExtendLogHelper.convertLogToTestArguments(log, solutionName));
-            case COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT -> Optional.of(AssignmentConflictLogHelper.convertLogToTestArguments(log, solutionName));
+            case COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT -> Optional.of(PlaceXIfOWillCauseAssignmentConflictLogHelper.convertLogToTestArguments(log, solutionName));
 
             // x placing
             case PLACE_XS_AT_UNREACHABLE_FIELDS ->

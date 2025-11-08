@@ -1,6 +1,5 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.loggeneration;
 
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.AssignmentConflictLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ExtendLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.OverlappingLogHelper;
@@ -143,8 +142,8 @@ class LogConverterTest {
 
         @Test @DisplayName("routes COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT")
         void routes_assignmentConflict() {
-            try (MockedStatic<AssignmentConflictLogHelper> ms = mockStatic(AssignmentConflictLogHelper.class)) {
-                ms.when(() -> AssignmentConflictLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
+            try (MockedStatic<PlaceXIfOWillCauseAssignmentConflictLogHelper> ms = mockStatic(PlaceXIfOWillCauseAssignmentConflictLogHelper.class)) {
+                ms.when(() -> PlaceXIfOWillCauseAssignmentConflictLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
                 Optional<String> out = LogConverter.convertLogByAction(LOG, SOL, "COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT");
                 assertThat(out).contains(OK);
             }
