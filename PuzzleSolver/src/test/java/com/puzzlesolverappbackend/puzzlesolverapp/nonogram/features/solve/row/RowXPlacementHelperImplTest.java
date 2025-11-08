@@ -331,7 +331,7 @@ class RowXPlacementHelperImplTest {
         int xPlacedCount = 1;
         int fieldsExcudedCount = 4;
         assertThat(state.getNewStepsMade()).isEqualTo(initialSteps + xPlacedCount + fieldsExcudedCount);
-        assertThat(nonogramRowLogic.getActionScheduler().getActionsToDoList()).hasSize(initialActions + 8); // 8 actions for one X placed before
+        assertThat(nonogramRowLogic.getActionScheduler().getActionsToDoList()).hasSize(initialActions + 9); // 9 actions for one X placed before
     }
 
     @DisplayName("Should handle case where coloured range is inside allowed range but too long – o06147 row 2")
@@ -404,7 +404,7 @@ class RowXPlacementHelperImplTest {
         assertThat(rowAfter.get(7)).isEqualTo("X");
         assertThat(rowAfter.get(10)).isEqualTo("X");
         assertThat(state.getNewStepsMade()).isEqualTo(initialSteps + 2);
-        assertThat(rowLogic.getActionScheduler().getActionsToDoList()).hasSize(initialActions + 16);  // 2 x 8 for every X placed
+        assertThat(rowLogic.getActionScheduler().getActionsToDoList()).hasSize(initialActions + 18);  // 2 x 9 for every X placed
     }
 
     @DisplayName("Should place X in range too short for any sequence – o07836 row 3")

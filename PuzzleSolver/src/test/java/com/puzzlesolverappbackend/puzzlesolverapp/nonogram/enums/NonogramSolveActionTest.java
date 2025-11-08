@@ -18,7 +18,7 @@ class NonogramSolveActionTest {
         // then
         assertTrue(actions.contains(CORRECT_SEQUENCES_RANGES_IN_ROW));
         assertTrue(actions.contains(MARK_AVAILABLE_FIELDS_IN_ROW));
-        assertEquals(16, actions.size());
+        assertEquals(17, actions.size());
     }
 
     @Test

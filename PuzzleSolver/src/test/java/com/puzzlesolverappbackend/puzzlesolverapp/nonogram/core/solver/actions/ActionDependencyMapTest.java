@@ -29,12 +29,14 @@ class ActionDependencyMapTest {
 
     @Test
     void returnsCorrectDependenciesForCorrectRowSequencesRanges() {
+        // given && when
         List<NonogramSolveAction> dependencies = ActionDependencyMap.getDependenciesFor(NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_ROW);
 
+        // then
         assertNotNull(dependencies);
         assertTrue(dependencies.contains(NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_ROW));
         assertTrue(dependencies.contains(NonogramSolveAction.PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_IN_ROW));
-        assertEquals(8, dependencies.size());
+        assertEquals(9, dependencies.size());
     }
 
     @Test
