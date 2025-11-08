@@ -307,7 +307,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
 
             if (context == null || context.validSequenceLengths().isEmpty()) continue;
 
-            handleValidOverextensionCase(context, initialRow, rowSequencesRanges, rowSequencesLengths);
+            handleValidLeftOverextensionCase(context, initialRow, rowSequencesRanges, rowSequencesLengths);
             updateSequenceRangeIfNeededLeft(context, rowIdx, initialRow, initialSequencesRanges);
         }
     }
@@ -342,7 +342,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                 validSequenceIds, validSequenceLengths, sequencesLengths, rowSequencesRanges);
     }
 
-    private void handleValidOverextensionCase(
+    private void handleValidLeftOverextensionCase(
             OverextensionContext context,
             List<String> initialRow,
             List<List<Integer>> rowSequencesRanges,
