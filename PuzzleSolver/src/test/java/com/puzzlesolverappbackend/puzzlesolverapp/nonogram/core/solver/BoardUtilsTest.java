@@ -556,7 +556,7 @@ class BoardUtilsTest {
         // then
         assertEquals("a", charMark0);
         assertEquals("d", charMark3);
-        assertEquals("a", charMark25);
+        assertEquals("z", charMark25);
     }
 
     // createEmptyMarkedLine
