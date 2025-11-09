@@ -1,12 +1,13 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.sudoku;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.common.CommonService;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.lang.reflect.Field;
 import java.nio.file.Files;
@@ -17,6 +18,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class SudokuDataInitializerTest {
 
     @Mock
@@ -31,12 +33,8 @@ class SudokuDataInitializerTest {
     @TempDir
     private Path tempDir;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
+    @DisplayName("Should not save existing sudoku")
     void shouldNotSaveSudokuWhenAlreadyExists() throws Exception {
         // given
         String filename = "sudoku2.json";
@@ -70,6 +68,7 @@ class SudokuDataInitializerTest {
     }
 
     @Test
+    @DisplayName("Should save new sudoku when is not present in repository")
     void shouldSaveNewSudokuWhenNotPresentInRepository() throws Exception {
         // given
         String filename = "sudoku1.json";
@@ -105,6 +104,7 @@ class SudokuDataInitializerTest {
     }
 
     @Test
+    @DisplayName("Should not save sudoku with malformed json and log error")
     void shouldLogErrorWhenJsonIsMalformed() throws Exception {
         // given
         String filename = "malformed.json";

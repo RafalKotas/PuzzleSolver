@@ -1,12 +1,13 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.hitori;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.common.CommonService;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.lang.reflect.Field;
 import java.nio.file.Files;
@@ -18,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class HitoriDataInitializerTest {
 
     @Mock
@@ -32,12 +34,8 @@ class HitoriDataInitializerTest {
     @TempDir
     Path tempDir;
 
-    @BeforeEach
-    void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
+    @DisplayName("Should not save existing hitori")
     void shouldNotSaveHitoriWhenAlreadyExists() throws Exception {
         // given
         String filename = "test.json";
@@ -73,6 +71,7 @@ class HitoriDataInitializerTest {
     }
 
     @Test
+    @DisplayName("Should save new hitori when is not present in repository")
     void shouldSaveNewHitoriWhenNotPresentInRepository() throws Exception {
         // given
         String filename = "test.json";
@@ -110,6 +109,7 @@ class HitoriDataInitializerTest {
     }
 
     @Test
+    @DisplayName("Should not save hitori with malformed json and log error")
     void shouldLogErrorWhenJsonIsMalformed() throws Exception {
         // given
         String filename = "malformedHitori.json";

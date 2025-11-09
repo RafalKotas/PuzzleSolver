@@ -60,7 +60,8 @@ public class AkariDataInitializer implements CommandLineRunner {
                 Akari akari = new Akari(akariFileNameWithoutExtension, source, difficulty, height, width);
 
                 if (this.akariRepository.existsAkariByGivenParamsFromFile(
-                        akariFileNameWithoutExtension, source, difficulty, height, width).isPresent()) {
+                        akariFileNameWithoutExtension, source, difficulty, height, width).isPresent()
+                ) {
                     akariRepeated++;
                 } else {
                     akariRepository.save(akari);

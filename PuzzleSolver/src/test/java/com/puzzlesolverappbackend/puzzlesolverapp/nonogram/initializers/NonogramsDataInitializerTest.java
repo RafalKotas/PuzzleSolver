@@ -3,30 +3,34 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.initializers;
 import com.puzzlesolverappbackend.puzzlesolverapp.common.CommonService;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Nonogram;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.repository.NonogramRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class NonogramsDataInitializerTest {
 
-    @Mock private NonogramRepository repository;
-    @Mock private CommonService commonService;
+    @Mock
+    private NonogramRepository repository;
+
+    @Mock
+    private CommonService commonService;
 
     @InjectMocks
     private NonogramsDataInitializer initializer;
@@ -34,44 +38,8 @@ class NonogramsDataInitializerTest {
     @TempDir
     Path tempDir;
 
-    AutoCloseable mocks;
-
-    @BeforeEach
-    void setUp() throws Exception {
-        mocks = MockitoAnnotations.openMocks(this);
-        initializer = new NonogramsDataInitializer(repository, commonService);
-        setPuzzlePath(tempDir.toString() + "/");
-        clearStaticLists();
-    }
-
-    @AfterEach
-    void tearDown() throws Exception {
-        if (mocks != null) mocks.close();
-        clearStaticLists();
-    }
-
-    // --- helpers ---
-
-    private void setPuzzlePath(String path) throws Exception {
-        Field f = NonogramsDataInitializer.class.getDeclaredField("puzzlePath");
-        f.setAccessible(true);
-        f.set(initializer, path);
-    }
-
-    @SuppressWarnings("unchecked")
-    private void clearStaticLists() throws Exception {
-        Field f1 = NonogramsDataInitializer.class.getDeclaredField("filesToCorrect");
-        f1.setAccessible(true);
-        ((List<String>) f1.get(null)).clear();
-
-        Field f2 = NonogramsDataInitializer.class.getDeclaredField("sourceMonthCombinations");
-        f2.setAccessible(true);
-        ((List<List<String>>) f2.get(null)).clear();
-    }
-
-    // ---------- existing coverage from wcześniej napisanych testów ----------
-
     @Test
+    @DisplayName("Should not save existing nonogram")
     void shouldNotSaveNonogramWhenAlreadyExists() throws Exception {
         // given
         String filename = "existing.json";
@@ -88,14 +56,20 @@ class NonogramsDataInitializerTest {
               "width": 4
             }
             """;
-        Files.writeString(tempDir.resolve(filename), content);
+
+        Path filePath = tempDir.resolve(filename);
+        Files.writeString(filePath, content);
+
+        Field puzzlePathField = NonogramsDataInitializer.class.getDeclaredField("puzzlePath");
+        puzzlePathField.setAccessible(true);
+        puzzlePathField.set(initializer, tempDir.toString() + "/");
 
         when(commonService.listFilesUsingJavaIO(anyString()))
                 .thenReturn(Set.of(filename));
 
         when(repository.existsNonogramByGivenParamsFromFile(
                 anyString(), anyString(), anyString(), anyString(), anyDouble(), anyInt(), anyInt()))
-                .thenReturn(true);
+                .thenReturn(Optional.of(new Nonogram()));
 
         // when
         initializer.run();
@@ -105,6 +79,7 @@ class NonogramsDataInitializerTest {
     }
 
     @Test
+    @DisplayName("Should save new nonogram when is not present in repository")
     void shouldSaveNewNonogramWhenNotPresentInRepository() throws Exception {
         // given
         String filename = "to-save.json";
@@ -128,7 +103,7 @@ class NonogramsDataInitializerTest {
                 .thenReturn(Set.of(filename));
         when(repository.existsNonogramByGivenParamsFromFile(
                 "to-save", "logi", "2024", "07", 4.5, 5, 5))
-                .thenReturn(false);
+                .thenReturn(Optional.empty());
 
         // when
         initializer.run();
@@ -140,10 +115,11 @@ class NonogramsDataInitializerTest {
     }
 
     @Test
+    @DisplayName("Should not save nonogram with malformed json and log error")
     void shouldLogErrorWhenJsonIsMalformed() throws Exception {
         // given
         String filename = "malformed.json";
-        String malformed = """
+        String malformedJson = """
         {
           "rowSequences": [[1,2]],
           "columnSequences": [[3,4]],
@@ -156,7 +132,9 @@ class NonogramsDataInitializerTest {
           "difficulty": 4.5,
           "additionalContent": "x"
         """;
-        Files.writeString(tempDir.resolve(filename), malformed);
+
+        Path filePath = tempDir.resolve(filename);
+        Files.writeString(filePath, malformedJson);
 
         when(commonService.listFilesUsingJavaIO(anyString()))
                 .thenReturn(Set.of(filename));
@@ -253,7 +231,7 @@ class NonogramsDataInitializerTest {
                 .thenReturn(Set.of(filename));
         when(repository.existsNonogramByGivenParamsFromFile(
                 "ok", "s", "2024", "08", 1.5, 6, 7))
-                .thenReturn(false);
+                .thenReturn(Optional.empty());
 
         // when
         initializer.run();
@@ -302,7 +280,7 @@ class NonogramsDataInitializerTest {
         when(commonService.listFilesUsingJavaIO(anyString()))
                 .thenReturn(Set.of(f1, f2));
         when(repository.existsNonogramByGivenParamsFromFile(anyString(), anyString(), anyString(), anyString(), anyDouble(), anyInt(), anyInt()))
-                .thenReturn(false);
+                .thenReturn(Optional.empty());
 
         // when
         initializer.run();
@@ -328,8 +306,8 @@ class NonogramsDataInitializerTest {
                 "  \"height\": 5,",
                 "  \"rowSequences\": [[1]],",
                 "  \"columnSequences\": [[1]]",
-                "}",                        // to 11 linii…
-                "", "", "", ""              // …+4 puste = 15 (wymagana liczba)
+                "}",                        // 11 lines
+                "", "", "", ""              // and 4 empty (needed count)
         );
         Files.writeString(tempDir.resolve(filename), String.join("\n", lines));
 
@@ -337,7 +315,7 @@ class NonogramsDataInitializerTest {
                 .thenReturn(Set.of(filename));
         when(repository.existsNonogramByGivenParamsFromFile(
                 "wrongOrder", "s", "2024", "08", 1.0, 5, 5))
-                .thenReturn(false);
+                .thenReturn(Optional.empty());
 
         // when
         initializer.run();

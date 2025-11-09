@@ -103,12 +103,10 @@ public class NonogramsDataInitializer implements CommandLineRunner {
                         details.getWidth()
                 );
 
-                boolean exists = nonogramRepository.existsNonogramByGivenParamsFromFile(
+                if (nonogramRepository.existsNonogramByGivenParamsFromFile(
                         nameWithoutExtension, details.getSource(), details.getYear(), details.getMonth(),
-                        details.getDifficulty(), details.getHeight(), details.getWidth()
-                );
-
-                if (exists) {
+                        details.getDifficulty(), details.getHeight(), details.getWidth()).isPresent()
+                ) {
                     nonogramsRepeated++;
                 } else {
                     nonogramRepository.save(nonogram);
