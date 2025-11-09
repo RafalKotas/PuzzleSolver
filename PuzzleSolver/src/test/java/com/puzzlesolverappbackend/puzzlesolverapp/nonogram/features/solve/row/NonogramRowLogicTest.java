@@ -69,7 +69,7 @@ class NonogramRowLogicTest {
 
     @Test
     @DisplayName("Should place X if colouring field will cause assignment conflict")
-    public void shouldPlaceXsRowIfColouringFieldWillCauseAssignmentConflict() {
+    void shouldPlaceXsRowIfColouringFieldWillCauseAssignmentConflict() {
         // given
         int rowSize = 30;
         List<String> row = Arrays.asList("X", "X", "X", "X", "X",
