@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, JpaSpecificationExecutor<Nonogram> {
@@ -53,14 +54,16 @@ public interface NonogramRepository extends JpaRepository<Nonogram, Integer>, Jp
              AND (:width     IS NULL OR n.dimensions.width  = :width)
              AND (:difficulty IS NULL OR n.difficulty = :difficulty)
            """)
-    boolean existsNonogramByGivenParamsFromFile(
+    Optional<Nonogram> existsNonogramByGivenParamsFromFile(
             @Param("filename") String filename,
             @Param("source") String source,
             @Param("year")   String year,
             @Param("month")  String month,
             @Param("difficulty") Double difficulty,
             @Param("height") Integer height,
-            @Param("width")  Integer width);
+            @Param("width")  Integer width
+    );
+
     @Query("""
            SELECT n.filename
            FROM Nonogram n

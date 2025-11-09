@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.architect;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ArchitectFileDetailsTest {
 
     @Test
+    @DisplayName("Should set all fields correctly through allArgsConstructor")
     void allArgsConstructor_shouldSetAllFieldsCorrectly() {
         // given
         List<Integer> tanksInRows = List.of(1, 2);
@@ -27,20 +29,21 @@ class ArchitectFileDetailsTest {
         );
 
         // then
-        assertThat(details.getTanksInRows()).isEqualTo(tanksInRows);
-        assertThat(details.getTanksInColumns()).isEqualTo(tanksInColumns);
-        assertThat(details.getBoard()).isEqualTo(board);
-        assertThat(details.getHeight()).isEqualTo(height);
-        assertThat(details.getWidth()).isEqualTo(width);
-        assertThat(details.getSource()).isEqualTo(source);
-        assertThat(details.getYear()).isEqualTo(year);
-        assertThat(details.getMonth()).isEqualTo(month);
-        assertThat(details.getDifficulty()).isEqualTo(difficulty);
+        assertThat(details.getTanksInRows()).isEqualTo(List.of(1, 2));
+        assertThat(details.getTanksInColumns()).isEqualTo(List.of(3, 4));
+        assertThat(details.getBoard()).isEqualTo(List.of(List.of("A", "B"), List.of("C", "D")));
+        assertThat(details.getHeight()).isEqualTo(2);
+        assertThat(details.getWidth()).isEqualTo(2);
+        assertThat(details.getSource()).isEqualTo("source");
+        assertThat(details.getYear()).isEqualTo("2025");
+        assertThat(details.getMonth()).isEqualTo("07");
+        assertThat(details.getDifficulty()).isEqualTo(2.5);
     }
 
     @Test
+    @DisplayName("Should create instance with null or default fields through NoArgsConstructor")
     void noArgsConstructor_shouldCreateInstanceWithNullOrDefaultFields() {
-        // when
+        // given & when
         ArchitectFileDetails details = new ArchitectFileDetails();
 
         // then
@@ -57,6 +60,7 @@ class ArchitectFileDetailsTest {
     }
 
     @Test
+    @DisplayName("Should get values after using setters")
     void settersAndGetters_shouldWorkCorrectly() {
         // given
         ArchitectFileDetails details = new ArchitectFileDetails();
@@ -83,23 +87,31 @@ class ArchitectFileDetailsTest {
         details.setDifficulty(difficulty);
 
         // then
-        assertThat(details.getTanksInRows()).isEqualTo(rows);
-        assertThat(details.getTanksInColumns()).isEqualTo(columns);
-        assertThat(details.getBoard()).isEqualTo(board);
-        assertThat(details.getHeight()).isEqualTo(height);
-        assertThat(details.getWidth()).isEqualTo(width);
-        assertThat(details.getSource()).isEqualTo(source);
-        assertThat(details.getYear()).isEqualTo(year);
-        assertThat(details.getMonth()).isEqualTo(month);
-        assertThat(details.getDifficulty()).isEqualTo(difficulty);
+        assertThat(details.getTanksInRows()).isEqualTo(List.of(5));
+        assertThat(details.getTanksInColumns()).isEqualTo(List.of(6));
+        assertThat(details.getBoard()).isEqualTo(List.of(List.of("X")));
+        assertThat(details.getHeight()).isEqualTo(1);
+        assertThat(details.getWidth()).isEqualTo(1);
+        assertThat(details.getSource()).isEqualTo("src");
+        assertThat(details.getYear()).isEqualTo("2024");
+        assertThat(details.getMonth()).isEqualTo("06");
+        assertThat(details.getDifficulty()).isEqualTo(3.0);
     }
 
     @Test
+    @DisplayName("toString() should contain all desired values")
     void toString_shouldIncludeAllFields() {
         // given
         ArchitectFileDetails details = new ArchitectFileDetails(
-                List.of(1, 2), List.of(3, 4), List.of(List.of("A")),
-                1, 1, "src", "2023", "05", 1.7
+                List.of(1, 2),
+                List.of(3, 4),
+                List.of(List.of("A")),
+                1,
+                1,
+                "src",
+                "2023",
+                "05",
+                1.7
         );
 
         // when

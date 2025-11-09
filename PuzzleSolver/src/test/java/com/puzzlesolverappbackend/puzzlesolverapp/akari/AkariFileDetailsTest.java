@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.akari;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AkariFileDetailsTest {
 
     @Test
+    @DisplayName("Should set all fields correctly through AllArgsConstructor")
     void allArgsConstructor_shouldSetAllFieldsCorrectly() {
         // given
         List<List<String>> board = List.of(List.of("0", "1"), List.of("1", "0"));
@@ -20,21 +22,30 @@ class AkariFileDetailsTest {
         double difficulty = 3.0;
 
         // when
-        AkariFileDetails details = new AkariFileDetails(board, source, year, month, height, width, difficulty);
+        AkariFileDetails details = new AkariFileDetails(
+                board,
+                source,
+                year,
+                month,
+                height,
+                width,
+                difficulty
+        );
 
         // then
-        assertThat(details.getBoard()).isEqualTo(board);
-        assertThat(details.getSource()).isEqualTo(source);
-        assertThat(details.getYear()).isEqualTo(year);
-        assertThat(details.getMonth()).isEqualTo(month);
-        assertThat(details.getHeight()).isEqualTo(height);
-        assertThat(details.getWidth()).isEqualTo(width);
-        assertThat(details.getDifficulty()).isEqualTo(difficulty);
+        assertThat(details.getBoard()).isEqualTo(List.of(List.of("0", "1"), List.of("1", "0")));
+        assertThat(details.getSource()).isEqualTo("source");
+        assertThat(details.getYear()).isEqualTo("2024");
+        assertThat(details.getMonth()).isEqualTo("07");
+        assertThat(details.getHeight()).isEqualTo(2);
+        assertThat(details.getWidth()).isEqualTo(2);
+        assertThat(details.getDifficulty()).isEqualTo(3.0);
     }
 
     @Test
+    @DisplayName("Should create instance with null or default fields through NoArgsConstructor")
     void noArgsConstructor_shouldCreateInstanceWithNullOrDefaultFields() {
-        // when
+        // given & when
         AkariFileDetails details = new AkariFileDetails();
 
         // then
@@ -49,9 +60,11 @@ class AkariFileDetailsTest {
     }
 
     @Test
+    @DisplayName("Should get values after using setters")
     void settersAndGetters_shouldWorkCorrectly() {
         // given
         AkariFileDetails details = new AkariFileDetails();
+
         List<List<String>> board = List.of(List.of("X"));
         String source = "src";
         String year = "2023";
@@ -70,20 +83,27 @@ class AkariFileDetailsTest {
         details.setDifficulty(difficulty);
 
         // then
-        assertThat(details.getBoard()).isEqualTo(board);
-        assertThat(details.getSource()).isEqualTo(source);
-        assertThat(details.getYear()).isEqualTo(year);
-        assertThat(details.getMonth()).isEqualTo(month);
-        assertThat(details.getHeight()).isEqualTo(height);
-        assertThat(details.getWidth()).isEqualTo(width);
-        assertThat(details.getDifficulty()).isEqualTo(difficulty);
+        assertThat(details.getBoard()).isEqualTo(List.of(List.of("X")));
+        assertThat(details.getSource()).isEqualTo("src");
+        assertThat(details.getYear()).isEqualTo("2023");
+        assertThat(details.getMonth()).isEqualTo("05");
+        assertThat(details.getHeight()).isEqualTo(1);
+        assertThat(details.getWidth()).isEqualTo(1);
+        assertThat(details.getDifficulty()).isEqualTo(1.5);
     }
 
     @Test
+    @DisplayName("toString() should contain all desired values")
     void toString_shouldIncludeAllFields() {
         // given
         AkariFileDetails details = new AkariFileDetails(
-                List.of(List.of("1", "0")), "src", "2023", "05", 2, 2, 4.0
+                List.of(List.of("1", "0")),
+                "src",
+                "2023",
+                "05",
+                2,
+                2,
+                4.0
         );
 
         // when

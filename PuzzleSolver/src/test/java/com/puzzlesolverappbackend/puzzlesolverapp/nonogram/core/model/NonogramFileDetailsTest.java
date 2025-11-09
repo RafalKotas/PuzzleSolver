@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class NonogramFileDetailsTest {
 
     @Test
+    @DisplayName("Should set all fields correctly through AllArgsConstructor")
     void allArgsConstructor_shouldSetAllFieldsCorrectly() {
         // given
         List<List<Integer>> rowSeq = List.of(List.of(1, 2), List.of(3));
@@ -24,23 +26,33 @@ class NonogramFileDetailsTest {
 
         // when
         NonogramFileDetails details = new NonogramFileDetails(
-                rowSeq, colSeq, filename, height, width, source, year, month, difficulty, additionalContent
+                rowSeq,
+                colSeq,
+                filename,
+                height,
+                width,
+                source,
+                year,
+                month,
+                difficulty,
+                additionalContent
         );
 
         // then
-        assertThat(details.getRowSequences()).isEqualTo(rowSeq);
-        assertThat(details.getColumnSequences()).isEqualTo(colSeq);
-        assertThat(details.getFilename()).isEqualTo(filename);
-        assertThat(details.getHeight()).isEqualTo(height);
-        assertThat(details.getWidth()).isEqualTo(width);
-        assertThat(details.getSource()).isEqualTo(source);
-        assertThat(details.getYear()).isEqualTo(year);
-        assertThat(details.getMonth()).isEqualTo(month);
-        assertThat(details.getDifficulty()).isEqualTo(difficulty);
-        assertThat(details.getAdditionalContent()).isEqualTo(additionalContent);
+        assertThat(details.getRowSequences()).isEqualTo(List.of(List.of(1, 2), List.of(3)));
+        assertThat(details.getColumnSequences()).isEqualTo(List.of(List.of(1), List.of(2, 1)));
+        assertThat(details.getFilename()).isEqualTo("nonogram.txt");
+        assertThat(details.getHeight()).isEqualTo(5);
+        assertThat(details.getWidth()).isEqualTo(5);
+        assertThat(details.getSource()).isEqualTo("source");
+        assertThat(details.getYear()).isEqualTo("2025");
+        assertThat(details.getMonth()).isEqualTo("07");
+        assertThat(details.getDifficulty()).isEqualTo(2.0);
+        assertThat(details.getAdditionalContent()).isEqualTo("bonus");
     }
 
     @Test
+    @DisplayName("Should create instance with null or default fields through NoArgsConstructor")
     void noArgsConstructor_shouldCreateInstanceWithNullOrDefaultFields() {
         // when
         NonogramFileDetails details = new NonogramFileDetails();
@@ -60,6 +72,7 @@ class NonogramFileDetailsTest {
     }
 
     @Test
+    @DisplayName("Should get values after using setters")
     void settersAndGetters_shouldWorkCorrectly() {
         // given
         NonogramFileDetails details = new NonogramFileDetails();
@@ -87,24 +100,33 @@ class NonogramFileDetailsTest {
         details.setAdditionalContent(content);
 
         // then
-        assertThat(details.getRowSequences()).isEqualTo(rowSeq);
-        assertThat(details.getColumnSequences()).isEqualTo(colSeq);
-        assertThat(details.getFilename()).isEqualTo(filename);
-        assertThat(details.getHeight()).isEqualTo(height);
-        assertThat(details.getWidth()).isEqualTo(width);
-        assertThat(details.getSource()).isEqualTo(source);
-        assertThat(details.getYear()).isEqualTo(year);
-        assertThat(details.getMonth()).isEqualTo(month);
-        assertThat(details.getDifficulty()).isEqualTo(difficulty);
-        assertThat(details.getAdditionalContent()).isEqualTo(content);
+        assertThat(details.getRowSequences()).isEqualTo(List.of(List.of(1)));
+        assertThat(details.getColumnSequences()).isEqualTo(List.of(List.of(2)));
+        assertThat(details.getFilename()).isEqualTo( "f.txt");
+        assertThat(details.getHeight()).isEqualTo(3);
+        assertThat(details.getWidth()).isEqualTo(3);
+        assertThat(details.getSource()).isEqualTo("src");
+        assertThat(details.getYear()).isEqualTo("2022");
+        assertThat(details.getMonth()).isEqualTo("06");
+        assertThat(details.getDifficulty()).isEqualTo(3.5);
+        assertThat(details.getAdditionalContent()).isEqualTo("extra");
     }
 
     @Test
+    @DisplayName("toString() should contain all desired values")
     void toString_shouldIncludeAllFields() {
         // given
         NonogramFileDetails details = new NonogramFileDetails(
-                List.of(List.of(1, 2)), List.of(List.of(3, 4)), "file.txt",
-                5, 5, "source", "2024", "07", 4.5, "extraData"
+                List.of(List.of(1, 2)),
+                List.of(List.of(3, 4)),
+                "file.txt",
+                5,
+                5,
+                "source",
+                "2024",
+                "07",
+                4.5,
+                "extraData"
         );
 
         // when

@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.slitherlink;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class SlitherlinkFileDetailsTest {
 
     @Test
+    @DisplayName("Should set all fields correctly through AllArgsConstructor")
     void allArgsConstructor_shouldSetAllFieldsCorrectly() {
         // given
         String source = "source";
@@ -35,8 +37,9 @@ class SlitherlinkFileDetailsTest {
     }
 
     @Test
+    @DisplayName("Should create instance with null or default fields through NoArgsConstructor")
     void noArgsConstructor_shouldCreateInstanceWithNullFields() {
-        // when
+        // given & when
         SlitherlinkFileDetails details = new SlitherlinkFileDetails();
 
         // then
@@ -51,6 +54,7 @@ class SlitherlinkFileDetailsTest {
     }
 
     @Test
+    @DisplayName("Should get values after using setters")
     void settersAndGetters_shouldWorkCorrectly() {
         // given
         SlitherlinkFileDetails details = new SlitherlinkFileDetails();
@@ -83,11 +87,17 @@ class SlitherlinkFileDetailsTest {
     }
 
     @Test
+    @DisplayName("toString() should contain all desired values")
     void toString_shouldContainAllFieldValues() {
         // given
         SlitherlinkFileDetails details = new SlitherlinkFileDetails(
-                "source", "2024", "07", 2.0,
-                List.of(List.of(1, 0), List.of(0, 1)), 2, 2
+                "source",
+                "2024",
+                "07",
+                2.0,
+                List.of(List.of(1, 0), List.of(0, 1)),
+                2,
+                2
         );
 
         // when
