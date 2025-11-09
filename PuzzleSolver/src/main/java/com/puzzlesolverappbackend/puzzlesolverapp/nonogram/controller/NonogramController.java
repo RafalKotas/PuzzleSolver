@@ -23,12 +23,10 @@ import java.util.List;
 public class NonogramController {
 
     private final NonogramService nonogramService;
-    private final NonogramRepository nonogramRepository;
 
     public NonogramController(NonogramService nonogramService,
                               NonogramRepository nonogramRepository) {
         this.nonogramService = nonogramService;
-        this.nonogramRepository = nonogramRepository;
     }
 
     private static final String DEFAULT_PAGE = "0";
