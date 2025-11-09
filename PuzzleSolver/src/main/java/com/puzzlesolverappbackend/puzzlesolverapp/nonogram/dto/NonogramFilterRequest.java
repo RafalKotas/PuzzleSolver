@@ -19,4 +19,9 @@ public class NonogramFilterRequest {
     private Integer maxHeight;
     private Integer minWidth;
     private Integer maxWidth;
+
+    protected boolean canEqual(final Object other) {
+        return other instanceof NonogramFilterRequest;
+    }
+
 }
