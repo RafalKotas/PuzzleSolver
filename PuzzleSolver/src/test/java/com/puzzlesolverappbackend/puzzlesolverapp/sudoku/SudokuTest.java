@@ -1,13 +1,16 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.sudoku;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.Publication;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class SudokuTest {
 
     @Test
+    @DisplayName("AllArgsConstructor should set fields correctly")
     void constructor_shouldSetAllFieldsCorrectly() {
         // given
         String filename = "sudoku_01.txt";
@@ -21,24 +24,26 @@ class SudokuTest {
         Sudoku sudoku = new Sudoku(filename, source, year, month, difficulty, filled);
 
         // then
-        assertThat(sudoku.getFilename()).isEqualTo(filename);
-        assertThat(sudoku.getSource()).isEqualTo(source);
-        assertThat(sudoku.getPublication().getYear()).isEqualTo(year);
-        assertThat(sudoku.getPublication().getMonth()).isEqualTo(month);
-        assertThat(sudoku.getDifficulty()).isEqualTo(difficulty);
-        assertThat(sudoku.getFilled()).isEqualTo(filled);
+        assertThat(sudoku.getFilename()).isEqualTo("sudoku_01.txt");
+        assertThat(sudoku.getSource()).isEqualTo("book");
+        assertThat(sudoku.getPublication().getYear()).isEqualTo("2023");
+        assertThat(sudoku.getPublication().getMonth()).isEqualTo("12");
+        assertThat(sudoku.getDifficulty()).isEqualTo(4.5);
+        assertThat(sudoku.getFilled()).isEqualTo(28);
     }
 
     @Test
+    @DisplayName("NoArgsConstructor should create empty instance")
     void noArgsConstructor_shouldCreateNonNullInstance() {
-        // when
+        // given & when
         Sudoku sudoku = new Sudoku();
 
         // then
-        assertThat(sudoku).isNotNull();
+        assertNotNull(sudoku);
     }
 
     @Test
+    @DisplayName("Should get fields after setting values")
     void settersAndGetters_shouldWorkCorrectly() {
         // given
         Sudoku sudoku = new Sudoku();
@@ -58,18 +63,26 @@ class SudokuTest {
         sudoku.setFilled(filled);
 
         // then
-        assertThat(sudoku.getFilename()).isEqualTo(filename);
-        assertThat(sudoku.getSource()).isEqualTo(source);
-        assertThat(sudoku.getPublication().getYear()).isEqualTo(year);
-        assertThat(sudoku.getPublication().getMonth()).isEqualTo(month);
-        assertThat(sudoku.getDifficulty()).isEqualTo(difficulty);
-        assertThat(sudoku.getFilled()).isEqualTo(filled);
+        assertThat(sudoku.getFilename()).isEqualTo("grid.txt");
+        assertThat(sudoku.getSource()).isEqualTo("web");
+        assertThat(sudoku.getPublication().getYear()).isEqualTo("2024");
+        assertThat(sudoku.getPublication().getMonth()).isEqualTo("07");
+        assertThat(sudoku.getDifficulty()).isEqualTo(3.8);
+        assertThat(sudoku.getFilled()).isEqualTo(40);
     }
 
     @Test
+    @DisplayName("toString() should contain all desired values")
     void toString_shouldIncludeAllFields() {
         // given
-        Sudoku sudoku = new Sudoku("grid.txt", "source", "2024", "01", 2.1, 36);
+        Sudoku sudoku = new Sudoku(
+                "grid.txt",
+                "source",
+                "2024",
+                "01",
+                2.1,
+                36
+        );
 
         // when
         String result = sudoku.toString();

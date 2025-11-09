@@ -1,15 +1,16 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.akari;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.Dimensions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class AkariTest {
 
     @Test
+    @DisplayName("AllArgsConstructor should set fields correctly")
     void constructor_shouldSetAllFieldsCorrectly() {
         // given
         String filename = "akari_01.txt";
@@ -22,16 +23,17 @@ class AkariTest {
         Akari akari = new Akari(filename, source, difficulty, height, width);
 
         // then
-        assertEquals("akari_01.txt", akari.getFilename());
-        assertEquals("example_source", akari.getSource());
-        assertEquals(3.5, akari.getDifficulty());
-        assertEquals(8, akari.getDimensions().getHeight());
-        assertEquals(5, akari.getDimensions().getWidth());
+        assertThat(akari.getFilename()).isEqualTo("akari_01.txt");
+        assertThat(akari.getSource()).isEqualTo("example_source");
+        assertThat(akari.getDifficulty()).isEqualTo(3.5);
+        assertThat(akari.getDimensions().getHeight()).isEqualTo(8);
+        assertThat(akari.getDimensions().getWidth()).isEqualTo(5);
     }
 
     @Test
+    @DisplayName("NoArgsConstructor should create empty instance")
     void noArgsConstructor_shouldCreateNonNullInstance() {
-        // when
+        // given & when
         Akari akari = new Akari();
 
         // then
@@ -39,6 +41,7 @@ class AkariTest {
     }
 
     @Test
+    @DisplayName("Should get fields after setting values")
     void settersAndGetters_shouldWorkCorrectly() {
         // given
         Akari akari = new Akari();
@@ -56,17 +59,24 @@ class AkariTest {
         akari.setDimensions(new Dimensions(height, width));
 
         // then
-        assertEquals("test.txt", akari.getFilename());
-        assertEquals("generated", akari.getSource());
-        assertEquals(2.0, akari.getDifficulty());
-        assertEquals(10, akari.getDimensions().getHeight());
-        assertEquals(15, akari.getDimensions().getWidth());
+        assertThat(akari.getFilename()).isEqualTo("test.txt");
+        assertThat(akari.getSource()).isEqualTo("generated");
+        assertThat(akari.getDifficulty()).isEqualTo(2.0);
+        assertThat(akari.getDimensions().getHeight()).isEqualTo(10);
+        assertThat(akari.getDimensions().getWidth()).isEqualTo(15);
     }
 
     @Test
+    @DisplayName("toString() should contain all desired values")
     void toString_includesAllFieldsFromHierarchy() {
         // given
-        Akari akari = new Akari("akari.txt", "source", 1.0, 10, 10);
+        Akari akari = new Akari(
+                "akari.txt",
+                "source",
+                1.0,
+                10,
+                10
+        );
 
         // when
         String result = akari.toString();

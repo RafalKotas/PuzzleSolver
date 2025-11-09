@@ -2,12 +2,16 @@ package com.puzzlesolverappbackend.puzzlesolverapp.slitherlink;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.Dimensions;
 import com.puzzlesolverappbackend.puzzlesolverapp.common.vo.Publication;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class SlitherlinkTest {
+
     @Test
+    @DisplayName("AllArgsConstructor should set fields correctly")
     void constructor_shouldSetAllFieldsCorrectly() {
         // given
         String filename = "slitherlink.txt";
@@ -22,25 +26,27 @@ class SlitherlinkTest {
         Slitherlink slitherlink = new Slitherlink(filename, source, year, month, difficulty, height, width);
 
         // then
-        assertThat(slitherlink.getFilename()).isEqualTo(filename);
-        assertThat(slitherlink.getSource()).isEqualTo(source);
-        assertThat(slitherlink.getPublication().getYear()).isEqualTo(year);
-        assertThat(slitherlink.getPublication().getMonth()).isEqualTo(month);
-        assertThat(slitherlink.getDifficulty()).isEqualTo(difficulty);
-        assertThat(slitherlink.getDimensions().getHeight()).isEqualTo(height);
-        assertThat(slitherlink.getDimensions().getWidth()).isEqualTo(width);
+        assertThat(slitherlink.getFilename()).isEqualTo("slitherlink.txt");
+        assertThat(slitherlink.getSource()).isEqualTo("puzzleBook");
+        assertThat(slitherlink.getPublication().getYear()).isEqualTo("2022");
+        assertThat(slitherlink.getPublication().getMonth()).isEqualTo("05");
+        assertThat(slitherlink.getDifficulty()).isEqualTo(3.7);
+        assertThat(slitherlink.getDimensions().getHeight()).isEqualTo(14);
+        assertThat(slitherlink.getDimensions().getWidth()).isEqualTo(10);
     }
 
     @Test
+    @DisplayName("NoArgsConstructor should create empty instance")
     void noArgsConstructor_shouldCreateNonNullInstance() {
-        // when
+        // given & when
         Slitherlink slitherlink = new Slitherlink();
 
         // then
-        assertThat(slitherlink).isNotNull();
+        assertNotNull(slitherlink);
     }
 
     @Test
+    @DisplayName("Should get fields after setting values")
     void settersAndGetters_shouldWorkCorrectly() {
         // given
         Slitherlink slitherlink = new Slitherlink();
@@ -61,19 +67,27 @@ class SlitherlinkTest {
         slitherlink.setDimensions(new Dimensions(height, width));
 
         // then
-        assertThat(slitherlink.getFilename()).isEqualTo(filename);
-        assertThat(slitherlink.getSource()).isEqualTo(source);
-        assertThat(slitherlink.getPublication().getYear()).isEqualTo(year);
-        assertThat(slitherlink.getPublication().getMonth()).isEqualTo(month);
-        assertThat(slitherlink.getDifficulty()).isEqualTo(difficulty);
-        assertThat(slitherlink.getDimensions().getHeight()).isEqualTo(height);
-        assertThat(slitherlink.getDimensions().getWidth()).isEqualTo(width);
+        assertThat(slitherlink.getFilename()).isEqualTo("daily.txt");
+        assertThat(slitherlink.getSource()).isEqualTo("online");
+        assertThat(slitherlink.getPublication().getYear()).isEqualTo("2025");
+        assertThat(slitherlink.getPublication().getMonth()).isEqualTo("07");
+        assertThat(slitherlink.getDifficulty()).isEqualTo(2.9);
+        assertThat(slitherlink.getDimensions().getHeight()).isEqualTo(16);
+        assertThat(slitherlink.getDimensions().getWidth()).isEqualTo(16);
     }
 
     @Test
+    @DisplayName("toString() should contain all desired values")
     void toString_shouldIncludeAllFields() {
         // given
-        Slitherlink slitherlink = new Slitherlink("slither.txt", "source", "2024", "03", 4.0, 12, 12);
+        Slitherlink slitherlink = new Slitherlink(
+                "slither.txt",
+                "source",
+                "2024",
+                "03",
+                4.0,
+                12,
+                12);
 
         // when
         String result = slitherlink.toString();
