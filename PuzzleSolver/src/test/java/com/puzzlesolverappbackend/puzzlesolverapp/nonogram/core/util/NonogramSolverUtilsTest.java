@@ -19,6 +19,11 @@ class NonogramSolverUtilsTest {
 
     NonogramLogic nonogramLogic;
 
+    @BeforeEach
+    void setUp() {
+        create_solved_o06005_nonogram();
+    }
+
     @Test
     @DisplayName("NonogramSolverUtils constructor should throw UnsupportedOperationException - reflect instantiation")
     void constructor_throwsException_whenInstantiatedReflectively() throws Exception {
@@ -35,10 +40,40 @@ class NonogramSolverUtilsTest {
         assertEquals("This is a utility class and cannot be instantiated", cause.getMessage());
     }
 
-    @BeforeEach
-    void setUp() {
-        create_solved_o06005_nonogram();
+    // isBoardConsistentWithSequences
+
+    @Test
+    @DisplayName("Should mark solutionBoard as consistent with sequences lengths")
+    void shouldRecognizeBoardAsConsistentWithSequences() {
+        // given
+        List<List<String>> board = nonogramLogic.getNonogramSolutionBoard();
+
+        // when
+        boolean consistent = NonogramSolverUtils.isBoardConsistentWithSequences(board,
+                nonogramLogic.getNonogramRules().getRowSequencesLengths(),
+                nonogramLogic.getNonogramRules().getColumnSequencesLengths());
+
+        // then
+        assertThat(consistent).isTrue();
     }
+
+    @Test
+    @DisplayName("Should mark solutionBoard as inconsistent with sequences lengths")
+    void shouldRecognizeBoardAsInconsistentWithSequences() {
+        // given
+        List<List<String>> board = nonogramLogic.getNonogramSolutionBoard();
+        board.get(0).set(0, "O");
+
+        // when
+        boolean consistent = NonogramSolverUtils.isBoardConsistentWithSequences(board,
+                nonogramLogic.getNonogramRules().getRowSequencesLengths(),
+                nonogramLogic.getNonogramRules().getColumnSequencesLengths());
+
+        // then
+        assertThat(consistent).isFalse();
+    }
+
+    //
 
     @Test
     @DisplayName("Should infer rows ranges from nonogram board")
@@ -64,21 +99,6 @@ class NonogramSolverUtilsTest {
 
         // that
         assertThat(inferred).isEqualTo(nonogramLogic.getColumnsSequencesRanges());
-    }
-
-    @Test
-    @DisplayName("Should mark solutionBoard as consistent with sequences lengths")
-    void shouldRecognizeBoardAsConsistentWithSequences() {
-        // given
-        List<List<String>> board = nonogramLogic.getNonogramSolutionBoard();
-
-        // when
-        boolean consistent = NonogramSolverUtils.isBoardConsistentWithSequences(board,
-                nonogramLogic.getNonogramRules().getRowSequencesLengths(),
-                nonogramLogic.getNonogramRules().getColumnSequencesLengths());
-
-        // then
-        assertThat(consistent).isTrue();
     }
 
     @Test
