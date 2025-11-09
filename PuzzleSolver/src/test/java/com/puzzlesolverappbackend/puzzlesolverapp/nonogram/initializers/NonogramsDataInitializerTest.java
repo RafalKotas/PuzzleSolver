@@ -3,6 +3,7 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.initializers;
 import com.puzzlesolverappbackend.puzzlesolverapp.common.CommonService;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Nonogram;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.repository.NonogramRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,6 +38,17 @@ class NonogramsDataInitializerTest {
 
     @TempDir
     Path tempDir;
+
+    @AfterEach
+    void resetStaticLists() throws Exception {
+        Field filesToCorrectField = NonogramsDataInitializer.class.getDeclaredField("filesToCorrect");
+        filesToCorrectField.setAccessible(true);
+        ((List<?>) filesToCorrectField.get(null)).clear();
+
+        Field sourceMonthField = NonogramsDataInitializer.class.getDeclaredField("sourceMonthCombinations");
+        sourceMonthField.setAccessible(true);
+        ((List<?>) sourceMonthField.get(null)).clear();
+    }
 
     @Test
     @DisplayName("Should not save existing nonogram")
@@ -99,6 +111,10 @@ class NonogramsDataInitializerTest {
             """;
         Files.writeString(tempDir.resolve(filename), content);
 
+        Field puzzlePathField = NonogramsDataInitializer.class.getDeclaredField("puzzlePath");
+        puzzlePathField.setAccessible(true);
+        puzzlePathField.set(initializer, tempDir.toString() + "/");
+
         when(commonService.listFilesUsingJavaIO(anyString()))
                 .thenReturn(Set.of(filename));
         when(repository.existsNonogramByGivenParamsFromFile(
@@ -136,6 +152,10 @@ class NonogramsDataInitializerTest {
         Path filePath = tempDir.resolve(filename);
         Files.writeString(filePath, malformedJson);
 
+        Field puzzlePathField = NonogramsDataInitializer.class.getDeclaredField("puzzlePath");
+        puzzlePathField.setAccessible(true);
+        puzzlePathField.set(initializer, tempDir.toString() + "/");
+
         when(commonService.listFilesUsingJavaIO(anyString()))
                 .thenReturn(Set.of(filename));
 
@@ -154,6 +174,10 @@ class NonogramsDataInitializerTest {
         String filename = "wrong-lines.json";
         String oneLine = "{\"rowSequences\": [[1]], \"columnSequences\": [[2]], \"filename\":\"abc\",\"source\":\"s\",\"year\":\"2024\",\"month\":\"07\",\"difficulty\":2.0,\"height\":5,\"width\":5}";
         Files.writeString(tempDir.resolve(filename), oneLine);
+
+        Field puzzlePathField = NonogramsDataInitializer.class.getDeclaredField("puzzlePath");
+        puzzlePathField.setAccessible(true);
+        puzzlePathField.set(initializer, tempDir.toString() + "/");
 
         when(commonService.listFilesUsingJavaIO(anyString()))
                 .thenReturn(Set.of(filename));
@@ -189,6 +213,10 @@ class NonogramsDataInitializerTest {
                 "", "", "", "" // 4 blank lines -> total 15
         ));
         Files.writeString(tempDir.resolve(filename), content);
+
+        Field puzzlePathField = NonogramsDataInitializer.class.getDeclaredField("puzzlePath");
+        puzzlePathField.setAccessible(true);
+        puzzlePathField.set(initializer, tempDir.toString() + "/");
 
         when(commonService.listFilesUsingJavaIO(anyString()))
                 .thenReturn(Set.of(filename));
@@ -226,6 +254,10 @@ class NonogramsDataInitializerTest {
         while (lines.size() < 17) lines.add("");
 
         Files.write(path, lines);
+
+        Field puzzlePathField = NonogramsDataInitializer.class.getDeclaredField("puzzlePath");
+        puzzlePathField.setAccessible(true);
+        puzzlePathField.set(initializer, tempDir.toString() + "/");
 
         when(commonService.listFilesUsingJavaIO(anyString()))
                 .thenReturn(Set.of(filename));
@@ -277,6 +309,10 @@ class NonogramsDataInitializerTest {
         Files.writeString(tempDir.resolve(f1), json1);
         Files.writeString(tempDir.resolve(f2), json2);
 
+        Field puzzlePathField = NonogramsDataInitializer.class.getDeclaredField("puzzlePath");
+        puzzlePathField.setAccessible(true);
+        puzzlePathField.set(initializer, tempDir.toString() + "/");
+
         when(commonService.listFilesUsingJavaIO(anyString()))
                 .thenReturn(Set.of(f1, f2));
         when(repository.existsNonogramByGivenParamsFromFile(anyString(), anyString(), anyString(), anyString(), anyDouble(), anyInt(), anyInt()))
@@ -310,6 +346,10 @@ class NonogramsDataInitializerTest {
                 "", "", "", ""              // and 4 empty (needed count)
         );
         Files.writeString(tempDir.resolve(filename), String.join("\n", lines));
+
+        Field puzzlePathField = NonogramsDataInitializer.class.getDeclaredField("puzzlePath");
+        puzzlePathField.setAccessible(true);
+        puzzlePathField.set(initializer, tempDir.toString() + "/");
 
         when(commonService.listFilesUsingJavaIO(anyString()))
                 .thenReturn(Set.of(filename));

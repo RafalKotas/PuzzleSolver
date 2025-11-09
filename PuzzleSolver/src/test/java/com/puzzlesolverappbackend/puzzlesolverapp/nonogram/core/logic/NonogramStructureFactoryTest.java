@@ -28,6 +28,7 @@ class NonogramStructureFactoryTest {
     }
 
     @Test
+    @DisplayName("Should generate 3 empty rows")
     void shouldGenerateCorrectNumberOfEmptyRows() {
         // given
         int height = 3;
@@ -41,6 +42,7 @@ class NonogramStructureFactoryTest {
     }
 
     @Test
+    @DisplayName("Should generate 4 empty columns")
     void shouldGenerateCorrectNumberOfEmptyColumns() {
         // given
         int width = 4;

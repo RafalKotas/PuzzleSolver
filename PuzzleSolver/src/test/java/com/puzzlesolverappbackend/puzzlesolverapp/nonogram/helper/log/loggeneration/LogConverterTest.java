@@ -21,8 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mockStatic;
 
 class LogConverterTest {
@@ -44,12 +43,14 @@ class LogConverterTest {
         // then
         Throwable cause = exception.getCause();
         assertInstanceOf(UnsupportedOperationException.class, cause);
+        assertEquals("This is a utility class and cannot be instantiated", cause.getMessage());
     }
 
     @Nested
     class ConvertRouting {
 
-        @Test @DisplayName("routes SEQUENCES_RANGES_CORRECTION")
+        @Test
+        @DisplayName("routes SEQUENCES_RANGES_CORRECTION")
         void routes_rangesCorrection() {
             try (MockedStatic<SequencesRangesCorrectionLogHelper> ms = mockStatic(SequencesRangesCorrectionLogHelper.class)) {
                 ms.when(() -> SequencesRangesCorrectionLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
@@ -59,7 +60,8 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("routes SEQUENCES_RANGES_CORRECTION_WHEN_MET_COLOURED_FIELDS")
+        @Test
+        @DisplayName("routes SEQUENCES_RANGES_CORRECTION_WHEN_MET_COLOURED_FIELDS")
         void routes_whenMetColoured() {
             try (MockedStatic<SequenceRangeCorrectionWhenMetColouredFieldsLogHelper> ms = mockStatic(SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.class)) {
                 ms.when(() -> SequenceRangeCorrectionWhenMetColouredFieldsLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
@@ -68,7 +70,8 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("routes SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY")
+        @Test
+        @DisplayName("routes SEQUENCES_RANGES_CORRECTION_IF_X_ON_WAY")
         void routes_ifXOnWay() {
             try (MockedStatic<SequenceRangeCorrectionWhenMetXLogHelper> ms = mockStatic(SequenceRangeCorrectionWhenMetXLogHelper.class)) {
                 ms.when(() -> SequenceRangeCorrectionWhenMetXLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
@@ -77,7 +80,8 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("routes SEQUENCES_RANGES_CORRECTION_BY_MATCHING_FIELDS_TO_SEQUENCES")
+        @Test
+        @DisplayName("routes SEQUENCES_RANGES_CORRECTION_BY_MATCHING_FIELDS_TO_SEQUENCES")
         void routes_matchingFields() {
             try (MockedStatic<SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper> ms = mockStatic(SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper.class)) {
                 ms.when(() -> SequenceRangeCorrectionWhenMatchingFieldsToSequencesLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
@@ -86,7 +90,8 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("routes SEQUENCES_RANGES_CORRECTION_FROM_COLOURED_EDGES")
+        @Test
+        @DisplayName("routes SEQUENCES_RANGES_CORRECTION_FROM_COLOURED_EDGES")
         void routes_fromEdges() {
             try (MockedStatic<SequenceRangeCorrectionFromColouredEdgesLogHelper> ms = mockStatic(SequenceRangeCorrectionFromColouredEdgesLogHelper.class)) {
                 ms.when(() -> SequenceRangeCorrectionFromColouredEdgesLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
@@ -95,7 +100,8 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("routes SEQUENCES_RANGES_CORRECTION_WHEN_MARKING_FIELDS")
+        @Test
+        @DisplayName("routes SEQUENCES_RANGES_CORRECTION_WHEN_MARKING_FIELDS")
         void routes_whenMarking() {
             try (MockedStatic<SequenceRangeCorrectionWhenMarkingFieldsLogHelper> ms = mockStatic(SequenceRangeCorrectionWhenMarkingFieldsLogHelper.class)) {
                 ms.when(() -> SequenceRangeCorrectionWhenMarkingFieldsLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
@@ -104,7 +110,8 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("routes SEQUENCES_RANGES_CORRECTION_WHEN_PLACING_X")
+        @Test
+        @DisplayName("routes SEQUENCES_RANGES_CORRECTION_WHEN_PLACING_X")
         void routes_whenPlacingX() {
             try (MockedStatic<SequenceRangeCorrectionWhenPlacingXsLogHelper> ms = mockStatic(SequenceRangeCorrectionWhenPlacingXsLogHelper.class)) {
                 ms.when(() -> SequenceRangeCorrectionWhenPlacingXsLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
@@ -113,7 +120,8 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("routes COLOUR_OVERLAPPING_FIELDS")
+        @Test
+        @DisplayName("routes COLOUR_OVERLAPPING_FIELDS")
         void routes_overlap() {
             try (MockedStatic<OverlappingLogHelper> ms = mockStatic(OverlappingLogHelper.class)) {
                 ms.when(() -> OverlappingLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
@@ -122,7 +130,8 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("routes TOO_LONG_MERGE")
+        @Test
+        @DisplayName("routes TOO_LONG_MERGE")
         void routes_tooLongMerge() {
             try (MockedStatic<ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper> ms = mockStatic(ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.class)) {
                 ms.when(() -> ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
@@ -131,7 +140,8 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("routes EXTEND")
+        @Test
+        @DisplayName("routes EXTEND")
         void routes_extend() {
             try (MockedStatic<ExtendLogHelper> ms = mockStatic(ExtendLogHelper.class)) {
                 ms.when(() -> ExtendLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
@@ -140,7 +150,8 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("routes COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT")
+        @Test
+        @DisplayName("routes COLOUR_IF_X_CAUSES_ASSIGNMENT_CONFLICT")
         void routes_assignmentConflict() {
             try (MockedStatic<PlaceXIfOWillCauseAssignmentConflictLogHelper> ms = mockStatic(PlaceXIfOWillCauseAssignmentConflictLogHelper.class)) {
                 ms.when(() -> PlaceXIfOWillCauseAssignmentConflictLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
@@ -149,7 +160,8 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("routes PLACE_XS_AT_UNREACHABLE_FIELDS")
+        @Test
+        @DisplayName("routes PLACE_XS_AT_UNREACHABLE_FIELDS")
         void routes_placeXsAtUnreachable() {
             try (MockedStatic<PlaceXsAtUnreachableFieldsLogHelper> ms = mockStatic(PlaceXsAtUnreachableFieldsLogHelper.class)) {
                 ms.when(() -> PlaceXsAtUnreachableFieldsLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
@@ -158,7 +170,8 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("routes PLACE_XS_AROUND_LONGEST_SEQUENCES")
+        @Test
+        @DisplayName("routes PLACE_XS_AROUND_LONGEST_SEQUENCES")
         void routes_placeXsAroundLongest() {
             try (MockedStatic<PlaceXsAroundLongestSequencesLogHelper> ms = mockStatic(PlaceXsAroundLongestSequencesLogHelper.class)) {
                 ms.when(() -> PlaceXsAroundLongestSequencesLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
@@ -167,7 +180,8 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("routes PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES")
+        @Test
+        @DisplayName("routes PLACE_XS_AT_TOO_SHORT_EMPTY_SEQUENCES")
         void routes_placeXsAtTooShort() {
             try (MockedStatic<PlaceXsAtTooShortEmptySequencesLogHelper> ms = mockStatic(PlaceXsAtTooShortEmptySequencesLogHelper.class)) {
                 ms.when(() -> PlaceXsAtTooShortEmptySequencesLogHelper.convertLogToTestArguments(LOG, SOL)).thenReturn(OK);
@@ -176,7 +190,8 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("routes PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE")
+        @Test
+        @DisplayName("routes PLACE_XS_IF_O_NEAR_X_WILL_BEGIN_TOO_LONG_POSSIBLE_COLOURED_SEQUENCE")
         void routes_placeXIfONearXBeginTooLong() {
             try (MockedStatic<PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper> ms =
                          mockStatic(PlaceXsIfONearXWillBeginTooLongPossibleSequenceLogHelper.class)) {
@@ -186,7 +201,8 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("routes PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE")
+        @Test
+        @DisplayName("routes PLACE_XS_IF_O_WILL_MERGE_NEAR_FIELDS_TO_TOO_LONG_COLOURED_SEQUENCE")
         void routes_placeXIfOWillMergeTooLong() {
             try (MockedStatic<PlaceXsIfOWillMergeNearFieldsToTooLongColouredSequenceLogHelper> ms =
                          mockStatic(PlaceXsIfOWillMergeNearFieldsToTooLongColouredSequenceLogHelper.class)) {
@@ -196,7 +212,8 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("routes mixed: colouring/placeX/correctingRange parts")
+        @Test
+        @DisplayName("routes mixed: colouring/placeX/correctingRange parts")
         void routes_mixed_threeParts() {
             try (MockedStatic<PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper> m1 =
                          mockStatic(PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper.class);
@@ -214,7 +231,8 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("routes other: Mark/Trivial/Excluded")
+        @Test
+        @DisplayName("routes other: Mark/Trivial/Excluded")
         void routes_other() {
             try (MockedStatic<MarkAvailableFieldsLogHelper> m1 = mockStatic(MarkAvailableFieldsLogHelper.class);
                  MockedStatic<TrivialFillLogHelper> m2 = mockStatic(TrivialFillLogHelper.class);
@@ -230,7 +248,8 @@ class LogConverterTest {
             }
         }
 
-        @Test @DisplayName("returns empty for unknown action")
+        @Test
+        @DisplayName("returns empty for unknown action")
         void returns_empty_forUnknown() {
             Optional<String> out = LogConverter.convertLogByAction(LOG, SOL, "SOMETHING_ELSE");
             assertThat(out).isEmpty();
@@ -240,7 +259,8 @@ class LogConverterTest {
     @Nested
     class Detection {
 
-        @Test @DisplayName("detects all correction flavours")
+        @Test
+        @DisplayName("detects all correction flavours")
         void detects_corrections() {
             assertThat(LogConverter.detectActionTypeFromRawLog("SEQUENCES_RANGES_CORRECTION_IN ..."))
                     .isEqualTo("SEQUENCES_RANGES_CORRECTION");
@@ -258,7 +278,8 @@ class LogConverterTest {
                     .isEqualTo("SEQUENCES_RANGES_CORRECTION_WHEN_PLACING_X");
         }
 
-        @Test @DisplayName("detects colouring, x placement, mixed and other")
+        @Test
+        @DisplayName("detects colouring, x placement, mixed and other")
         void detects_otherFamilies() {
             assertThat(LogConverter.detectActionTypeFromRawLog("COLOUR_OVERLAPPING_FIELDS_IN_ROW ...")).isEqualTo("COLOUR_OVERLAPPING_FIELDS");
             assertThat(LogConverter.detectActionTypeFromRawLog("COLOURING_FIELDS_IF_X_WOULD_FORCE_TOO_LONG_COLOURED_FIELDS_SEQUENCE ...")).isEqualTo("TOO_LONG_MERGE");
@@ -287,7 +308,8 @@ class LogConverterTest {
             assertThat(LogConverter.detectActionTypeFromRawLog("EXCLUSION_SEQUENCE_IN_ROW ...")).isEqualTo("EXCLUDED");
         }
 
-        @Test @DisplayName("returns UNKNOWN for unrecognized log line")
+        @Test
+        @DisplayName("returns UNKNOWN for unrecognized log line")
         void detects_unknown() {
             assertThat(LogConverter.detectActionTypeFromRawLog("SOMETHING COMPLETELY DIFFERENT")).isEqualTo("UNKNOWN");
         }

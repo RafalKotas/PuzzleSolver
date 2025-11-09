@@ -24,11 +24,12 @@ class NonogramLogicUtilsTest {
         // then
         Throwable cause = exception.getCause();
         assertInstanceOf(UnsupportedOperationException.class, cause);
+        assertEquals("This is a utility class and cannot be instantiated", cause.getMessage());
     }
 
     // FF: inside=false, lengthOk=false -> expected false (TODO: provide real case scenario from existing nonogram)
-    @DisplayName("colouredSequenceInRowIsValid → false when not inside any range AND too long (FF)")
     @Test
+    @DisplayName("colouredSequenceInRowIsValid → false when not inside any range AND too long (FF)")
     void row_shouldReturnFalse_whenNotInsideAndTooLong() {
         // given
         List<Integer> coloured = List.of(2, 8);                 // length = 7
@@ -45,8 +46,8 @@ class NonogramLogicUtilsTest {
     }
 
     // FT: inside=true, lengthOk=false -> expected false (TODO: provide real case scenario from existing nonogram)
-    @DisplayName("colouredSequenceInRowIsValid → false when inside a range BUT too long for that sequence (FT)")
     @Test
+    @DisplayName("colouredSequenceInRowIsValid → false when inside a range BUT too long for that sequence (FT)")
     void row_shouldReturnFalse_whenInsideButTooLong() {
         // given
         List<Integer> coloured = List.of(0, 3);                 // length = 4
@@ -63,8 +64,8 @@ class NonogramLogicUtilsTest {
     }
 
     // TF: inside=true, lengthOk=false -> expected false (TODO: provide real case scenario from existing nonogram)
-    @DisplayName("colouredSequenceInRowIsValid → false for case labeled (TF)")
     @Test
+    @DisplayName("colouredSequenceInRowIsValid → false for case labeled (TF)")
     void row_shouldReturnFalse_caseLabeledTF_butEvaluatesLikeFT() {
         // given
         List<Integer> coloured = List.of(1, 6);                 // length = 6
@@ -81,8 +82,8 @@ class NonogramLogicUtilsTest {
     }
 
     // TT: inside=true, lengthOk=true -> expected true
-    @DisplayName("colouredSequenceInRowIsValid → true when inside a range AND <= sequence length (TT)")
     @Test
+    @DisplayName("colouredSequenceInRowIsValid → true when inside a range AND <= sequence length (TT)")
     void row_shouldReturnTrue_whenInsideAndShortEnough() {
         // given
         List<Integer> coloured = List.of(4, 5);                 // length = 2
@@ -99,8 +100,8 @@ class NonogramLogicUtilsTest {
     }
 
     // FF (TODO: provide real case scenario from existing nonogram)
-    @DisplayName("colouredSequenceInColumnIsValid → false when not inside any range AND too long (FF)")
     @Test
+    @DisplayName("colouredSequenceInColumnIsValid → false when not inside any range AND too long (FF)")
     void shouldReturnFalse_whenNotInsideAndTooLong() {
         // given
         List<Integer> coloured = List.of(0, 6);                // length = 7
@@ -115,8 +116,8 @@ class NonogramLogicUtilsTest {
     }
 
     // FT (TODO: provide real case scenario from existing nonogram)
-    @DisplayName("colouredSequenceInColumnIsValid → false when inside a range BUT too long for that sequence (FT)")
     @Test
+    @DisplayName("colouredSequenceInColumnIsValid → false when inside a range BUT too long for that sequence (FT)")
     void shouldReturnFalse_whenInsideButTooLong() {
         // given
         List<Integer> coloured = List.of(0, 3);                // length = 4
@@ -131,8 +132,8 @@ class NonogramLogicUtilsTest {
     }
 
     // TF (TODO: provide real case scenario from existing nonogram)
-    @DisplayName("colouredSequenceInColumnIsValid → true when inside a range and short enough (TF)")
     @Test
+    @DisplayName("colouredSequenceInColumnIsValid → true when inside a range and short enough (TF)")
     void shouldReturnTrue_whenInsideAndShortEnough_case3() {
         // given
         List<Integer> coloured = List.of(7, 8);                // length = 2
@@ -147,8 +148,8 @@ class NonogramLogicUtilsTest {
     }
 
     // TT
-    @DisplayName("colouredSequenceInColumnIsValid → true when inside a range AND <= sequence length (TT)")
     @Test
+    @DisplayName("colouredSequenceInColumnIsValid → true when inside a range AND <= sequence length (TT)")
     void shouldReturnTrue_whenInsideAndShortEnough_case4() {
         // given
         List<Integer> coloured = List.of(0, 2);                // length = 3

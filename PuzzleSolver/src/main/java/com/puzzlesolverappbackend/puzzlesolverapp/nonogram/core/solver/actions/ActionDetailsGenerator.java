@@ -14,13 +14,13 @@ public class ActionDetailsGenerator {
         List<NonogramActionDetails> result = new ArrayList<>();
         int index = 0;
 
-        List<NonogramActionDetails> rowActions = generateRowActionDetails(height);
+        List<NonogramActionDetails> rowActions = generateRowActionDetailsList(height);
         for (NonogramActionDetails action : rowActions) {
             action.setIndex(index++);
             result.add(action);
         }
 
-        List<NonogramActionDetails> columnActions = generateColumnActionDetails(width);
+        List<NonogramActionDetails> columnActions = generateColumnActionDetailsList(width);
         for (NonogramActionDetails action : columnActions) {
             action.setIndex(index++);
             result.add(action);
@@ -29,7 +29,7 @@ public class ActionDetailsGenerator {
         return result;
     }
 
-    static List<NonogramActionDetails> generateRowActionDetails(int height) {
+    static List<NonogramActionDetails> generateRowActionDetailsList(int height) {
         List<NonogramActionDetails> result = new ArrayList<>();
         for (int rowIdx = 0; rowIdx < height; rowIdx++) {
             for (NonogramSolveAction action : List.of(
@@ -59,7 +59,7 @@ public class ActionDetailsGenerator {
         return result;
     }
 
-    static List<NonogramActionDetails> generateColumnActionDetails(int width) {
+    static List<NonogramActionDetails> generateColumnActionDetailsList(int width) {
         List<NonogramActionDetails> result = new ArrayList<>();
         for (int colIdx = 0; colIdx < width; colIdx++) {
             for (NonogramSolveAction action : List.of(

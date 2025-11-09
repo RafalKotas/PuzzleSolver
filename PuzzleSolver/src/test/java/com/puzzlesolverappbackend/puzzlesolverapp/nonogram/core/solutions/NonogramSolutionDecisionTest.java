@@ -11,7 +11,7 @@ class NonogramSolutionDecisionTest {
     @Test
     @DisplayName("No-args constructor should create an instance with null fields")
     void noArgsCtor_createsInstanceWithNulls() {
-        // given / when
+        // given & when
         NonogramSolutionDecision d = new NonogramSolutionDecision();
 
         // then
@@ -35,6 +35,20 @@ class NonogramSolutionDecisionTest {
         assertSame(f, d.getDecisionField());
     }
 
+    @Test
+    @DisplayName("equals: instanceof true but canEqual == false (subclass) → false")
+    void equals_shouldReturnFalse_whenSubclassCanEqualFalse() {
+        // given
+        Field f = new Field(1, 2);
+        NonogramSolutionDecision base = new NonogramSolutionDecision("X", f);
+        NonogramSolutionDecision child = new NonogramSolutionDecisionChild("X", f);
+
+        // when & then
+        // child instanceof NonogramSolutionDecision == true, but child.canEqual(base) == false
+        assertNotEquals(base, child);
+        assertEquals(child, base); // symmetric check (can be true or false depending on canEqual)
+    }
+
     static class NonogramSolutionDecisionChild extends NonogramSolutionDecision {
         public NonogramSolutionDecisionChild(String marker, Field field) {
             super(marker, field);
@@ -47,20 +61,6 @@ class NonogramSolutionDecisionTest {
     }
 
     @Test
-    @DisplayName("equals: instanceof true but canEqual == false (subclass) → false")
-    void equals_shouldReturnFalse_whenSubclassCanEqualFalse() {
-        // given
-        Field f = new Field(1, 2);
-        NonogramSolutionDecision base = new NonogramSolutionDecision("X", f);
-        NonogramSolutionDecision child = new NonogramSolutionDecisionChild("X", f);
-
-        // when / then
-        // child instanceof NonogramSolutionDecision == true, but child.canEqual(base) == false
-        assertNotEquals(base, child);
-        assertEquals(child, base); // symmetric check (can be true or false depending on canEqual)
-    }
-
-    @Test
     @DisplayName("equals: this.marker == null vs other.marker != null → false (null branch)")
     void equals_shouldHandleNullMarkerBranch() {
         // given: marker null in 'this', non-null in 'other' (fields equal)
@@ -68,7 +68,7 @@ class NonogramSolutionDecisionTest {
         NonogramSolutionDecision a = new NonogramSolutionDecision(null, f);
         NonogramSolutionDecision b = new NonogramSolutionDecision("X", f);
 
-        // when / then
+        // when & then
         assertNotEquals(a, b);
         // also exercise hashCode's null-constant (43) branch
         // (no strict value assert needed; just call to execute the branch)
@@ -82,7 +82,7 @@ class NonogramSolutionDecisionTest {
         NonogramSolutionDecision a = new NonogramSolutionDecision("O", null);
         NonogramSolutionDecision b = new NonogramSolutionDecision("O", new Field(5, 6));
 
-        // when / then
+        // when & then
         assertNotEquals(a, b);
         // exercise hashCode's null-constant (43) branch for field
         a.hashCode();
@@ -95,7 +95,7 @@ class NonogramSolutionDecisionTest {
         NonogramSolutionDecision a = new NonogramSolutionDecision(null, null);
         NonogramSolutionDecision b = new NonogramSolutionDecision(null, null);
 
-        // when / then
+        // when & then
         assertEquals(a, b);         // equality with both nulls
         assertEquals(a, a);         // reflexive
         assertEquals(a.hashCode(), b.hashCode()); // hash consistency when both components are null
@@ -110,7 +110,7 @@ class NonogramSolutionDecisionTest {
         NonogramSolutionDecision d2 = new NonogramSolutionDecision("O", f);
         NonogramSolutionDecision d3 = new NonogramSolutionDecision("X", f);
 
-        // when / then
+        // when & then
         assertEquals(d1, d2);
         assertEquals(d1.hashCode(), d2.hashCode());
 
@@ -123,10 +123,10 @@ class NonogramSolutionDecisionTest {
     @Test
     @DisplayName("equals should return false when compared to object of different class")
     void equals_shouldReturnFalseForDifferentClass() {
-        // given
+        // given & when
         NonogramSolutionDecision decision = new NonogramSolutionDecision("X", new Field(1, 1));
 
-        // when / then
+        // then
         assertNotEquals("some string", decision);
         assertNotEquals(decision, new Object());
     }

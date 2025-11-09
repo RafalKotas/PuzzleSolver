@@ -10,13 +10,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class BasePuzzleEntityTest {
 
     @Test
-    @DisplayName("should not be instantiable via reflection because class is abstract")
+    @DisplayName("Should not be instantiable via reflection because class is abstract")
     void shouldNotBeInstantiableViaReflection() throws Exception {
         // given
         Constructor<BasePuzzleEntity> constructor = BasePuzzleEntity.class.getDeclaredConstructor();
         constructor.setAccessible(true);
 
-        // expect
+        // when then
         assertThatThrownBy(constructor::newInstance)
                 .isInstanceOf(InstantiationException.class);
     }

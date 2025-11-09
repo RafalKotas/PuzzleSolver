@@ -23,9 +23,11 @@ class LogicFunctionsTest {
         // then
         Throwable cause = exception.getCause();
         assertInstanceOf(UnsupportedOperationException.class, cause);
+        assertEquals("This is a utility class and cannot be instantiated", cause.getMessage());
     }
 
     @Test
+    @DisplayName("xor - should return true if only 1st value from 2 is true")
     void xor_returnsTrue_whenOnlyFirstArgumentIsTrue() {
         // given
         boolean a = true;
@@ -39,6 +41,7 @@ class LogicFunctionsTest {
     }
 
     @Test
+    @DisplayName("xor - should return true if only 2nd value from 2 is true")
     void xor_returnsTrue_whenOnlySecondArgumentIsTrue() {
         // given
         boolean a = false;
@@ -52,6 +55,7 @@ class LogicFunctionsTest {
     }
 
     @Test
+    @DisplayName("xor - should return false if both values are true")
     void xor_returnsFalse_whenBothArgumentsAreTrue() {
         // given
         boolean a = true;
@@ -65,6 +69,7 @@ class LogicFunctionsTest {
     }
 
     @Test
+    @DisplayName("xor - should return false if both values are false")
     void xor_returnsFalse_whenBothArgumentsAreFalse() {
         // given
         boolean a = false;

@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +20,7 @@ class LiquibaseSmokeTest {
     JdbcTemplate jdbc;
 
     @Test
+    @DisplayName("Should create tables after liquibase migrations")
     void liquibaseCreatedTables() {
         Integer cnt = jdbc.queryForObject(
                 "SELECT COUNT(*) FROM information_schema.tables " +

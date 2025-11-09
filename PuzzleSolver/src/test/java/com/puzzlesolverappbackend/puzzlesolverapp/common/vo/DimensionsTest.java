@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.common.vo;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -7,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class DimensionsTest {
 
     @Test
+    @DisplayName("NoArgsConstructor should create non null instance ")
     void noArgsConstructor_shouldCreateNonNullInstance() {
         // when
         Dimensions dimensions = new Dimensions();

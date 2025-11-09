@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class NonogramLogicTest {
 
     @Test
+    @DisplayName("Should set and get all fields after NoArgsConstructor call")
     void shouldSetAndGetAllFields() {
         // given
         NonogramLogic logic = new NonogramLogic();
@@ -63,6 +64,7 @@ class NonogramLogicTest {
     }
 
     @Test
+    @DisplayName("Should set and get NonogramPrinter after constructor call")
     void shouldSetAndGetNonogramPrinter() {
         // given
         List<List<Integer>> rowSequences = List.of(List.of(1, 1, 1));
@@ -79,6 +81,7 @@ class NonogramLogicTest {
     }
 
     @Test
+    @DisplayName("Should copy NonogramLogic to independent object")
     void testDeepCopyCreatesIndependentClone() {
         // given
         List<List<Integer>> rowSequences = List.of(List.of(1, 1, 1));
@@ -111,6 +114,7 @@ class NonogramLogicTest {
     }
 
     @Test
+    @DisplayName("Should initialize helpers")
     void initializeHelpers_setsAllRequiredHelpers() {
         // given
         List<List<Integer>> rowSequences = List.of(List.of(1));
@@ -140,6 +144,7 @@ class NonogramLogicTest {
     }
 
     @Test
+    @DisplayName("Should initialize helpers")
     void fillTrivialRowsAndColumns() {
         // given
         NonogramRules rules = new NonogramRules();
@@ -164,6 +169,7 @@ class NonogramLogicTest {
     }
 
     @Test
+    @DisplayName("Should fill trivial rows and columns")
     void fillEmptyRowsAndColumns() {
         // given
         NonogramRules rules = new NonogramRules();
@@ -214,6 +220,7 @@ class NonogramLogicTest {
     }
 
     @Test
+    @DisplayName("Should not colour field with invalid indexes")
     void shouldNotColourFieldIfIndexesNotValid() {
         // given
         NonogramRules rules = new NonogramRules();
@@ -237,6 +244,7 @@ class NonogramLogicTest {
     }
 
     @Test
+    @DisplayName("Should not add row field to excluded if field is already in list")
     void shouldNotAddRowFieldToExcludedIfFieldIsInList() {
         // given
         NonogramRules rules = new NonogramRules();
@@ -263,6 +271,7 @@ class NonogramLogicTest {
 
     // TODO - add some real case
     @Test
+    @DisplayName("Should update available choices (empty fields)")
     void updateCurrentAvailableChoices_populatesChoicesFoNotExcludedFieldsOnly() {
         // given
         NonogramRules rules = new NonogramRules();
@@ -295,6 +304,7 @@ class NonogramLogicTest {
     }
 
     @Test
+    @DisplayName("Should add expected actions to actionsToDoList after colouring field")
     void addAffectedRowAndColumnAfterColouringField_addsExpectedActionsToList() {
         // given
         NonogramRules rules = new NonogramRules(
@@ -351,6 +361,7 @@ class NonogramLogicTest {
     }
 
     @Test
+    @DisplayName("Should add expected actions to actionsToDoList after placing X at field")
     void addAffectedRowAndColumnAfterPlacingXAtField_addsExpectedActionsToList() {
         // given
         NonogramRules rules = new NonogramRules(

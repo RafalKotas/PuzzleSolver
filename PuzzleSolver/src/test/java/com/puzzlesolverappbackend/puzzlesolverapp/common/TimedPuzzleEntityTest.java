@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Constructor;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TimedPuzzleEntityTest {
 
@@ -17,9 +17,8 @@ class TimedPuzzleEntityTest {
         Constructor<TimedPuzzleEntity> constructor = TimedPuzzleEntity.class.getDeclaredConstructor();
         constructor.setAccessible(true);
 
-        // expect
-        assertThatThrownBy(constructor::newInstance)
-                .isInstanceOf(InstantiationException.class);
+        // when & then
+        InstantiationException exception = assertThrows(InstantiationException.class, constructor::newInstance);
     }
 
     static class TestTimedEntity extends TimedPuzzleEntity {

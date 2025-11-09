@@ -10,7 +10,7 @@ class NonogramStateTest {
     @Test
     @DisplayName("buildInitialEmptyNonogramState should create state with 0 steps and valid solution")
     void shouldBuildInitialEmptyState() {
-        // when
+        // given & when
         NonogramState state = NonogramState.buildInitialEmptyNonogramState();
 
         // then
@@ -53,7 +53,7 @@ class NonogramStateTest {
     @Test
     @DisplayName("Builder should set fields and getters should return them")
     void builderAndGettersShouldWork() {
-        // when
+        // given & when
         NonogramState state = NonogramState.builder()
                 .newStepsMade(12)
                 .invalidSolution(true)

@@ -9,6 +9,7 @@ import java.util.List;
 @UtilityClass
 public class CollectionUtils {
 
+    // TODO - unit test
     public static <T> List<T> reverseList(List<T> list) {
         List<T> reversed = new ArrayList<>(list);
         Collections.reverse(reversed);

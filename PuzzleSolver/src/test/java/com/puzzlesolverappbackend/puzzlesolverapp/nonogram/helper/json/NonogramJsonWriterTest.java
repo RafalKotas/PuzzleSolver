@@ -41,14 +41,15 @@ class NonogramJsonWriterTest {
     }
 
     @Test
+    @DisplayName("saveSolutionBoard should write file matching json structure")
     void saveSolutionBoard_writesFile_andJsonMatchesStructure() throws Exception {
         // given
-        List<List<String>> board = testBoard();
+        List<List<String>> expectedBoard = testBoard();
         Path target = tempDir.resolve("ro07931.json");
         ObjectMapper mapper = new ObjectMapper();
 
         // when
-        NonogramJsonWriter.saveSolutionBoard(board, target.toString());
+        NonogramJsonWriter.saveSolutionBoard(expectedBoard, target.toString());
 
         // then
         assertTrue(Files.exists(target), "File should not be saved");
@@ -63,12 +64,13 @@ class NonogramJsonWriterTest {
                 }
         );
 
-        assertEquals(board, parsed, "Saved board should be equal to entry board");
+        assertEquals(expectedBoard, parsed, "Saved board should be equal to entry board");
     }
 
     @Test
+    @DisplayName("saveSolutionBoard should throw Exception when path is directory")
     void saveSolutionBoard_throwsIOException_whenPathIsDirectory() throws Exception {
-        // arrange
+        // given
         List<List<String>> board = Arrays.asList(
                 Arrays.asList("X", "O"),
                 Arrays.asList("O", "X")
@@ -76,7 +78,7 @@ class NonogramJsonWriterTest {
 
         Path dirAsTarget = Files.createDirectory(tempDir.resolve("as_directory"));
 
-        // act + assert
+        // when & then
         assertThrows(IOException.class,
                 () -> NonogramJsonWriter.saveSolutionBoard(board, dirAsTarget.toString()),
                 "Attempt to path folder should throw IOException");

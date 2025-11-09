@@ -41,8 +41,8 @@ class JsonFormatterTest {
         return s.replace("\r\n", "\n");
     }
 
-    @DisplayName("JsonFormatter.format should pretty-print nonogram JSON with special arrays split and indented")
     @Test
+    @DisplayName("JsonFormatter.format should pretty-print nonogram JSON with special arrays split and indented")
     void format_shouldPrettyPrintSpecialArrays() {
         // given
         String rawJson =

@@ -64,7 +64,7 @@ class NonogramBoardTemplateTest {
         // given
         String notExisting = "nbt_missing_" + System.nanoTime();
 
-        // when / then
+        // when & then
         assertThatThrownBy(() -> new NonogramBoardTemplate(notExisting))
                 .isInstanceOf(NonogramFileReadException.class)
                 .hasMessageContaining("Could not find nonogram solution file")

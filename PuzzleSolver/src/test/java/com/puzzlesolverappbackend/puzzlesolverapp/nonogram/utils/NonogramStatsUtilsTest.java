@@ -103,8 +103,8 @@ class NonogramStatsUtilsTest {
 
     // --- tests --------------------------------------------------------------
 
-    @DisplayName("fieldsToColourTotal sums row sequences (66) and area/fieldsToPlaceXTotal are consistent")
     @Test
+    @DisplayName("fieldsToColourTotal sums row sequences (66) and area/fieldsToPlaceXTotal are consistent")
     void totals_computation() {
         // given
         NonogramLogic logic = buildLogic_o06005();
@@ -121,8 +121,8 @@ class NonogramStatsUtilsTest {
         assertThat(toPlaceX).isEqualTo(34); // 100 - 66
     }
 
-    @DisplayName("fieldsColoured / fieldsWithXPlaced / fieldsFilled on sample board are computed exactly")
     @Test
+    @DisplayName("fieldsColoured / fieldsWithXPlaced / fieldsFilled on sample board are computed exactly")
     void counts_onSampleBoard() {
         // given
         NonogramLogic logic = buildLogic_o06005();
@@ -140,8 +140,8 @@ class NonogramStatsUtilsTest {
         assertThat(filled).isEqualTo(96);
     }
 
-    @DisplayName("fieldsColouredPercent (64/66=96.97%) and fieldsWithXPlacedPercent (32/34=94.12%) are rounded to 2 decimals")
     @Test
+    @DisplayName("fieldsColouredPercent (64/66=96.97%) and fieldsWithXPlacedPercent (32/34=94.12%) are rounded to 2 decimals")
     void percentages_specific() {
         // given
         NonogramLogic logic = buildLogic_o06005();
@@ -156,8 +156,8 @@ class NonogramStatsUtilsTest {
         assertThat(xPct).isCloseTo(94.12, offset(0.0001));
     }
 
-    @DisplayName("getCompletionPercentage uses filled/area (96/100=96.00%)")
     @Test
+    @DisplayName("getCompletionPercentage uses filled/area (96/100=96.00%)")
     void completionPercentage() {
         // given
         NonogramLogic logic = buildLogic_o06005();
@@ -171,8 +171,8 @@ class NonogramStatsUtilsTest {
         assertThat(NonogramStatsUtils.isSolved(logic)).isFalse();
     }
 
-    @DisplayName("isSolved returns true when whole board is filled (all cells X)")
     @Test
+    @DisplayName("isSolved returns true when whole board is filled (all cells X)")
     void isSolved_trueWhenAllFilled() {
         // given
         NonogramLogic logic = buildLogic_o06005();
@@ -187,8 +187,8 @@ class NonogramStatsUtilsTest {
         assertThat(NonogramStatsUtils.isSolved(logic)).isTrue();
     }
 
-    @DisplayName("getPercent rounds half-up to two decimals (sanity: 1/3 -> 33.33)")
     @Test
+    @DisplayName("getPercent rounds half-up to two decimals (sanity: 1/3 -> 33.33)")
     void getPercent_roundingSanity() {
         // given / when
         double pct = NonogramStatsUtils.getPercent(1, 3);

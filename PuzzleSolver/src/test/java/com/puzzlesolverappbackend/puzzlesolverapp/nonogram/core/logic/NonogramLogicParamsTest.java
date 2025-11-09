@@ -13,11 +13,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class NonogramLogicParamsTest {
 
 
-    private NonogramLogic logic;
+    private NonogramLogic subject;
 
     @BeforeEach
     void setUp() {
-        logic = buildLogic_o07836();
+        subject = buildLogic_o07836();
     }
 
     @Test
@@ -27,7 +27,7 @@ class NonogramLogicParamsTest {
         int rowIdx = 0;
 
         // when
-        List<String> rowCopy = logic.getRowCopy(rowIdx);
+        List<String> rowCopy = subject.getRowCopy(rowIdx);
 
         // then
         List<String> expectedRow = List.of("-", "-", "-", "-", "-", "-", "-", "-", "-", "-");
@@ -41,7 +41,7 @@ class NonogramLogicParamsTest {
         int columnIdx = 0;
 
         // when
-        List<String> columnCopy = logic.getColumnCopy(columnIdx);
+        List<String> columnCopy = subject.getColumnCopy(columnIdx);
 
         // then
         List<String> expectedColumn = List.of("-", "-", "-", "-", "-", "-", "-", "-", "-", "-");
@@ -55,7 +55,7 @@ class NonogramLogicParamsTest {
         int rowIdx = 0;
 
         // when
-        List<String> nonogramBoardRow = logic.getNonogramBoardRow(rowIdx);
+        List<String> nonogramBoardRow = subject.getNonogramBoardRow(rowIdx);
 
         // then
         List<String> expectedBoardRow = List.of("-", "-", "-", "-", "-", "-", "-", "-", "-", "-");
@@ -69,7 +69,7 @@ class NonogramLogicParamsTest {
         int columnIndex = 0;
 
         // when
-        List<String> nonogramBoardColumn = logic.getNonogramBoardColumn(columnIndex);
+        List<String> nonogramBoardColumn = subject.getNonogramBoardColumn(columnIndex);
 
         // then
         List<String> expectedBoardColumn = List.of("-", "-", "-", "-", "-", "-", "-", "-", "-", "-");
@@ -80,30 +80,30 @@ class NonogramLogicParamsTest {
     @DisplayName("Should warn when adding empty tmpLog")
     void shouldWarnWhenAddingEmptyTmpLog() {
         // given
-        logic.setTmpLog("");
+        subject.setTmpLog("");
 
         // when
-        logic.addLog();
+        subject.addLog();
 
         // then
-        assertThat(logic.getLogs()).isEmpty();
+        assertThat(subject.getLogs()).isEmpty();
     }
 
     @Test
     @DisplayName("Should add tmpLog to logs when not empty")
     void shouldAddTmpLogToLogs() {
         // given
-        logic.setTmpLog("COLOUR_OVERLAPPING_FIELDS_IN_ROW: row=9\n" +
+        subject.setTmpLog("COLOUR_OVERLAPPING_FIELDS_IN_ROW: row=9\n" +
                 "initialLine=[-, -, -, -, -, -, -, -, -, -]\n" +
                 "sequencesRanges=[[0, 6], [6, 9]]\n" +
                 "sequencesLengths=[5, 2]\n" +
                 "updatedLine=[-, -, O, O, O, -, -, -, -, -]\n");
 
         // when
-        logic.addLog();
+        subject.addLog();
 
         // then
-        assertThat(logic.getLogs())
+        assertThat(subject.getLogs())
                 .containsExactly("COLOUR_OVERLAPPING_FIELDS_IN_ROW: row=9\n" +
                         "initialLine=[-, -, -, -, -, -, -, -, -, -]\n" +
                         "sequencesRanges=[[0, 6], [6, 9]]\n" +

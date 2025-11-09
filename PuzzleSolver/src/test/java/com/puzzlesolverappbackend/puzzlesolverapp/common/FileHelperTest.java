@@ -24,9 +24,11 @@ class FileHelperTest {
         // then
         Throwable cause = exception.getCause();
         assertInstanceOf(UnsupportedOperationException.class, cause);
+        assertEquals("This is a utility class and cannot be instantiated", cause.getMessage());
     }
 
     @Test
+    @DisplayName("nonogramSolutionSavePathForFilename - should return save path for given filename")
     void nonogramSolutionSavePathForFilename_returnsExpectedPath() {
         // given
         String filename = "oXXXXX.txt";
@@ -39,6 +41,7 @@ class FileHelperTest {
     }
 
     @Test
+    @DisplayName("nonogramSolutionSavePathForFilename - should return load path for given filename")
     void nonogramSolutionLoadPathForFilename_returnsExpectedPath() {
         // given
         String filename = "oXXXXX.txt";

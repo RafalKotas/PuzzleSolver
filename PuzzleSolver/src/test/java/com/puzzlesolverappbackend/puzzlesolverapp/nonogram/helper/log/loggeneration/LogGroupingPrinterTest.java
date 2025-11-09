@@ -20,8 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class LogGroupingPrinterTest {
@@ -54,6 +53,7 @@ class LogGroupingPrinterTest {
         // then
         Throwable cause = exception.getCause();
         assertInstanceOf(UnsupportedOperationException.class, cause);
+        assertEquals("This is a utility class and cannot be instantiated", cause.getMessage());
     }
 
     @Test

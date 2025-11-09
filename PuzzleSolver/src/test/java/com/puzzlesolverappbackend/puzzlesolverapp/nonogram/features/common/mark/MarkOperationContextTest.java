@@ -2,6 +2,7 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramState;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramActionScheduler;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Consumer;
@@ -12,6 +13,7 @@ import static org.mockito.Mockito.mock;
 class MarkOperationContextTest {
 
     @Test
+    @DisplayName("AllArgsConstructor should create MarkOperationContext with all fields")
     void shouldCreateContextWithAllFields() {
         // given
         NonogramActionScheduler scheduler = mock(NonogramActionScheduler.class);

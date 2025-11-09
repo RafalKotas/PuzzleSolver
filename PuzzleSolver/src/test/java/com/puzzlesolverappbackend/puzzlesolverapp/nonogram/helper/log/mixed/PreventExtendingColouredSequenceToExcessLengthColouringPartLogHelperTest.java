@@ -28,6 +28,7 @@ class PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelperTest {
         // then
         Throwable cause = exception.getCause();
         assertInstanceOf(UnsupportedOperationException.class, cause);
+        assertEquals("This is a utility class and cannot be instantiated", cause.getMessage());
     }
 
     @Test

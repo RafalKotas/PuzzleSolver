@@ -1,6 +1,7 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.common;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -13,14 +14,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CommonServiceTest {
 
-    private CommonService commonService;
+    private CommonService subject;
 
     @BeforeEach
     void setUp() {
-        commonService = new CommonService();
+        subject = new CommonService();
     }
 
     @Test
+    @DisplayName("listFilesUsingJavaIO - should set of files in tempDir path")
     void listFilesUsingJavaIO_returnsFileNames_whenFilesExist() throws IOException {
         // given
         File tempDir = Files.createTempDirectory("testDir").toFile();
@@ -33,25 +35,27 @@ class CommonServiceTest {
         file2.deleteOnExit();
 
         // when
-        Set<String> result = commonService.listFilesUsingJavaIO(tempDir.getAbsolutePath());
+        Set<String> result = subject.listFilesUsingJavaIO(tempDir.getAbsolutePath());
 
         // then
         assertEquals(Set.of("file1.txt", "file2.txt"), result);
     }
 
     @Test
+    @DisplayName("listFilesUsingJavaIO - should return empty set when directory not exists")
     void listFilesUsingJavaIO_returnsEmptySet_whenDirInvalid() {
         // given
         String invalidDir = "non_existing_directory_123456";
 
         // when
-        Set<String> result = commonService.listFilesUsingJavaIO(invalidDir);
+        Set<String> result = subject.listFilesUsingJavaIO(invalidDir);
 
         // then
         assertTrue(result.isEmpty());
     }
 
     @Test
+    @DisplayName("listFilesUsingJavaIO - should return set with only files and skip directories")
     void listFilesUsingJavaIO_skipsDirectories_whenPresentInFolder() throws IOException {
         // given
         File tempDir = Files.createTempDirectory("testDir").toFile();
@@ -67,7 +71,7 @@ class CommonServiceTest {
         subdirectory.deleteOnExit();
 
         // when
-        Set<String> result = commonService.listFilesUsingJavaIO(tempDir.getAbsolutePath());
+        Set<String> result = subject.listFilesUsingJavaIO(tempDir.getAbsolutePath());
 
         // then
         assertEquals(Set.of("file.txt"), result);

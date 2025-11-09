@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NonogramSpecificationTest {
 
-    @DisplayName("NonogramSpecification constructor should throw UnsupportedOperationException - reflect instantiation")
     @Test
+    @DisplayName("NonogramSpecification constructor should throw UnsupportedOperationException - reflect instantiation")
     void constructor_throwsException_whenInstantiatedReflectively() throws Exception {
         // given
         Constructor<NonogramSpecification> constructor = NonogramSpecification.class.getDeclaredConstructor();

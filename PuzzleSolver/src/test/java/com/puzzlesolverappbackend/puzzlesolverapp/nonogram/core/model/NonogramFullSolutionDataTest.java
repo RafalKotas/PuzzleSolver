@@ -9,8 +9,8 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 class NonogramFullSolutionDataTest {
 
-    @DisplayName("All-args constructor should set fields and getters should return the same data - ro07929")
     @Test
+    @DisplayName("All-args constructor should set fields and getters should return the same data - ro07929")
     void allArgsConstructor_and_getters() {
         // given
         List<List<String>> finalBoard = List.of(
@@ -91,8 +91,8 @@ class NonogramFullSolutionDataTest {
         assertThat(data.getDerivedColumnRanges()).isEqualTo(derivedColumnRanges);
     }
 
-    @DisplayName("Getters should expose the same references that were provided to the constructor")
     @Test
+    @DisplayName("Getters should expose the same references that were provided to the constructor")
     void getters_returnSameReferences() {
         // given
         List<List<String>> finalBoard = List.of(List.of("X"));

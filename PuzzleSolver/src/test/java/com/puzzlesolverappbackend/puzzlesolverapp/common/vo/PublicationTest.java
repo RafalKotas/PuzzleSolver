@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class PublicationTest {
 
     @Test
+    @DisplayName("NoArgsConstructor should create non null instance")
     void noArgsConstructor_shouldCreateNonNullInstance() {
         // when
         Publication publication = new Publication();

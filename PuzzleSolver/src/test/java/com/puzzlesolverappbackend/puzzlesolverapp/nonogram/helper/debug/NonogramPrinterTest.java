@@ -38,8 +38,8 @@ class NonogramPrinterTest {
         appender.stop();
     }
 
-    @DisplayName("NonogramPrinter keeps provided NonogramLogic")
     @Test
+    @DisplayName("NonogramPrinter keeps provided NonogramLogic")
     void printerKeepsLogicInstance() {
         // given
         NonogramLogic logic = buildLogic_o06005_withBoardAndRanges();
@@ -139,8 +139,8 @@ class NonogramPrinterTest {
         assertThat(appender.getLogs()).anyMatch(line -> line.contains("completion percentage"));
     }
 
-    @DisplayName("NonogramPrinter: printNonogramBoard logs one line per row with index prefix (o06005)")
     @Test
+    @DisplayName("NonogramPrinter: printNonogramBoard logs one line per row with index prefix (o06005)")
     void printNonogramBoard_shouldLogRows_o06005() {
         // given
         NonogramLogic logic = buildLogic_o06005_withBoardAndRanges();
@@ -174,8 +174,8 @@ class NonogramPrinterTest {
         appender.stop();
     }
 
-    @DisplayName("NonogramPrinter: printRows/Columns ranges and printLogs log meaningful content (o06005)")
     @Test
+    @DisplayName("NonogramPrinter: printRows/Columns ranges and printLogs log meaningful content (o06005)")
     void shouldLogRangesAndOverlapLog_o06005() {
         // given
         NonogramLogic logic = buildLogic_o06005_withBoardAndRanges();

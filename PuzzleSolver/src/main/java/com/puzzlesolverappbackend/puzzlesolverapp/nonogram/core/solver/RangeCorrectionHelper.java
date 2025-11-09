@@ -10,6 +10,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.Bo
 @UtilityClass
 public class RangeCorrectionHelper {
 
+    // TODO - unit tests for these 2 methods
     public static List<Integer> updatedSequenceRangeWhenMetColouredField(
             int sequenceStart, int sequenceEnd, int colouredIndex, int sequenceLength, boolean fromStart) {
 

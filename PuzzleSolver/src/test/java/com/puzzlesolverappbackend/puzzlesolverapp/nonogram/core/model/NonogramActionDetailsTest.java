@@ -25,8 +25,8 @@ class NonogramActionDetailsTest {
 
     // constructor / setters / copy / toString
 
-    @DisplayName("all-args constructor should set all fields")
     @Test
+    @DisplayName("all-args constructor should set all fields")
     void allArgsConstructor_setsAllFields() {
         // given
         int idx = 5;
@@ -43,8 +43,8 @@ class NonogramActionDetailsTest {
         assertThat(d.isChangedState()).isTrue();
     }
 
-    @DisplayName("no-args + setters should populate the instance")
     @Test
+    @DisplayName("no-args + setters should populate the instance")
     void noArgsAndSetters_populateFields() {
         // given
         NonogramActionDetails d = new NonogramActionDetails();
@@ -62,8 +62,8 @@ class NonogramActionDetailsTest {
         assertThat(d.isChangedState()).isFalse();
     }
 
-    @DisplayName("copy() should clone field values and return a different instance")
     @Test
+    @DisplayName("copy() should clone field values and return a different instance")
     void copy_clonesFields_notSameInstance() {
         // given
         NonogramActionDetails original = new NonogramActionDetails(
@@ -84,8 +84,8 @@ class NonogramActionDetailsTest {
         assertThat(copy.isChangedState()).isEqualTo(original.isChangedState());
     }
 
-    @DisplayName("toString() should contain index and action names")
     @Test
+    @DisplayName("toString() should contain index and action names")
     void toString_containsKeyData() {
         // given
         NonogramActionDetails d = new NonogramActionDetails(
@@ -108,44 +108,44 @@ class NonogramActionDetailsTest {
 
     // --- equals / hashCode ---
 
-    @DisplayName("equals is reflexive for the same instance")
     @Test
+    @DisplayName("equals is reflexive for the same instance")
     void equals_reflexive() {
         // given
         NonogramActionDetails a = sample(1);
 
-        // when // then
+        // when & then
         assertThat(a.equals(a)).isTrue();
     }
 
-    @DisplayName("equals returns false for null and different class")
     @Test
+    @DisplayName("equals returns false for null and different class")
     void equals_nullAndDifferentClass() {
         // given
         NonogramActionDetails a = sample(1);
 
-        // when // then
+        // when & then
         assertThat(a.equals(null)).isFalse();
         assertThat(a.equals("not-an-action")).isFalse();
     }
 
-    @DisplayName("equals returns true for two objects with identical fields (symmetry + transitivity)")
     @Test
+    @DisplayName("equals returns true for two objects with identical fields (symmetry + transitivity)")
     void equals_trueForIdenticalFields() {
         // given
         NonogramActionDetails a = sample(1);
         NonogramActionDetails b = sample(1);
         NonogramActionDetails c = sample(1);
 
-        // when // then
+        // when & then
         assertThat(a).isEqualTo(b);
         assertThat(b).isEqualTo(a);
         assertThat(a).isEqualTo(c);
         assertThat(b).isEqualTo(c);
     }
 
-    @DisplayName("equals returns false when any field differs")
     @Test
+    @DisplayName("equals returns false when any field differs")
     void equals_falseWhenAnyFieldDiffers() {
         // given
         NonogramActionDetails base = sample(1);
@@ -161,15 +161,15 @@ class NonogramActionDetailsTest {
         NonogramActionDetails diffChanged = new NonogramActionDetails(
                 base.getIndex(), base.getActionName(), base.getTriggeringActionName(), true);
 
-        // when // then
+        // when & then
         assertThat(base).isNotEqualTo(diffIndex)
                 .isNotEqualTo(diffAction)
                 .isNotEqualTo(diffTrigger)
                 .isNotEqualTo(diffChanged);
     }
 
-    @DisplayName("hashCode is consistent with equals (same fields -> same hash)")
     @Test
+    @DisplayName("hashCode is consistent with equals (same fields -> same hash)")
     void hashCode_consistentForEqualObjects() {
         // given
         NonogramActionDetails a = sample(3);
@@ -180,8 +180,8 @@ class NonogramActionDetailsTest {
                 .hasSameHashCodeAs(b);
     }
 
-    @DisplayName("hashCode likely differs when significant fields differ")
     @Test
+    @DisplayName("hashCode likely differs when significant fields differ")
     void hashCode_differsForDifferentObjects() {
         // given
         NonogramActionDetails a = sample(3);
@@ -194,8 +194,8 @@ class NonogramActionDetailsTest {
     // --- ActionDependencyMap linkage smoke ---
 
     @SuppressWarnings("unchecked")
-    @DisplayName("action should be present in ActionDependencyMap for its triggering action (sample pairs)")
     @Test
+    @DisplayName("action should be present in ActionDependencyMap for its triggering action (sample pairs)")
     void dependencyMap_containsExpectedPairs() throws Exception {
         // given
         Class<?> depsClazz = Class.forName(
@@ -206,7 +206,7 @@ class NonogramActionDetailsTest {
         Map<NonogramSolveAction, List<NonogramSolveAction>> deps =
                 (Map<NonogramSolveAction, List<NonogramSolveAction>>) f.get(null);
 
-        // when // then
+        // when & then
         assertThat(deps.get(NonogramSolveAction.CORRECT_SEQUENCES_RANGES_IN_ROW))
                 .contains(
                         NonogramSolveAction.PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW,
@@ -226,8 +226,8 @@ class NonogramActionDetailsTest {
                 );
     }
 
-    @DisplayName("equals returns true for the same instance (this == o short-circuit)")
     @Test
+    @DisplayName("equals returns true for the same instance (this == o short-circuit)")
     void equals_isReflexive() {
         // given
         NonogramActionDetails a = new NonogramActionDetails(
@@ -237,12 +237,12 @@ class NonogramActionDetailsTest {
                 false
         );
 
-        // when / then
+        // when & then
         assertThat(a.equals(a)).isTrue(); // covers (this == o) return true
     }
 
-    @DisplayName("equals returns false when compared to object of different type")
     @Test
+    @DisplayName("equals returns false when compared to object of different type")
     void equals_returnsFalseForDifferentType() {
         // given
         NonogramActionDetails a = new NonogramActionDetails(
@@ -252,24 +252,24 @@ class NonogramActionDetailsTest {
                 false
         );
 
-        // when / then
+        // when & then
         assertThat(a.equals("not-a-details")).isFalse(); // covers !(o instanceof NonogramActionDetails)
     }
 
-    @DisplayName("equals/hashCode handle null actionName and triggeringActionName (both null on both sides)")
     @Test
+    @DisplayName("equals/hashCode handle null actionName and triggeringActionName (both null on both sides)")
     void equalsAndHash_handleNulls_bothSidesNull() {
         // given
         NonogramActionDetails x = new NonogramActionDetails(7, null, null, true);
         NonogramActionDetails y = new NonogramActionDetails(7, null, null, true);
 
-        // when / then
+        // when & then
         assertThat(x).isEqualTo(y)
                 .hasSameHashCodeAs(y); // cover hashCode branches with nulls
     }
 
-    @DisplayName("equals returns false when one actionName is null and the other is non-null")
     @Test
+    @DisplayName("equals returns false when one actionName is null and the other is non-null")
     void equals_handlesMixedNull_actionName() {
         // given
         NonogramActionDetails x = new NonogramActionDetails(
@@ -277,12 +277,12 @@ class NonogramActionDetailsTest {
         NonogramActionDetails y = new NonogramActionDetails(
                 10, NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN, NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW, false);
 
-        // when / then
+        // when & then
         assertThat(x.equals(y)).isFalse(); // branch: this$actionName == null ? other$actionName != null -> true
     }
 
-    @DisplayName("equals returns false when one triggeringActionName is null and the other is non-null")
     @Test
+    @DisplayName("equals returns false when one triggeringActionName is null and the other is non-null")
     void equals_handlesMixedNull_triggeringActionName() {
         // given
         NonogramActionDetails x = new NonogramActionDetails(
@@ -290,12 +290,12 @@ class NonogramActionDetailsTest {
         NonogramActionDetails y = new NonogramActionDetails(
                 3, NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW, NonogramSolveAction.COLOUR_OVERLAPPING_FIELDS_IN_ROW, false);
 
-        // when / then
+        // when & then
         assertThat(x.equals(y)).isFalse(); // branch: this$triggeringActionName == null ? other$triggeringActionName != null -> true
     }
 
-    @DisplayName("equals hits canEqual guard: base.equals(subclassWithFalseCanEqual) returns false")
     @Test
+    @DisplayName("equals hits canEqual guard: base.equals(subclassWithFalseCanEqual) returns false")
     void equals_triggersCanEqualGuard_branch() {
         // given: subclass that deliberately overrides canEqual to always return false
         class DetailsWithFalseCanEqual extends NonogramActionDetails {
@@ -324,7 +324,7 @@ class NonogramActionDetailsTest {
                 false
         );
 
-        // when / then:
+        // when & then:
         // Calling base.equals(sub) will hit the guard:
         // if (!other.canEqual(this)) return false;
         assertThat(base.equals(sub)).isFalse();

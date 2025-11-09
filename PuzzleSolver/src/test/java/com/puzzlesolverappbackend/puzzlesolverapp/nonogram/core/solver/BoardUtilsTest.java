@@ -44,6 +44,7 @@ class BoardUtilsTest {
     @Test
     @DisplayName("getColumn: returns N-th column values")
     void getColumn_returnsExpectedColumn() {
+        // given
         List<List<String>> board = new ArrayList<>(
                 List.of(
                         new ArrayList<>(List.of("O", "O", "O")),
@@ -52,11 +53,13 @@ class BoardUtilsTest {
                 )
         );
 
-        List<String> col1 = getColumn(board, 1);
-        assertThat(col1).containsExactly("O", "X", "O");
-
+        // when
         List<String> col0 = getColumn(board, 0);
+        List<String> col1 = getColumn(board, 1);
+
+        // then
         assertThat(col0).containsExactly("O", "O", "O");
+        assertThat(col1).containsExactly("O", "X", "O");
     }
 
     // allFieldsAreColouredInRowRange
@@ -446,10 +449,10 @@ class BoardUtilsTest {
 
         // empty input -> empty output
         // given
-        List<List<List<Integer>>> emptyInput = List.of();
+        List<List<Integer>> emptyInput = List.of();
 
         // when
-        List<List<List<Integer>>> candidatesRangesEmptyInput = createCandidateRangesAroundSequences(List.of());
+        List<List<List<Integer>>> candidatesRangesEmptyInput = createCandidateRangesAroundSequences(emptyInput);
 
         // then
         assertThat(candidatesRangesEmptyInput).isEmpty();
@@ -537,6 +540,7 @@ class BoardUtilsTest {
     }
 
     // indexToSequenceCharMark
+    @Test
     @DisplayName("indexToSequenceCharMark: 0->'a', 25->'z'")
     void indexToSequenceCharMark_works() {
         // given
@@ -549,13 +553,10 @@ class BoardUtilsTest {
         String charMark3 = indexToSequenceCharMark(threeIndex);
         String charMark25 = indexToSequenceCharMark(twentyFiveIndex);
 
-        // given
-        String charMark0Expected = "a";
-        String charMark3Expected = "d";
-        String charMark25Expected = "z";
-        assertEquals(charMark0Expected, charMark0);
-        assertEquals(charMark3Expected, charMark3);
-        assertEquals(charMark25Expected, charMark25);
+        // then
+        assertEquals("a", charMark0);
+        assertEquals("d", charMark3);
+        assertEquals("a", charMark25);
     }
 
     // createEmptyMarkedLine

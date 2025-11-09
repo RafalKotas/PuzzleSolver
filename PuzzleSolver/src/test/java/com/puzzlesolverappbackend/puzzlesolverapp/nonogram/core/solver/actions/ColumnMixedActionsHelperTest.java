@@ -76,8 +76,8 @@ class ColumnMixedActionsHelperTest {
         secondIfNegative -
         secondIfPositive +
      */
-    @DisplayName("o06005: getColouredSequencesRangesInColumnInRangeToTop → [[2,7]] for col=3 row=7 maxLen=6 (3/4 conditions)")
     @Test
+    @DisplayName("o06005: getColouredSequencesRangesInColumnInRangeToTop → [[2,7]] for col=3 row=7 maxLen=6 (3/4 conditions)")
     void shouldReturnCorrectColouredRangesForGivenColumnAndRow() {
         // given
         List<List<String>> solutionBoard = List.of(
@@ -108,8 +108,8 @@ class ColumnMixedActionsHelperTest {
         assertEquals(List.of(List.of(2, 7)), result);
     }
 
-    @DisplayName("should leave loop when currentRowIdx < minRow for o06005 (scan to top)")
     @Test
+    @DisplayName("should leave loop when currentRowIdx < minRow for o06005 (scan to top)")
     void shouldLeaveLoopWhenCurrentRowBelowMinRow_o06005() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
@@ -138,8 +138,8 @@ class ColumnMixedActionsHelperTest {
                 .hasSize(1);
     }
 
-    @DisplayName("getColouredSequencesRangesInColumnInRangeToTop — o06041, col=7, hits empty cell branch and returns [3,5]")
     @Test
+    @DisplayName("getColouredSequencesRangesInColumnInRangeToTop — o06041, col=7, hits empty cell branch and returns [3,5]")
     void shouldCollectColouredRangeToTop_whenEmptyCellBetweenOAndX_o06041_col7() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
@@ -175,8 +175,8 @@ class ColumnMixedActionsHelperTest {
         secondIfPositive +
         secondIfNegative -
      */
-    @DisplayName("o06005: getColouredSequencesRangesInColumnInRangeToBottom → [[2,7]] for col=3 row=2 maxLen=6 (3/4 conditions)")
     @Test
+    @DisplayName("o06005: getColouredSequencesRangesInColumnInRangeToBottom → [[2,7]] for col=3 row=2 maxLen=6 (3/4 conditions)")
     void shouldReturnCorrectColouredRangesForGivenColumnAndRow_Bottom() {
         // given
         List<List<String>> solutionBoard = List.of(
@@ -213,8 +213,8 @@ class ColumnMixedActionsHelperTest {
         2. currentField is not coloured and not with X (empty)
         3. currentRowIdx > maxRow
      */
-    @DisplayName("o10642: getColouredSequencesRangesInColumnInRangeToBottom → [[8,17],[19,19]] for col=5 row=8 maxLen=12 (other conditions)")
     @Test
+    @DisplayName("o10642: getColouredSequencesRangesInColumnInRangeToBottom → [[8,17],[19,19]] for col=5 row=8 maxLen=12 (other conditions)")
     void shouldReturnTwoColouredRanges_AllConditionsCovered() {
         // given
         List<List<String>> solutionBoard = List.of(
@@ -252,8 +252,8 @@ class ColumnMixedActionsHelperTest {
         assertEquals(List.of(List.of(8, 17), List.of(19, 19)), ranges);
     }
 
-    @DisplayName("o07986: findValidSequencesIdsMergingToTop should return [1], column 8")
     @Test
+    @DisplayName("o07986: findValidSequencesIdsMergingToTop should return [1], column 8")
     void shouldReturnValidSequenceIdsMergingToTop_o07986() {
         // given
         List<Integer> sequenceIds = List.of(0, 1);
@@ -272,8 +272,8 @@ class ColumnMixedActionsHelperTest {
         assertThat(result).isEqualTo(List.of(1));
     }
 
-    @DisplayName("o07986: findValidSequencesIdsMergingToBottom should return [1], column 8")
     @Test
+    @DisplayName("o07986: findValidSequencesIdsMergingToBottom should return [1], column 8")
     void shouldReturnValidSequenceIdsMergingToBottom_o07986() {
         // given
         List<Integer> sequenceIds = List.of(0, 1);

@@ -1,5 +1,6 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -8,6 +9,7 @@ import static org.mockito.Mockito.mock;
 class MarkContextTest {
 
     @Test
+    @DisplayName("AllArgsConstructor should create MarkContext with all fields")
     void shouldHoldAllProvidedContexts() {
         // given
         BoardContext boardContext = mock(BoardContext.class);

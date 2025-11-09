@@ -27,15 +27,20 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ColouringHelperTest {
 
-    @Mock NonogramColumnLogic nonogramColumnLogic;
+    @Mock
+    NonogramColumnLogic nonogramColumnLogic;
 
-    @Mock NonogramRowLogic nonogramRowLogic;
+    @Mock
+    NonogramRowLogic nonogramRowLogic;
 
-    @Mock NonogramFieldColouringHelper colouringHelper;
+    @Mock
+    NonogramFieldColouringHelper colouringHelper;
 
-    @Mock NonogramActionScheduler scheduler;
+    @Mock
+    NonogramActionScheduler scheduler;
 
-    @Mock NonogramState state;
+    @Mock
+    NonogramState state;
 
     @Mock
     NonogramRules rules;
@@ -56,10 +61,11 @@ class ColouringHelperTest {
         // then
         Throwable cause = exception.getCause();
         assertInstanceOf(UnsupportedOperationException.class, cause);
+        assertEquals("This is a utility class and cannot be instantiated", cause.getMessage());
     }
 
-    @DisplayName("calculateOverlappingRange should return empty list for range [0, 5] and sequenceLength = 1 o06005 - row 0")
     @Test
+    @DisplayName("calculateOverlappingRange should return empty list for range [0, 5] and sequenceLength = 1 o06005 - row 0")
     void shouldReturnEmptyListWhenNoOverlapExists() {
         // given
         List<Integer> range = List.of(0, 5);
@@ -72,8 +78,8 @@ class ColouringHelperTest {
         assertTrue(result.isEmpty(), "Expected empty list for non-overlapping case");
     }
 
-    @DisplayName("calculateOverlappingRange should return [3, 4, 5, 6] for range [2, 7] and sequenceLength = 5 o06005 - row 2")
     @Test
+    @DisplayName("calculateOverlappingRange should return [3, 4, 5, 6] for range [2, 7] and sequenceLength = 5 o06005 - row 2")
     void shouldReturnCorrectOverlappingRangeWhenExists() {
         // given
         List<Integer> range = List.of(2, 7);
@@ -86,8 +92,8 @@ class ColouringHelperTest {
         assertEquals(List.of(3, 4, 5, 6), result);
     }
 
-    @DisplayName("findPossibleSequenceLengths should return [7] for colouredRange [3, 7] within [1, 9] and length 7 o06005 - column 0")
     @Test
+    @DisplayName("findPossibleSequenceLengths should return [7] for colouredRange [3, 7] within [1, 9] and length 7 o06005 - column 0")
     void shouldReturnMatchingLengthWhenColouredRangeFits() {
         // given
         List<List<Integer>> ranges = List.of(List.of(1, 9));
@@ -101,8 +107,8 @@ class ColouringHelperTest {
         assertEquals(List.of(7), result);
     }
 
-    @DisplayName("findPossibleSequenceLengths should filter out non-matching ranges o06005 - column 2")
     @Test
+    @DisplayName("findPossibleSequenceLengths should filter out non-matching ranges o06005 - column 2")
     void shouldReturnOnlyMatchingLengthsWhenColouredRangeFitsSomeRanges() {
         // given
         List<List<Integer>> ranges = List.of(List.of(0, 7), List.of(9, 9));
@@ -116,8 +122,8 @@ class ColouringHelperTest {
         assertEquals(List.of(8), result);
     }
 
-    @DisplayName("findColouredSequenceRangeTop should return [2, 2] when starting at coloured cell with X above o07836 - column 7")
     @Test
+    @DisplayName("findColouredSequenceRangeTop should return [2, 2] when starting at coloured cell with X above o07836 - column 7")
     void shouldReturnSingleFieldRangeWhenXIsAboveColouredField() {
         // given
         List<List<String>> board = List.of(
@@ -142,8 +148,8 @@ class ColouringHelperTest {
         assertEquals(List.of(2, 2), result);
     }
 
-    @DisplayName("findColouredSequenceRangeTop should return [1, 2] for vertical coloured segment extended upwards o07986 column 5")
     @Test
+    @DisplayName("findColouredSequenceRangeTop should return [1, 2] for vertical coloured segment extended upwards o07986 column 5")
     void shouldReturnVerticalColouredRangeAboveWhenOsPresent() {
         // given
         List<List<String>> board = List.of(
@@ -168,8 +174,8 @@ class ColouringHelperTest {
         assertEquals(List.of(1, 2), result);
     }
 
-    @DisplayName("findColouredSequenceRangeTop should return [0, 0] when startRowIdx is 0 (while skipped) o07986 column 10")
     @Test
+    @DisplayName("findColouredSequenceRangeTop should return [0, 0] when startRowIdx is 0 (while skipped) o07986 column 10")
     void shouldReturnSingleFieldWhenStartRowIsZero() {
         // given
         List<List<String>> board = List.of(
@@ -267,8 +273,8 @@ class ColouringHelperTest {
         assertEquals(List.of(19, 19), result);
     }
 
-    @DisplayName("findDistanceFromTopX - should return 0 when no 'X' found within maxDist above coloured range")
     @Test // o08079 column 0
+    @DisplayName("findDistanceFromTopX - should return 0 when no 'X' found within maxDist above coloured range")
     void shouldReturnZeroWhenNoXFoundAboveWithinMaxDist() {
         // given
         List<List<String>> board = List.of(
@@ -304,8 +310,8 @@ class ColouringHelperTest {
         assertEquals(0, result);
     }
 
-    @DisplayName("findDistanceFromTopX - should return offset when 'X' is below at a distance no greater than the maximum")
     @Test  // o07836 column 7
+    @DisplayName("findDistanceFromTopX - should return offset when 'X' is below at a distance no greater than the maximum")
     void shouldReturnTheOffsetWhenXIsAboveAt_a_DistanceNoGreaterThanTheMaximum() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
@@ -331,8 +337,8 @@ class ColouringHelperTest {
         assertThat(resultOffset).isEqualTo(2);
     }
 
-    @DisplayName("findDistanceFromTopX - should return 0 if rowIdxToCheck less than zero")
     @Test
+    @DisplayName("findDistanceFromTopX - should return 0 if rowIdxToCheck less than zero")
     void shouldReturnZeroWhenRowIdxLessThanZero() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
@@ -364,8 +370,8 @@ class ColouringHelperTest {
         assertThat(resultOffset).isZero();
     }
 
-    @DisplayName("findDistanceFromBottomX - should return 0 when no 'X' found within maxDist below coloured range")
     @Test // o06005 column 0
+    @DisplayName("findDistanceFromBottomX - should return 0 when no 'X' found within maxDist below coloured range")
     void shouldReturnZeroWhenNoXFoundBelowWithinMaxDist() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
@@ -391,8 +397,8 @@ class ColouringHelperTest {
         assertEquals(0, result);
     }
 
-    @DisplayName("findDistanceFromBottomX - should return offset when 'X' is below at a distance no greater than the maximum")
     @Test  // o07836 column 2
+    @DisplayName("findDistanceFromBottomX - should return offset when 'X' is below at a distance no greater than the maximum")
     void shouldReturnTheOffsetWhenXIsBelowAt_a_DistanceNoGreaterThanTheMaximum() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
@@ -418,8 +424,8 @@ class ColouringHelperTest {
         assertThat(resultOffset).isEqualTo(1);
     }
 
-    @DisplayName("findDistanceFromBottomX - should return 0 if rowIdxToCheck equal to board size")
     @Test // o07836
+    @DisplayName("findDistanceFromBottomX - should return 0 if rowIdxToCheck equal to board size")
     void shouldReturnZeroWhenRowIdxEqualToBoardSize() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
@@ -448,8 +454,8 @@ class ColouringHelperTest {
 
     // extendToTop
     // extended: false(), true(x)
-    @DisplayName("extendToTop should colour (0,14) and return true when start=0 and minExtensionIdx=0")
     @Test // o07986
+    @DisplayName("extendToTop should colour (0,14) and return true when start=0 and minExtensionIdx=0")
     void shouldExtendSingleCellAtTopAndReturnTrue() {
         List<String> row0 = new ArrayList<>(List.of(
                 "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"
@@ -494,8 +500,8 @@ class ColouringHelperTest {
 
     // extendToBottom
     // extended: false(), true(x)
-    @DisplayName("extendToBottom should colour rows 8..9 in column 7 and return true for range [6,7] -> max 9")
     @Test // o07836
+    @DisplayName("extendToBottom should colour rows 8..9 in column 7 and return true for range [6,7] -> max 9")
     void shouldExtendLastSequenceDownwardsAndReturnTrue() {
         // given: 10x10 board (row-major), column 7 has O,O at rows 6..7 and '-' at rows 8..9
         List<List<String>> board = new ArrayList<>(List.of(
@@ -558,8 +564,8 @@ class ColouringHelperTest {
 
     // extendToRight
     // extended: false(), true(x)
-    @DisplayName("extendToRight should colour (1,4) and return true for range [3,3] -> max 4")
     @Test // o07836
+    @DisplayName("extendToRight should colour (1,4) and return true for range [3,3] -> max 4")
     void shouldExtendRightOneCellAndReturnTrue() {
         // given: 10x10 board; row 1 has 'O' at col 3 and '-' at col 4
         List<List<String>> board = new ArrayList<>(List.of(
@@ -614,8 +620,8 @@ class ColouringHelperTest {
 
     // extendToLeft
     // extended: false(), true(x)
-    @DisplayName("extendToLeft should colour (2,5) and (2,4) and return true for range [6,7] with minExtensionIdx=3")
     @Test // o07836
+    @DisplayName("extendToLeft should colour (2,5) and (2,4) and return true for range [6,7] with minExtensionIdx=3")
     void shouldExtendLeftOverEmptyCellsAndReturnTrue() {
         // given: updated 10x10 board; row 2 has 'O' at 3, '-' at 4 and 5, 'O' at 6..7, 'X' at 2 and 8
         List<List<String>> board = new ArrayList<>(List.of(
@@ -673,8 +679,8 @@ class ColouringHelperTest {
         verifyNoMoreInteractions(colouringHelper, scheduler, state);
     }
 
-    @DisplayName("findDistanceFromLeftX - should return 0 when no 'X' found within maxDist before coloured range")
     @Test // o06005 row 0 (with columnIdxToCheck < 0 -> false step)
+    @DisplayName("findDistanceFromLeftX - should return 0 when no 'X' found within maxDist before coloured range")
     void shouldReturnZeroWhenNoXFoundBeforeColouredSequenceWithinMaxDist() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
@@ -700,8 +706,8 @@ class ColouringHelperTest {
         assertEquals(0, result);
     }
 
-    @DisplayName("findDistanceFromLeftX - should return offset when 'X' is before at a distance no greater than the maximum")
     @Test  // o06005 row 1
+    @DisplayName("findDistanceFromLeftX - should return offset when 'X' is before at a distance no greater than the maximum")
     void shouldReturnTheOffsetWhenXIsBeforeAt_a_DistanceNoGreaterThanTheMaximum() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
@@ -727,8 +733,8 @@ class ColouringHelperTest {
         assertThat(resultOffset).isEqualTo(1);
     }
 
-    @DisplayName("findDistanceFromLeftX - should return 0 if columnIdxToCheck is less than zero")
     @Test // o07836
+    @DisplayName("findDistanceFromLeftX - should return 0 if columnIdxToCheck is less than zero")
     void shouldReturnZeroWhenColumnIdxIsLessThanZero() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
@@ -755,8 +761,8 @@ class ColouringHelperTest {
         assertThat(resultOffset).isZero();
     }
 
-    @DisplayName("findDistanceFromRightX - should return 0 when no 'X' found within maxDist before coloured range")
     @Test // o06005 row 0 (with columnIdxToCheck == board.get(0).size() -> false step)
+    @DisplayName("findDistanceFromRightX - should return 0 when no 'X' found within maxDist before coloured range")
     void shouldReturnZeroWhenNoXFoundAfterColouredSequenceWithinMaxDist() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
@@ -782,8 +788,8 @@ class ColouringHelperTest {
         assertEquals(0, result);
     }
 
-    @DisplayName("findDistanceFromRightX - should return offset when 'X' is after at a distance no greater than the maximum")
     @Test // o07386
+    @DisplayName("findDistanceFromRightX - should return offset when 'X' is after at a distance no greater than the maximum")
     void shouldReturnTheOffsetWhenXIsAfterAt_a_DistanceNoGreaterThanTheMaximum() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
@@ -810,8 +816,8 @@ class ColouringHelperTest {
         assertThat(resultOffset).isEqualTo(2);
     }
 
-    @DisplayName("findDistanceFromRightX  - should return 0 if columnIdxToCheck equal to width")
     @Test // o07836
+    @DisplayName("findDistanceFromRightX  - should return 0 if columnIdxToCheck equal to width")
     void shouldReturnZeroWhenColumnIdxIsEqualToWidth() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
@@ -839,8 +845,8 @@ class ColouringHelperTest {
     }
 
     // findColouredSequenceRangeLeft
-    @DisplayName("findColouredSequenceRangeLeft should return [6, 6] when starting at coloured cell with possible X before")
     @Test // o06005
+    @DisplayName("findColouredSequenceRangeLeft should return [6, 6] when starting at coloured cell with possible X before")
     void shouldReturnSingleFieldRangeWhenXCanBeBeforeColouredField() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
@@ -865,8 +871,8 @@ class ColouringHelperTest {
         assertEquals(List.of(6, 6), result);
     }
 
-    @DisplayName("findColouredSequenceRangeLeft should return [2, 6] for horizontal coloured segment extended backwards")
     @Test // o06005
+    @DisplayName("findColouredSequenceRangeLeft should return [2, 6] for horizontal coloured segment extended backwards")
     void shouldReturnHorizontalColouredRangeBeforeWhenOsPresent() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
@@ -891,8 +897,8 @@ class ColouringHelperTest {
         assertEquals(List.of(2, 6), result);
     }
 
-    @DisplayName("findColouredSequenceRangeLeft should return [0, 0] when starColumnIdx is 0 (while skipped)")
     @Test // o06005
+    @DisplayName("findColouredSequenceRangeLeft should return [0, 0] when starColumnIdx is 0 (while skipped)")
     void shouldReturnSingleFieldWhenStartColumnIsZero() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
@@ -919,8 +925,8 @@ class ColouringHelperTest {
 
     // findColouredSequenceRangeRight
 
-    @DisplayName("findColouredSequenceRangeRight should return [2, 2] when starting at coloured cell with possible X before")
     @Test // o06005
+    @DisplayName("findColouredSequenceRangeRight should return [2, 2] when starting at coloured cell with possible X before")
     void shouldReturnSingleFieldRangeWhenXCanBeBeforeColouredFieldRight() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
@@ -945,8 +951,8 @@ class ColouringHelperTest {
         assertEquals(List.of(2, 2), result);
     }
 
-    @DisplayName("findColouredSequenceRangeRight should return [2, 6] for horizontal coloured segment extended forwards")
     @Test // o06005
+    @DisplayName("findColouredSequenceRangeRight should return [2, 6] for horizontal coloured segment extended forwards")
     void shouldReturnHorizontalColouredRangeAfterWhenOsPresent() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
@@ -971,8 +977,8 @@ class ColouringHelperTest {
         assertEquals(List.of(2, 6), result);
     }
 
-    @DisplayName("findColouredSequenceRangeRight should return [9, 9] when startColumnIdx is the last column in row (while skipped)")
     @Test // o06005
+    @DisplayName("findColouredSequenceRangeRight should return [9, 9] when startColumnIdx is the last column in row (while skipped)")
     void shouldReturnSingleFieldWhenStartColumnIsLast() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(

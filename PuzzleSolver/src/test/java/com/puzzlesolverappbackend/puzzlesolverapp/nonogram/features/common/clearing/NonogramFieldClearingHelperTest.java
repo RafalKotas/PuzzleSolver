@@ -2,6 +2,7 @@ package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.clea
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramBoardAccessHelper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -14,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class NonogramFieldClearingHelperTest {
 
     @Test
+    @DisplayName("Should clear field on board nd boardWithMarks")
     void shouldClearFieldInBoardAndBoardWithMarks() {
-
         // given
         List<List<String>> board = createBoardWithSingleColouredField();
         List<List<String>> boardWithMarks = createBoardWithSingleMark();
@@ -33,6 +34,7 @@ class NonogramFieldClearingHelperTest {
     }
 
     @Test
+    @DisplayName("Should not clear field if its indexes are not valid")
     void shouldNotClearFieldIfIndexesAreInvalid() {
         // given
         List<List<String>> board = createBoardWithSingleColouredField();

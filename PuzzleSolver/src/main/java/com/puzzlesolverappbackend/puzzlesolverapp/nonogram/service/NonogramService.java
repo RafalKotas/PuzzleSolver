@@ -188,6 +188,10 @@ public class NonogramService {
         }
     }
 
+    public List<Nonogram> getNonogramsList() {
+        return nonogramRepository.findAll();
+    }
+
     // TODO - only used in tests (remove/change)
     public NonogramFileDetails getNonogramDetailsFromFile(String filePath) {
 

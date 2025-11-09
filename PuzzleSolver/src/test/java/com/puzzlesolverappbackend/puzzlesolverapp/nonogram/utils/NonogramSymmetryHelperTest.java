@@ -31,8 +31,8 @@ class NonogramSymmetryHelperTest {
         assertEquals("This is a utility class and cannot be instantiated", cause.getMessage());
     }
 
-    @DisplayName("getSymmetryGrade should return 'None' for asymmetric rows & asymmetric columns")
     @Test
+    @DisplayName("getSymmetryGrade should return 'None' for asymmetric rows & asymmetric columns")
     void symmetryGradeNone() {
         // given
         NonogramLogic logic = buildCatAuthCyanidaNoneLogic();
@@ -44,8 +44,8 @@ class NonogramSymmetryHelperTest {
         assertThat(grade).isEqualTo("None");
     }
 
-    @DisplayName("getSymmetryGrade should return '1 axis' for asymmetric rows & symmetric columns")
     @Test
+    @DisplayName("getSymmetryGrade should return '1 axis' for asymmetric rows & symmetric columns")
     void symmetryGradeOneAxis() {
         // given
         NonogramLogic logic = buildDoggyChiotAuthorLiaaaaaaaaaa1DSymmetricalLogic();
@@ -57,8 +57,8 @@ class NonogramSymmetryHelperTest {
         assertThat(grade).isEqualTo("1 axis");
     }
 
-    @DisplayName("getSymmetryGrade should return '2 axis' for symmetric rows & symmetric columns")
     @Test
+    @DisplayName("getSymmetryGrade should return '2 axis' for symmetric rows & symmetric columns")
     void symmetryGradeTwoAxis() {
         // given
         NonogramLogic logic = buildPattern19x19AuthWiki2DSymmetricalLogic();
@@ -70,8 +70,8 @@ class NonogramSymmetryHelperTest {
         assertThat(grade).isEqualTo("2 axis");
     }
 
-    @DisplayName("getSymmetryGrade should return '4 axis' for symmetric & identical rows & columns")
     @Test
+    @DisplayName("getSymmetryGrade should return '4 axis' for symmetric & identical rows & columns")
     void symmetryGradeFourAxis() {
         // given
         NonogramLogic logic = buildDoilyAuthRicarix4AxisLogic();
@@ -173,7 +173,7 @@ class NonogramSymmetryHelperTest {
         return new NonogramLogic(rules, GuessMode.DISABLED);
     }
 
-    // helper: assimetric nonogram "kot(cat)(auth_cyanida)" — 15x15
+    // helper: asymmetric nonogram "kot(cat)(auth_cyanida)" — 15x15
     private NonogramLogic buildCatAuthCyanidaNoneLogic() {
         List<List<Integer>> rows = List.of(
                 List.of(2, 2), List.of(3, 3), List.of(2, 1, 2, 1), List.of(1, 4, 1), List.of(1, 2, 2, 3),

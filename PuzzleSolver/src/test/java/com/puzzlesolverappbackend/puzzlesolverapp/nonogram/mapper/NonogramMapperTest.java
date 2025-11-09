@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class NonogramMapperTest {
 
     @Test
+    @DisplayName("NonogramMapper constructor should throw UnsupportedOperationException - reflect instantiation")
     void constructor_throwsException_whenInstantiatedReflectively() throws Exception {
         // given
         Constructor<NonogramMapper> constructor = NonogramMapper.class.getDeclaredConstructor();
@@ -25,6 +26,7 @@ class NonogramMapperTest {
         // then
         Throwable cause = exception.getCause();
         assertInstanceOf(UnsupportedOperationException.class, cause);
+        assertEquals("This is a utility class and cannot be instantiated", cause.getMessage());
     }
 
     @Test

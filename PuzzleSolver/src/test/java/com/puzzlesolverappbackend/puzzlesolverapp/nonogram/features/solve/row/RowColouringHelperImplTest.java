@@ -6,6 +6,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRu
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramActionScheduler;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramBoardAccessHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.colouring.NonogramFieldColouringHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.testclasses.RowColouringHelperImplUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.RowColouringHelperImplUtils.*;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.testclasses.RowColouringHelperImplUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -50,8 +51,8 @@ class RowColouringHelperImplTest {
         subject = new RowColouringHelperImpl(nonogramRowLogic);
     }
 
-    @DisplayName("Should not colour any field in row if there isn't overlapping fields - o06005 row 0")
     @Test
+    @DisplayName("Should not colour any field in row if there isn't overlapping fields - o06005 row 0")
     void colourOverlappingFieldsInRow_shouldNotChangeRow_whenNoOverlaps() {
         // given
         NonogramLogic logic = buildLogic_o06005();
@@ -80,8 +81,8 @@ class RowColouringHelperImplTest {
         assertEquals(initialRow, updatedRow, "Row should not be changed when no overlaps exist");
     }
 
-    @DisplayName("Should colour overlapping fields - o06005 row 2")
     @Test
+    @DisplayName("Should colour overlapping fields - o06005 row 2")
     void shouldColourOverlappingFields_row2() {
         // given
         NonogramLogic logic = buildLogic_o06005();
@@ -107,8 +108,8 @@ class RowColouringHelperImplTest {
                 "Row should have overlapping fields coloured (center of [2,7] for length=5)");
     }
 
-    @DisplayName("Should exclude sequence when fully determined after overlap colouring (o06005, row 1)")
     @Test
+    @DisplayName("Should exclude sequence when fully determined after overlap colouring (o06005, row 1)")
     void shouldExcludeSequence_whenFullyDetermined() {
         // given
         NonogramLogic logic = buildLogic_o06005();
@@ -137,8 +138,8 @@ class RowColouringHelperImplTest {
                 .contains(1, 3);
     }
 
-    @DisplayName("colourFieldsInRowIfXWouldForceTooLongColouredFieldsSequence — nothing coloured when row already satisfies ranges (o06005 row 3)")
     @Test
+    @DisplayName("colourFieldsInRowIfXWouldForceTooLongColouredFieldsSequence — nothing coloured when row already satisfies ranges (o06005 row 3)")
     void shouldNotColour_whenNoOverlengthRisk() {
         // given
         NonogramLogic logic = buildLogic_o06005();
@@ -166,8 +167,8 @@ class RowColouringHelperImplTest {
         assertThat(logic.getLogs()).hasSize(logsBefore);
     }
 
-    @DisplayName("Should colour fields when X would force overlength — o07836 row 6")
     @Test
+    @DisplayName("Should colour fields when X would force overlength — o07836 row 6")
     void shouldColour_whenOverlengthWouldBeForced() {
         // given
         NonogramLogic logic = buildLogic_o07836();
@@ -196,8 +197,8 @@ class RowColouringHelperImplTest {
         assertThat(logic.getLogs()).hasSize(logsBefore + 1);
     }
 
-    @DisplayName("extendColouredFieldsToLeftNearX - only extending case")
     @Test // o07836
+    @DisplayName("extendColouredFieldsToLeftNearX - only extending case")
     void shouldExtendLeft_Row2_WithRealSequencesAndBoard() {
         // given: logic with real sequences
         NonogramLogic logic = buildLogic_o07836();
@@ -229,8 +230,8 @@ class RowColouringHelperImplTest {
         assertEquals(expectedRow2, logic.getNonogramSolutionBoard().get(2));
     }
 
-    @DisplayName("o06005: extendColouredFieldsNearXToMaximumPossibleLengthInRow does not extend row 0")
     @Test // o06005
+    @DisplayName("o06005: extendColouredFieldsNearXToMaximumPossibleLengthInRow does not extend row 0")
     void shouldNotExtendLeft_Row0_o06005() {
         // given
         NonogramLogic logic = buildLogic_o06005();
@@ -275,8 +276,8 @@ class RowColouringHelperImplTest {
         assertEquals(logsBefore, logic.getLogs().size());
     }
 
-    @DisplayName("extendColouredFieldsToRightNearX covers cases: extended, not extended, and distanceFromX == 0 (o06041 row 9)")
     @Test
+    @DisplayName("extendColouredFieldsToRightNearX covers cases: extended, not extended, and distanceFromX == 0 (o06041 row 9)")
     void shouldHandleExtendedAndNotExtendedCases_o06041() {
         // given: real sequences (o06041)
         NonogramLogic logic = buildLogic_o06041();

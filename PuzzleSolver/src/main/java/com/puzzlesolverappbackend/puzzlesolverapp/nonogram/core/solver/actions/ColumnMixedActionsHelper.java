@@ -12,6 +12,7 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.Bo
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.MixedActionsHelper.wouldMergeTooLongBackward;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.MixedActionsHelper.wouldMergeTooLongForward;
 
+// TODO rename to analogic to Row (RowOverextensionPrevention)
 @UtilityClass
 public class ColumnMixedActionsHelper {
 

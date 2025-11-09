@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.utils.NonogramStatsUtils.getCompletionPercentage;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(properties = "nonogram.init.enabled=false")

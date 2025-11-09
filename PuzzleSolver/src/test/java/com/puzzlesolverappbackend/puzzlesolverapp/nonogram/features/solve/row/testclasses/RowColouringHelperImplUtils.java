@@ -1,10 +1,11 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.testclasses;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRules;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramActionScheduler;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramBoardAccessHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.config.GuessMode;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.NonogramRowLogic;
 
 import java.util.List;
 

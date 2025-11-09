@@ -68,6 +68,7 @@ class NonogramRowLogicTest {
     }
 
     @Test
+    @DisplayName("Should place X if colouring field will cause assignment conflict")
     public void shouldPlaceXsRowIfColouringFieldWillCauseAssignmentConflict() {
         // given
         int rowSize = 30;

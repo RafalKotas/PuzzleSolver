@@ -66,6 +66,6 @@ class FinalNonogramSolutionDTOTest {
         assertThat(dto.getFinalBoard()).isEqualTo(finalBoard);
         assertThat(dto.getDerivedRowRanges()).isEqualTo(derivedRowRanges);
         assertThat(dto.getDerivedColumnRanges()).isEqualTo(derivedColumnRanges);
-        assertThat(dto.getVerifiedAgainstOriginal()).isEqualTo(verified);
+        assertThat(dto.getVerifiedAgainstOriginal()).isEqualTo("PASS");
     }
 }

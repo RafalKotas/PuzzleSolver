@@ -41,26 +41,48 @@ class NonogramSolverUtilsTest {
     }
 
     @Test
-    void shouldInferRowRangesCorrectly() {
-        var inferred = NonogramSolverUtils.inferSequenceRangesFromBoard(nonogramLogic.getNonogramSolutionBoard());
+    @DisplayName("Should infer rows ranges from nonogram board")
+    void shouldInferRowsRangesCorrectly() {
+        // given
+        List<List<String>> board = nonogramLogic.getNonogramSolutionBoard();
+
+        // when
+        var inferred = NonogramSolverUtils.inferSequenceRangesFromBoard(board);
+
+        // then
         assertThat(inferred).isEqualTo(nonogramLogic.getRowsSequencesRanges());
     }
 
     @Test
-    void shouldInferColumnRangesCorrectly() {
-        var inferred = NonogramSolverUtils.inferSequenceRangesFromColumns(nonogramLogic.getNonogramSolutionBoard());
+    @DisplayName("Should infer columns ranges from nonogram board")
+    void shouldInferColumnsRangesCorrectly() {
+        // given
+        List<List<String>> board = nonogramLogic.getNonogramSolutionBoard();
+
+        // when
+        var inferred = NonogramSolverUtils.inferSequenceRangesFromColumns(board);
+
+        // that
         assertThat(inferred).isEqualTo(nonogramLogic.getColumnsSequencesRanges());
     }
 
     @Test
+    @DisplayName("Should mark solutionBoard as consistent with sequences lengths")
     void shouldRecognizeBoardAsConsistentWithSequences() {
-        boolean consistent = NonogramSolverUtils.isBoardConsistentWithSequences(nonogramLogic.getNonogramSolutionBoard(),
+        // given
+        List<List<String>> board = nonogramLogic.getNonogramSolutionBoard();
+
+        // when
+        boolean consistent = NonogramSolverUtils.isBoardConsistentWithSequences(board,
                 nonogramLogic.getNonogramRules().getRowSequencesLengths(),
                 nonogramLogic.getNonogramRules().getColumnSequencesLengths());
+
+        // then
         assertThat(consistent).isTrue();
     }
 
     @Test
+    @DisplayName("Should mark modified correct solutionBoard as inconsistent with sequences lengths")
     void shouldDetectInconsistentBoard() {
         // copy + modify one coloured field
         List<List<String>> modified = new ArrayList<>();
@@ -68,24 +90,42 @@ class NonogramSolverUtilsTest {
             modified.add(new ArrayList<>(row));
         }
         modified.get(2).set(3, "X"); // breaks a coloured sequence
+
+        // when
         boolean consistent = NonogramSolverUtils.isBoardConsistentWithSequences(modified,
                 nonogramLogic.getNonogramRules().getRowSequencesLengths(),
                 nonogramLogic.getNonogramRules().getColumnSequencesLengths());
+
+        // then
         assertThat(consistent).isFalse();
     }
 
     @Test
+    @DisplayName("Should return true when actual ranges don't contain correct ranges")
     void shouldReturnTrueWhenExpectedNotContainedInActual() {
+        // given
         List<List<Integer>> expected = List.of(List.of(1, 3), List.of(5, 7));
         List<List<Integer>> actual = List.of(List.of(2, 4), List.of(6, 8));
-        assertThat(NonogramSolverUtils.actualRangesDoNotContainCorrectRanges(expected, actual)).isTrue();
+
+        // when
+        boolean actualRangesDoNotContainCorrectRanges = NonogramSolverUtils.actualRangesDoNotContainCorrectRanges(expected, actual);
+
+        // then
+        assertThat(actualRangesDoNotContainCorrectRanges).isTrue();
     }
 
     @Test
+    @DisplayName("Should return false when actual ranges contain correct ranges")
     void shouldReturnFalseWhenExpectedContainedInActual() {
+        // given
         List<List<Integer>> expected = List.of(List.of(2, 3), List.of(6, 7));
         List<List<Integer>> actual = List.of(List.of(1, 4), List.of(5, 8));
-        assertThat(NonogramSolverUtils.actualRangesDoNotContainCorrectRanges(expected, actual)).isFalse();
+
+        // when
+        boolean actualRangesDoNotContainCorrectRanges = NonogramSolverUtils.actualRangesDoNotContainCorrectRanges(expected, actual);
+
+        // then
+        assertThat(actualRangesDoNotContainCorrectRanges).isFalse();
     }
 
     void create_solved_o06005_nonogram() {

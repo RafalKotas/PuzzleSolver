@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Constructor;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SizedPuzzleEntityTest {
 
@@ -17,10 +17,10 @@ class SizedPuzzleEntityTest {
         Constructor<SizedPuzzleEntity> constructor = SizedPuzzleEntity.class.getDeclaredConstructor();
         constructor.setAccessible(true);
 
-        // expect
-        assertThatThrownBy(constructor::newInstance)
-                .isInstanceOf(InstantiationException.class);
+        // when & then
+        InstantiationException exception = assertThrows(InstantiationException.class, constructor::newInstance);
     }
+
 
     static class TestSizedEntity extends SizedPuzzleEntity {
         protected TestSizedEntity(String filename, String source, Double difficulty, Integer height, Integer width) {
@@ -42,11 +42,11 @@ class SizedPuzzleEntityTest {
         SizedPuzzleEntity entity = new TestSizedEntity(filename, source, difficulty, height, width);
 
         // then
-        assertThat(entity.getFilename()).isEqualTo(filename);
-        assertThat(entity.getSource()).isEqualTo(source);
-        assertThat(entity.getDifficulty()).isEqualTo(difficulty);
-        assertThat(entity.getHeight()).isEqualTo(height);
-        assertThat(entity.getWidth()).isEqualTo(width);
+        assertThat(entity.getFilename()).isEqualTo("puzzle1.json");
+        assertThat(entity.getSource()).isEqualTo("testSource");
+        assertThat(entity.getDifficulty()).isEqualTo(3.5);
+        assertThat(entity.getHeight()).isEqualTo(10);
+        assertThat(entity.getWidth()).isEqualTo(15);
 
         entity.setHeight(20);
         entity.setWidth(30);

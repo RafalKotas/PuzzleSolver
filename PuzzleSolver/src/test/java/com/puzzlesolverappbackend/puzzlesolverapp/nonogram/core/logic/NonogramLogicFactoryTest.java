@@ -108,12 +108,16 @@ class NonogramLogicFactoryTest {
     }
 
     @Test
+    @DisplayName("Should copy NonogramLogic")
     void shouldCopyNonogramLogicProperly() {
+        // given
         NonogramLogic original = create_o08311_logic();
         NonogramLogicFactory factory = new NonogramLogicFactory();
 
+        // when
         NonogramLogic copy = factory.copy(original);
 
+        // then
         assertNotSame(original, copy);
         assertNotNull(copy.getNonogramRules());
         assertNotNull(copy.getNonogramSolutionBoard());

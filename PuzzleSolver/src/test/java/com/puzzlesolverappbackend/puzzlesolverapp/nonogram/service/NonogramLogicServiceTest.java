@@ -94,8 +94,8 @@ class NonogramLogicServiceTest {
         assertThat(rules.getWidth()).isEqualTo(request.getWidth());
     }
 
-    @DisplayName("fillOverlappingFieldsInColumnsRange - should fill overlapping fields in columns 0 and 1 only")
     @Test
+    @DisplayName("fillOverlappingFieldsInColumnsRange - should fill overlapping fields in columns 0 and 1 only")
     void shouldFillOverlappingFieldsInColumns0and1and2Only() {
         // given
         NonogramLogic logic = create_o08311_logic();
@@ -117,8 +117,8 @@ class NonogramLogicServiceTest {
         assertThat(logic.getBoardAccessHelper().isColumnRangeColoured(3, List.of(15, 16))).isFalse();
     }
 
-    @DisplayName("fillOverlappingFieldsInRowsRange - should fill overlapping fields in rows 16-18 only")
     @Test
+    @DisplayName("fillOverlappingFieldsInRowsRange - should fill overlapping fields in rows 16-18 only")
     void shouldFillOverlappingFieldsInRows16and17and18Only() {
         // given
         NonogramLogic logic = create_o08311_logic();
@@ -140,8 +140,8 @@ class NonogramLogicServiceTest {
         assertThat(logic.getBoardAccessHelper().isRowRangeColoured(15, List.of(8, 8))).isFalse();
     }
 
-    @DisplayName("markAvailableSequencesInRows - should mark fields in rows 16, 17 only")
     @Test // TODO - integration -> change to unit
+    @DisplayName("markAvailableSequencesInRows - should mark fields in rows 16, 17 only")
     void shouldMarkAvailableSequencesInRow16and17Only() {
         // given
         NonogramLogic logic = create_o08311_logic();
@@ -184,8 +184,8 @@ class NonogramLogicServiceTest {
         assertThat(logic.getNonogramSolutionBoardWithMarks().get(18).get(7)).isEqualTo("R---");
     }
 
-    @DisplayName("markAvailableSequencesInColumns - should mark fields in columns 0, 1 only")
     @Test // TODO - integration -> change to unit
+    @DisplayName("markAvailableSequencesInColumns - should mark fields in columns 0, 1 only")
     void shouldMarkAvailableSequencesInColumns0and1Only() {
         // given
         NonogramLogic logic = create_o08311_logic();
@@ -223,8 +223,8 @@ class NonogramLogicServiceTest {
         }
     }
 
-    @DisplayName("placeXsAroundLongestSequencesInRowsRange - should place X around longest sequences in rows [11, 12]")
     @Test
+    @DisplayName("placeXsAroundLongestSequencesInRowsRange - should place X around longest sequences in rows [11, 12]")
     void shouldPlaceXAroundLongestSequencesInRowsRange() {
         // given
         NonogramLogic logic = create_o08311_logic();
@@ -257,8 +257,8 @@ class NonogramLogicServiceTest {
         assertThat(isFieldWithX(logic.getNonogramSolutionBoard(), new Field(12, 9))).isTrue();
     }
 
-    @DisplayName("placeXsAroundLongestSequencesInColumnsRange - should place X around longest sequences in columns [5, 6]")
     @Test
+    @DisplayName("placeXsAroundLongestSequencesInColumnsRange - should place X around longest sequences in columns [5, 6]")
     void shouldPlaceXAroundLongestSequencesInColumnsRange() {
         // given
         NonogramLogic logic = create_o08311_logic();
@@ -292,8 +292,8 @@ class NonogramLogicServiceTest {
         assertThat(isFieldWithX(logic.getNonogramSolutionBoard(), new Field(14, 6))).isTrue();
     }
 
-    @DisplayName("placeXsAtUnreachableFieldsInRowsRange - should place Xs correctly in given row range (1–2)")
     @Test
+    @DisplayName("placeXsAtUnreachableFieldsInRowsRange - should place Xs correctly in given row range (1–2)")
     void shouldPlaceXsAtUnreachableFieldsInRowsRange() {
         // given
         NonogramLogic logic = create_o06005_logic();
@@ -346,8 +346,8 @@ class NonogramLogicServiceTest {
         assertEquals(expectedFinalRow2, updatedRow2, "Row 2 should have X placed in correct unreachable fields");
     }
 
-    @DisplayName("placeXsAtUnreachableFieldsInColumnsRange - should place Xs correctly in given column range (0–1)")
     @Test
+    @DisplayName("placeXsAtUnreachableFieldsInColumnsRange - should place Xs correctly in given column range (0–1)")
     void shouldPlaceXsAtUnreachableFieldsInColumnsRange() {
         // given
         NonogramLogic logic = create_o06005_logic();
@@ -397,8 +397,8 @@ class NonogramLogicServiceTest {
         assertEquals(expectedFinalColumn1, updatedColumn1, "Column 1 should have X placed in correct unreachable fields");
     }
 
-    @DisplayName("correctRowsSequencesRanges - should correct rows sequences ranges (1–2)")
     @Test
+    @DisplayName("correctRowsSequencesRanges - should correct rows sequences ranges (1–2)")
     void shouldCorrectRowsSequencesRangesInRowsRange() {
         // given
         NonogramLogic logic = create_o06005_logic();
@@ -449,8 +449,8 @@ class NonogramLogicServiceTest {
         assertThat(logic.getNonogramRowLogic().getRowsSequencesRanges().get(2)).isEqualTo(expectedFinalRow2Ranges);
     }
 
-    @DisplayName("correctColumnsSequencesRanges - should correct column sequences ranges (9–10)")
     @Test
+    @DisplayName("correctColumnsSequencesRanges - should correct column sequences ranges (9–10)")
     void shouldCorrectColumnsSequencesRangesInColumnsRange() {
         // given
         NonogramLogic logic = create_o08311_logic();

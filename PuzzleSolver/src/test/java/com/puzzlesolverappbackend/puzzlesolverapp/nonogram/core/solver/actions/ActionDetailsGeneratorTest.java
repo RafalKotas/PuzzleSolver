@@ -1,6 +1,7 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.actions;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramActionDetails;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
@@ -13,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ActionDetailsGeneratorTest {
 
     @Test
+    @DisplayName("Should generate all possible single action details")
     void generateAllPossibleSingleActionDetails_shouldReturnCorrectSizeAndValues() {
         // given
         int height = 2;
@@ -32,12 +34,13 @@ class ActionDetailsGeneratorTest {
     }
 
     @Test
-    void generateRowActionDetails_shouldReturnExpectedNumberOfDetails() {
+    @DisplayName("Should generate NonogramActionDetails list in row")
+    void generateRowActionDetails_shouldReturnExpectedNumberOfDetailsList() {
         // given
         int height = 1;
 
         // when
-        List<NonogramActionDetails> rowDetails = ActionDetailsGenerator.generateRowActionDetails(height);
+        List<NonogramActionDetails> rowDetails = ActionDetailsGenerator.generateRowActionDetailsList(height);
 
         // then
         assertThat(rowDetails)
@@ -48,12 +51,13 @@ class ActionDetailsGeneratorTest {
     }
 
     @Test
-    void generateColumnActionDetails_shouldReturnExpectedNumberOfDetails() {
+    @DisplayName("Should generate NonogramActionDetails list in column")
+    void generateColumnActionDetails_shouldReturnExpectedNumberOfDetailsList() {
         // given
         int width = 1;
 
         // when
-        List<NonogramActionDetails> colDetails = ActionDetailsGenerator.generateColumnActionDetails(width);
+        List<NonogramActionDetails> colDetails = ActionDetailsGenerator.generateColumnActionDetailsList(width);
 
         // then
         assertThat(colDetails)
@@ -64,6 +68,7 @@ class ActionDetailsGeneratorTest {
     }
 
     @Test
+    @DisplayName("ActionDetailsGenerator constructor should throw UnsupportedOperationException - reflect instantiation")
     void constructorIsPrivateAndThrowsException() throws Exception {
         // given
         Constructor<ActionDetailsGenerator> constructor = ActionDetailsGenerator.class.getDeclaredConstructor();

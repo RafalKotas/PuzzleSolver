@@ -15,9 +15,27 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ArrayUtilsTest {
 
-    // 1. copyTwoDeepList
     @Test
-    @DisplayName("Should return empty list if twoDeepList is null")
+    @DisplayName("ArrayUtils constructor should throw UnsupportedOperationException - reflect instantiation")
+    void constructor_throwsException_whenInstantiatedReflectively() throws Exception {
+        // given
+        Constructor<ArrayUtils> constructor = ArrayUtils.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+
+        // when
+        InvocationTargetException thrown = assertThrows(
+                InvocationTargetException.class,
+                constructor::newInstance
+        );
+
+        // then
+        Throwable cause = thrown.getCause();
+        assertInstanceOf(UnsupportedOperationException.class, cause);
+        assertEquals("This is a utility class and cannot be instantiated", cause.getMessage());
+    }
+
+    @Test
+    @DisplayName("copyTwoDeepList - should return empty list if argument is null")
     void shouldReturnEmptyListIfTwoDeepListIsNull() {
         // given
         List<List<String>> twoDeepList = null;
@@ -30,22 +48,24 @@ class ArrayUtilsTest {
     }
 
     @Test
-    @DisplayName("Should return board with null row")
+    @DisplayName("copyTwoDeepList - should return two dimensional list containing null row")
     void shouldReturnBoardWithNullRow() {
         // given
-        List<String> nullArray = null;
         List<List<String>> twoDeepList = new ArrayList<>();
-        twoDeepList.add(nullArray);
+        twoDeepList.add(null);
 
         // when
         List<List<String>> result = copyTwoDeepList(twoDeepList);
 
         // then
-        assertThat(result).isNotNull().hasSize(1);
+        assertThat(result)
+                .isNotNull()
+                .hasSize(1);
+        assertThat(result.get(0)).isNull();
     }
 
     @Test
-    @DisplayName("Should return board with filled row")
+    @DisplayName("copyTwoDeepList - should return two dimensional array")
     void shouldReturnBoardWithFilledRow() {
         // given
         List<String> list = new ArrayList<>(List.of("X", "O", "X", "O"));
@@ -66,27 +86,7 @@ class ArrayUtilsTest {
     }
 
     @Test
-    @DisplayName("ArrayUtils constructor should throw UnsupportedOperationException - reflect instantiation")
-    void constructor_throwsException_whenInstantiatedReflectively() throws Exception {
-        // given
-        Constructor<ArrayUtils> constructor = ArrayUtils.class.getDeclaredConstructor();
-        constructor.setAccessible(true);
-
-        // when
-        InvocationTargetException thrown = assertThrows(
-                InvocationTargetException.class,
-                constructor::newInstance
-        );
-
-        // then
-        Throwable cause = thrown.getCause();
-        assertInstanceOf(UnsupportedOperationException.class, cause);
-        assertEquals("This is a utility class and cannot be instantiated", cause.getMessage());
-    }
-
-    // 2. rangeInsideAnotherRange
-
-    @Test
+    @DisplayName("rangeInsideAnotherRange - should return true when range inside another range")
     void rangeInsideAnotherRange_returnsTrueWhenInside() {
         // given
         List<Integer> inner = List.of(2, 3);
@@ -100,6 +100,7 @@ class ArrayUtilsTest {
     }
 
     @Test
+    @DisplayName("rangeInsideAnotherRange - should return true when not whole range inside another range")
     void rangeInsideAnotherRange_returnsFalseWhenOutside() {
         // given
         List<Integer> inner = List.of(0, 5);
@@ -113,6 +114,7 @@ class ArrayUtilsTest {
     }
 
     @Test
+    @DisplayName("rangeInsideAnotherRange - should return false when inner range list is empty")
     void rangeInsideAnotherRange_returnsFalseWhenInnerEmpty() {
         // given
         List<Integer> inner = Collections.emptyList();
@@ -126,6 +128,7 @@ class ArrayUtilsTest {
     }
 
     @Test
+    @DisplayName("rangeInsideAnotherRange - should return false when outer range hasn't 2 elements")
     void rangeInsideAnotherRange_returnsFalseWhenOuterHasLessThanTwoElements() {
         // given
         List<Integer> inner = List.of(1, 2);
@@ -138,9 +141,8 @@ class ArrayUtilsTest {
         assertFalse(result);
     }
 
-    // 2. rangeLength
-
     @Test
+    @DisplayName("rangeLength - should return range int elements count")
     void rangeLength_returnsCorrectLength() {
         // given
         List<Integer> range = List.of(2, 5);
@@ -152,9 +154,8 @@ class ArrayUtilsTest {
         assertEquals(4, length);
     }
 
-    // 3. deepCopy
-
     @Test
+    @DisplayName("deepCopy - should not modify original array if copy is changed")
     void deepCopy_returnsIndependentCopy() {
         // given
         List<List<Integer>> original = new ArrayList<>();
@@ -168,9 +169,8 @@ class ArrayUtilsTest {
         assertNotEquals(original.get(0).get(0), copy.get(0).get(0));
     }
 
-    // 4. rangesListNotEqual
-
     @Test
+    @DisplayName("rangesListNotEqual - should return true if ranges list have different size")
     void rangesListNotEqual_returnsTrueWhenSizesDiffer() {
         // given
         List<List<Integer>> a = List.of(List.of(1, 2));
@@ -184,6 +184,7 @@ class ArrayUtilsTest {
     }
 
     @Test
+    @DisplayName("rangesListNotEqual - should return true if ranges list have same size but not elements")
     void rangesListNotEqual_returnsTrueWhenContentsDiffer() {
         // given
         List<List<Integer>> a = List.of(List.of(1, 2), List.of(3, 4));
@@ -197,6 +198,7 @@ class ArrayUtilsTest {
     }
 
     @Test
+    @DisplayName("rangesListNotEqual - should return false if ranges list are identical")
     void rangesListNotEqual_returnsFalseWhenEqual() {
         // given
         List<List<Integer>> a = List.of(List.of(1, 2), List.of(3, 4));
@@ -209,9 +211,8 @@ class ArrayUtilsTest {
         assertFalse(result);
     }
 
-    // 5. sumListElements
-
     @Test
+    @DisplayName("sumListElements - should return sum of list elements")
     void sumListElements_returnsCorrectSum() {
         // given
         List<Integer> list = List.of(1, 2, 3, 4);
@@ -223,9 +224,8 @@ class ArrayUtilsTest {
         assertEquals(10, sum);
     }
 
-    // 6. cloneAndMakeImmutable2DList
-
     @Test
+    @DisplayName("cloneAndMakeImmutable2DList - should clone 2d list and make it immutable")
     void cloneAndMakeImmutable2DList_returnsImmutableCopy() {
         // given
         List<List<Integer>> original = List.of(List.of(1, 2), List.of(3));
@@ -242,9 +242,8 @@ class ArrayUtilsTest {
         assertThrows(UnsupportedOperationException.class, () -> innerList.add(10));
     }
 
-    // 7. mutableClone2DList
-
     @Test
+    @DisplayName("mutableClone2DList - should clone 2d list and make it mutable")
     void mutableClone2DList_returnsIndependentMutableCopy() {
         // given
         List<List<Integer>> original = new ArrayList<>();

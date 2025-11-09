@@ -28,8 +28,8 @@ class SolutionJsonFormatterTest {
         assertEquals("This is a utility class and cannot be instantiated", cause.getMessage());
     }
 
-    @DisplayName("format should pretty-print full DTO to expected JSON shape")
     @Test
+    @DisplayName("format should pretty-print full DTO to expected JSON shape")
     void format_shouldPrettyPrintDto() {
         // given
         FinalNonogramSolutionDTO dto = new FinalNonogramSolutionDTO();

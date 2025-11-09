@@ -6,12 +6,10 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramSolution;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRules;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.config.GuessMode;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -29,13 +27,8 @@ class NonogramSolutionNodeTest {
     @Mock
     NonogramLogicFactory nonogramLogicFactory;
 
-    @BeforeEach
-    void init() {
-        MockitoAnnotations.openMocks(this);
-    }
-
-    @DisplayName("Should create NonogramSolutionNode - AllArgsConstructor")
     @Test
+    @DisplayName("Should create NonogramSolutionNode - AllArgsConstructor")
     void shouldCreateNonogramSolutionNodeAllArgsConstructor() {
         // given
         NonogramLogic nonogramLogic = create_o06005_logic();
@@ -64,8 +57,8 @@ class NonogramSolutionNodeTest {
         assertThat(subject.getNodeLogs()).isNotNull().isEmpty();
     }
 
-    @DisplayName("Should create NonogramSolutionNode and get Fields")
     @Test
+    @DisplayName("Should create NonogramSolutionNode and get Fields")
     void shouldCreateNonogramSolutionNodeAllArgsConstructorAndGetFields() {
         // given
         NonogramLogic nonogramLogic = create_o06005_logic();
@@ -83,8 +76,8 @@ class NonogramSolutionNodeTest {
         assertThat(subject.getNodeLogs()).isNotNull().isEmpty();
     }
 
-    @DisplayName("Should create NonogramSolutionNode and check toString()")
     @Test
+    @DisplayName("Should create NonogramSolutionNode and check toString()")
     void shouldCreateNonogramSolutionNodeAndCheckToString() {
         // given
         NonogramLogic nonogramLogic = create_o06005_logic();
@@ -104,8 +97,8 @@ class NonogramSolutionNodeTest {
                         ", nodeLogs=");
     }
 
-    @DisplayName("colourOrPlaceX - should place X at given position and add action dependencies")
     @Test
+    @DisplayName("colourOrPlaceX - should place X at given position and add action dependencies")
     void shouldPlaceXAtGivenPositionAndAddActionDependencies() {
         // given
         NonogramLogic logicMock = mock(NonogramLogic.class);
@@ -123,8 +116,8 @@ class NonogramSolutionNodeTest {
         verify(logicMock, never()).colourFieldAtGivenPosition(any());
     }
 
-    @DisplayName("colourOrPlaceX - should colour at given position and add action dependencies")
     @Test
+    @DisplayName("colourOrPlaceX - should colour at given position and add action dependencies")
     void shouldColourAtGivenPositionAndAddActionDependencies() {
         // given
         NonogramLogic logicMock = mock(NonogramLogic.class);

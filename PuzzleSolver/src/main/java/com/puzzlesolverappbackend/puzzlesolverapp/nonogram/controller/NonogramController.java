@@ -62,7 +62,7 @@ public class NonogramController {
 
     @GetMapping("/getNonogramsList")
     public ResponseEntity<List<Nonogram>> getNonogramsList() {
-        return new ResponseEntity<>(nonogramRepository.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(nonogramService.getNonogramsList(), HttpStatus.OK);
     }
 }
 

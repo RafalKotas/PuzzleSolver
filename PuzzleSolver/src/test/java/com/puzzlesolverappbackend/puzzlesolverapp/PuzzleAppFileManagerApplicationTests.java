@@ -15,11 +15,13 @@ class PuzzleAppFileManagerApplicationTests {
 	private ApplicationContext context;
 
 	@Test
+	@DisplayName("Should load context")
 	void contextLoads() {
 		assertThat(context).isNotNull();
 	}
 
 	@Test
+	@DisplayName("Should run main method without exceptions")
 	void mainMethodShouldRunWithoutExceptions() {
 		// given
 		String[] args = {};

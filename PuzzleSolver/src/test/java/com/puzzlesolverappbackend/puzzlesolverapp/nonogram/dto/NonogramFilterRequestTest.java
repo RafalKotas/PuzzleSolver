@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class NonogramFilterRequestTest {
 
-    @DisplayName("should correctly construct NonogramFilterRequest and return values")
     @Test
+    @DisplayName("should correctly construct NonogramFilterRequest and return values")
     void shouldConstructNonogramFilterRequest() {
         // given
         List<String> sources = List.of("user", "system");
@@ -31,14 +31,14 @@ class NonogramFilterRequestTest {
         );
 
         // then
-        assertEquals(sources, request.getSources());
-        assertEquals(years, request.getYears());
-        assertEquals(months, request.getMonths());
-        assertEquals(minDifficulty, request.getMinDifficulty());
-        assertEquals(maxDifficulty, request.getMaxDifficulty());
-        assertEquals(minHeight, request.getMinHeight());
-        assertEquals(maxHeight, request.getMaxHeight());
-        assertEquals(minWidth, request.getMinWidth());
-        assertEquals(maxWidth, request.getMaxWidth());
+        assertEquals(List.of("user", "system"), request.getSources());
+        assertEquals(List.of("2024"), request.getYears());
+        assertEquals(List.of("07"), request.getMonths());
+        assertEquals(1.0, request.getMinDifficulty());
+        assertEquals(5.0, request.getMaxDifficulty());
+        assertEquals(5, request.getMinHeight());
+        assertEquals(20, request.getMaxHeight());
+        assertEquals(5, request.getMinWidth());
+        assertEquals(20, request.getMaxWidth());
     }
 }

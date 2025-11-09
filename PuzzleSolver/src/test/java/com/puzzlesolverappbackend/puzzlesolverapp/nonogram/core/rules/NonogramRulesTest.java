@@ -10,10 +10,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class NonogramRulesTest {
 
-    @DisplayName("no-args constructor should create an object with default field values")
     @Test
+    @DisplayName("no-args constructor should create an object with default field values")
     void noArgsConstructor_defaults() {
-        // given / when
+        // given & when
         NonogramRules rules = new NonogramRules();
 
         // then
@@ -23,13 +23,12 @@ class NonogramRulesTest {
         assertThat(rules.getWidth()).isZero();
     }
 
-    @DisplayName("setters should populate fields and getters should return those values")
     @Test
+    @DisplayName("setters should populate fields and getters should return those values")
     void settersAndGetters_roundtrip() {
         // given
         NonogramRules rules = new NonogramRules();
 
-        // given
         List<List<Integer>> rowSeq = List.of(
                 List.of(1, 1, 1),
                 List.of(1, 1, 1, 1, 1),
@@ -69,8 +68,8 @@ class NonogramRulesTest {
         assertThat(rules.getWidth()).isEqualTo(10);
     }
 
-    @DisplayName("all-args constructor should set all fields")
     @Test
+    @DisplayName("all-args constructor should set all fields")
     void allArgsConstructor_setsAllFields() {
         // given
         List<List<Integer>> rowSeq = List.of(
@@ -120,8 +119,8 @@ class NonogramRulesTest {
         assertThat(rules.getWidth()).isEqualTo(10);
     }
 
-    @DisplayName("mapNonogramFileDetailsToNonogramRules should copy sequences and dimensions from file details (o06005)")
     @Test
+    @DisplayName("mapNonogramFileDetailsToNonogramRules should copy sequences and dimensions from file details (o06005)")
     void mapFromFileDetails_copiesSequencesAndDimensions() {
         // given
         List<List<Integer>> rowSeq = List.of(

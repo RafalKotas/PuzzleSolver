@@ -1,6 +1,7 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mark;
 
 import org.apache.logging.log4j.util.TriConsumer;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class SequencesContextTest {
 
     @Test
+    @DisplayName("AllArgsConstructor should create SequencesContext with all fields")
     void shouldCreateContextWithAllFields() {
         // given
         List<List<Integer>> lengths = List.of(List.of(1, 2), List.of(3));

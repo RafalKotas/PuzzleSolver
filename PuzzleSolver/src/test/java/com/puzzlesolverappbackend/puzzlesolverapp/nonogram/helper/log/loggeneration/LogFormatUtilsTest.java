@@ -14,7 +14,7 @@ class LogFormatUtilsTest {
 
     @Test
     @DisplayName("LogFormatUtils constructor should throw UnsupportedOperationException - reflect instantiation")
-    void constructor_throwsException_whenInstantiatedReflectively() throws Exception {
+    void shouldNotBeInstantiableViaReflection() throws Exception {
         // given
         Constructor<LogFormatUtils> constructor = LogFormatUtils.class.getDeclaredConstructor();
         constructor.setAccessible(true);
@@ -30,8 +30,8 @@ class LogFormatUtilsTest {
 
     // -------------------- toMutableRangesList --------------------
 
-    @DisplayName("toMutableRangesList - should throw when string does not start with \"[[\"")
     @Test
+    @DisplayName("toMutableRangesList - should throw when string does not start with \"[[\"")
     void toMutableRangesList_shouldThrow_whenNoLeadingDoubleBracket() {
         // given
         String bad = "[0, 14], [3, 16]]"; // missing leading "[["
@@ -44,8 +44,8 @@ class LogFormatUtilsTest {
         assertTrue(ex.getMessage().contains("Unsupported format (expected [[...]]):"));
     }
 
-    @DisplayName("toMutableRangesList - should throw when string does not end with \"]]\"")
     @Test
+    @DisplayName("toMutableRangesList - should throw when string does not end with \"]]\"")
     void toMutableRangesList_shouldThrow_whenNoTrailingDoubleBracket() {
         // given
         String bad = "[[0, 14], [3, 16]"; // missing trailing "]]"
@@ -58,8 +58,8 @@ class LogFormatUtilsTest {
         assertTrue(ex.getMessage().contains("Unsupported format (expected [[...]]):"));
     }
 
-    @DisplayName("toMutableRangesList - should parse multiple inner lists with spaces")
     @Test
+    @DisplayName("toMutableRangesList - should parse multiple inner lists with spaces")
     void toMutableRangesList_shouldParseRanges() {
         // given
         String literal = "[[0, 14], [  3 , 16  ], [18,18]]";
@@ -78,8 +78,8 @@ class LogFormatUtilsTest {
         assertEquals(List.of(0, 14, 99), parsed.get(0));
     }
 
-    @DisplayName("toMutableRangesList - should return empty when inner lists don't match number pattern")
     @Test
+    @DisplayName("toMutableRangesList - should return empty when inner lists don't match number pattern")
     void toMutableRangesList_shouldReturnEmpty_whenNoNumericMatches() {
         // given
         String literal = "[[a, b], [x, y]]"; // outer OK, inner won't match regex
@@ -93,8 +93,8 @@ class LogFormatUtilsTest {
 
     // -------------------- toImmutableIntListLiteral / toMutableIntListLiteral --------------------
 
-    @DisplayName("Flat int parser should ignore empty tokens like \"[1,, 2]\" and produce valid literals")
     @Test
+    @DisplayName("Flat int parser should ignore empty tokens like \"[1,, 2]\" and produce valid literals")
     void flatIntParser_shouldIgnoreEmptyTokens() {
         // given
         String literal = "[1,, 2,  ,3]";
@@ -108,8 +108,8 @@ class LogFormatUtilsTest {
         assertEquals("new ArrayList<>(List.of(1, 2, 3))", mutable);
     }
 
-    @DisplayName("Flat int parser should handle empty list []")
     @Test
+    @DisplayName("Flat int parser should handle empty list []")
     void flatIntParser_shouldHandleEmptyList() {
         // given
         String empty = "[]";
@@ -125,8 +125,8 @@ class LogFormatUtilsTest {
 
     // -------------------- Ranges formatters --------------------
 
-    @DisplayName("toImmutableRangesListLiteral - should format nested ranges into List.of(...)")
     @Test
+    @DisplayName("toImmutableRangesListLiteral - should format nested ranges into List.of(...)")
     void toImmutableRangesListLiteral_shouldFormat() {
         // given
         String ranges = "[[0, 14], [3, 16], [18, 18]]";
@@ -138,8 +138,8 @@ class LogFormatUtilsTest {
         assertEquals("List.of(List.of(0, 14), List.of(3, 16), List.of(18, 18))", out);
     }
 
-    @DisplayName("toMutableRangesListLiteral - should format nested ranges into new ArrayList<>(List.of(...))")
     @Test
+    @DisplayName("toMutableRangesListLiteral - should format nested ranges into new ArrayList<>(List.of(...))")
     void toMutableRangesListLiteral_shouldFormat() {
         // given
         String ranges = "[[0, 14], [3, 16]]";
@@ -153,8 +153,8 @@ class LogFormatUtilsTest {
 
     // -------------------- String lists formatters --------------------
 
-    @DisplayName("toImmutableStringListLiteral - should convert strings like \"[-, X]\" to List.of(\"-\", \"X\")")
     @Test
+    @DisplayName("toImmutableStringListLiteral - should convert strings like \"[-, X]\" to List.of(\"-\", \"X\")")
     void toImmutableStringListLiteral_shouldFormat() {
         // given
         String row = "[-, -, X, -, O]";
@@ -166,8 +166,8 @@ class LogFormatUtilsTest {
         assertEquals("List.of(\"-\", \"-\", \"X\", \"-\", \"O\")", out);
     }
 
-    @DisplayName("toImmutableStringListLiteral - should return List.of() for []")
     @Test
+    @DisplayName("toImmutableStringListLiteral - should return List.of() for []")
     void toImmutableStringListLiteral_empty() {
         // given
         String row = "[]";
@@ -179,8 +179,8 @@ class LogFormatUtilsTest {
         assertEquals("List.of()", out);
     }
 
-    @DisplayName("toMutableStringListLiteral - should wrap immutable form in new ArrayList<>(...)")
     @Test
+    @DisplayName("toMutableStringListLiteral - should wrap immutable form in new ArrayList<>(...)")
     void toMutableStringListLiteral_shouldFormat() {
         // given
         String row = "[]";
