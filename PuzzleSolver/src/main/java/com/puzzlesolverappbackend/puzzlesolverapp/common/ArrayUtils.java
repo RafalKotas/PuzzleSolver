@@ -10,13 +10,13 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class ArrayUtils {
 
-    public static <T> List<List<T>> copyTwoDeepList(List<List<T>> nonogramBoard) {
-        if (nonogramBoard == null) {
+    public static <T> List<List<T>> copyTwoDeepList(List<List<T>> twoDeepList) {
+        if (twoDeepList == null) {
             return new ArrayList<>();
         }
 
         List<List<T>> copiedBoard = new ArrayList<>();
-        for (List<T> boardRow : nonogramBoard) {
+        for (List<T> boardRow : twoDeepList) {
             if (boardRow != null) {
                 copiedBoard.add(new ArrayList<>(boardRow));
             } else {

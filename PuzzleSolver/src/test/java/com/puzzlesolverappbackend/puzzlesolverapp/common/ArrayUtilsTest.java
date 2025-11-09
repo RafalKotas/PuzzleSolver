@@ -9,9 +9,61 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.copyTwoDeepList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ArrayUtilsTest {
+
+    // 1. copyTwoDeepList
+    @Test
+    @DisplayName("Should return empty list if twoDeepList is null")
+    void shouldReturnEmptyListIfTwoDeepListIsNull() {
+        // given
+        List<List<String>> twoDeepList = null;
+
+        // when
+        List<List<String>> result = copyTwoDeepList(twoDeepList);
+
+        // then
+        assertThat(result).isNotNull().hasSize(0);
+    }
+
+    @Test
+    @DisplayName("Should return board with null row")
+    void shouldReturnBoardWithNullRow() {
+        // given
+        List<String> nullArray = null;
+        List<List<String>> twoDeepList = new ArrayList<>();
+        twoDeepList.add(nullArray);
+
+        // when
+        List<List<String>> result = copyTwoDeepList(twoDeepList);
+
+        // then
+        assertThat(result).isNotNull().hasSize(1);
+    }
+
+    @Test
+    @DisplayName("Should return board with filled row")
+    void shouldReturnBoardWithFilledRow() {
+        // given
+        List<String> list = new ArrayList<>(List.of("X", "O", "X", "O"));
+        List<List<String>> twoDeepList = new ArrayList<>();
+        twoDeepList.add(list);
+
+        // when
+        List<List<String>> result = copyTwoDeepList(twoDeepList);
+
+        // then
+        assertThat(result).isNotNull()
+                .hasSize(1)
+                .isEqualTo(
+                        new ArrayList<>(
+                                List.of(new ArrayList<>(List.of("X", "O", "X", "O")))
+                        )
+                );
+    }
 
     @Test
     @DisplayName("ArrayUtils constructor should throw UnsupportedOperationException - reflect instantiation")
@@ -32,7 +84,7 @@ class ArrayUtilsTest {
         assertEquals("This is a utility class and cannot be instantiated", cause.getMessage());
     }
 
-    // 1. rangeInsideAnotherRange
+    // 2. rangeInsideAnotherRange
 
     @Test
     void rangeInsideAnotherRange_returnsTrueWhenInside() {
