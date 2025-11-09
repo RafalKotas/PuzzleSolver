@@ -19,13 +19,13 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Non
 public class NonogramSolverUtils {
 
     public static boolean isBoardConsistentWithSequences(List<List<String>> board, List<List<Integer>> rowSeq, List<List<Integer>> colSeq) {
-        List<List<List<Integer>>> rowRanges = inferSequenceRangesFromBoard(board);
+        List<List<List<Integer>>> rowRanges = inferSequenceRangesFromRows(board);
         List<List<List<Integer>>> colRanges = inferSequenceRangesFromColumns(board);
 
         return sequencesMatch(rowRanges, rowSeq) && sequencesMatch(colRanges, colSeq);
     }
 
-    public static List<List<List<Integer>>> inferSequenceRangesFromBoard(List<List<String>> board) {
+    public static List<List<List<Integer>>> inferSequenceRangesFromRows(List<List<String>> board) {
         List<List<List<Integer>>> allRowRanges = new ArrayList<>();
 
         for (List<String> row : board) {

@@ -117,7 +117,7 @@ class NonogramSolutionSaverTest {
 
             utilsMock.when(() -> NonogramSolverUtils.isBoardConsistentWithSequences(any(), any(), any()))
                     .thenReturn(true);
-            utilsMock.when(() -> NonogramSolverUtils.inferSequenceRangesFromBoard(any()))
+            utilsMock.when(() -> NonogramSolverUtils.inferSequenceRangesFromRows(any()))
                     .thenReturn(derivedRowRanges);
             utilsMock.when(() -> NonogramSolverUtils.inferSequenceRangesFromColumns(any()))
                     .thenReturn(derivedColumnRanges);
@@ -221,7 +221,7 @@ class NonogramSolutionSaverTest {
 
             utilsMock.when(() -> NonogramSolverUtils.isBoardConsistentWithSequences(any(), any(), any()))
                     .thenReturn(false);
-            utilsMock.when(() -> NonogramSolverUtils.inferSequenceRangesFromBoard(any()))
+            utilsMock.when(() -> NonogramSolverUtils.inferSequenceRangesFromRows(any()))
                     .thenReturn(derivedRowRanges);
             utilsMock.when(() -> NonogramSolverUtils.inferSequenceRangesFromColumns(any()))
                     .thenReturn(derivedColumnRanges);

@@ -33,7 +33,7 @@ public class NonogramSolutionSaver {
 
         if (!isCorrect) return result;
 
-        result.setDerivedRowRanges(NonogramSolverUtils.inferSequenceRangesFromBoard(request.getBoard()));
+        result.setDerivedRowRanges(NonogramSolverUtils.inferSequenceRangesFromRows(request.getBoard()));
         result.setDerivedColumnRanges(NonogramSolverUtils.inferSequenceRangesFromColumns(request.getBoard()));
 
         Path directory = Paths.get(solutionDir);

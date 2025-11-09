@@ -73,34 +73,6 @@ class NonogramSolverUtilsTest {
         assertThat(consistent).isFalse();
     }
 
-    //
-
-    @Test
-    @DisplayName("Should infer rows ranges from nonogram board")
-    void shouldInferRowsRangesCorrectly() {
-        // given
-        List<List<String>> board = nonogramLogic.getNonogramSolutionBoard();
-
-        // when
-        var inferred = NonogramSolverUtils.inferSequenceRangesFromBoard(board);
-
-        // then
-        assertThat(inferred).isEqualTo(nonogramLogic.getRowsSequencesRanges());
-    }
-
-    @Test
-    @DisplayName("Should infer columns ranges from nonogram board")
-    void shouldInferColumnsRangesCorrectly() {
-        // given
-        List<List<String>> board = nonogramLogic.getNonogramSolutionBoard();
-
-        // when
-        var inferred = NonogramSolverUtils.inferSequenceRangesFromColumns(board);
-
-        // that
-        assertThat(inferred).isEqualTo(nonogramLogic.getColumnsSequencesRanges());
-    }
-
     @Test
     @DisplayName("Should mark modified correct solutionBoard as inconsistent with sequences lengths")
     void shouldDetectInconsistentBoard() {
@@ -119,6 +91,54 @@ class NonogramSolverUtilsTest {
         // then
         assertThat(consistent).isFalse();
     }
+
+    // inferSequenceRangesFromRows
+
+    @Test
+    @DisplayName("Should infer (-1, -1) -> for empty range from nonogram board")
+    void shouldInferRangeForEmptyRow() {
+        // given
+        nonogramLogic.setNonogramBoardRow(1, new ArrayList<>(
+                List.of("X", "X", "X", "X", "X", "X", "X", "X", "X", "X")
+        ));
+        List<List<String>> board = nonogramLogic.getNonogramSolutionBoard();
+
+        // when
+        var inferred = NonogramSolverUtils.inferSequenceRangesFromRows(board);
+
+        // then
+        assertThat(inferred.get(1)).isEqualTo(List.of(List.of(-1, -1)));
+    }
+
+    @Test
+    @DisplayName("Should infer rows ranges from nonogram board")
+    void shouldInferRowsRangesCorrectly() {
+        // given
+        List<List<String>> board = nonogramLogic.getNonogramSolutionBoard();
+
+        // when
+        var inferred = NonogramSolverUtils.inferSequenceRangesFromRows(board);
+
+        // then
+        assertThat(inferred).isEqualTo(nonogramLogic.getRowsSequencesRanges());
+    }
+
+    // inferSequenceRangesFromColumns
+
+    @Test
+    @DisplayName("Should infer columns ranges from nonogram board")
+    void shouldInferColumnsRangesCorrectly() {
+        // given
+        List<List<String>> board = nonogramLogic.getNonogramSolutionBoard();
+
+        // when
+        var inferred = NonogramSolverUtils.inferSequenceRangesFromColumns(board);
+
+        // that
+        assertThat(inferred).isEqualTo(nonogramLogic.getColumnsSequencesRanges());
+    }
+
+    // actualRangesDoNotContainCorrectRanges
 
     @Test
     @DisplayName("Should return true when actual ranges don't contain correct ranges")
@@ -146,6 +166,76 @@ class NonogramSolverUtilsTest {
 
         // then
         assertThat(actualRangesDoNotContainCorrectRanges).isFalse();
+    }
+
+    @Test
+    @DisplayName("Should return true if actual ranges size is not equal to expected ranges size")
+    void shouldReturnTrueWhenRangesSizesAreDifferent() {
+        // given
+        List<List<Integer>> expected = List.of(List.of(2, 3));
+        List<List<Integer>> actual = List.of(List.of(1, 4), List.of(5, 8));
+
+        // when
+        boolean actualRangesDoNotContainCorrectRanges = NonogramSolverUtils.actualRangesDoNotContainCorrectRanges(expected, actual);
+
+        // then
+        assertThat(actualRangesDoNotContainCorrectRanges).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should return true if expected ranges element has size not equal to 2")
+    void shouldReturnTrueWhenExpectedRangesElementHasSizeNotEqualToTwo() {
+        // given
+        List<List<Integer>> expected = List.of(List.of(1, 2, 3), List.of(6, 8));
+        List<List<Integer>> actual = List.of(List.of(1, 4), List.of(5, 8));
+
+        // when
+        boolean actualRangesDoNotContainCorrectRanges = NonogramSolverUtils.actualRangesDoNotContainCorrectRanges(expected, actual);
+
+        // then
+        assertThat(actualRangesDoNotContainCorrectRanges).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should return true if actual ranges element has size not equal to 2")
+    void shouldReturnTrueWhenActualRangesElementHasSizeNotEqualToTwo() {
+        // given
+        List<List<Integer>> expected = List.of(List.of(1, 2), List.of(6, 8));
+        List<List<Integer>> actual = List.of(List.of(1, 4, 5), List.of(5, 8));
+
+        // when
+        boolean actualRangesDoNotContainCorrectRanges = NonogramSolverUtils.actualRangesDoNotContainCorrectRanges(expected, actual);
+
+        // then
+        assertThat(actualRangesDoNotContainCorrectRanges).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should return true if actual ranges element start is greater than expected ranges element start")
+    void shouldReturnTrueActualRangeStartGreaterThanExpectedRangeStart() {
+        // given
+        List<List<Integer>> expected = List.of(List.of(1, 2), List.of(6, 8));
+        List<List<Integer>> actual = List.of(List.of(5, 7), List.of(5, 9));
+
+        // when
+        boolean actualRangesDoNotContainCorrectRanges = NonogramSolverUtils.actualRangesDoNotContainCorrectRanges(expected, actual);
+
+        // then
+        assertThat(actualRangesDoNotContainCorrectRanges).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should return true if actual ranges element end is less than expected ranges element end")
+    void shouldReturnTrueActualRangeEndLessThanExpectedRangeEnd() {
+        // given
+        List<List<Integer>> expected = List.of(List.of(1, 2), List.of(6, 8));
+        List<List<Integer>> actual = List.of(List.of(1, 1), List.of(5, 8));
+
+        // when
+        boolean actualRangesDoNotContainCorrectRanges = NonogramSolverUtils.actualRangesDoNotContainCorrectRanges(expected, actual);
+
+        // then
+        assertThat(actualRangesDoNotContainCorrectRanges).isTrue();
     }
 
     void create_solved_o06005_nonogram() {
