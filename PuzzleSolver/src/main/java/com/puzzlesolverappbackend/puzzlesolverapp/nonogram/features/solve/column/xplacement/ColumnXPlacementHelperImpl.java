@@ -1,9 +1,11 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.xplacement;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogicParams;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.xplacement.NonogramFieldPlacingXHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.NonogramColumnLogic;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.RefreshableColumnHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.common.CommonXPlacementHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.SequenceRangeCorrectionWhenPlacingXsLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.*;
@@ -36,7 +38,7 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
     private static final List<Integer> NOT_FOUND_COLOURED_FIELDS_RANGE_VALUE = List.of(-1, -1);
 
     public ColumnXPlacementHelperImpl(NonogramColumnLogic nonogramColumnLogic) {
-        this.nonogramColumnLogic = new NonogramColumnLogic(nonogramColumnLogic);
+        this.nonogramColumnLogic = nonogramColumnLogic;
         this.nonogramFieldPlacingXHelper = new NonogramFieldPlacingXHelper(
                 this.nonogramColumnLogic.getNonogramSolutionBoard(),
                 this.nonogramColumnLogic.getNonogramSolutionBoardWithMarks(),
@@ -290,7 +292,7 @@ public class ColumnXPlacementHelperImpl  extends CommonXPlacementHelper implemen
     private void updateLogicAfterXsPlacement(int columnIdx, int sequenceIndex, List<Integer> newRange) {
         List<Integer> oldRange = nonogramColumnLogic.getColumnsSequencesRanges().get(columnIdx).get(sequenceIndex);
         if (!newRange.equals(oldRange)) {
-            nonogramColumnLogic.changeColumnSequenceRange(columnIdx, sequenceIndex, newRange);
+            nonogramColumnLogic.updateColumnSequenceRange(columnIdx, sequenceIndex, newRange);
 
             List<Integer> sequencesLengths = nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIdx);
             List<String> columnState = nonogramColumnLogic.getBoardAccessHelper().getColumnCopy(columnIdx);

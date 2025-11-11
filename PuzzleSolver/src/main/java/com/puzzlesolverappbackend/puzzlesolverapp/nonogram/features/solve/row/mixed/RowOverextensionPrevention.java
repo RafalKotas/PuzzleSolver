@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.mixed;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 
@@ -9,8 +9,8 @@ import java.util.stream.IntStream;
 
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldColoured;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.isFieldWithX;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.MixedActionsHelper.wouldMergeTooLongBackward;
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.MixedActionsHelper.wouldMergeTooLongForward;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mixed.MixedActionsHelper.wouldMergeTooLongBackward;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mixed.MixedActionsHelper.wouldMergeTooLongForward;
 
 /**
  * prevent extending coloured sequence to excess length in row
@@ -74,7 +74,7 @@ public interface RowOverextensionPrevention {
             int maxSequenceLength
     ) {
         int width = solutionBoard.get(0).size();
-        List<List<Integer>> colouredSequencesRangesNotFurtherThanMaxSequenceLength = new ArrayList<>();
+        List<List<Integer>> colouredSequencesRangesInRowNotFurtherThanMaxSequenceLength = new ArrayList<>();
 
         List<Integer> possibleColouredSequencesStartIndexesRange = Arrays.asList(
                 potentiallyColouredFieldColumnIndex + DISTANCE_WITH_ONE_EMPTY_FIELD_TO_POSSIBLE_COLOURED,
@@ -99,7 +99,7 @@ public interface RowOverextensionPrevention {
                         currentColumnIdx,
                         potentiallyColouredSequenceColumnIdx - 1
                 );
-                colouredSequencesRangesNotFurtherThanMaxSequenceLength.add(colouredSequenceRangeInRowInRange);
+                colouredSequencesRangesInRowNotFurtherThanMaxSequenceLength.add(colouredSequenceRangeInRowInRange);
 
                 currentColumnIdx = potentiallyColouredSequenceColumnIdx + 1;
 
@@ -113,17 +113,23 @@ public interface RowOverextensionPrevention {
             currentColumnIdx++;
         }
 
-        return colouredSequencesRangesNotFurtherThanMaxSequenceLength;
+        return colouredSequencesRangesInRowNotFurtherThanMaxSequenceLength;
     }
 
-    static List<Integer> findValidSequencesIdsMergingToLeft(List<Integer> sequenceIds, List<Integer> expectedLengths, int columnIndexBeforeX, List<List<Integer>> colouredSequences) {
+    static List<Integer> findValidSequencesIdsMergingToLeft(List<Integer> sequenceIds,
+                                                            List<Integer> expectedLengths,
+                                                            int columnIndexBeforeX,
+                                                            List<List<Integer>> colouredSequences) {
         return IntStream.range(0, sequenceIds.size())
                 .filter(i -> !wouldMergeTooLongBackward(expectedLengths.get(i), columnIndexBeforeX, colouredSequences))
                 .mapToObj(sequenceIds::get)
                 .toList();
     }
 
-    static List<Integer> findValidSequencesIdsMergingToRight(List<Integer> sequenceIds, List<Integer> expectedLengths, int colouredColumnIndexAfterX, List<List<Integer>> colouredSequences) {
+    static List<Integer> findValidSequencesIdsMergingToRight(List<Integer> sequenceIds,
+                                                             List<Integer> expectedLengths,
+                                                             int colouredColumnIndexAfterX,
+                                                             List<List<Integer>> colouredSequences) {
 
         return IntStream.range(0, sequenceIds.size())
                 .filter(i -> !wouldMergeTooLongForward(expectedLengths.get(i), colouredColumnIndexAfterX, colouredSequences))

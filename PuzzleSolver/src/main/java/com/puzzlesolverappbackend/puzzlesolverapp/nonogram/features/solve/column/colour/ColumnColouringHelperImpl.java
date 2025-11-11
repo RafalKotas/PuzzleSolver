@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.colour;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogicParams;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
@@ -6,6 +6,8 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.Colouring
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.TooLongMergeFieldHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.colouring.NonogramFieldColouringHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.NonogramColumnLogic;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.RefreshableColumnHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringFieldsIfXWouldForceTooLongColouredFieldsSequenceLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ColouringGenerateLogBaseContext;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.colouring.ExtendLogHelper;
@@ -173,7 +175,7 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
                     isFieldEmpty(nonogramColumnLogic.getNonogramSolutionBoard(), tempX)) {
                 nonogramColumnLogic.getNonogramFieldExclusionHelper().excludeFieldInColumn(tempX);
                 nonogramColumnLogic.getColumnXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(tempX);
-                nonogramColumnLogic.correctColumnSequencesRangesIfXOnWay(columnIdx, false);
+                nonogramColumnLogic.correctColumnSequencesRangesIfXOnWay(columnIdx);
                 nonogramColumnLogic.getNonogramFieldClearingHelper().clearField(tempX);
             }
 
@@ -224,7 +226,7 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
                     isFieldEmpty(nonogramColumnLogic.getNonogramSolutionBoard(), tempX)) {
                 nonogramColumnLogic.getColumnXPlacementHelper().getNonogramFieldPlacingXHelper().placeXAtGivenField(tempX);
                 nonogramColumnLogic.getNonogramFieldExclusionHelper().excludeFieldInColumn(tempX);
-                nonogramColumnLogic.correctColumnSequencesRangesIfXOnWay(columnIdx, false);
+                nonogramColumnLogic.correctColumnSequencesRangesIfXOnWay(columnIdx);
                 nonogramColumnLogic.getNonogramFieldClearingHelper().clearField(tempX);
             }
 

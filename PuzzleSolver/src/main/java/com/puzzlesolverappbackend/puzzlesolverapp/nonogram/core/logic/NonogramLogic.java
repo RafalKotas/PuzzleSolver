@@ -129,7 +129,7 @@ public class NonogramLogic extends NonogramLogicParams {
 
         this.nonogramRowLogic = new NonogramRowLogic(this, boardAccessHelper, actionScheduler);
 
-        this.nonogramColumnLogic = new NonogramColumnLogic(this);
+        this.nonogramColumnLogic = new NonogramColumnLogic(this, boardAccessHelper, actionScheduler);
 
         this.printer = new NonogramPrinter(this);
     }
@@ -794,7 +794,7 @@ public class NonogramLogic extends NonogramLogicParams {
                     }
                 }
                 case CORRECT_SEQUENCES_RANGES_IF_X_ON_WAY_IN_COLUMN -> {
-                    this.nonogramColumnLogic.correctColumnSequencesRangesIfXOnWay(columnIdx, true);
+                    this.nonogramColumnLogic.correctColumnSequencesRangesIfXOnWay(columnIdx);
                     if (this.guessMode == GuessMode.ENABLED) {
                         invalidateSolutionIfColumnSequencesWrong(columnIdx);
                     }

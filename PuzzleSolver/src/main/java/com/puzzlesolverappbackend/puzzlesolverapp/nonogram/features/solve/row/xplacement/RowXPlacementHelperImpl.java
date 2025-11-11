@@ -1,10 +1,12 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.xplacement;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogicParams;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.xplacement.NonogramFieldPlacingXHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.common.CommonXPlacementHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.NonogramRowLogic;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.RefreshableRowHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.mixed.SequenceRangeCorrectionWhenPlacingXsLogHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.xplacement.*;
 import lombok.Getter;
@@ -208,7 +210,7 @@ public class RowXPlacementHelperImpl extends CommonXPlacementHelper implements R
     private void updateLogicAfterXsPlacement(int rowIdx, int sequenceIndex, List<Integer> updatedRange) {
         List<Integer> oldRange = nonogramRowLogic.getRowsSequencesRanges().get(rowIdx).get(sequenceIndex);
         if (!updatedRange.equals(oldRange)) {
-            nonogramRowLogic.changeRowSequenceRange(rowIdx, sequenceIndex, updatedRange);
+            nonogramRowLogic.updateRowSequenceRange(rowIdx, sequenceIndex, updatedRange);
 
             List<Integer> rowSequencesLengths = nonogramRowLogic.getNonogramRules().getRowSequencesLengths().get(rowIdx);
             List<String> boardRow = nonogramRowLogic.getBoardAccessHelper().getRowCopy(rowIdx);

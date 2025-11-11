@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.xplacement;
 
 public interface ColumnXPlacementHelper {
     void placeXsColumnAtUnreachableFields(int columnIdx);

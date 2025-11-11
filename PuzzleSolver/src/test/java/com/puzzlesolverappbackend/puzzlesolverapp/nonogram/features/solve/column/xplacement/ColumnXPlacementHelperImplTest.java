@@ -1,11 +1,15 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.xplacement;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLogic;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.NonogramActionDetails;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRules;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramActionScheduler;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramBoardAccessHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.config.GuessMode;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.NonogramColumnLogic;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.xplacement.ColumnXPlacementHelperImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -1294,10 +1298,14 @@ class ColumnXPlacementHelperImplTest {
         );
 
         NonogramLogic logicForHelper = new NonogramLogic(rules, GuessMode.DISABLED);
-        NonogramColumnLogic columnLogicForHelper = new NonogramColumnLogic(logicForHelper);
+        NonogramColumnLogic columnLogicForHelper = new NonogramColumnLogic(logicForHelper,
+                new NonogramBoardAccessHelper(logicForHelper),
+                new NonogramActionScheduler(logicForHelper.getActionsToDoList()));
 
         NonogramLogic logicToCopySrc = new NonogramLogic(rules, GuessMode.DISABLED);
-        NonogramColumnLogic columnLogicToCopy = new NonogramColumnLogic(logicToCopySrc);
+        NonogramColumnLogic columnLogicToCopy = new NonogramColumnLogic(logicToCopySrc,
+                new NonogramBoardAccessHelper(logicForHelper),
+                new NonogramActionScheduler(logicForHelper.getActionsToDoList()));
 
         var helperRanges = deepCopy(columnLogicForHelper.getColumnsSequencesRanges());
         helperRanges.set(0, new ArrayList<>(List.of(new ArrayList<>(List.of(0, 9)))));

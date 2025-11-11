@@ -6,6 +6,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRu
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramActionScheduler;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramBoardAccessHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.colouring.NonogramFieldColouringHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.colour.RowColouringHelperImpl;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.testclasses.RowColouringHelperImplUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

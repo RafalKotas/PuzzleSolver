@@ -6,6 +6,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRu
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramActionScheduler;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.NonogramBoardAccessHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.correction.RowSequencesCorrectionHelperImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,8 @@ class RowSequencesCorrectionHelperImplTest {
     @Mock
     NonogramBoardAccessHelper nonogramBoardAccessHelper;
 
-    @InjectMocks RowSequencesCorrectionHelperImpl subject;
+    @InjectMocks
+    RowSequencesCorrectionHelperImpl subject;
 
     @BeforeEach
     void setUpRules() {

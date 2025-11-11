@@ -9,12 +9,12 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.config.Gu
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.dto.FinalNonogramSolutionDTO;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.dto.NonogramInitializationRequest;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.dto.NonogramSolutionSaveRequest;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.ColumnColouringHelperImpl;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.ColumnSequencesCorrectionHelperImpl;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.ColumnXPlacementHelperImpl;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.RowColouringHelperImpl;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.RowSequencesCorrectionHelperImpl;
-import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.RowXPlacementHelperImpl;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.colour.ColumnColouringHelperImpl;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.correction.ColumnSequencesCorrectionHelperImpl;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.xplacement.ColumnXPlacementHelperImpl;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.colour.RowColouringHelperImpl;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.correction.RowSequencesCorrectionHelperImpl;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.xplacement.RowXPlacementHelperImpl;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.mapper.NonogramMapper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.service.saver.NonogramSolutionSaver;
 import lombok.extern.slf4j.Slf4j;
@@ -300,7 +300,7 @@ public class NonogramLogicService {
                 nonogramLogicObject.getNonogramColumnLogic()
         );
 
-        columnSequencesCorrectionHelper.correctColumnSequencesRangesIfXOnWay(columnIdx, true);
+        columnSequencesCorrectionHelper.correctColumnSequencesRangesIfXOnWay(columnIdx);
     }
 
     // TODO - create test just for this action

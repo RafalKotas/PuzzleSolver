@@ -4,6 +4,7 @@ import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramLo
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.logic.NonogramState;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.rules.NonogramRules;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.config.GuessMode;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.xplacement.RowXPlacementHelperImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

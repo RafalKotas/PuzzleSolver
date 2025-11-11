@@ -20,10 +20,11 @@
 			**/nonogram/core/guess/**,
 			<!-- temporary exclusions -->
 			**/nonogram/helper/log/colouring/AssignmentConflictLogHelper.java
-			**/nonogram/helper/log/colouring/PlaceXsIfONearXWillMergeNearFieldsToTooLongColouredSequenceLogHelper.java
-			**/nonogram/helper/log/colouring/PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper.java
-			**/nonogram/helper/log/colouring/PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLogHelper.java
-			**/nonogram/helper/log/colouring/PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper.java
+			**/nonogram/helper/log/mixed/PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper.java
+			**/nonogram/helper/log/mixed/PreventExtendingColouredSequenceToExcessLengthPlaceXPartLogHelper.java
+			**/nonogram/helper/log/mixed/PreventExtendingColouredSequenceToExcessLengthColouringPartLogHelper.java
+			**/nonogram/helper/log/range/PreventExtendingColouredSequenceToExcessLengthCorrectingRangePartLogHelper.java
+			**/nonogram/helper/log/xplacement/PlaceXsIfONearXWillMergeNearFieldsToTooLongColouredSequenceLogHelper.java
 		</sonar.exclusions>
 	</properties>
 	<dependencies>

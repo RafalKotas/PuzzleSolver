@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.common.mixed;
 
 import lombok.experimental.UtilityClass;
 

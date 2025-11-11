@@ -48,11 +48,11 @@ public abstract class NonogramLogicParams {
         this.logs = logs;
     }
 
-    protected List<String> getRowCopy(int rowIdx) {
+    public List<String> getRowCopy(int rowIdx) {
         return new ArrayList<>(this.nonogramSolutionBoard.get(rowIdx));
     }
 
-    protected List<String> getColumnCopy(int columnIdx) {
+    public List<String> getColumnCopy(int columnIdx) {
         return new ArrayList<>(this.getNonogramBoardColumn(columnIdx));
     }
 

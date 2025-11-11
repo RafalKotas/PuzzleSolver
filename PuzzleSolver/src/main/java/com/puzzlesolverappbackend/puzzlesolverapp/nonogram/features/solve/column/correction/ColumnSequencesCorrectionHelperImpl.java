@@ -1,8 +1,10 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.correction;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.RangeCorrectionHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.NonogramColumnLogic;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.RefreshableColumnHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.common.CommonRangeCorrectionHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.*;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.solve.SequenceRangeCorrectionHelper;
@@ -255,7 +257,7 @@ public class ColumnSequencesCorrectionHelperImpl extends CommonRangeCorrectionHe
     }
 
     @Override
-    public void correctColumnSequencesRangesIfXOnWay(int columnIndex, boolean changeLogicDetails) {
+    public void correctColumnSequencesRangesIfXOnWay(int columnIndex) {
         var ranges = nonogramColumnLogic.getColumnsSequencesRanges().get(columnIndex);
         var lengths = nonogramColumnLogic.getNonogramRules().getColumnSequencesLengths().get(columnIndex);
         var excluded = nonogramColumnLogic.getColumnsSequencesIdsNotToInclude().get(columnIndex);
@@ -278,7 +280,7 @@ public class ColumnSequencesCorrectionHelperImpl extends CommonRangeCorrectionHe
             if (!currentRange.equals(updatedRange)) {
                 nonogramColumnLogic.updateColumnSequenceRange(columnIndex, sequenceIndex, updatedRange);
 
-                if (changeLogicDetails && shouldExcludeSequence(columnIndex, updatedRange, length)) {
+                if (shouldExcludeSequence(columnIndex, updatedRange, length)) {
                     nonogramColumnLogic.excludeSequenceInColumn(columnIndex, sequenceIndex);
                 }
 
@@ -286,7 +288,7 @@ public class ColumnSequencesCorrectionHelperImpl extends CommonRangeCorrectionHe
             }
         }
 
-        if (changed && changeLogicDetails) {
+        if (changed) {
             List<List<Integer>> updatedRanges = nonogramColumnLogic.getColumnsSequencesRanges().get(columnIndex);
 
             String tmpLog = SequenceRangeCorrectionWhenMetXLogHelper.generateLog(

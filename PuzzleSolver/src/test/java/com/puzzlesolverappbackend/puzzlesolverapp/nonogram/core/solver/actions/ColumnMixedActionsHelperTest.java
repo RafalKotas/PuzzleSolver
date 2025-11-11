@@ -1,6 +1,7 @@
 package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.actions;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.mixed.ColumnMixedActionsHelper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.actions.ColumnMixedActionsHelper.*;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.mixed.ColumnOverextensionPrevention.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,7 +43,7 @@ class ColumnMixedActionsHelperTest {
         Field fieldToCheckColoured = new Field(7, columnIdx);
 
         // when
-        List<Integer> result = ColumnMixedActionsHelper.sequencesIdsInColumnIncludingField(columnsSequencesRanges, fieldToCheckColoured);
+        List<Integer> result = sequencesIdsInColumnIncludingField(columnsSequencesRanges, fieldToCheckColoured);
 
         // then
         assertThat(result).containsExactly(0);
@@ -60,7 +61,7 @@ class ColumnMixedActionsHelperTest {
         Field fieldToCheckColoured = new Field(7, 7);
 
         // when
-        List<Integer> sequencesIds = ColumnMixedActionsHelper.sequencesIdsInColumnIncludingField(
+        List<Integer> sequencesIds = sequencesIdsInColumnIncludingField(
                 columnSequencesRanges,
                 fieldToCheckColoured
         );
@@ -129,7 +130,7 @@ class ColumnMixedActionsHelperTest {
         int maxSequenceLength = 8;
 
         // when
-        List<List<Integer>> ranges = ColumnMixedActionsHelper.getColouredSequencesRangesInColumnInRangeToTop(
+        List<List<Integer>> ranges = getColouredSequencesRangesInColumnInRangeToTop(
                 board, columnIdx, potentiallyColouredFieldRowIndex, maxSequenceLength
         );
 
@@ -159,8 +160,7 @@ class ColumnMixedActionsHelperTest {
         int maxSequenceLength = 4;
 
         // when
-        List<List<Integer>> ranges =
-                ColumnMixedActionsHelper.getColouredSequencesRangesInColumnInRangeToTop(
+        List<List<Integer>> ranges = getColouredSequencesRangesInColumnInRangeToTop(
                         board, columnIdx, potentiallyColouredFieldRowIndex, maxSequenceLength);
 
         // then
@@ -284,7 +284,7 @@ class ColumnMixedActionsHelperTest {
         );
 
         // when
-        List<Integer> result = ColumnMixedActionsHelper.findValidSequencesIdsMergingToBottom(
+        List<Integer> result = findValidSequencesIdsMergingToBottom(
                 sequenceIds, expectedLengths, colouredRowIndexAfterX, colouredSequences
         );
 

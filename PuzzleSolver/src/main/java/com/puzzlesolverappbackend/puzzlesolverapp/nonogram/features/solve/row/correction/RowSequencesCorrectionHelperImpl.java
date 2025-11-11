@@ -1,9 +1,11 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.correction;
 
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.model.Field;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.RangeCorrectionHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.enums.NonogramSolveAction;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.common.CommonRangeCorrectionHelper;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.NonogramRowLogic;
+import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.RefreshableRowHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.log.range.*;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.solve.SequenceRangeCorrectionHelper;
 import com.puzzlesolverappbackend.puzzlesolverapp.nonogram.helper.solve.SequenceRangeCorrectionWhenMetXHelper;

@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.xplacement;
 
 public interface RowXPlacementHelper {
     void placeXsRowAtUnreachableFields(int rowIdx);

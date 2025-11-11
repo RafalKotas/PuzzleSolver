@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.row.colour;
 
 public interface RowColouringHelper {
     void colourOverlappingFieldsInRow(int rowIdx);

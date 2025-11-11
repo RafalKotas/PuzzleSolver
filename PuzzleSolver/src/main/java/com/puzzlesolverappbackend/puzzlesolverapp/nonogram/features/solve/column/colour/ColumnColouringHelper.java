@@ -1,4 +1,4 @@
-package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column;
+package com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.colour;
 
 public interface ColumnColouringHelper {
     void colourOverlappingFieldsInColumn(int columnIdx);

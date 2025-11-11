@@ -13,7 +13,7 @@ public interface ColumnActions {
     void correctColumnSequencesRangesWhenMetColouredField(int columnIdx);
 
     @SuppressWarnings("unused")
-    void correctColumnSequencesRangesIfXOnWay(int columnIdx, boolean changeLogicDetails);
+    void correctColumnSequencesRangesIfXOnWay(int columnIdx);
 
     @SuppressWarnings("unused")
     void correctColumnSequencesRangesWhenMatchingFieldsToSequences(int columnIdx);
@@ -25,12 +25,12 @@ public interface ColumnActions {
     void colourOverlappingFieldsInColumn(int columnIdx);
 
     @SuppressWarnings("unused")
-    void colourFieldsInColumnIfXWouldForceTooLongColouredFieldsSequence(int columnIdx);
-
-    @SuppressWarnings("unused")
     void extendColouredFieldsNearXToMaximumPossibleLengthInColumn(int columnIdx);
 
-    // colourFieldsInColumnIfXCausesAssignmentConflict
+    @SuppressWarnings("unused")
+    void colourFieldsInColumnIfXWouldForceTooLongColouredFieldsSequence(int columnIdx);
+
+//    void colourFieldsInColumnIfXCausesAssignmentConflict(int columnIdx);
 
     @SuppressWarnings("unused")
     void placeXsColumnAtUnreachableFields(int columnIdx);
@@ -46,6 +46,9 @@ public interface ColumnActions {
 
     @SuppressWarnings("unused")
     void placeXsColumnIfONearXWillBeginTooLongPossibleColouredSequence(int columnIdx);
+
+    @SuppressWarnings("unused")
+    void placeXsColumnIfColouringFieldWillCauseAssignmentConflict(int rowIdx);
 
     @SuppressWarnings("unused")
     void preventExtendingColouredSequenceToExcessLengthInColumn(int columnIdx);
