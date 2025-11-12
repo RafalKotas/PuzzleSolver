@@ -10,7 +10,7 @@ FrontReact/my_notes/
 # BE
 .idea/
 PuzzleSolver/src/main/tools/MySQL/docker-compose.yml
-PuzzleSolver/src/test/resources/application.yml
+PuzzleSolver/src/test/resources/
 PuzzleSolver/data
 PuzzleSolver/src/main/java/com/puzzlesolverappbackend/puzzlesolverapp/old
 
@@ -19,4 +19,6 @@ PuzzleSolver/src/main/java/com/puzzlesolverappbackend/puzzlesolverapp/old
 /solutionsBackup/
 nCopy
 otherFolders
+
+.gitignore.backup
 
