@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import static com.puzzlesolverappbackend.puzzlesolverapp.common.ArrayUtils.rangeLength;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.solver.BoardUtils.*;
 import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.util.NonogramParametersComparatorHelper.rangesNotEqual;
+import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.mixed.ColumnOverextensionPrevention.*;
 
 public class ColumnMixedActionsHelperImpl implements ColumnMixedActionsHelper, RefreshableColumnHelper {
 
@@ -99,7 +100,7 @@ public class ColumnMixedActionsHelperImpl implements ColumnMixedActionsHelper, R
             List<Integer> columnSequencesLengths,
             List<List<Integer>> columnSequencesRanges
     ) {
-        List<Integer> sequencesIds = com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.mixed.ColumnOverextensionPrevention.sequencesIdsInColumnIncludingField(
+        List<Integer> sequencesIds = sequencesIdsInColumnIncludingField(
                 columnSequencesRanges, new Field(potentiallyColouredFieldRow, columnIdx)
         );
         if (sequencesIds.isEmpty()) return null;
@@ -107,14 +108,13 @@ public class ColumnMixedActionsHelperImpl implements ColumnMixedActionsHelper, R
         List<Integer> sequencesLengths = sequencesIds.stream().map(columnSequencesLengths::get).toList();
         int maxSequenceLength = Collections.max(sequencesLengths);
 
-        List<List<Integer>> colouredSequences = com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.mixed.ColumnOverextensionPrevention
-                .getColouredSequencesRangesInColumnInRangeToTop(
+        List<List<Integer>> colouredSequences = getColouredSequencesRangesInColumnInRangeToTop(
                         nonogramColumnLogic.getNonogramSolutionBoard(),
                         columnIdx,
                         potentiallyColouredFieldRow,
                         maxSequenceLength);
 
-        List<Integer> validSequenceIds = com.puzzlesolverappbackend.puzzlesolverapp.nonogram.features.solve.column.mixed.ColumnOverextensionPrevention.findValidSequencesIdsMergingToTop(
+        List<Integer> validSequenceIds = findValidSequencesIdsMergingToTop(
                 sequencesIds, sequencesLengths, potentiallyColouredFieldRow, colouredSequences
         );
 
@@ -226,8 +226,7 @@ public class ColumnMixedActionsHelperImpl implements ColumnMixedActionsHelper, R
             List<Integer> columnSequencesLengths,
             List<List<Integer>> columnSequencesRanges
     ) {
-        List<Integer> sequencesIds = ColumnOverextensionPrevention
-                .sequencesIdsInColumnIncludingField(
+        List<Integer> sequencesIds = sequencesIdsInColumnIncludingField(
                         columnSequencesRanges,
                         new Field(columnIdx, potentiallyColouredFieldRow)
                 );

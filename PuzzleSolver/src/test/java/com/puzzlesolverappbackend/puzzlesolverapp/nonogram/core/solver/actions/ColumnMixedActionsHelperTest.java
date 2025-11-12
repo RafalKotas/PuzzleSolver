@@ -140,7 +140,7 @@ class ColumnMixedActionsHelperTest {
     }
 
     @Test
-    @DisplayName("getColouredSequencesRangesInColumnInRangeToTop — o06041, col=7, hits empty cell branch and returns [3,5]")
+    @DisplayName("getColouredSequencesRangesInColumnInRangeToTop — o06041, col=7, hits empty cell branch and returns [3, 5]")
     void shouldCollectColouredRangeToTop_whenEmptyCellBetweenOAndX_o06041_col7() {
         // given
         List<List<String>> board = new ArrayList<>(List.of(
