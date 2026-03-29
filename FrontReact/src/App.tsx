@@ -1,4 +1,3 @@
-import "./App.css"
 import AppHeader  from "./CommonComponents/AppHeader/AppHeader"
 import AppFooter from "./CommonComponents/AppFooter/AppFooter"
 

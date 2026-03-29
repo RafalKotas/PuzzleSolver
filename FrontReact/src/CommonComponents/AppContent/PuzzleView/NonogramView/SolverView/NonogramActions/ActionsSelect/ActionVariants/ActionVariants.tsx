@@ -1,5 +1,5 @@
 // react
-import * as React from "react"
+import React from "react"
 
 // redux
 import { connect, ConnectedProps } from "react-redux"
