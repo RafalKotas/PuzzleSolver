@@ -1,5 +1,5 @@
 import axios from "axios"
-import { nonogramRelatedLogicData, toSolvePayload } from "../../store/puzzleLogic/nonogram"
+import { nonogramRelatedLogicData } from "@store/puzzleLogic/nonogram"
 
 const API_URL = "http://localhost:5003/api/nonogram/logic"
 
@@ -149,7 +149,7 @@ const placeXinColumnsRange  = (nonogramRelatedData: nonogramRelatedLogicData, co
 }
 
 const testCustomSolution = (nonogramRelatedData: nonogramRelatedLogicData, fileName: string) => {
-    var data = JSON.stringify(toSolvePayload(nonogramRelatedData))
+    var data = JSON.stringify(nonogramRelatedData)
 
     var config = {
         method: "post",
