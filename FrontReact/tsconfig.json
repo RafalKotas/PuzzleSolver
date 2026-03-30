@@ -13,7 +13,21 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"],
+      "@store/*": ["store/*"],
+      "@layout/*": ["store/layout/*"],
+      "@functions/*": ["functions/*"],
+      "@components/*": ["CommonComponents/*"],
+      // "@storelayout/*": ["./src/store/layout/*"],
+      // "@storedata/*": ["./src/store/data/*"],
+      // "@storefilters/*": ["./src/store/filters/*"],
+      // "@storepuzzleLogic/*": ["./src/store/puzzleLogic/*"],
+      // "@storedisplay/*": ["./src/store/display/*"],
+      // "@storecommons/*": ["./src/store/commons/*"],
+    }
   },
   "include": ["src"]
 }
