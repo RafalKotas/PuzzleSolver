@@ -1,11 +1,14 @@
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../../store"
+import { AppState } from "@store/index"
 
-// mui
+// mui - components
 import { Button } from "@mui/material"
 
 interface OwnSaveButtonProps {

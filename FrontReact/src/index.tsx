@@ -1,12 +1,17 @@
+// react
 import React from "react"
 import ReactDOM from "react-dom/client"
-import App from "./App"
-import reportWebVitals from "./reportWebVitals"
+
+// react-router
 import {
   BrowserRouter,
   Routes,
   Route
 } from "react-router-dom"
+
+// (sub)component(s)
+import App from "./App"
+
 import EmptyContent from "./CommonComponents/EmptyContent/EmptyContent"
 
 // content components
@@ -35,6 +40,9 @@ import AkariEditView from "./CommonComponents/AppContent/PuzzleView/AkariView/Ed
 import SudokuEditView from "./CommonComponents/AppContent/PuzzleView/SudokuView/EditView/SudokuEditView"
 import HitoriEditView from "./CommonComponents/AppContent/PuzzleView/HitoriView/EditView/HitoriEditView"
 import ArchitectEditView from "./CommonComponents/AppContent/PuzzleView/ArchitectView/EditView/ArchitectEditView"
+
+// other
+import reportWebVitals from "./reportWebVitals"
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

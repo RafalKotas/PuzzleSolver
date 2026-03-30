@@ -1,24 +1,35 @@
 // react
-import { useEffect } from "react"
+import React, { useEffect } from "react"
+
+// react - router
 import { useParams } from "react-router-dom"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../store"
-import { modes, SetMode } from "../../../../../store/display"
-import { selectedNonogramDetails, SetSelectedNonogram, transformNonogramInformationIntoNonogramDetails } from "../../../../../store/data/nonogram"
-import EditNonogramActions from "./EditNonogramActions/EditNonogramActions"
+import { AppState } from "@store/index"
+import { 
+    modes, 
+    SetMode 
+} from "store/display"
+import { 
+    selectedNonogramDetails, 
+    SetSelectedNonogram, 
+    transformNonogramInformationIntoNonogramDetails 
+} from "store/data/nonogram"
 
-// (sub) components
-import ValidateNonogramSection from "./ValidateNonogramSection/ValidateNonogramSection"
-import NonogramDisplay from "../NonogramDisplay/NonogramDisplay"
+// (sub)component(s)
+import EditNonogramActions from "CommonComponents/AppContent/PuzzleView/NonogramView/EditView/EditNonogramActions/EditNonogramActions"
+import ValidateNonogramSection from "CommonComponents/AppContent/PuzzleView/NonogramView/EditView/ValidateNonogramSection/ValidateNonogramSection"
+import NonogramDisplay from "CommonComponents/AppContent/PuzzleView/NonogramView/NonogramDisplay/NonogramDisplay"
 
 // styles
 import "./NonogramEditView.css"
-import React from "react"
 
 const mapStateToProps = (state: AppState) => ({
     selectedNonogram: state.nonogramDataReducer.selectedNonogram,

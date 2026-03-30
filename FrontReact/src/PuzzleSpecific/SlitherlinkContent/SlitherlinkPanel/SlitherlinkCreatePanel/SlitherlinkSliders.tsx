@@ -2,19 +2,29 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { AddSlitherlinkDetail, slitherlinkInformation, ChangeSlitherlinkDetail} from "../../../../store/data/slitherlink"
-import { modes, SetMode } from "../../../../store/display"
+import { AppState } from "@store/index"
+import { 
+    AddSlitherlinkDetail, 
+    slitherlinkInformation, 
+    ChangeSlitherlinkDetail 
+} from "store/data/slitherlink"
+import { 
+    modes, 
+    SetMode 
+} from "store/display"
 
 // (sub)component(s)
-import InputSlider from "../../../../CommonComponents/AppContent/PuzzleFiltersPanel/InputSlider/InputSlider"
+import InputSlider from "CommonComponents/AppContent/PuzzleFiltersPanel/InputSlider/InputSlider"
 
-//other
-import { slitherlinkSliders } from "./sliders"
+// other
+import { slitherlinkSliders } from "PuzzleSpecific/SlitherlinkContent/SlitherlinkPanel/SlitherlinkCreatePanel/sliders"
 
 interface OwnSlitherlinkSlidersProps {
 

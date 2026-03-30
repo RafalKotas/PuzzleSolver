@@ -1,6 +1,6 @@
-// (sub) components
-import SlitherlinkPanel from "./SlitherlinkPanel/SlitherlinkPanel"
-import SlitherlinkSelectSection from "./SlitherlinkSelectSection/SlitherlinkSelectSection"
+// (sub)component(s)
+import SlitherlinkPanel from "PuzzleSpecific/SlitherlinkContent/SlitherlinkPanel/SlitherlinkPanel"
+import SlitherlinkSelectSection from "PuzzleSpecific/SlitherlinkContent/SlitherlinkSelectSection/SlitherlinkSelectSection"
 
 const SlitherlinkContent = () => {
     return (

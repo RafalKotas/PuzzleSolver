@@ -2,20 +2,33 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { displayModes, SetCurrentPage, SetDisplayMode } from "../../../../store/display"
-import { slitherlinkSortFiltersNames, selectFilterNamePriorityIndicator } from "../../../../store/filters/slitherlink"
-import { slitherlinkInformation, selectListFromMode } from "../../../../store/data/slitherlink"
+import { AppState } from "@store/index"
+import { 
+    displayModes, 
+    SetCurrentPage, 
+    SetDisplayMode 
+} from "store/display"
+import { 
+    slitherlinkSortFiltersNames, 
+    selectFilterNamePriorityIndicator 
+} from "store/filters/slitherlink"
+import { 
+    slitherlinkInformation, 
+    selectListFromMode 
+} from "store/data/slitherlink"
 
-// (sub) components
-import SlitherlinkItemCard from "./SlitherlinkItemCard/SlitherlinkItemCard"
+// (sub)component(s)
+import SlitherlinkItemCard from "PuzzleSpecific/SlitherlinkContent/SlitherlinkSelectSection/SlitherlinkPageItems/SlitherlinkItemCard/SlitherlinkItemCard"
 
-// other (functions)
-import commonFunctions from "../../../../functions"
+// functions
+import commonFunctions from "functions"
 
 const mapStateToProps = (state: AppState) => ({
     

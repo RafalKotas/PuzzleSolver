@@ -2,16 +2,19 @@
 import React, { useEffect } from "react"
 
 // redux
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
-import { connect, ConnectedProps } from "react-redux"
 
 // redux - store
-import { AppState } from "../../../../../store"
-import { InitializeSudokuBoardSolver } from "../../../../../store/puzzleLogic/sudoku"
+import { AppState } from "@store/index"
+import { InitializeSudokuBoardSolver } from "store/puzzleLogic/sudoku"
 
-// (sub) components
-import SudokuDisplay from "../SudokuDisplay/SudokuDisplay"
-import SudokuActions from "./SudokuActions/SudokuActions"
+// (sub)component(s)
+import SudokuDisplay from "CommonComponents/AppContent/PuzzleView/SudokuView/SudokuDisplay/SudokuDisplay"
+import SudokuActions from "CommonComponents/AppContent/PuzzleView/SudokuView/SolverView/SudokuActions/SudokuActions"
 
 // styles
 import "../SudokuView.css"

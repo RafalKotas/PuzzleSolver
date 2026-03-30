@@ -1,17 +1,27 @@
-//react
+// react
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { displayModes, SetDisplayMode } from "../../../../store/display"
-import { hitoriSortFilters, hitoriSortFiltersNames, selectFilterNamePriorityIndicator } from "../../../../store/filters/hitori"
+import { AppState } from "@store/index"
+import { 
+    displayModes, 
+    SetDisplayMode 
+} from "store/display"
+import { 
+    hitoriSortFilters, 
+    hitoriSortFiltersNames, 
+    selectFilterNamePriorityIndicator 
+} from "store/filters/hitori"
 
-// (sub) components
-import HitoriSortFilter from "./HitoriSortFilter/HitoriSortFilter"
+// (sub)component(s)
+import HitoriSortFilter from "PuzzleSpecific/HitoriContent/HitoriSelectSection/HitoriSortFilters/HitoriSortFilter/HitoriSortFilter"
 
 const mapStateToProps = (state: AppState) => ({
     puzzlesList: state.hitoriDataReducer.hitorisList,

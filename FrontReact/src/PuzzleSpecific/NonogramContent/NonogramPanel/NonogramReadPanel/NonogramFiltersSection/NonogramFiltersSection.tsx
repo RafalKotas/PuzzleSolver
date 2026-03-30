@@ -1,25 +1,37 @@
 // react
-import React, { useEffect} from "react"
+import React, { useEffect } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../store"
-import { InitOptionsList, nonogramFiltersObject, UpdateNumberValuedFilters, UpdateStringValuedFilters } from "../../../../../store/filters/nonogram"
+import { AppState } from "@store/index"
+import { 
+    InitOptionsList, 
+    nonogramFiltersObject, 
+    UpdateNumberValuedFilters, 
+    UpdateStringValuedFilters 
+} from "store/filters/nonogram"
 
-//(sub) components
-import Box from "@mui/material/Box"
-import CheckBoxGroup from "../../../../../CommonComponents/AppContent/PuzzleFiltersPanel/CheckBoxGroup/CheckBoxGroup"
-import CustomMUISlider from "../../../../../CommonComponents/AppContent/PuzzleFiltersPanel/CustomMUISlider/CustomMUISlider"
+// (sub)component(s)
+import CheckBoxGroup from "CommonComponents/AppContent/PuzzleFiltersPanel/CheckBoxGroup/CheckBoxGroup"
+import CustomMUISlider from "CommonComponents/AppContent/PuzzleFiltersPanel/CustomMUISlider/CustomMUISlider"
 
-//functions
-import commonFunctions from "../../../../../functions"
+// services
+import NonogramService from "services/nonogram/nonogram.service"
 
-//styles
-import "./NonogramFiltersSection.css"
-import NonogramService from "../../../../../services/nonogram/nonogram.service"
+// mui - components
+import { Box } from "@mui/material"
+
+// functions
+import commonFunctions from "functions"
+
+// styles
+import "PuzzleSpecific/NonogramContent/NonogramPanel/NonogramReadPanel/NonogramFiltersSection/NonogramFiltersSection.css"
 
 interface OwnNonogramFiltersSectionProps {
     markFiltersCollected: () => void,

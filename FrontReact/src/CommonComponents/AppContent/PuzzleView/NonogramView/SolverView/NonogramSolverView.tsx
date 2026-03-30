@@ -1,26 +1,39 @@
 // react
 import React, { useEffect } from "react"
+
+// react - router
 import { useParams } from "react-router-dom"
 
-import axios from "axios"
-
-// (sub) components
-import NonogramDisplay from "../NonogramDisplay/NonogramDisplay"
-import NonogramActions from "./NonogramActions/NonogramActions"
-import SelectNonogramArrow from "./SelectNonogramArrow/SelectNonogramArrow"
-import { faSquareCaretLeft, faSquareCaretRight } from "@fortawesome/free-solid-svg-icons"
-
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../store"
-import { findNextNonogramName, findPreviousNonogramName, selectedNonogramDetails, SetSelectedNonogram } from "../../../../../store/data/nonogram"
-import { SetNonogramRelatedLogicData } from "../../../../../store/puzzleLogic/nonogram"
+import { AppState } from "@store/index"
+import { 
+    findNextNonogramName, 
+    findPreviousNonogramName, 
+    selectedNonogramDetails, 
+    SetSelectedNonogram 
+} from "store/data/nonogram"
+import { SetNonogramRelatedLogicData } from "store/puzzleLogic/nonogram"
+
+// (sub)component(s)
+import NonogramDisplay from "CommonComponents/AppContent/PuzzleView/NonogramView/NonogramDisplay/NonogramDisplay"
+import NonogramActions from "CommonComponents/AppContent/PuzzleView/NonogramView/SolverView/NonogramActions/NonogramActions"
+import SelectNonogramArrow from "CommonComponents/AppContent/PuzzleView/NonogramView/SolverView/SelectNonogramArrow/SelectNonogramArrow"
 
 // services
-import NonogramLogicService from "../../../../../services/nonogram/nonogram.logic.service"
+import NonogramLogicService from "services/nonogram/nonogram.logic.service"
+
+// fortawesome
+import { faSquareCaretLeft, faSquareCaretRight } from "@fortawesome/free-solid-svg-icons"
+
+// axios
+import axios from "axios"
 
 // styles
 import "./NonogramSolverView.css"

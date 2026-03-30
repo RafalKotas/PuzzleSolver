@@ -1,22 +1,34 @@
-//react
-import React, {  useEffect, useState } from "react"
+// react
+import React, { 
+    useEffect, 
+    useState 
+} from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../store"
-import { hitoriInformation, SetHitorisList, SetSelectedHitori } from "../../../store/data/hitori"
+import { AppState } from "@store/index"
+import { 
+    hitoriInformation, 
+    SetHitorisList, 
+    SetSelectedHitori 
+} from "store/data/hitori"
 
-// (sub) components
-import HitoriReadPanel from "./HitoriReadPanel/HitoriReadPanel"
-import HitoriCreatePanel from "./HitoriCreatePanel/HitoriCreatePanel"
+// (sub)component(s)
+import HitoriReadPanel from "PuzzleSpecific/HitoriContent/HitoriPanel/HitoriReadPanel/HitoriReadPanel"
+import HitoriCreatePanel from "PuzzleSpecific/HitoriContent/HitoriPanel/HitoriCreatePanel/HitoriCreatePanel"
 
-//mui
-import Tabs from "@mui/material/Tabs"
-import Tab from "@mui/material/Tab"
-import Box from "@mui/material/Box"
+// mui - components
+import { 
+    Tabs, 
+    Tab, 
+    Box 
+} from "@mui/material"
 
 const mapStateToProps = (state: AppState) => ({
     hitorisList: state.hitoriDataReducer.hitorisList

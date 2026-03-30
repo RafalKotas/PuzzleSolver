@@ -2,17 +2,20 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
-import { calculateSequencesSectionDimensionInPx } from "../../../../../../../store/layout/nonogram"
 
 // redux - store
-import { AppState } from "../../../../../../../store"
+import { AppState } from "@store/index"
+import { calculateSequencesSectionDimensionInPx } from "store/layout/nonogram"
 
-// (sub) components
-import InfoCardTooltip from "../../../../../../InfoCardTooltip/InfoCardTooltip"
+// (sub)component(s)
+import InfoCardTooltip from "CommonComponents/InfoCardTooltip/InfoCardTooltip"
 
-//fontawesome
+// fortawesome
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 

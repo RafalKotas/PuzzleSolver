@@ -2,36 +2,49 @@
 import React, { useEffect } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { AddNonogramDetail, RemoveNonogramDetail, ChangeNonogramDetail, SaveTemporaryNonogram, 
-    nonogramInformation/*, SetMode*/ } from "../../../../store/data/nonogram"
+import { AppState } from "@store/index"
+import { 
+    AddNonogramDetail, 
+    RemoveNonogramDetail, 
+    ChangeNonogramDetail, 
+    SaveTemporaryNonogram, 
+    nonogramInformation 
+} from "store/data/nonogram"
+import { 
+    modes, 
+    SetMode 
+} from "store/display"
+import { ResetNonogramBoard } from "store/puzzleLogic/nonogram"
 
 // (sub)component(s)
-import InputSlider from "../../../../CommonComponents/AppContent/PuzzleFiltersPanel/InputSlider/InputSlider"
-import StringPropTextField from "../../../../CommonComponents/StringPropTextField/StringPropTextField"
+import InputSlider from "CommonComponents/AppContent/PuzzleFiltersPanel/InputSlider/InputSlider"
+import StringPropTextField from "CommonComponents/StringPropTextField/StringPropTextField"
 
-//mui
-import { Button, ButtonProps, styled } from "@mui/material"
+// mui - components
+import { 
+    Button, 
+    ButtonProps, 
+    styled 
+} from "@mui/material"
 import { grey } from "@mui/material/colors"
 
-// fontawesome
+// fortawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 
-// types, interfaces etc
-import { nonogramStringProps } from "./types"
+// other
+import { sliders } from "PuzzleSpecific/NonogramContent/NonogramPanel/NonogramCreatePanel/sliders"
+import { nonogramStringProps } from "PuzzleSpecific/NonogramContent/NonogramPanel/NonogramCreatePanel/types"
 
 // styles
 import "./NonogramCreatePanel.css"
-
-//other
-import { sliders } from "./sliders"
-import { modes, SetMode } from "../../../../store/display"
-import { ResetNonogramBoard } from "../../../../store/puzzleLogic/nonogram"
 
 interface OwnNonogramCreatePanelProps {
 

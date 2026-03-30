@@ -1,23 +1,26 @@
-//react
+// react
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../store"
-import { calculateSequencesSectionDimensionInPx } from "../../../../../../store/layout/nonogram"
-import { selectedNonogramDifficulty } from "../../../../../../store/data/nonogram"
+import { AppState } from "@store/index"
+import { calculateSequencesSectionDimensionInPx } from "store/layout/nonogram"
+import { selectedNonogramDifficulty } from "store/data/nonogram"
 
-// sub(components)
+// (sub)component(s)
 import InfoCardTooltip from "./NonogramInformationTooltip/NonogramInformationTooltip"
 
-//fontawesome
-import { faStar} from "@fortawesome/free-solid-svg-icons"
+// fortawesome
+import { faStar } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
-//styles
+// styles
 import "./FilledRectangle.css"
 
 interface OwnFilledRectangleProps {

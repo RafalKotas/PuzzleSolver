@@ -1,17 +1,28 @@
-import { faXmark } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Tooltip } from "@mui/material"
+// react
 import React, { useEffect } from "react"
-import { connect, ConnectedProps } from "react-redux"
+
+// redux
+import { 
+  connect, 
+  ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
-import { AppState } from "../../../../../../store"
+// redux - store
+import { AppState } from "@store/index"
 import {
   FillBoardSquare,
   PlaceXBoardSquare,
   selectBoardSquare,
   selectBoardSquareMark
-} from "../../../../../../store/puzzleLogic/nonogram"
+} from "store/puzzleLogic/nonogram"
+
+// mui - components
+import { Tooltip } from "@mui/material"
+
+// fortawesome
+import { faXmark } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 interface OwnSingleNonogramSquareProps {
   bigSquareColumnIndex: number

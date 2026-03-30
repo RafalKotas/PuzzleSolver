@@ -2,27 +2,39 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../store"
-import { displayModes, SetDisplayMode } from "../../../store/display"
-import { akariSortFiltersNames, selectFilterNamePriorityIndicator } from "../../../store/filters/akari"
+import { AppState } from "@store/index"
+import { 
+    displayModes, 
+    SetDisplayMode 
+} from "store/display"
+import { 
+    hitoriSortFiltersNames, 
+    selectFilterNamePriorityIndicator 
+} from "store/filters/hitori"
 
-// (sub) components
-import HitoriSortFilters from "./HitoriSortFilters/HitoriSortFilters"
-import HitoriPageItems from "./HitoriPageItems/HitoriPageItems"
-import HitoriSelectSectionPagination from "./HitoriSelectSectionPagination/HitoriSelectSectionPagination"
+// (sub)component(s)
+import HitoriSortFilters from "PuzzleSpecific/HitoriContent/HitoriSelectSection/HitoriSortFilters/HitoriSortFilters"
+import HitoriPageItems from "PuzzleSpecific/HitoriContent/HitoriSelectSection/HitoriPageItems/HitoriPageItems"
+import HitoriSelectSectionPagination from "PuzzleSpecific/HitoriContent/HitoriSelectSection/HitoriSelectSectionPagination/HitoriSelectSectionPagination"
 
-// fontawesome
+// fortawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faList, faGrip} from "@fortawesome/free-solid-svg-icons"
+import { 
+    faList, 
+    faGrip 
+} from "@fortawesome/free-solid-svg-icons"
 
 const mapStateToProps = (state: AppState) => ({
     displayMode: state.displayReducer.displayMode,
 
-    priorityIndicator: (filterName: akariSortFiltersNames) => 
+    priorityIndicator: (filterName: hitoriSortFiltersNames) => 
         selectFilterNamePriorityIndicator(state.akariFiltersReducer, filterName),
 
     akariSortFiltersList: state.akariFiltersReducer.sortFilters, 

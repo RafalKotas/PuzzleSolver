@@ -1,22 +1,34 @@
-//react
-import React, {  useEffect, useState } from "react"
+// react
+import React, { 
+    useEffect, 
+    useState 
+} from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../store"
-import { architectInformation, SetArchitectsList, SetSelectedArchitect } from "../../../store/data/architect"
+import { AppState } from "@store/index"
+import { 
+    architectInformation, 
+    SetArchitectsList, 
+    SetSelectedArchitect 
+} from "store/data/architect"
 
-// (sub) components
-import ArchitectReadPanel from "./ArchitectReadPanel/ArchitectReadPanel"
-import ArchitectCreatePanel from "./ArchitectCreatePanel/ArchitectCreatePanel"
+// (sub)component(s)
+import ArchitectReadPanel from "PuzzleSpecific/ArchitectContent/ArchitectPanel/ArchitectReadPanel/ArchitectReadPanel"
+import ArchitectCreatePanel from "PuzzleSpecific/ArchitectContent/ArchitectPanel/ArchitectCreatePanel/ArchitectCreatePanel"
 
-//mui
-import Tabs from "@mui/material/Tabs"
-import Tab from "@mui/material/Tab"
-import Box from "@mui/material/Box"
+// mui - components
+import { 
+    Tabs, 
+    Tab, 
+    Box 
+} from "@mui/material"
 
 const mapStateToProps = (state: AppState) => ({
     architectsList: state.architectDataReducer.architectsList

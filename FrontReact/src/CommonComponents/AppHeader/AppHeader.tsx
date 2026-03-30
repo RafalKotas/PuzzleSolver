@@ -1,4 +1,10 @@
-import { NavLink, useLocation } from "react-router-dom"
+// react - router
+import { 
+    NavLink, 
+    useLocation 
+} from "react-router-dom"
+
+// styles
 import "./AppHeader.css"
 
 const puzzlesNamesList : string[] = ["NONOGRAM", "SUDOKU", "SLITHERLINK", "AKARI", "HITORI", "ARCHITECT"]

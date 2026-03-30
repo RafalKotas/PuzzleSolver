@@ -2,19 +2,28 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../store"
-import { selectedNonogramDetails, SetSelectedNonogram } from "../../../../../store/data/nonogram"
-import { calculateBoardDimensionInPx, calculateSequencesSectionDimensionInPx } from "../../../../../store/layout/nonogram"
+import { AppState } from "@store/index"
+import { 
+    selectedNonogramDetails, 
+    SetSelectedNonogram 
+} from "store/data/nonogram"
+import { 
+    calculateBoardDimensionInPx, 
+    calculateSequencesSectionDimensionInPx 
+} from "store/layout/nonogram"
 
-// (sub)components
-import FilledRectangle from "./FilledRectangle/FilledRectangle"
-import NonogramBoard from "./NonogramBoard/NonogramBoard"
-import NonogramColumnSequencesSection from "./SequencesSection/NonogramColumnSequencesSection/NonogramColumnSequencesSection"
-import NonogramRowSequencesSection from "./SequencesSection/NonogramRowSequencesSection/NonogramRowSequencesSection"
+// (sub)component(s)
+import FilledRectangle from "CommonComponents/AppContent/PuzzleView/NonogramView/NonogramDisplay/FilledRectangle/FilledRectangle"
+import NonogramBoard from "CommonComponents/AppContent/PuzzleView/NonogramView/NonogramDisplay/NonogramBoard/NonogramBoard"
+import NonogramColumnSequencesSection from "CommonComponents/AppContent/PuzzleView/NonogramView/NonogramDisplay/SequencesSection/NonogramColumnSequencesSection/NonogramColumnSequencesSection"
+import NonogramRowSequencesSection from "CommonComponents/AppContent/PuzzleView/NonogramView/NonogramDisplay/SequencesSection/NonogramRowSequencesSection/NonogramRowSequencesSection"
 
 interface OwnNonogramDisplayProps {
     

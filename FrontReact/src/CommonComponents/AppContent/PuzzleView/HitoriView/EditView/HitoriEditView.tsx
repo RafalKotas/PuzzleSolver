@@ -2,15 +2,17 @@
 import { useEffect } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../store"
+import { AppState } from "@store/index"
 
-
-// sub(components)
-import HitoriDisplay from "../HitoriDisplay/HitoriDisplay"
+// (sub)component(s)
+import HitoriDisplay from "CommonComponents/AppContent/PuzzleView/HitoriView/HitoriDisplay/HitoriDisplay"
 
 const mapStateToProps = (state: AppState) => ({
 

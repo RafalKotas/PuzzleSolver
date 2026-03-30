@@ -3,14 +3,17 @@ import React from "react"
 
 // redux
 import { Dispatch } from "redux"
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 
 // redux - store
-import { AppState } from "../../../../../store"
-import { SetCellSize } from "../../../../../store/layout/nonogram"
+import { AppState } from "@store/index"
+import { SetCellSize } from "store/layout/nonogram"
 
-// (sub) components
-import AkariDisplay from "../AkariDisplay/AkariDisplay"
+// (sub)component(s)
+import AkariDisplay from "CommonComponents/AppContent/PuzzleView/AkariView/AkariDisplay/AkariDisplay"
 
 //styles
 import "../AkariView.css"

@@ -1,20 +1,28 @@
 // react
-import React, { useEffect, useState } from "react"
+import React, { 
+    useEffect, 
+    useState 
+} from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux-store
-import { AppState } from "../../../../store"
+import { AppState } from "@store/index"
+import { 
+    modes, 
+    SetMode 
+} from "store/display"
 
-// (sub)components
-import NonogramFiltersSection from "./NonogramFiltersSection/NonogramFiltersSection"
+// (sub)component(s)
+import NonogramFiltersSection from "PuzzleSpecific/NonogramContent/NonogramPanel/NonogramReadPanel/NonogramFiltersSection/NonogramFiltersSection"
 
-// images etc
-import bubbleLoaderIcon from  "../../../../assets/Loaders/Bubble-Loader-Icon/96x96.gif"
-import { modes, SetMode } from "../../../../store/display"
-
+// other
+import bubbleLoaderIcon from  "assets/Loaders/Bubble-Loader-Icon/96x96.gif"
 
 interface OwnNonogramReadPanelProps {
     dataFetched: boolean

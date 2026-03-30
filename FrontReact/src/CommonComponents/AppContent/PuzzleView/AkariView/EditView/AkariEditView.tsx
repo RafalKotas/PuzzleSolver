@@ -2,17 +2,20 @@
 import { useEffect } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../store"
+import { AppState } from "@store/index"
 
 
-// sub(components)
-import AkariDisplay from "../AkariDisplay/AkariDisplay"
+// (sub)component(s)
+import AkariDisplay from "CommonComponents/AppContent/PuzzleView/AkariView/AkariDisplay/AkariDisplay"
 
-//styles
+// styles
 import "../AkariView.css"
 
 const mapStateToProps = (state: AppState) => ({

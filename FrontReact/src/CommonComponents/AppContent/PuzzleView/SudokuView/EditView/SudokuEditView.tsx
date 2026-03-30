@@ -2,20 +2,27 @@
 import { useEffect } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../store"
-import { InitializeSudokuBoardEdit, ResetSudokuEditData, ToggleEditMode } from "../../../../../store/puzzleLogic/sudoku"
+import { AppState } from "@store/index"
+import { 
+    InitializeSudokuBoardEdit, 
+    ResetSudokuEditData, 
+    ToggleEditMode 
+} from "store/puzzleLogic/sudoku"
+import { SetCorrectness } from "store/data/sudoku"
 
-// (sub) components
-import SudokuDisplay from "../SudokuDisplay/SudokuDisplay"
-import SudokuValidationPanel from "./ValidationPanel/SudokuValidationPanel"
+// (sub)component(s)
+import SudokuDisplay from "CommonComponents/AppContent/PuzzleView/SudokuView/SudokuDisplay/SudokuDisplay"
+import SudokuValidationPanel from "CommonComponents/AppContent/PuzzleView/SudokuView/EditView/ValidationPanel/SudokuValidationPanel"
 
 // styles
 import "../SudokuView.css"
-import { SetCorrectness } from "../../../../../store/data/sudoku"
 
 const mapStateToProps = (state: AppState) => ({
     // ok

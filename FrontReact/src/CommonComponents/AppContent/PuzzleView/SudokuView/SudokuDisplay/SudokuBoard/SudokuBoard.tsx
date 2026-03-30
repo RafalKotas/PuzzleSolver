@@ -2,15 +2,18 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../store"
+import { AppState } from "@store/index"
 
-// (sub) components
-import EditSquare from "../EditSquare/EditSquare"
-import CorrectFilledSquare from "../CorrectFilledSquare/CorrectFilledSquare"
+// (sub)component(s)
+import EditSquare from "CommonComponents/AppContent/PuzzleView/SudokuView/SudokuDisplay/EditSquare/EditSquare"
+import CorrectFilledSquare from "CommonComponents/AppContent/PuzzleView/SudokuView/SudokuDisplay/CorrectFilledSquare/CorrectFilledSquare"
 
 interface OwnSudokuBoardProps {
 

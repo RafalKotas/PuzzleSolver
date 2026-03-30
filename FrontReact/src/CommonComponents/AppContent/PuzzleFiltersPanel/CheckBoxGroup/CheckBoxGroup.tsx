@@ -1,7 +1,12 @@
+// react
 import * as React from "react"
+
+// mui - components
 import { Checkbox } from "@mui/material"
 import TextField from "@mui/material/TextField"
 import AutoComplete from "@mui/material/Autocomplete"
+
+// mui - icons
 import CheckboxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank"
 import CheckBoxIcon from "@mui/icons-material/CheckBox"
 

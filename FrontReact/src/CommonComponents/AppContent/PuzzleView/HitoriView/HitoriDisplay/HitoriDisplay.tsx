@@ -3,16 +3,27 @@ import React from "react"
 
 // redux
 import { Dispatch } from "redux"
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 
 // redux - store
-import { AppState } from "../../../../../store"
-import { selectBoardHeight, selectBoardWidth } from "../../../../../store/data/hitori"
-import { calculateBoardDimensionInPx, calculateCellWithBorderSize } from "../../../../../store/layout/hitori"
+import { AppState } from "@store/index"
+import { 
+    selectBoardHeight, 
+    selectBoardWidth 
+} from "store/data/hitori"
+import { 
+    calculateBoardDimensionInPx, 
+    calculateCellWithBorderSize 
+} from "store/layout/hitori"
+
+// (sub)component(s)
+import HitoriInformationTooltip from "CommonComponents/AppContent/PuzzleView/HitoriView/HitoriInformationTooltip/HitoriInformationTooltip"
 
 // styles
 import "./HitoriDisplay.css"
-import HitoriInformationTooltip from "../HitoriInformationTooltip/HitoriInformationTooltip"
 
 const mapStateToProps = (state: AppState) => ({
     hitoriBoard: state.hitoriDataReducer.selectedHitori.board,

@@ -1,16 +1,26 @@
 // react
-import { useEffect, useState } from "react"
+import { 
+    useEffect, 
+    useState 
+} from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../../store"
-import { ToggleEditMode, TogglePreviewMode } from "../../../../../../../store/puzzleLogic/sudoku"
+import { AppState } from "@store/index"
+import { 
+    ToggleEditMode, 
+    TogglePreviewMode 
+} from "store/puzzleLogic/sudoku"
+import { SetCorrectness } from "store/data/sudoku"
 
+// mui - components
 import { Button } from "@mui/material"
-import { SetCorrectness } from "../../../../../../../store/data/sudoku"
 
 const mapStateToProps = (state: AppState) => ({
     availableNumbers: state.sudokuLogicReducer.availableNumbers,

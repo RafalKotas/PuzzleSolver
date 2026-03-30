@@ -2,33 +2,41 @@
 import React, { useEffect } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { AddAkariDetail, akariInformation, ChangeAkariDetail, RemoveAkariDetail, SaveTemporaryAkari } from "../../../../store/data/akari"
-import { modes, SetMode } from "../../../../store/display"
+import { AppState } from "@store/index"
+import { 
+    AddAkariDetail, 
+    akariInformation, 
+    ChangeAkariDetail, 
+    RemoveAkariDetail, 
+    SaveTemporaryAkari 
+} from "store/data/akari"
+import { 
+    modes, 
+    SetMode 
+} from "store/display"
 
 // (sub)component(s)
-import AkariSliders from "./AkariSliders"
+import AkariSliders from "PuzzleSpecific/AkariContent/AkariPanel/AkariCreatePanel/AkariSliders"
+import StringPropTextField from "CommonComponents/StringPropTextField/StringPropTextField"
 
-//mui
+// mui - components
 import { Button, ButtonProps, styled } from "@mui/material"
 import { grey } from "@mui/material/colors"
 
-// fontawesome
+// fortawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 
-// types, interfaces etc
-import { AkariStringProps } from "./types"
-
-// sub(components)
-import StringPropTextField from "../../../../CommonComponents/StringPropTextField/StringPropTextField"
-
-//other
-import { propDetails } from "../../../../CommonComponents/StringPropTextField/types"
+// other
+import { AkariStringProps } from "PuzzleSpecific/AkariContent/AkariPanel/AkariCreatePanel/types"
+import { propDetails } from "CommonComponents/StringPropTextField/types"
 
 interface OwnAkariCreatePanelProps {
 

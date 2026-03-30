@@ -2,19 +2,29 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { AddAkariDetail, akariInformation, ChangeAkariDetail} from "../../../../store/data/akari"
-import { modes, SetMode } from "../../../../store/display"
+import { AppState } from "@store/index"
+import { 
+    AddAkariDetail, 
+    akariInformation, 
+    ChangeAkariDetail 
+} from "store/data/akari"
+import { 
+    modes, 
+    SetMode 
+} from "store/display"
 
 // (sub)component(s)
-import InputSlider from "../../../../CommonComponents/AppContent/PuzzleFiltersPanel/InputSlider/InputSlider"
+import InputSlider from "CommonComponents/AppContent/PuzzleFiltersPanel/InputSlider/InputSlider"
 
-//other
-import { sliders } from "./sliders"
+// other
+import { sliders } from "PuzzleSpecific/AkariContent/AkariPanel/AkariCreatePanel/sliders"
 
 interface OwnAkariSlidersProps {
 

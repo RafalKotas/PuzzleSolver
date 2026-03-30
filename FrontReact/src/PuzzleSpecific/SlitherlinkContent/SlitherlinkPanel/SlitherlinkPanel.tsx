@@ -1,22 +1,34 @@
-//react
-import React, {  useEffect, useState } from "react"
+// react
+import React, { 
+    useEffect, 
+    useState 
+} from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../store"
-import { slitherlinkInformation, SetSlitherlinksList, SetSelectedSlitherlink } from "../../../store/data/slitherlink"
+import { AppState } from "@store/index"
+import { 
+    slitherlinkInformation, 
+    SetSlitherlinksList, 
+    SetSelectedSlitherlink 
+} from "store/data/slitherlink"
 
-// (sub) components
-import SlitherlinkReadPanel from "./SlitherlinkReadPanel/SlitherlinkReadPanel"
-import SlitherlinkCreatePanel from "./SlitherlinkCreatePanel/SlitherlinkCreatePanel"
+// (sub)component(s)
+import SlitherlinkReadPanel from "PuzzleSpecific/SlitherlinkContent/SlitherlinkPanel/SlitherlinkReadPanel/SlitherlinkReadPanel"
+import SlitherlinkCreatePanel from "PuzzleSpecific/SlitherlinkContent/SlitherlinkPanel/SlitherlinkCreatePanel/SlitherlinkCreatePanel"
 
-//mui
-import Tabs from "@mui/material/Tabs"
-import Tab from "@mui/material/Tab"
-import Box from "@mui/material/Box"
+// mui - components
+import { 
+    Tabs, 
+    Tab, 
+    Box 
+} from "@mui/material"
 
 const mapStateToProps = (state: AppState) => ({
     slitherlinksList: state.slitherlinkDataReducer.slitherlinksList

@@ -1,17 +1,27 @@
-//react
+// react
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { displayModes, SetDisplayMode } from "../../../../store/display"
-import { sudokuSortFilters, sudokuSortFiltersNames, selectFilterNamePriorityIndicator } from "../../../../store/filters/sudoku"
+import { AppState } from "@store/index"
+import { 
+    displayModes, 
+    SetDisplayMode 
+} from "store/display"
+import { 
+    sudokuSortFilters, 
+    sudokuSortFiltersNames, 
+    selectFilterNamePriorityIndicator 
+} from "store/filters/sudoku"
 
-// (sub) components
-import SudokuSortFilter from "./SudokuSortFilter/SudokuSortFilter"
+// (sub)component(s)
+import SudokuSortFilter from "PuzzleSpecific/SudokuContent/SudokuSelectSection/SudokuSortFilters/SudokuSortFilter/SudokuSortFilter"
 
 const mapStateToProps = (state: AppState) => ({
     puzzlesList: state.sudokuDataReducer.sudokusList,

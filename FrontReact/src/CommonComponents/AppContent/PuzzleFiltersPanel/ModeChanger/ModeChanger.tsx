@@ -1,4 +1,8 @@
-import { FormControlLabel, Switch } from "@mui/material"
+// mui - components
+import { 
+    FormControlLabel, 
+    Switch 
+} from "@mui/material"
 
 interface ModeChangerProps {
     changeMode: (event : React.ChangeEvent<HTMLInputElement>) => void,

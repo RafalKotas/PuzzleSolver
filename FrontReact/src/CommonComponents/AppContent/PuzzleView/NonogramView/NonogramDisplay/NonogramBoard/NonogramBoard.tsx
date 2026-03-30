@@ -1,23 +1,25 @@
-//react
+// react
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 
 // redux - store
-import { AppState } from "../../../../../../store"
-import { calculateBoardDimensionInPx } from "../../../../../../store/layout/nonogram"
+import { AppState } from "@store/index"
+import { calculateBoardDimensionInPx } from "store/layout/nonogram"
 
-// (sub) components
-import BoardBigRow from "./BoardBigRow"
+// (sub)component(s)
+import BoardBigRow from "CommonComponents/AppContent/PuzzleView/NonogramView/NonogramDisplay/NonogramBoard/BoardBigRow"
 
-//styles
+// styles
 import "./NonogramBoard.css"
 
 interface OwnNonogramBoardProps {
 
 }
-
 
 const mapStateToProps = (state: AppState) => ({
     selectedNonogram: state.nonogramDataReducer.selectedNonogram,

@@ -5,21 +5,34 @@ import React from "react"
 import { Link } from "react-router-dom"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+  connect, 
+  ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { sudokuInformation, SetSelectedSudoku, SetCreatedSudoku, CopySudokuToCreatedList, CopySudokuToSolverList } from "../../../../../store/data/sudoku"
-import { AppState } from "../../../../../store"
+import { 
+  sudokuInformation, 
+  SetSelectedSudoku, 
+  SetCreatedSudoku, 
+  CopySudokuToCreatedList, 
+  CopySudokuToSolverList 
+} from "store/data/sudoku"
+import { AppState } from "@store/index"
 
-// mui
-import { Card, CardContent, Typography } from "@mui/material"
+// (sub)component(s)
+import CopySection from "PuzzleSpecific/SudokuContent/SudokuSelectSection/SudokuPageItems/SudokuItemCard/CopySection/CopySection"
 
-// (sub) components
-import CopySection from "./CopySection/CopySection"
+// mui - components
+import { 
+  Card, 
+  CardContent, 
+  Typography 
+} from "@mui/material"
 
 // styles
-import "./SudokuItemCard.css"
+import "PuzzleSpecific/SudokuContent/SudokuSelectSection/SudokuPageItems/SudokuItemCard/SudokuItemCard.css"
 
 interface OwnSudokuItemCardProps {
     sudokuDetails : sudokuInformation,

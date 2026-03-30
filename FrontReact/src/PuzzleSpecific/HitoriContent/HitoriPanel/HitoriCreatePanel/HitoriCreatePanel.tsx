@@ -2,31 +2,45 @@
 import React, { useEffect } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { AddHitoriDetail, hitoriInformation, ChangeHitoriDetail, RemoveHitoriDetail, SaveTemporaryHitori } from "../../../../store/data/hitori"
-import { modes, SetMode } from "../../../../store/display"
+import { AppState } from "@store/index"
+import { 
+    AddHitoriDetail, 
+    hitoriInformation, 
+    ChangeHitoriDetail, 
+    RemoveHitoriDetail, 
+    SaveTemporaryHitori 
+} from "store/data/hitori"
+import { 
+    modes, 
+    SetMode 
+} from "store/display"
 
 // (sub)component(s)
+import StringPropTextField from "CommonComponents/StringPropTextField/StringPropTextField"
+import HitoriSliders from "PuzzleSpecific/HitoriContent/HitoriPanel/HitoriCreatePanel/HitoriSliders"
 
-//mui
-import { Button, ButtonProps, styled } from "@mui/material"
+// mui - components
+import { 
+    Button,
+    ButtonProps, 
+    styled 
+} from "@mui/material"
 import { grey } from "@mui/material/colors"
 
-// fontawesome
+// fortawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 
-// sub(components)
-import StringPropTextField from "../../../../CommonComponents/StringPropTextField/StringPropTextField"
-import HitoriSliders from "./HitoriSliders"
-
 // other
-import { propDetails } from "../../../../CommonComponents/StringPropTextField/types"
-import { HitoriStringProps } from "./types"
+import { propDetails } from "CommonComponents/StringPropTextField/types"
+import { HitoriStringProps } from "PuzzleSpecific/HitoriContent/HitoriPanel/HitoriCreatePanel/types"
 
 interface OwnHitoriCreatePanelProps {
 

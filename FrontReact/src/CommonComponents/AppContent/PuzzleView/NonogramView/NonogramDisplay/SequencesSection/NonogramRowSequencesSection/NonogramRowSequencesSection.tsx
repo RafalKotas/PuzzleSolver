@@ -1,22 +1,28 @@
-//react
+// react
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../../store"
+import { AppState } from "@store/index"
+import { 
+    calculateBoardDimensionInPx, 
+    calculateSequencesSectionDimensionInPx 
+} from "store/layout/nonogram"
 
-// (sub)components
-import SequenceSquare from "../SequenceSquare/SequenceSquare"
+// (sub)component(s)
+import SequenceSquare from "CommonComponents/AppContent/PuzzleView/NonogramView/NonogramDisplay/SequencesSection/SequenceSquare/SequenceSquare"
+
+// functions
+import commonFunctions from "functions"
 
 // styles
 import "../NonogramSequencesSection.css"
-
-// others
-import commonFunctions from "../../../../../../../functions"
-import { calculateBoardDimensionInPx, calculateSequencesSectionDimensionInPx } from "../../../../../../../store/layout/nonogram"
 
 interface OwnNonogramRowSequencesSectionProps {
     

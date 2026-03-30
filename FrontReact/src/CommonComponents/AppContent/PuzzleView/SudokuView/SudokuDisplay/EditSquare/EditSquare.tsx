@@ -1,14 +1,17 @@
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../store"
-import { selectAvailableNumbersInCell } from "../../../../../../store/puzzleLogic/sudoku"
-import { sudokuCellCoords } from "../../../../../../store/puzzleLogic/sudoku/types"
+import { AppState } from "@store/index"
+import { selectAvailableNumbersInCell } from "store/puzzleLogic/sudoku"
+import { sudokuCellCoords } from "store/puzzleLogic/sudoku/types"
 
-// (sub) components
-import NumberField from "./NumberField/NumberField"
+// (sub)component(s)
+import NumberField from "CommonComponents/AppContent/PuzzleView/SudokuView/SudokuDisplay/EditSquare/NumberField/NumberField"
 
 interface OwnEditSquareProps {
     squareCoords: sudokuCellCoords

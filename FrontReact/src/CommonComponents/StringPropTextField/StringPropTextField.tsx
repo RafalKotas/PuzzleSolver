@@ -1,19 +1,32 @@
+// react
+import { 
+    useEffect, 
+    useState 
+} from "react"
+
 // redux
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
-import { connect, ConnectedProps } from "react-redux"
 
 // redux - store
-import { AppState } from "../../store"
+import { AppState } from "@store/index"
 
-// mui
-import { Autocomplete, Checkbox, FormControlLabel, TextField } from "@mui/material"
-import { useEffect, useState } from "react"
+// mui - components
+import { 
+    Autocomplete, 
+    Checkbox, 
+    FormControlLabel, 
+    TextField 
+} from "@mui/material"
+
+// other
+import { propDetails } from "./types"
 
 // styles
 import "./StringPropTextField.css"
-
-// other files
-import { propDetails } from "./types"
 
 interface OwnStringPropTextFieldProps {
     prop: propDetails,

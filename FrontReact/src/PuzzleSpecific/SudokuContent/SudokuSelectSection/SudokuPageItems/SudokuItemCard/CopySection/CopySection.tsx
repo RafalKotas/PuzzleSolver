@@ -1,25 +1,37 @@
 // react
-import React, { useEffect, useState } from "react"
+import React, { 
+    useEffect, 
+    useState 
+} from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { sudokuInformation, SetSelectedSudoku, SetCreatedSudoku, 
-    CopySudokuToCreatedList, CopySudokuToSolverList } from "../../../../../../store/data/sudoku"
-import { AppState } from "../../../../../../store"
+import { AppState } from "@store/index"
+import { 
+    sudokuInformation, 
+    SetSelectedSudoku, 
+    SetCreatedSudoku, 
+    CopySudokuToCreatedList, 
+    CopySudokuToSolverList 
+} from "store/data/sudoku"
+import { listIncludesFileName } from "store/data/sudoku/functions"
 
-// mui
-import { Snackbar, Tooltip } from "@mui/material"
+// mui - components
 import MuiAlert, { AlertProps } from "@mui/material/Alert"
+import { 
+    Snackbar, 
+    Tooltip 
+} from "@mui/material"
 
-// fontawesome
+// fortawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCopy} from "@fortawesome/free-solid-svg-icons"
-import { listIncludesFileName } from "../../../../../../store/data/sudoku/functions"
-
-
 
 interface OwnCopySectionProps {
     sudokuDetails : sudokuInformation

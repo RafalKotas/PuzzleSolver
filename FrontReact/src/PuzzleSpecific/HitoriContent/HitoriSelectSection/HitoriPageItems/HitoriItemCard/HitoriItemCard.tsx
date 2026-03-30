@@ -1,19 +1,29 @@
-// redux
-import { connect, ConnectedProps } from "react-redux"
-import { Dispatch } from "redux"
-
-// redux - store
-import { hitoriInformation, SetSelectedHitori } from "../../../../../store/data/hitori"
-import { AppState } from "../../../../../store"
-
-// mui
-import { Card, CardContent, Typography } from "@mui/material"
-
 // react - router
 import { Link } from "react-router-dom"
 
+// redux
+import { 
+  connect, 
+  ConnectedProps 
+} from "react-redux"
+import { Dispatch } from "redux"
+
+// redux - store
+import { AppState } from "@store/index"
+import { 
+  hitoriInformation, 
+  SetSelectedHitori 
+} from "store/data/hitori"
+
+// mui - components
+import { 
+  Card, 
+  CardContent, 
+  Typography 
+} from "@mui/material"
+
 // styles
-import "./HitoriItemCard.css"
+import "PuzzleSpecific/HitoriContent/HitoriSelectSection/HitoriPageItems/HitoriItemCard/HitoriItemCard.css"
 
 interface OwnHitoriItemCardProps {
     hitoriDetails : hitoriInformation,

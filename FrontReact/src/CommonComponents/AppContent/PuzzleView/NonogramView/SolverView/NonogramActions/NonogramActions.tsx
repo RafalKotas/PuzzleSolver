@@ -1,27 +1,41 @@
 // react
-import React from "react"
-import { useEffect, useState } from "react"
+import React, { 
+    useEffect, 
+    useState 
+} from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../store"
-import { maxCellSize, minCellSize, SetCellSize } from "../../../../../../store/layout/nonogram"
-import { correctnessIndicator } from "../../../../../../store/data/nonogram/types"
-import { SetCorrectness, SetEditMode, ToggleMarksVisibility, ToggleXsVisibility } from "../../../../../../store/data/nonogram"
+import { AppState } from "@store/index"
+import { 
+    maxCellSize, 
+    minCellSize, 
+    SetCellSize 
+} from "store/layout/nonogram"
+import { correctnessIndicator } from "store/data/nonogram/types"
+import { 
+    SetCorrectness, 
+    SetEditMode, 
+    ToggleMarksVisibility, 
+    ToggleXsVisibility 
+} from "store/data/nonogram"
 
-// libraries-components
+// (sub)component(s)
+import SolverActionsPanel from "CommonComponents/AppContent/PuzzleView/NonogramView/SolverView/NonogramActions/ActionsSelect/SolverActionsPanel"
+import CheckCorrectButton from "CommonComponents/AppContent/PuzzleView/NonogramView/SolverView/NonogramActions/CheckCorrectButton/CheckCorrectButton"
+
+// mui - components
 import TextField from "@mui/material/TextField"
 import { Tab, Tabs, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material"
-import CheckCorrectButton from "./CheckCorrectButton/CheckCorrectButton"
 
-// (sub) components
-import SolverActionsPanel from "./ActionsSelect/SolverActionsPanel"
-
-// other functions
-import commonFunctions from "../../../../../../functions"
+// functions
+import commonFunctions from "functions"
 
 // styles
 import "./NonogramActions.css"

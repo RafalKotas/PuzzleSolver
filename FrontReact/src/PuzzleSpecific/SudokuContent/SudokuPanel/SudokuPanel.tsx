@@ -1,22 +1,34 @@
-//react
-import React, {  useEffect, useState } from "react"
+// react
+import React, { 
+    useEffect, 
+    useState 
+} from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../store"
-import { sudokuInformation, SetSudokusList, SetSelectedSudoku } from "../../../store/data/sudoku"
+import { AppState } from "@store/index"
+import { 
+    sudokuInformation, 
+    SetSudokusList, 
+    SetSelectedSudoku 
+} from "store/data/sudoku"
 
-// (sub) components
-import SudokuReadPanel from "./SudokuReadPanel/SudokuReadPanel"
-import SudokuCreatePanel from "./SudokuCreatePanel/SudokuCreatePanel"
+// (sub)component(s)
+import SudokuReadPanel from "PuzzleSpecific/SudokuContent/SudokuPanel/SudokuReadPanel/SudokuReadPanel"
+import SudokuCreatePanel from "PuzzleSpecific/SudokuContent/SudokuPanel/SudokuCreatePanel/SudokuCreatePanel"
 
-//mui
-import Tabs from "@mui/material/Tabs"
-import Tab from "@mui/material/Tab"
-import Box from "@mui/material/Box"
+// mui - components
+import { 
+    Tabs, 
+    Tab, 
+    Box 
+} from "@mui/material"
 
 const mapStateToProps = (state: AppState) => ({
     sudokusList: state.sudokuDataReducer.sudokusList
@@ -52,7 +64,7 @@ const SudokuPanel : React.FC<SudokuPanelProps> = ({sudokusList, setSudokusList})
         setMode(newValue === 0 ? "READ" : "CREATE")
     }
 
-    const puzzlePath = "../resources/Sudoku/"
+    const puzzlePath = "resources/Sudoku/"
 
     const axios = require("axios")
 

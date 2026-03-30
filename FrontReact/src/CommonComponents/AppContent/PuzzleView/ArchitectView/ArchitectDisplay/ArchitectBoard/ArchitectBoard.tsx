@@ -2,18 +2,22 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../store"
-import { calculateBoardDimensionInPx, calculateCellWithBorderSize } from "../../../../../../store/layout/architect"
+import { AppState } from "@store/index"
+import { 
+    calculateBoardDimensionInPx, 
+    calculateCellWithBorderSize 
+} from "store/layout/architect"
 
-// fontawesome
+// fortawesome
 import { faHouseChimney } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-
-// (sub)components
 
 interface OwnArchitectBoardProps {
 

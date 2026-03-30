@@ -2,22 +2,34 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../store"
-import { displayModes, SetDisplayMode } from "../../../store/display"
-import { slitherlinkSortFiltersNames, selectFilterNamePriorityIndicator } from "../../../store/filters/slitherlink"
+import { AppState } from "@store/index"
+import { 
+    displayModes, 
+    SetDisplayMode 
+} from "store/display"
+import { 
+    slitherlinkSortFiltersNames, 
+    selectFilterNamePriorityIndicator 
+} from "store/filters/slitherlink"
 
-// (sub) components
-import SlitherlinkSortFilters from "./SlitherlinkSortFilters/SlitherlinkSortFilters"
-import SlitherlinkPageItems from "./SlitherlinkPageItems/SlitherlinkPageItems"
-import SlitherlinkSelectSectionPagination from "./SlitherlinkSelectSectionPagination/SlitherlinkSelectSectionPagination"
+// (sub)component(s)
+import SlitherlinkSortFilters from "PuzzleSpecific/SlitherlinkContent/SlitherlinkSelectSection/SlitherlinkSortFilters/SlitherlinkSortFilters"
+import SlitherlinkPageItems from "PuzzleSpecific/SlitherlinkContent/SlitherlinkSelectSection/SlitherlinkPageItems/SlitherlinkPageItems"
+import SlitherlinkSelectSectionPagination from "PuzzleSpecific/SlitherlinkContent/SlitherlinkSelectSection/SlitherlinkSelectSectionPagination/SlitherlinkSelectSectionPagination"
 
-// fontawesome
+// fortawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faList, faGrip} from "@fortawesome/free-solid-svg-icons"
+import { 
+    faList, 
+    faGrip 
+} from "@fortawesome/free-solid-svg-icons"
 
 const mapStateToProps = (state: AppState) => ({
     displayMode: state.displayReducer.displayMode,

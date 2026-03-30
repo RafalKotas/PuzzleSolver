@@ -2,22 +2,34 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../store"
-import { displayModes, SetDisplayMode } from "../../../store/display"
-import { akariSortFiltersNames, selectFilterNamePriorityIndicator } from "../../../store/filters/akari"
+import { AppState } from "@store/index"
+import { 
+    displayModes, 
+    SetDisplayMode 
+} from "store/display"
+import { 
+    akariSortFiltersNames, 
+    selectFilterNamePriorityIndicator 
+} from "store/filters/akari"
 
-// (sub) components
-import AkariSortFilters from "./AkariSortFilters/AkariSortFilters"
-import AkariPageItems from "./AkariPageItems/AkariPageItems"
-import AkariSelectSectionPagination from "./AkariSelectSectionPagination/AkariSelectSectionPagination"
+// (sub)component(s)
+import AkariSortFilters from "PuzzleSpecific/AkariContent/AkariSelectSection/AkariSortFilters/AkariSortFilters"
+import AkariPageItems from "PuzzleSpecific/AkariContent/AkariSelectSection/AkariPageItems/AkariPageItems"
+import AkariSelectSectionPagination from "PuzzleSpecific/AkariContent/AkariSelectSection/AkariSelectSectionPagination/AkariSelectSectionPagination"
 
-// fontawesome
+// fortawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faList, faGrip} from "@fortawesome/free-solid-svg-icons"
+import { 
+    faList, 
+    faGrip 
+} from "@fortawesome/free-solid-svg-icons"
 
 const mapStateToProps = (state: AppState) => ({
     displayMode: state.displayReducer.displayMode,

@@ -1,15 +1,20 @@
-// react
-
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../../store"
-import { ClosePreviewNonogram, PreviewNonogram, SetEditMode} from "../../../../../../../store/data/nonogram"
+import { AppState } from "@store/index"
+import { 
+    ClosePreviewNonogram, 
+    PreviewNonogram, 
+    SetEditMode 
+} from "store/data/nonogram"
 
-// mui
-import { Button} from "@mui/material"
+// mui - components
+import { Button } from "@mui/material"
 
 
 interface OwnPreviewButtonProps {

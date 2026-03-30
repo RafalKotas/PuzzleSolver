@@ -2,20 +2,33 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { displayModes, SetCurrentPage, SetDisplayMode } from "../../../../store/display"
-import { akariSortFiltersNames, selectFilterNamePriorityIndicator } from "../../../../store/filters/akari"
-import { akariInformation, selectListFromMode } from "../../../../store/data/akari"
+import { AppState } from "@store/index"
+import { 
+    displayModes, 
+    SetCurrentPage, 
+    SetDisplayMode 
+} from "store/display"
+import { 
+    akariSortFiltersNames, 
+    selectFilterNamePriorityIndicator 
+} from "store/filters/akari"
+import { 
+    akariInformation, 
+    selectListFromMode 
+} from "store/data/akari"
 
-// (sub) components
-import AkariItemCard from "./AkariItemCard/AkariItemCard"
+// (sub)component(s)
+import AkariItemCard from "PuzzleSpecific/AkariContent/AkariSelectSection/AkariPageItems/AkariItemCard/AkariItemCard"
 
-// other (functions)
-import commonFunctions from "../../../../functions"
+// functions
+import commonFunctions from "functions"
 
 const mapStateToProps = (state: AppState) => ({
     

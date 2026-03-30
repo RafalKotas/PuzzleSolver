@@ -3,19 +3,25 @@ import React from "react"
 
 // redux
 import { Dispatch } from "redux"
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 
 // redux - store
-import { AppState } from "../../../../../store"
-import { calculateBoardDimensionInPx, calculateCellWithBorderSize } from "../../../../../store/layout/architect"
+import { AppState } from "@store/index"
+import { 
+    calculateBoardDimensionInPx, 
+    calculateCellWithBorderSize 
+} from "store/layout/architect"
 
-// (sub)components
-import TanksInColumnsIndicators from "../Indicators/Columns/TanksInColumnsIndicators"
-import TanksInRowsIndicators from "../Indicators/Rows/TanksInRowsIndicators"
-import ArchitectBoard from "./ArchitectBoard/ArchitectBoard"
+// (sub)component(s)
+import TanksInColumnsIndicators from "CommonComponents/AppContent/PuzzleView/ArchitectView/Indicators/Columns/TanksInColumnsIndicators"
+import TanksInRowsIndicators from "CommonComponents/AppContent/PuzzleView/ArchitectView/Indicators/Rows/TanksInRowsIndicators"
+import ArchitectBoard from "CommonComponents/AppContent/PuzzleView/ArchitectView/ArchitectDisplay/ArchitectBoard/ArchitectBoard"
 
-// fontawesome
-import ArchitectInformationTooltip from "./ArchitectInformationTooltip/ArchitectInformationTooltip"
+// fortawesome
+import ArchitectInformationTooltip from "CommonComponents/AppContent/PuzzleView/ArchitectView/ArchitectDisplay/ArchitectInformationTooltip/ArchitectInformationTooltip"
 
 interface OwnArchitectDisplayProps {
 

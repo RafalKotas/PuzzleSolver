@@ -2,12 +2,18 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../store"
-import { calculateBoardDimensionInPx, calculateCellWithBorderSize } from "../../../../../../store/layout/architect"
+import { AppState } from "@store/index" 
+import { 
+    calculateBoardDimensionInPx, 
+    calculateCellWithBorderSize 
+} from "store/layout/architect"
 
 interface OwnTanksInRowsIndicatorsProps {
 

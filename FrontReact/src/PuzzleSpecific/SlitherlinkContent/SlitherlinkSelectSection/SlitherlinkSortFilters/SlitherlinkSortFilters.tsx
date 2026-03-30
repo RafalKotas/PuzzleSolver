@@ -1,20 +1,30 @@
-//react
+// react
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { displayModes, SetDisplayMode } from "../../../../store/display"
-import { slitherlinkSortFilters, slitherlinkSortFiltersNames, selectFilterNamePriorityIndicator } from "../../../../store/filters/slitherlink"
+import { AppState } from "@store/index"
+import { 
+    displayModes, 
+    SetDisplayMode 
+} from "store/display"
+import { 
+    slitherlinkSortFilters, 
+    slitherlinkSortFiltersNames, 
+    selectFilterNamePriorityIndicator 
+} from "store/filters/slitherlink"
 
-// (sub) components
-import SlitherlinkSortFilter from "./SlitherlinkSortFilter/SlitherlinkSortFilter"
+// (sub)component(s)
+import SlitherlinkSortFilter from "PuzzleSpecific/SlitherlinkContent/SlitherlinkSelectSection/SlitherlinkSortFilters/SlitherlinkSortFilter/SlitherlinkSortFilter"
 
 const mapStateToProps = (state: AppState) => ({
-    puzzlesList: state.slitherlinkDataReducer.slitherlinksList,
+    slitherlinksList: state.slitherlinkDataReducer.slitherlinksList,
     displayMode: state.displayReducer.displayMode,
 
     priorityIndicator: (filterName: slitherlinkSortFiltersNames) =>

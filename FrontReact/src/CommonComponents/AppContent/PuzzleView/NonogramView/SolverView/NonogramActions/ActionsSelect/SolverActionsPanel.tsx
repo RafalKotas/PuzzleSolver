@@ -1,38 +1,43 @@
+// react
 import React, { useState } from "react"
-import { connect, ConnectedProps } from "react-redux"
+
+// redux
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
-import { AppState } from "../../../../../../../store"
-import { correctnessIndicator } from "../../../../../../../store/data/nonogram/types"
-import { SetCorrectness } from "../../../../../../../store/data/nonogram"
+// redux - store
+import { AppState } from "@store/index"
+import { correctnessIndicator } from "@store/data/nonogram/types"
+import { SetCorrectness } from "store/data/nonogram"
+import { 
+    nonogramRelatedLogicData, 
+    SetNonogramRelatedLogicData, 
+    nonogramActionsNames, 
+    nonogramBoardMarks, 
+    SetCurrentNonogramMark, 
+    InitializeSolverData 
+} from "store/puzzleLogic/nonogram"
 
+// (sub)component(s)
 import ActionVariants from "./ActionVariants/ActionVariants"
 
-import { Button, Tab, Tabs, Theme, Tooltip } from "@mui/material"
-import { makeStyles } from "@mui/styles"
+// services
+import NonogramLogicService from "services/nonogram/nonogram.logic.service"
 
-import { actionsProps } from "./solverActions"
-import NonogramLogicService from "../../../../../../../services/nonogram/nonogram.logic.service"
-import { nonogramRelatedLogicData, SetNonogramRelatedLogicData, nonogramActionsNames } from "../../../../../../../store/puzzleLogic/nonogram"
+// mui - components
+import { Button, Tab, Tabs, Tooltip } from "@mui/material"
 
-import "./SolverActionsPanel.css"
+// fortawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { InitializeSolverData, nonogramBoardMarks, SetCurrentNonogramMark } from "../../../../../../../store/puzzleLogic/nonogram"
 
-const useStyles = makeStyles((theme: Theme) => ({
-    listItemRoot: {
-        "&.Mui-selected": {
-            backgroundColor: "#721717",
-            color: "#7EEAEC",
-            borderRadius: "5px"
-        }
-    },
-    tabsContainer: {
-        "&.MuiTabs-flexContainer": {
-            flexWrap: "wrap"
-        }
-    }
-}))
+// others
+import { actionsProps } from "CommonComponents/AppContent/PuzzleView/NonogramView/SolverView/NonogramActions/ActionsSelect/solverActions"
+
+// styles
+import "./SolverActionsPanel.css"
 
 const mapStateToProps = (state: AppState) => ({
     selectedNonogramName: state.nonogramDataReducer.selectedNonogram?.filename ?? "",
@@ -59,9 +64,6 @@ const SolverActionsPanel: React.FC<Props> = ({
     selectedNonogramName, correctIndicator, nonogramRelatedLogicData,
     setCurrentNonogramMark, setNonogramRelatedLogicData
 }) => {
-
-    const classes = useStyles()
-
     const [selectedActionTypeIdx, setSelectedActionTypeIdx] = useState<number>(0)
     const [order, setOrder] = useState<"ROW" | "COLUMN">("ROW")
     const [rowsRange, setRowsRange] = useState<number[]>([0, 0])
@@ -144,7 +146,6 @@ const SolverActionsPanel: React.FC<Props> = ({
             <div id="nonogram-actions-icons">
                 <Tabs
                     value={selectedActionTypeIdx}
-                    classes={{ flexContainer: classes.tabsContainer }}
                     onChange={onActionTabChange}
                     centered
                     sx={{ maxWidth: "300px", padding: "5px" }}
@@ -153,7 +154,6 @@ const SolverActionsPanel: React.FC<Props> = ({
                     {actionsProps.map(({ icon, name, mark }) => (
                         <Tooltip key={name} title={name.toUpperCase()} placement="top">
                             <Tab
-                                classes={{ root: classes.listItemRoot }}
                                 label={<FontAwesomeIcon icon={icon} />}
                                 onClick={() => setCurrentNonogramMark(mark)}
                                 disabled={!correctIndicator}

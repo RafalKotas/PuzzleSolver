@@ -2,20 +2,28 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../../../store"
+import { AppState } from "@store/index"
+import { 
+    nonogramSolverActionsNames, 
+    nonogramActionsNames, 
+    nonogramRelatedLogicData,
+    ColourFieldsInColumnsRange, 
+    SetNonogramRelatedLogicData 
+} from "store/puzzleLogic/nonogram"
 
-// mui/material
+// (sub)component(s)
+import CustomMUISlider from "CommonComponents/AppContent/PuzzleFiltersPanel/CustomMUISlider/CustomMUISlider"
+
+// mui - components
 import { Tab, Tabs } from "@mui/material"
-/*import { makeStyles } from "@mui/material/core"*/
 
-// others
-import CustomMUISlider from "../../../../../../PuzzleFiltersPanel/CustomMUISlider/CustomMUISlider"
-import { nonogramSolverActionsNames, nonogramActionsNames, nonogramRelatedLogicData,
-    ColourFieldsInColumnsRange, SetNonogramRelatedLogicData } from "../../../../../../../../store/puzzleLogic/nonogram"
 
 interface OwnNonogramActionVariantsProps {
     selectedActionName: nonogramActionsNames,

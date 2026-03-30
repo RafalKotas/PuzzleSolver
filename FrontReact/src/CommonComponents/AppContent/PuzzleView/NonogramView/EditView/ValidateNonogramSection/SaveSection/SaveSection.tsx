@@ -1,11 +1,14 @@
 // react
-import React, { useEffect, useState } from "react"
+import React, { 
+    useEffect, 
+    useState 
+} from "react"
 
-// (sub) components
-import SaveButton from "../SaveButton/SaveButton"
-import SaveModal from "../SaveModal/SaveModal"
+// (sub)component(s)
+import SaveButton from "CommonComponents/AppContent/PuzzleView/NonogramView/EditView/ValidateNonogramSection/SaveButton/SaveButton"
+import SaveModal from "CommonComponents/AppContent/PuzzleView/NonogramView/EditView/ValidateNonogramSection/SaveModal/SaveModal"
 
-// mui
+// mui - components
 import { Snackbar } from "@mui/material"
 import MuiAlert, { AlertProps } from "@mui/material/Alert"
 

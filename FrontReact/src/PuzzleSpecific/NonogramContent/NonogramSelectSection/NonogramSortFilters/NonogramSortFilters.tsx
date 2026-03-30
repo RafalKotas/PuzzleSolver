@@ -1,18 +1,27 @@
-//react
+// react
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { displayModes, SetDisplayMode } from "../../../../store/display"
-import { nonogramSortFilters, nonogramSortFiltersNames, 
-    selectFilterNamePriorityIndicator } from "../../../../store/filters/nonogram"
+import { AppState } from "@store/index"
+import { 
+    displayModes, 
+    SetDisplayMode 
+} from "store/display"
+import { 
+    nonogramSortFilters, 
+    nonogramSortFiltersNames, 
+    selectFilterNamePriorityIndicator 
+} from "store/filters/nonogram"
 
-// (sub) components
-import NonogramSortFilter from "./NonogramSortFilter/NonogramSortFilter"
+// (sub)component(s)
+import NonogramSortFilter from "PuzzleSpecific/NonogramContent/NonogramSelectSection/NonogramSortFilters/NonogramSortFilter/NonogramSortFilter"
 
 const mapStateToProps = (state: AppState) => ({
     nonogramsList: state.nonogramDataReducer.nonogramsList,

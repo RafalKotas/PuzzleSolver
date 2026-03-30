@@ -3,15 +3,17 @@ import React from "react"
 
 // redux
 import { Dispatch } from "redux"
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 
 // redux - store
-import { AppState } from "../../../../../store"
-import { SetCellSize } from "../../../../../store/layout/nonogram"
+import { AppState } from "@store/index"
+import { SetCellSize } from "store/layout/nonogram"
 
-// (sub) components
-import ArchitectDisplay from "../ArchitectDisplay/ArchitectDisplay"
-//import ArchitectActions from "./ArchitectActions/ArchitectActions"
+// (sub)component(s)
+import ArchitectDisplay from "CommonComponents/AppContent/PuzzleView/ArchitectView/ArchitectDisplay/ArchitectDisplay"
 
 // styles
 import "../ArchitectView.css"

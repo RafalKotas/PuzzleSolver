@@ -1,6 +1,6 @@
-// (sub) components
-import AkariPanel from "./AkariPanel/AkariPanel"
-import AkariSelectSection from "./AkariSelectSection/AkariSelectSection"
+// (sub)component(s)
+import AkariPanel from "PuzzleSpecific/AkariContent/AkariPanel/AkariPanel"
+import AkariSelectSection from "PuzzleSpecific/AkariContent/AkariSelectSection/AkariSelectSection"
 
 const AkariContent = () => {
     return (

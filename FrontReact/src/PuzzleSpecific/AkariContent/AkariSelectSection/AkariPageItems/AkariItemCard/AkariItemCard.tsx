@@ -1,19 +1,29 @@
+// react-router
+import { Link } from "react-router-dom"
+
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+  connect, 
+  ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { akariInformation, SetSelectedAkari } from "../../../../../store/data/akari"
-import { AppState } from "../../../../../store"
+import { 
+  akariInformation, 
+  SetSelectedAkari 
+} from "store/data/akari"
+import { AppState } from "@store/index"
 
-// mui
-import { Card, CardContent, Typography } from "@mui/material"
+// mui - components
+import { 
+  Card, 
+  CardContent, 
+  Typography 
+} from "@mui/material"
 
-// react - router
-import { Link } from "react-router-dom"
-
-//styles
-import "./AkariItemCard.css"
+// styles
+import "PuzzleSpecific/AkariContent/AkariSelectSection/AkariPageItems/AkariItemCard/AkariItemCard.css"
 
 interface OwnAkariItemCardProps {
     akariDetails : akariInformation,

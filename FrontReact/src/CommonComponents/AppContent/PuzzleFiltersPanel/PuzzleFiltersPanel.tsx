@@ -1,7 +1,7 @@
-//react(-router)
-import { Outlet} from "react-router-dom"
+// react - router
+import { Outlet } from "react-router-dom"
 
-//styles
+// styles
 import "./PuzzleFiltersPanel.css"
 
 

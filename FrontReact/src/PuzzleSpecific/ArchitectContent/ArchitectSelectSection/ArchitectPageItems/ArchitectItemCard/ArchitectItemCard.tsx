@@ -1,19 +1,29 @@
-// redux
-import { connect, ConnectedProps } from "react-redux"
-import { Dispatch } from "redux"
-
-// redux - store
-import { architectInformation, SetSelectedArchitect } from "../../../../../store/data/architect"
-import { AppState } from "../../../../../store"
-
-// mui
-import { Card, CardContent, Typography } from "@mui/material"
-
 // react - router
 import { Link } from "react-router-dom"
 
+// redux
+import { 
+  connect, 
+  ConnectedProps 
+} from "react-redux"
+import { Dispatch } from "redux"
+
+// redux - store
+import { 
+  architectInformation, 
+  SetSelectedArchitect 
+} from "store/data/architect"
+import { AppState } from "@store/index"
+
+// mui - components
+import { 
+  Card, 
+  CardContent, 
+  Typography 
+} from "@mui/material"
+
 // styles
-import "./ArchitectItemCard.css"
+import "PuzzleSpecific/ArchitectContent/ArchitectSelectSection/ArchitectPageItems/ArchitectItemCard/ArchitectItemCard.css"
 
 interface OwnArchitectItemCardProps {
     architectDetails : architectInformation,

@@ -1,14 +1,27 @@
-//react
-import React from "react"
-import { useEffect, useState } from "react"
+// react
+import React, { 
+    useEffect, 
+    useState 
+} from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
-import { AppState } from "../../../../../../../store"
-import { ModifySequence, nonogramSquareEdit, SetEditedSquare } from "../../../../../../../store/data/nonogram"
-import EditableSquare from "./EditableSquare/EditableSquare"
-import NotEditableSquare from "./NotEditableSquare/NotEditableSquare"
+
+// redux - store
+import { AppState } from "@store/index"
+import { 
+    ModifySequence, 
+    nonogramSquareEdit, 
+    SetEditedSquare 
+} from "store/data/nonogram"
+
+// (sub)component(s)
+import EditableSquare from "CommonComponents/AppContent/PuzzleView/NonogramView/NonogramDisplay/SequencesSection/SequenceSquare/EditableSquare/EditableSquare"
+import NotEditableSquare from "CommonComponents/AppContent/PuzzleView/NonogramView/NonogramDisplay/SequencesSection/SequenceSquare/NotEditableSquare/NotEditableSquare"
 
 interface OwnSequenceSquareProps {
     section: "rowSequences" | "columnSequences",

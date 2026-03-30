@@ -2,22 +2,34 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../store"
-import { displayModes, SetDisplayMode } from "../../../store/display"
-import { sudokuSortFiltersNames, selectFilterNamePriorityIndicator } from "../../../store/filters/sudoku"
+import { AppState } from "@store/index"
+import { 
+    displayModes, 
+    SetDisplayMode 
+} from "store/display"
+import { 
+    sudokuSortFiltersNames, 
+    selectFilterNamePriorityIndicator 
+} from "store/filters/sudoku"
 
-// (sub) components
-import SudokuSortFilters from "./SudokuSortFilters/SudokuSortFilters"
-import SudokuPageItems from "./SudokuPageItems/SudokuPageItems"
-import SudokuSelectSectionPagination from "./SudokuSelectSectionPagination/SudokuSelectSectionPagination"
+// (sub)component(s)
+import SudokuSortFilters from "PuzzleSpecific/SudokuContent/SudokuSelectSection/SudokuSortFilters/SudokuSortFilters"
+import SudokuPageItems from "PuzzleSpecific/SudokuContent/SudokuSelectSection/SudokuPageItems/SudokuPageItems"
+import SudokuSelectSectionPagination from "PuzzleSpecific/SudokuContent/SudokuSelectSection/SudokuSelectSectionPagination/SudokuSelectSectionPagination"
 
-// fontawesome
+// fortawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faList, faGrip} from "@fortawesome/free-solid-svg-icons"
+import { 
+    faList, 
+    faGrip 
+} from "@fortawesome/free-solid-svg-icons"
 
 const mapStateToProps = (state: AppState) => ({
     displayMode: state.displayReducer.displayMode,

@@ -1,20 +1,43 @@
 // react
-import React, { useEffect, useState } from "react"
+import React, { 
+    useEffect, 
+    useState 
+} from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../store"
-import { ChangeColumnEndConsideredIndex, ChangeColumnStartConsideredIndex, ChangeRowEndConsideredIndex, 
-    ChangeRowStartConsideredIndex, FillMarkedCells, MarkAction,
-     ResetMarkedCells, SetRowsAndColumnsRanges } from "../../../../../../store/puzzleLogic/sudoku"
+import { AppState } from "@store/index"
+import { 
+    ChangeColumnEndConsideredIndex, 
+    ChangeColumnStartConsideredIndex, 
+    ChangeRowEndConsideredIndex, 
+    ChangeRowStartConsideredIndex, 
+    FillMarkedCells, 
+    MarkAction,
+    ResetMarkedCells, 
+    SetRowsAndColumnsRanges 
+} from "store/puzzleLogic/sudoku"
 
-// mui
-import { Button, Divider, FormControl, FormControlLabel, FormLabel, List, ListItemButton, ListItemText, Radio, RadioGroup, TextField } from "@mui/material"
-
-// (sub) components
+// mui - components
+import { 
+    Button, 
+    Divider, 
+    FormControl, 
+    FormControlLabel, 
+    FormLabel, 
+    List, 
+    ListItemButton, 
+    ListItemText, 
+    Radio, 
+    RadioGroup, 
+    TextField 
+} from "@mui/material"
 
 // styles
 import "./SudokuActions.css"

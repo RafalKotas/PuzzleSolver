@@ -1,24 +1,45 @@
-// mui
-import { Button, FormControlLabel, Grid, Radio, RadioGroup, TextField } from "@mui/material"
-import { useEffect, useState } from "react"
+// react
+import React, { 
+    useEffect, 
+    useState 
+} from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../store"
-import { AddColumns, AddRows, RemoveColumns, RemoveRows, 
-    selectColumnsSequencesLength, selectRowsSequencesLength } from "../../../../../../store/data/nonogram"
+import { AppState } from "@store/index"
+import { 
+    AddColumns, 
+    AddRows, 
+    RemoveColumns, 
+    RemoveRows, 
+    selectColumnsSequencesLength, 
+    selectRowsSequencesLength 
+} from "store/data/nonogram"
 
-// (sub) components
-import SequencesModifier from "./SequencesModifier/SequencesModifier"
+// (sub)component(s)
+import SequencesModifier from "CommonComponents/AppContent/PuzzleView/NonogramView/EditView/EditNonogramActions/SequencesModifier/SequencesModifier"
+
+// mui - components
+import { 
+    Button, 
+    FormControlLabel, 
+    Grid, 
+    Radio, 
+    RadioGroup, 
+    TextField 
+} from "@mui/material"
+
+// functions
+import commonFunctions from "functions"
 
 // styles
 import "./EditNonogramActions.css"
-
-// functions
-import commonFunctions from "../../../../../../functions"
 
 const mapStateToProps = (state: AppState) => ({
     selectedNonogram: state.nonogramDataReducer.selectedNonogram,

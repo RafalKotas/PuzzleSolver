@@ -1,6 +1,6 @@
-// (sub) components
-import NonogramPanel from "./NonogramPanel/NonogramPanel"
-import NonogramSelectSection from "./NonogramSelectSection/NonogramSelectSection"
+// (sub)component(s)
+import NonogramPanel from "PuzzleSpecific/NonogramContent/NonogramPanel/NonogramPanel"
+import NonogramSelectSection from "PuzzleSpecific/NonogramContent/NonogramSelectSection/NonogramSelectSection"
 
 const NonogramContent = () => {
     return (

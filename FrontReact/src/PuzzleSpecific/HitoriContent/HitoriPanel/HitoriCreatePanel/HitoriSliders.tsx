@@ -2,19 +2,29 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { AddHitoriDetail, hitoriInformation, ChangeHitoriDetail} from "../../../../store/data/hitori"
-import { modes, SetMode } from "../../../../store/display"
+import { AppState } from "@store/index"
+import { 
+    AddHitoriDetail, 
+    hitoriInformation, 
+    ChangeHitoriDetail 
+} from "store/data/hitori"
+import { 
+    modes, 
+    SetMode 
+} from "store/display"
 
 // (sub)component(s)
-import InputSlider from "../../../../CommonComponents/AppContent/PuzzleFiltersPanel/InputSlider/InputSlider"
+import InputSlider from "CommonComponents/AppContent/PuzzleFiltersPanel/InputSlider/InputSlider"
 
-//other
-import { hitoriSliders } from "./sliders"
+// functions
+import { hitoriSliders } from "PuzzleSpecific/HitoriContent/HitoriPanel/HitoriCreatePanel/sliders"
 
 interface OwnHitoriSlidersProps {
 

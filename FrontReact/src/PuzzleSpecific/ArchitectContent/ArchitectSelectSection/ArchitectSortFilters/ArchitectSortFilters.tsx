@@ -1,17 +1,27 @@
-//react
+// react
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { displayModes, SetDisplayMode } from "../../../../store/display"
-import { architectSortFilters, architectSortFiltersNames, selectFilterNamePriorityIndicator } from "../../../../store/filters/architect"
+import { AppState } from "@store/index"
+import { 
+    displayModes, 
+    SetDisplayMode 
+} from "store/display"
+import { 
+    architectSortFilters, 
+    architectSortFiltersNames, 
+    selectFilterNamePriorityIndicator 
+} from "store/filters/architect"
 
-// (sub) components
-import ArchitectSortFilter from "./ArchitectSortFilter/ArchitectSortFilter"
+// (sub)component(s)
+import ArchitectSortFilter from "PuzzleSpecific/ArchitectContent/ArchitectSelectSection/ArchitectSortFilters/ArchitectSortFilter/ArchitectSortFilter"
 
 const mapStateToProps = (state: AppState) => ({
     puzzlesList: state.architectDataReducer.architectsList,

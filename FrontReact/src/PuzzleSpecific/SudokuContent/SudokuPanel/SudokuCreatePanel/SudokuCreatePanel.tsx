@@ -2,33 +2,41 @@
 import React, { useEffect } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
+import { AppState } from "@store/index"
+import { 
+    AddSudokuDetail, 
+    ChangeSudokuDetail, 
+    RemoveSudokuDetail, 
+    SaveTemporarySudoku, 
+    sudokuInformation 
+} from "store/data/sudoku"
+import { 
+    modes, 
+    SetMode 
+} from "store/display"
 
 // (sub)component(s)
-import InputSlider from "../../../../CommonComponents/AppContent/PuzzleFiltersPanel/InputSlider/InputSlider"
+import InputSlider from "CommonComponents/AppContent/PuzzleFiltersPanel/InputSlider/InputSlider"
+import StringPropTextField from "CommonComponents/StringPropTextField/StringPropTextField"
 
-//mui
+// mui - components
 import { Button, ButtonProps, styled } from "@mui/material"
 import { grey } from "@mui/material/colors"
 
-// fontawesome
+// fortawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 
-// types, interfaces etc
-import { SudokuStringProps } from "./types"
-
-//other
-import { sliders } from "./sliders"
-
-// sub(components)
-import StringPropTextField from "../../../../CommonComponents/StringPropTextField/StringPropTextField"
-import { AddSudokuDetail, ChangeSudokuDetail, RemoveSudokuDetail, SaveTemporarySudoku, sudokuInformation } from "../../../../store/data/sudoku"
-import { modes, SetMode } from "../../../../store/display"
+// other
+import { SudokuStringProps } from "PuzzleSpecific/SudokuContent/SudokuPanel/SudokuCreatePanel/types"
+import { sliders } from "PuzzleSpecific/SudokuContent/SudokuPanel/SudokuCreatePanel/sliders"
 
 interface OwnSudokuCreatePanelProps {
 

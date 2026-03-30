@@ -3,13 +3,16 @@ import React from "react"
 
 // redux
 import { Dispatch } from "redux"
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 
 // redux - store
-import { AppState } from "../../../../../store"
+import { AppState } from "@store/index"
 
-// (sub) components
-import HitoriDisplay from "../HitoriDisplay/HitoriDisplay"
+// (sub)component(s)
+import HitoriDisplay from "CommonComponents/AppContent/PuzzleView/HitoriView/HitoriDisplay/HitoriDisplay"
 
 // styles
 import "./HitoriSolverView.css"

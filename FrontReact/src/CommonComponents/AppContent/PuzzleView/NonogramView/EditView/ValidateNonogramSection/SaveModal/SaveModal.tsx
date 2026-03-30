@@ -1,25 +1,42 @@
 // react
-import { useEffect, useState } from "react"
+import { 
+    useEffect, 
+    useState 
+} from "react"
 
 // redux
 import { Dispatch } from "redux"
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 
 // redux - store
-import { AppState } from "../../../../../../../store"
+import { AppState } from "@store/index"
+import { calculateFilledFields } from "store/puzzleLogic/sudoku/logic"
 
 // services
-import NonogramService from "../../../../../../../services/nonogram/nonogram.service"
+import NonogramService from "services/nonogram/nonogram.service"
+import SudokuService from "services/sudoku/sudoku.service"
 
-// mui
-import {IconButton, Button, Dialog, DialogTitle, DialogActions, DialogContent, DialogContentText, TextField} from "@mui/material"
+// mui - components
+import {
+    IconButton, 
+    Button, 
+    Dialog, 
+    DialogTitle, 
+    DialogActions, 
+    DialogContent, 
+    DialogContentText, 
+    TextField
+} from "@mui/material"
+
+// mui - icons
 import CloseIcon from "@mui/icons-material/Close"
 
-// fontawesome
+// fortawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faRightLong } from "@fortawesome/free-solid-svg-icons"
-import SudokuService from "../../../../../../../services/sudoku/sudoku.service"
-import { calculateFilledFields } from "../../../../../../../store/puzzleLogic/sudoku/logic"
 
 interface OwnSaveModalProps {
     showSaveAlert: boolean,

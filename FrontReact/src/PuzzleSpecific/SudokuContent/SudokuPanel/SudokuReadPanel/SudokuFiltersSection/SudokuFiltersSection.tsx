@@ -1,22 +1,30 @@
 // react
-import React, { useEffect} from "react"
+import React, { useEffect } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../store"
-import { sudokuOptions, InitOptionsList, UpdateNumberValuedFilters, UpdateStringValuedFilters } from "../../../../../store/filters/sudoku"
-import { possibleSudokuOptions } from "../../../../../store/data/sudoku"
+import { AppState } from "@store/index"
+import { 
+    sudokuOptions, 
+    InitOptionsList, 
+    UpdateNumberValuedFilters, 
+    UpdateStringValuedFilters 
+} from "store/filters/sudoku"
+import { possibleSudokuOptions } from "store/data/sudoku"
 
-// (sub) components
-import Box from "@mui/material/Box"
-import CheckBoxGroup from "../../../../../CommonComponents/AppContent/PuzzleFiltersPanel/CheckBoxGroup/CheckBoxGroup"
-import CustomMUISlider from "../../../../../CommonComponents/AppContent/PuzzleFiltersPanel/CustomMUISlider/CustomMUISlider"
+// (sub)component(s)
+import { Box } from "@mui/material"
+import CheckBoxGroup from "CommonComponents/AppContent/PuzzleFiltersPanel/CheckBoxGroup/CheckBoxGroup"
+import CustomMUISlider from "CommonComponents/AppContent/PuzzleFiltersPanel/CustomMUISlider/CustomMUISlider"
 
 // functions
-import commonFunctions from "../../../../../functions"
+import commonFunctions from "functions"
 
 interface OwnSudokuFiltersSectionProps {
     markFiltersCollected: () => void,

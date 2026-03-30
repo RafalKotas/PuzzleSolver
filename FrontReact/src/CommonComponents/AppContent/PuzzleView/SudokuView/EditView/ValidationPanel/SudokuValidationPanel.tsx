@@ -2,16 +2,19 @@
 import React, { useEffect } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../store"
-import SaveSection from "../../../NonogramView/EditView/ValidateNonogramSection/SaveSection/SaveSection"
+import { AppState } from "@store/index"
 
-// (sub) components
-import SudokuPreviewButton from "./SudokuPreviewButton/SudokuPreviewButton"
-import SudokuValidationButton from "./SudokuValidationButton/SudokuValidationButton"
+// (sub)component(s)
+import SudokuPreviewButton from "CommonComponents/AppContent/PuzzleView/SudokuView/EditView/ValidationPanel/SudokuPreviewButton/SudokuPreviewButton"
+import SudokuValidationButton from "CommonComponents/AppContent/PuzzleView/SudokuView/EditView/ValidationPanel/SudokuValidationButton/SudokuValidationButton"
+import SaveSection from "CommonComponents/AppContent/PuzzleView/NonogramView/EditView/ValidateNonogramSection/SaveSection/SaveSection"
 
 // styles
 import "./SudokuValidationPanel.css"

@@ -3,12 +3,17 @@ import React from "react"
 
 // redux
 import { Dispatch } from "redux"
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 
 // redux - store
-import { AppState } from "../../../../../../../store"
-import { selectCellSize } from "../../../../../../../store/layout/slitherlink"
-import SmallBlacksquare from "../../SmallBlackSquare/SmallBlacksquare"
+import { AppState } from "@store/index"
+import { selectCellSize } from "store/layout/slitherlink"
+
+// (sub)component(s)
+import SmallBlacksquare from "CommonComponents/AppContent/PuzzleView/SlitherlinkView/SlitherlinkDisplay/SmallBlackSquare/SmallBlacksquare"
 
 interface OwnBottomEdgesRowProps {
     boardWidth: number,

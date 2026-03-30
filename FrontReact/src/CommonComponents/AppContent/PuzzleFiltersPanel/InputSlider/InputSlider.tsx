@@ -1,11 +1,19 @@
-//mui
-import { Box, Grid, Input, Slider, Typography } from "@mui/material"
+// react
+import React, { useEffect } from "react"
+
+// mui - components
+import { 
+    Box, 
+    Grid, 
+    Input, 
+    Slider, 
+    Typography 
+} from "@mui/material"
+
+// mui - icons
 import WidthFullIcon from '@mui/icons-material/WidthFull'
 import HeightIcon from '@mui/icons-material/Height';
-
-//react
-import React, { useEffect } from "react"
-import { Leaderboard } from "@mui/icons-material";
+import Leaderboard from '@mui/icons-material/Leaderboard';
 
 interface OwnInputSliderProps {
     label: string,

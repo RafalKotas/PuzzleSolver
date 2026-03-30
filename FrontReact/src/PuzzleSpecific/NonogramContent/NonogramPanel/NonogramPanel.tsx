@@ -1,29 +1,43 @@
-//react
-import React, {  useEffect, useState } from "react"
+// react
+import React, { 
+    useEffect, 
+    useState 
+} from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../store"
-import { nonogramInformation, SetNonogramsList} from "../../../store/data/nonogram"
-import { modes, SetMode } from "../../../store/display"
+import { AppState } from "@store/index"
+import { 
+    nonogramInformation, 
+    SetNonogramsList 
+} from "store/data/nonogram"
+import { 
+    modes, 
+    SetMode 
+} from "store/display"
 
-// (sub) components
-import NonogramReadPanel from "./NonogramReadPanel/NonogramReadPanel"
-import NonogramCreatePanel from "./NonogramCreatePanel/NonogramCreatePanel"
+// (sub)component(s)
+import NonogramReadPanel from "PuzzleSpecific/NonogramContent/NonogramPanel/NonogramReadPanel/NonogramReadPanel"
+import NonogramCreatePanel from "PuzzleSpecific/NonogramContent/NonogramPanel/NonogramCreatePanel/NonogramCreatePanel"
 
-//mui
-import Tabs from "@mui/material/Tabs"
-import Tab from "@mui/material/Tab"
-import Box from "@mui/material/Box"
+// services
+import NonogramService from "services/nonogram/nonogram.service"
 
-//services
-import NonogramService from "../../../services/nonogram/nonogram.service"
+// mui - components
+import { 
+    Tabs, 
+    Tab, 
+    Box 
+} from "@mui/material"
 
-//styles
-import "./NonogramPanel.css"
+// styles
+import "PuzzleSpecific/NonogramContent/NonogramPanel/NonogramPanel.css"
 
 const mapStateToProps = (state: AppState) => ({
     mode: state.displayReducer.mode,

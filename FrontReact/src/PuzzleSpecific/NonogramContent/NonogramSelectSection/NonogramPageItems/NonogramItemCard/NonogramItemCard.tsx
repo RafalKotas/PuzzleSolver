@@ -1,19 +1,30 @@
-// redux
-import { connect, ConnectedProps } from "react-redux"
-import { Dispatch } from "redux"
-
-// redux - store
-import { nonogramInformation, selectedNonogramDetails, SetSelectedNonogram } from "../../../../../store/data/nonogram"
-import { AppState } from "../../../../../store"
-
-// mui
-import { Card, CardContent, Typography } from "@mui/material"
-
 // react - router
 import { useNavigate } from "react-router-dom"
 
+// redux
+import { 
+  connect, 
+  ConnectedProps 
+} from "react-redux"
+import { Dispatch } from "redux"
+
+// redux - store
+import { 
+  nonogramInformation, 
+  selectedNonogramDetails, 
+  SetSelectedNonogram 
+} from "store/data/nonogram"
+import { AppState } from "@store/index"
+
+// mui - components
+import { 
+  Card, 
+  CardContent, 
+  Typography 
+} from "@mui/material"
+
 // styles
-import "./NonogramItemCard.css"
+import "PuzzleSpecific/NonogramContent/NonogramSelectSection/NonogramPageItems/NonogramItemCard/NonogramItemCard.css"
 
 interface OwnNonogramItemCardProps {
     nonogramDetails : nonogramInformation,

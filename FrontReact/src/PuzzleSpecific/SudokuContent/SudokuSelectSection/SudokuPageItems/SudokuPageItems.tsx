@@ -2,20 +2,33 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { displayModes, SetCurrentPage, SetDisplayMode } from "../../../../store/display"
-import { sudokuSortFiltersNames, selectFilterNamePriorityIndicator } from "../../../../store/filters/sudoku"
-import { sudokuInformation, selectListFromMode } from "../../../../store/data/sudoku"
+import { AppState } from "@store/index"
+import { 
+    displayModes, 
+    SetCurrentPage, 
+    SetDisplayMode 
+} from "store/display"
+import { 
+    sudokuSortFiltersNames, 
+    selectFilterNamePriorityIndicator 
+} from "store/filters/sudoku"
+import { 
+    sudokuInformation, 
+    selectListFromMode 
+} from "store/data/sudoku"
 
-// (sub) components
-import SudokuItemCard from "./SudokuItemCard/SudokuItemCard"
+// (sub)component(s)
+import SudokuItemCard from "PuzzleSpecific/SudokuContent/SudokuSelectSection/SudokuPageItems/SudokuItemCard/SudokuItemCard"
 
-// other (functions)
-import commonFunctions from "../../../../functions"
+// functions
+import commonFunctions from "functions"
 
 const mapStateToProps = (state: AppState) => ({
     

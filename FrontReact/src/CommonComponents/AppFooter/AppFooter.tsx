@@ -1,3 +1,4 @@
+// styles
 import "./AppFooter.css"
 
 const AppFooter = () => {

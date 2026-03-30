@@ -3,12 +3,18 @@ import React from "react"
 
 // redux
 import { Dispatch } from "redux"
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 
 // redux - store
-import { AppState } from "../../../../../../../store"
-import { selectCellSize, selectEdgeWidth } from "../../../../../../../store/layout/slitherlink"
-import { selectBoardWidth } from "../../../../../../../store/data/slitherlink"
+import { AppState } from "@store/index"
+import { 
+    selectCellSize, 
+    selectEdgeWidth 
+} from "store/layout/slitherlink"
+import { selectBoardWidth } from "store/data/slitherlink"
 
 // styles
 import "../../SlitherlinkDisplay.css"

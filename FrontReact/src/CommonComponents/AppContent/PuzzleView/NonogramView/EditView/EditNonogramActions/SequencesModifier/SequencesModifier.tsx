@@ -1,19 +1,37 @@
 // react
-import React, { useEffect, useState } from "react"
+import React, { 
+  useEffect, 
+  useState 
+} from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+  connect, 
+  ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../../store"
-import { ModifyColumn, ModifyRow, selectColumnsSequencesLength, selectRowsSequencesLength } from "../../../../../../../store/data/nonogram"
+import { AppState } from "@store/index"
+import { 
+  ModifyColumn, 
+  ModifyRow, 
+  selectColumnsSequencesLength, 
+  selectRowsSequencesLength 
+} from "store/data/nonogram"
 
-// mui
-import { Button, TextField, ToggleButton, ToggleButtonGroup, Tooltip } from "@mui/material"
+// mui - components
+import { 
+  Button, 
+  TextField, 
+  ToggleButton, 
+  ToggleButtonGroup, 
+  Tooltip 
+} from "@mui/material"
+
+// fortawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBroom } from "@fortawesome/free-solid-svg-icons"
-
 
 const mapStateToProps = (state: AppState) => ({
   maxRowModifyIndex: selectRowsSequencesLength(state.nonogramDataReducer) - 1,

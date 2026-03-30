@@ -1,25 +1,35 @@
 // react
-import React from "react"
-import { useEffect } from "react"
+import React, { useEffect } from "react"
 
 // redux
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
-import { connect, ConnectedProps } from "react-redux"
 
 // redux - store
-import { AppState } from "../../../../../store"
-import { calculateBoardDimensionInPx, selectCellPlusEdgeHeight, selectEdgeWidth, SetCellSize } from "../../../../../store/layout/slitherlink"
+import { AppState } from "@store/index"
+import { 
+    calculateBoardDimensionInPx, 
+    selectCellPlusEdgeHeight, 
+    selectEdgeWidth, 
+    SetCellSize 
+} from "store/layout/slitherlink"
+import { 
+    selectBoardHeight, 
+    selectBoardWidth 
+} from "store/data/slitherlink"
 
-// subcomponents
-import BottomEdgesRow from "./SlitherlinkRow/BottomEdgesRow/BottomEdgesRow"
+// (sub)component(s)
+import BottomEdgesRow from "CommonComponents/AppContent/PuzzleView/SlitherlinkView/SlitherlinkDisplay/SlitherlinkRow/BottomEdgesRow/BottomEdgesRow"
+import SlitherLinkInformationTooltip from "CommonComponents/AppContent/PuzzleView/SlitherlinkView/SlitherlinkDisplay/SlitherLinkInformationTooltip/SlitherLinkInformationTooltip"
+import SmallBlacksquare from "CommonComponents/AppContent/PuzzleView/SlitherlinkView/SlitherlinkDisplay/SmallBlackSquare/SmallBlacksquare"
+import EdgesRow from "CommonComponents/AppContent/PuzzleView/SlitherlinkView/SlitherlinkDisplay/SlitherlinkRow/SimpleRow/EdgesRow"
+import CellsRow from "CommonComponents/AppContent/PuzzleView/SlitherlinkView/SlitherlinkDisplay/SlitherlinkRow/CellsRow/CellsRow"
 
 // styles
 import "./SlitherlinkDisplay.css"
-import { selectBoardHeight, selectBoardWidth } from "../../../../../store/data/slitherlink"
-import SlitherLinkInformationTooltip from "./SlitherLinkInformationTooltip/SlitherLinkInformationTooltip"
-import SmallBlacksquare from "./SmallBlackSquare/SmallBlacksquare"
-import EdgesRow from "./SlitherlinkRow/SimpleRow/EdgesRow"
-import CellsRow from "./SlitherlinkRow/CellsRow/CellsRow"
 
 interface OwnSlitherlinkDisplayProps {
 

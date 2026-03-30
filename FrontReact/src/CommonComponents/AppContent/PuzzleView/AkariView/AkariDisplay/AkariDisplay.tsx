@@ -3,15 +3,22 @@ import { useEffect } from "react"
 
 // redux
 import { Dispatch } from "redux"
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 
 // redux - store
-import { AppState } from "../../../../../store"
-import { calculateBoardDimensionInPx, calculateCellWithBorderSize, SetCellSize } from "../../../../../store/layout/akari"
+import { AppState } from "@store/index"
+import { 
+    calculateBoardDimensionInPx, 
+    calculateCellWithBorderSize, 
+    SetCellSize 
+} from "store/layout/akari"
 
-// (sub) components
-import AkariCell from "./AkariCell/AkariCell"
-import AkariInformationTooltip from "./AkariInformationTooltip/AkariInformationTooltip"
+// (sub)component(s)
+import AkariCell from "CommonComponents/AppContent/PuzzleView/AkariView/AkariDisplay/AkariCell/AkariCell"
+import AkariInformationTooltip from "CommonComponents/AppContent/PuzzleView/AkariView/AkariDisplay/AkariInformationTooltip/AkariInformationTooltip"
 
 // styles
 import "./AkariDisplay.css"

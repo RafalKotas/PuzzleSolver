@@ -1,15 +1,28 @@
-// mui
+// redux
+import { Dispatch } from "redux"
+import { 
+    connect, 
+    ConnectedProps, 
+    useDispatch 
+} from "react-redux"
+
+// redux - store
+import { 
+    filterTypeDetails,  
+    filterWithDirectionIncludedSelector, 
+    selectFilterAction 
+} from "store/filters/slitherlink"
+import { AppState } from "@store/index"
+
+// mui - components
 import { Tooltip } from "@mui/material"
 
-// fontawesome
+// fortawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faArrowUp, faArrowDown} from "@fortawesome/free-solid-svg-icons"
-
-// redux
-import { filterTypeDetails,  filterWithDirectionIncludedSelector, selectFilterAction } from "../../../../../store/filters/slitherlink"
-import { AppState } from "../../../../../store"
-import { Dispatch } from "redux"
-import { connect, ConnectedProps, useDispatch} from "react-redux"
+import { 
+    faArrowUp, 
+    faArrowDown 
+} from "@fortawesome/free-solid-svg-icons"
 
 
 interface OwnSlitherlinkSortFilterProps {

@@ -3,8 +3,12 @@ import { Dispatch } from "redux"
 import { connect, ConnectedProps } from "react-redux"
 
 // redux - store
-import { AppState } from "../../../../../../store"
-import { calculateBoardDimensionInPx, calculateCellWithBorderSize, SetCellSize } from "../../../../../../store/layout/akari"
+import { AppState } from "@store/index"
+import { SetCellSize } from "store/layout/akari/actions"
+import { 
+    calculateCellWithBorderSize, 
+    calculateBoardDimensionInPx 
+} from "store/layout/akari"
 
 interface OwnAkariCellProps {
     akariCell: string,

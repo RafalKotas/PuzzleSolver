@@ -2,15 +2,17 @@
 import { useEffect } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../store"
+import { AppState } from "@store/index"
 
-
-// sub(components)
-import ArchitectDisplay from "../ArchitectDisplay/ArchitectDisplay"
+// (sub)component(s)
+import ArchitectDisplay from "CommonComponents/AppContent/PuzzleView/ArchitectView/ArchitectDisplay/ArchitectDisplay"
 
 const mapStateToProps = (state: AppState) => ({
 

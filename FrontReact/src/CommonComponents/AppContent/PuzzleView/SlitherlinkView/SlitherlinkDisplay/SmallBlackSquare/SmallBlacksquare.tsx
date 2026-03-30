@@ -3,11 +3,14 @@ import React from "react"
 
 // redux
 import { Dispatch } from "redux"
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 
 // redux - store
-import { AppState } from "../../../../../../store"
-import { selectCellSize } from "../../../../../../store/layout/slitherlink"
+import { AppState } from "@store/index"
+import { selectCellSize } from "store/layout/slitherlink"
 
 interface OwnSmallBlackSquareProps {
     edgeWidthInPx: number

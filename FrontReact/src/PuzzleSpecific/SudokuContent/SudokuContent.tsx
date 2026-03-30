@@ -1,6 +1,6 @@
-// (sub) components
-import SudokuPanel from "./SudokuPanel/SudokuPanel"
-import SudokuSelectSection from "./SudokuSelectSection/SudokuSelectSection"
+// (sub)component(s)
+import SudokuPanel from "PuzzleSpecific/SudokuContent/SudokuPanel/SudokuPanel"
+import SudokuSelectSection from "PuzzleSpecific/SudokuContent/SudokuSelectSection/SudokuSelectSection"
 
 const SudokuContent = () => {
     return (

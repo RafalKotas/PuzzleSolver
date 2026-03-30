@@ -1,18 +1,28 @@
 // react
-import React, { useEffect, useState } from "react"
+import React, { 
+    useEffect, 
+    useState 
+} from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
-import { AppState } from "../../../../store"
 
-// (sub)components
-import SudokuFiltersSection from "./SudokuFiltersSection/SudokuFiltersSection"
+// redux - store
+import { AppState } from "@store/index"
+import { 
+    modes, 
+    SetMode 
+} from "store/display"
 
-// images etc
-import bubbleLoaderIcon from  "../../../../assets/Loaders/Bubble-Loader-Icon/96x96.gif"
-import { modes, SetMode } from "../../../../store/display"
+// (sub)component(s)
+import SudokuFiltersSection from "PuzzleSpecific/SudokuContent/SudokuPanel/SudokuReadPanel/SudokuFiltersSection/SudokuFiltersSection"
 
+// other
+import bubbleLoaderIcon from  "assets/Loaders/Bubble-Loader-Icon/96x96.gif"
 
 interface OwnSudokuReadPanelProps {
     dataFetched: boolean

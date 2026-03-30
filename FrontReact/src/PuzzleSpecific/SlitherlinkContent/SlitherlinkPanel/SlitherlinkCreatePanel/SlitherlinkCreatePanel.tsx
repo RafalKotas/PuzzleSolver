@@ -2,27 +2,44 @@
 import React, { useEffect } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { AddSlitherlinkDetail, RemoveSlitherlinkDetail, ChangeSlitherlinkDetail, SaveTemporarySlitherlink, 
-    slitherlinkInformation } from "../../../../store/data/slitherlink"
-import { modes, SetMode } from "../../../../store/display"
+import { AppState } from "@store/index"
+import { 
+    AddSlitherlinkDetail, 
+    RemoveSlitherlinkDetail, 
+    ChangeSlitherlinkDetail, 
+    SaveTemporarySlitherlink, 
+    slitherlinkInformation 
+} from "store/data/slitherlink"
+import { 
+    modes, 
+    SetMode 
+} from "store/display"
 
-//mui
-import { Button, ButtonProps, styled } from "@mui/material"
+// (sub)component(s)
+import StringPropTextField from "CommonComponents/StringPropTextField/StringPropTextField"
+import SlitherlinkSliders from "PuzzleSpecific/SlitherlinkContent/SlitherlinkPanel/SlitherlinkCreatePanel/SlitherlinkSliders"
+
+// mui - components
+import { 
+    Button, 
+    ButtonProps, 
+    styled 
+} from "@mui/material"
 import { grey } from "@mui/material/colors"
 
-// fontawesome
+// fortawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 
-//other
-import { slitherlinkStringProps } from "./types"
-import StringPropTextField from "../../../../CommonComponents/StringPropTextField/StringPropTextField"
-import SlitherlinkSliders from "./SlitherlinkSliders"
+// other
+import { slitherlinkStringProps } from "PuzzleSpecific/SlitherlinkContent/SlitherlinkPanel/SlitherlinkCreatePanel/types"
 
 interface OwnSlitherlinkCreatePanelProps {
 

@@ -1,7 +1,11 @@
-import { Route, Routes } from "react-router-dom"
+// react-router
+import { 
+    Route, 
+    Routes 
+} from "react-router-dom"
 
-// (sub)components
-import NonogramSelectSectionPagination from "../../PuzzleSpecific/NonogramContent/NonogramSelectSection/NonogramSelectSectionPagination/NonogramSelectSectionPagination"
+// (sub)component(s)
+import NonogramSelectSectionPagination from "PuzzleSpecific/NonogramContent/NonogramSelectSection/NonogramSelectSectionPagination/NonogramSelectSectionPagination"
 
 const SelectSectionPagination = () => {
     return (

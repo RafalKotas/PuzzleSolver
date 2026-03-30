@@ -1,6 +1,6 @@
-// (sub) components
-import ArchitectPanel from "./ArchitectPanel/ArchitectPanel"
-import ArchitectSelectSection from "./ArchitectSelectSection/ArchitectSelectSection"
+// (sub)component(s)
+import ArchitectPanel from "PuzzleSpecific/ArchitectContent/ArchitectPanel/ArchitectPanel"
+import ArchitectSelectSection from "PuzzleSpecific/ArchitectContent/ArchitectSelectSection/ArchitectSelectSection"
 
 const ArchitectContent = () => {
     return (

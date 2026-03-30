@@ -2,20 +2,33 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { displayModes, SetCurrentPage, SetDisplayMode } from "../../../../store/display"
-import { hitoriSortFiltersNames, selectFilterNamePriorityIndicator } from "../../../../store/filters/hitori"
-import { hitoriInformation, selectListFromMode } from "../../../../store/data/hitori"
+import { AppState } from "@store/index"
+import { 
+    displayModes, 
+    SetCurrentPage, 
+    SetDisplayMode 
+} from "store/display"
+import { 
+    hitoriSortFiltersNames, 
+    selectFilterNamePriorityIndicator 
+} from "store/filters/hitori"
+import { 
+    hitoriInformation, 
+    selectListFromMode 
+} from "store/data/hitori"
 
-// (sub) components
-import HitoriItemCard from "./HitoriItemCard/HitoriItemCard"
+// (sub)component(s)
+import HitoriItemCard from "PuzzleSpecific/HitoriContent/HitoriSelectSection/HitoriPageItems/HitoriItemCard/HitoriItemCard"
 
-// other (functions)
-import commonFunctions from "../../../../functions"
+// functions
+import commonFunctions from "functions"
 
 const mapStateToProps = (state: AppState) => ({
 

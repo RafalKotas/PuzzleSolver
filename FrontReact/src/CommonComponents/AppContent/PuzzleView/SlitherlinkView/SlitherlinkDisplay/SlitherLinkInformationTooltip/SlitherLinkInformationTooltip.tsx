@@ -2,18 +2,21 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../store"
+import { AppState } from "@store/index"
 
-//fontawesome
+// (sub)component(s)
+import InfoCardTooltip from "CommonComponents/InfoCardTooltip/InfoCardTooltip"
+
+// fortawesome
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-
-// (sub) components
-import InfoCardTooltip from "../../../../../InfoCardTooltip/InfoCardTooltip"
 
 interface OwnSlitherlinkInformationTooltipProps {
 }

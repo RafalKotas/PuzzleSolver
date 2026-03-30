@@ -2,10 +2,18 @@
 import { useState } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
-import { AppState } from "../../../../../../../../store"
-import { ModifySequence, ResetEditedSquare} from "../../../../../../../../store/data/nonogram"
+
+// redux - store
+import { AppState } from "@store/index"
+import { 
+    ModifySequence, 
+    ResetEditedSquare 
+} from "store/data/nonogram"
 
 interface OwnEditableSquareProps {
     section: "rowSequences" | "columnSequences",

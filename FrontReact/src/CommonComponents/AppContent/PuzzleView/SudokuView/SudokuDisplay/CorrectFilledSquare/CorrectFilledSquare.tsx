@@ -1,13 +1,19 @@
+// react
+import { useEffect } from "react"
+
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../store"
-import { InsertDigitIntoCell, sudokuCellCoords } from "../../../../../../store/puzzleLogic/sudoku"
-import { useEffect } from "react"
-
-// styles
+import { AppState } from "@store/index"
+import { 
+    InsertDigitIntoCell, 
+    sudokuCellCoords 
+} from "store/puzzleLogic/sudoku"
 
 interface OwnCorrectFilledSquareProps {
     coords: sudokuCellCoords

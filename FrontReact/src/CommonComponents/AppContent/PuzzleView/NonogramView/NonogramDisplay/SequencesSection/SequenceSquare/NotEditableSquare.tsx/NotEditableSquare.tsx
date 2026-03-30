@@ -1,9 +1,20 @@
+// react
+import React from "react"
+
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
-import { AppState } from "../../../../../../../../store"
-import { nonogramSquareEdit, SetEditedSquare } from "../../../../../../../../store/data/nonogram"
-import { selectSequenceFulFilledConditionMet } from "../../../../../../../../store/puzzleLogic/nonogram"
+
+// redux - store
+import { AppState } from "@store/index"
+import { 
+    nonogramSquareEdit, 
+    SetEditedSquare 
+} from "store/data/nonogram"
+import { selectSequenceFulFilledConditionMet } from "store/puzzleLogic/nonogram"
 
 interface OwnNotEditableSquareProps {
     section: string,

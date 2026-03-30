@@ -3,12 +3,17 @@ import React from "react"
 
 // redux
 import { Dispatch } from "redux"
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 
 // redux - store
-import { AppState } from "../../../../../../store"
-import SingleNonogramSquare from "./SingleNonogramSquare"
-import { calculateCellWithBorderSize } from "../../../../../../store/layout/nonogram"
+import { AppState } from "@store/index"
+import { calculateCellWithBorderSize } from "store/layout/nonogram"
+
+// (sub)component(s)
+import SingleNonogramSquare from "CommonComponents/AppContent/PuzzleView/NonogramView/NonogramDisplay/NonogramBoard/SingleNonogramSquare"
 
 interface OwnBigSquareProps {
     firstRowNoInBigSquare: number,

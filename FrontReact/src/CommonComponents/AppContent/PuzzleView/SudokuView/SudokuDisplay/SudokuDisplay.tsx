@@ -1,13 +1,13 @@
 // react
 import React from "react"
 
-// (sub) components
-
-import SudokuInformationTooltip from "./SudokuInformationTooltip/SudokuInformationTooltip"
+// (sub)component(s)
+import SudokuInformationTooltip from "CommonComponents/AppContent/PuzzleView/SudokuView/SudokuDisplay/SudokuInformationTooltip/SudokuInformationTooltip"
+import SudokuBoard from "CommonComponents/AppContent/PuzzleView/SudokuView/SudokuDisplay/SudokuBoard/SudokuBoard"
 
 // styles
 import "./SudokuDisplay.css"
-import SudokuBoard from "./SudokuBoard/SudokuBoard"
+
 
 const SudokuDisplay = () => {
 

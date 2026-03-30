@@ -1,13 +1,32 @@
-// redux
-import { Tooltip } from "@mui/material"
+// react
 import { useEffect } from "react"
-import { connect, ConnectedProps } from "react-redux"
+
+// redux
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
-import commonFunctions from "../../../../../../../functions"
 
 // redux - store
-import { AppState } from "../../../../../../../store"
-import { AddMarkedCell, InsertDigitIntoCell, InsertDigitIntoCellEditMode, RemoveDigitFromCellEditMode, selectOccurencesInColumn, selectOccurencesInRow, selectOccurencesInSquare3x3, selectOnlyAvailableInCell, sudokuCellCoords } from "../../../../../../../store/puzzleLogic/sudoku"
+import { AppState } from "@store/index"
+import { 
+    AddMarkedCell, 
+    InsertDigitIntoCell, 
+    InsertDigitIntoCellEditMode, 
+    RemoveDigitFromCellEditMode, 
+    selectOccurencesInColumn, 
+    selectOccurencesInRow, 
+    selectOccurencesInSquare3x3, 
+    selectOnlyAvailableInCell, 
+    sudokuCellCoords 
+} from "store/puzzleLogic/sudoku"
+
+// mui - components
+import { Tooltip } from "@mui/material"
+
+// functions
+import commonFunctions from "functions"
 
 // styles
 import "./NumberField.css"

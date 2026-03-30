@@ -2,22 +2,34 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../store"
-import { displayModes, SetDisplayMode } from "../../../store/display"
-import { architectSortFiltersNames, selectFilterNamePriorityIndicator } from "../../../store/filters/architect"
+import { AppState } from "@store/index"
+import { 
+    displayModes, 
+    SetDisplayMode 
+} from "store/display"
+import { 
+    architectSortFiltersNames, 
+    selectFilterNamePriorityIndicator 
+} from "store/filters/architect"
 
-// (sub) components
-import ArchitectSortFilters from "./ArchitectSortFilters/ArchitectSortFilters"
-import ArchitectPageItems from "./ArchitectPageItems/ArchitectPageItems"
-import ArchitectSelectSectionPagination from "./ArchitectSelectSectionPagination/ArchitectSelectSectionPagination"
+// (sub)component(s)
+import ArchitectSortFilters from "PuzzleSpecific/ArchitectContent/ArchitectSelectSection/ArchitectSortFilters/ArchitectSortFilters"
+import ArchitectPageItems from "PuzzleSpecific/ArchitectContent/ArchitectSelectSection/ArchitectPageItems/ArchitectPageItems"
+import ArchitectSelectSectionPagination from "PuzzleSpecific/ArchitectContent/ArchitectSelectSection/ArchitectSelectSectionPagination/ArchitectSelectSectionPagination"
 
-// fontawesome
+// fortawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faList, faGrip} from "@fortawesome/free-solid-svg-icons"
+import { 
+    faList, 
+    faGrip 
+} from "@fortawesome/free-solid-svg-icons"
 
 const mapStateToProps = (state: AppState) => ({
     displayMode: state.displayReducer.displayMode,

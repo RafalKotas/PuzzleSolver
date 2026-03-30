@@ -1,6 +1,6 @@
-// (sub) components
-import HitoriPanel from "./HitoriPanel/HitoriPanel"
-import HitoriSelectSection from "./HitoriSelectSection/HitoriSelectSection"
+// (sub)component(s)
+import HitoriPanel from "PuzzleSpecific/HitoriContent/HitoriPanel/HitoriPanel"
+import HitoriSelectSection from "PuzzleSpecific/HitoriContent/HitoriSelectSection/HitoriSelectSection"
 
 const HitoriContent = () => {
     return (

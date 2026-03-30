@@ -1,19 +1,29 @@
-// redux
-import { connect, ConnectedProps } from "react-redux"
-import { Dispatch } from "redux"
-
-// redux - store
-import { slitherlinkInformation, SetSelectedSlitherlink } from "../../../../../store/data/slitherlink"
-import { AppState } from "../../../../../store"
-
-// mui
-import { Card, CardContent, Typography } from "@mui/material"
-
 // react - router
 import { Link } from "react-router-dom"
 
+// redux
+import { 
+  connect, 
+  ConnectedProps 
+} from "react-redux"
+import { Dispatch } from "redux"
+
+// redux - store
+import { AppState } from "@store/index"
+import { 
+  slitherlinkInformation, 
+  SetSelectedSlitherlink 
+} from "store/data/slitherlink"
+
+// mui - components
+import { 
+  Card, 
+  CardContent, 
+  Typography 
+} from "@mui/material"
+
 // styles
-import "./SlitherlinkItemCard.css"
+import "PuzzleSpecific/SlitherlinkContent/SlitherlinkSelectSection/SlitherlinkPageItems/SlitherlinkItemCard/SlitherlinkItemCard.css"
 
 interface OwnSlitherlinkItemCardProps {
     slitherlinkDetails : slitherlinkInformation,

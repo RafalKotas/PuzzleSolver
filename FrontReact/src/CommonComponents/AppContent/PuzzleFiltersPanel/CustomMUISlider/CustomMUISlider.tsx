@@ -1,7 +1,15 @@
-import Box from "@mui/material/Box/Box"
-import Slider from "@mui/material/Slider"
-import Typography from "@mui/material/Typography"
-import React, {useEffect, useState} from "react"
+// react
+import React, { 
+    useEffect, 
+    useState 
+} from "react"
+
+// mui - components
+import { 
+    Slider, 
+    Typography 
+} from "@mui/material"
+import { Box } from "@mui/material"
 
 interface CustomMUISliderProps {
     minValue: number,

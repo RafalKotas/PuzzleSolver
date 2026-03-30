@@ -2,19 +2,29 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { AddArchitectDetail, architectInformation, ChangeArchitectDetail} from "../../../../store/data/architect"
-import { modes, SetMode } from "../../../../store/display"
+import { AppState } from "@store/index"
+import { 
+    AddArchitectDetail, 
+    architectInformation, 
+    ChangeArchitectDetail 
+} from "store/data/architect"
+import { 
+    modes, 
+    SetMode 
+} from "store/display"
 
 // (sub)component(s)
-import InputSlider from "../../../../CommonComponents/AppContent/PuzzleFiltersPanel/InputSlider/InputSlider"
+import InputSlider from "CommonComponents/AppContent/PuzzleFiltersPanel/InputSlider/InputSlider"
 
-//other
-import { architectSliders } from "./sliders"
+// other
+import { architectSliders } from "PuzzleSpecific/ArchitectContent/ArchitectPanel/ArchitectCreatePanel/sliders"
 
 interface OwnArchitectSlidersProps {
 

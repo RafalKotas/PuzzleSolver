@@ -1,14 +1,22 @@
-// redux
+// react
 import React from "react"
-import { connect, ConnectedProps } from "react-redux"
+
+// redux
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
+import { Dispatch } from "redux"
 
 // redux - store
-import { Dispatch } from "redux"
-import { AppState } from "../../../../../../store"
-import { calculateBoardDimensionInPx, calculateCellWithBorderSize } from "../../../../../../store/layout/nonogram"
+import { AppState } from "@store/index"
+import { 
+    calculateBoardDimensionInPx, 
+    calculateCellWithBorderSize 
+} from "store/layout/nonogram"
 
-// (sub) components
-import BigSquare from "./BigSquare"
+// (sub)component(s)
+import BigSquare from "CommonComponents/AppContent/PuzzleView/NonogramView/NonogramDisplay/NonogramBoard/BigSquare"
 
 interface OwnBoardBigRowProps {
     rowNo: number
@@ -41,7 +49,7 @@ const BoardBigRow : React.FC<BoardBigRowProps> = ({rowNo,
     let bigRowHeightInCells = Math.min(5, selectedNonogram ? selectedNonogram.height - rowNo : 5)
     let bigRowHeightPx = bigRowHeightInCells * cellOverallSize + bigSquareAdditionalBorder
 
-    const renderCond = ((colNo : number) => colNo % 5 == 0)
+    const renderCond = ((colNo : number) => colNo % 5 === 0)
 
     return (
         <div 

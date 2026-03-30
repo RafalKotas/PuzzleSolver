@@ -1,19 +1,28 @@
 // react
-import React, { useEffect, useState } from "react"
+import React, { 
+    useEffect, 
+    useState 
+} from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
-// redux store
-import { AppState } from "../../../../store"
-import { modes, SetMode } from "../../../../store/display"
+// redux - store
+import { AppState } from "@store/index"
+import { 
+    modes, 
+    SetMode 
+} from "store/display"
 
-// (sub)components
-import AkariFiltersSection from "./AkariFiltersSection/AkariFiltersSection"
+// (sub)component(s)
+import AkariFiltersSection from "PuzzleSpecific/AkariContent/AkariPanel/AkariReadPanel/AkariFiltersSection/AkariFiltersSection"
 
-// images etc
-import bubbleLoaderIcon from  "../../../../assets/Loaders/Bubble-Loader-Icon/96x96.gif"
+// other
+import bubbleLoaderIcon from  "assets/Loaders/Bubble-Loader-Icon/96x96.gif"
 
 
 interface OwnAkariReadPanelProps {

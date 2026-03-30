@@ -1,21 +1,30 @@
 // react
-import { useEffect} from "react"
+import { useEffect } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { displayModes, SetCurrentPage, SetDisplayMode } from "../../../../store/display"
-import { nonogramInformation, selectListFromMode } from "../../../../store/data/nonogram"
+import { AppState } from "@store/index"
+import { 
+    displayModes, 
+    SetCurrentPage, 
+    SetDisplayMode 
+} from "store/display"
+import { 
+    nonogramInformation, 
+    selectListFromMode 
+} from "store/data/nonogram"
 
-// mui
+// mui - components
 import { Pagination } from "@mui/material"
 
-// own functions
-import commonFunctions from "../../../../functions"
-
+// functions
+import commonFunctions from "functions"
 
 const mapStateToProps = (state: AppState) => ({
     properNonogramsList: selectListFromMode(state.displayReducer, state.nonogramDataReducer),

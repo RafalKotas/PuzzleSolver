@@ -1,17 +1,20 @@
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+  connect, 
+  ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../../store"
-import { correctnessIndicator } from "../../../../../../../store/data/nonogram/types"
-import { SetCorrectness } from "../../../../../../../store/data/nonogram"
+import { AppState } from "@store/index"
+import { correctnessIndicator } from "store/data/nonogram/types"
+import { SetCorrectness } from "store/data/nonogram"
 
-// mui
-import { Button} from "@mui/material"
+// mui - components
+import { Button } from "@mui/material"
 
 // functions
-import commonFunctions from "../../../../../../../functions"
+import commonFunctions from "functions"
 
 interface OwnCheckCorrectButtonProps {
 

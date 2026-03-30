@@ -2,25 +2,38 @@
 import React, { useEffect } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../store"
-import { displayModes, SetCurrentPage, SetDisplayMode } from "../../../store/display"
-import { nonogramSortFiltersNames, selectFilterNamePriorityIndicator } from "../../../store/filters/nonogram"
+import { AppState } from "@store/index"
+import { 
+    displayModes, 
+    SetCurrentPage, 
+    SetDisplayMode 
+} from "store/display"
+import { 
+    nonogramSortFiltersNames, 
+    selectFilterNamePriorityIndicator 
+} from "store/filters/nonogram"
 
-// (sub) components
-import NonogramSortFilters from "./NonogramSortFilters/NonogramSortFilters"
-import NonogramPageItems from "./NonogramPageItems/NonogramPageItems"
-import NonogramSelectSectionPagination from "./NonogramSelectSectionPagination/NonogramSelectSectionPagination"
+// (sub)component(s)
+import NonogramSortFilters from "PuzzleSpecific/NonogramContent/NonogramSelectSection/NonogramSortFilters/NonogramSortFilters"
+import NonogramPageItems from "PuzzleSpecific/NonogramContent/NonogramSelectSection/NonogramPageItems/NonogramPageItems"
+import NonogramSelectSectionPagination from "PuzzleSpecific/NonogramContent/NonogramSelectSection/NonogramSelectSectionPagination/NonogramSelectSectionPagination"
 
-// fontawesome
+// fortawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faList, faGrip} from "@fortawesome/free-solid-svg-icons"
+import { 
+    faList, 
+    faGrip 
+} from "@fortawesome/free-solid-svg-icons"
 
-//styles
-import "./NonogramSelectSection.css"
+// styles
+import "PuzzleSpecific/NonogramContent/NonogramSelectSection/NonogramSelectSection.css"
 
 const mapStateToProps = (state: AppState) => ({
     displayMode: state.displayReducer.displayMode,

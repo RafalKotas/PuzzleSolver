@@ -2,20 +2,33 @@
 import React from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { displayModes, SetCurrentPage, SetDisplayMode } from "../../../../store/display"
-import { architectSortFiltersNames, selectFilterNamePriorityIndicator } from "../../../../store/filters/architect"
-import { architectInformation, selectListFromMode } from "../../../../store/data/architect"
+import { AppState } from "@store/index"
+import { 
+    displayModes, 
+    SetCurrentPage, 
+    SetDisplayMode 
+} from "store/display"
+import { 
+    architectSortFiltersNames, 
+    selectFilterNamePriorityIndicator 
+} from "store/filters/architect"
+import { 
+    architectInformation, 
+    selectListFromMode 
+} from "store/data/architect"
 
-// (sub) components
-import ArchitectItemCard from "./ArchitectItemCard/ArchitectItemCard"
+// (sub)component(s)
+import ArchitectItemCard from "PuzzleSpecific/ArchitectContent/ArchitectSelectSection/ArchitectPageItems/ArchitectItemCard/ArchitectItemCard"
 
-// other (functions)
-import commonFunctions from "../../../../functions"
+// functions
+import commonFunctions from "functions"
 
 const mapStateToProps = (state: AppState) => ({
     

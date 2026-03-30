@@ -1,23 +1,34 @@
-//react
-import React, {  useEffect, useState } from "react"
+// react
+import React, { 
+    useEffect, 
+    useState 
+} from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../store"
-import { akariInformation, SetAkarisList, SetSelectedAkari } from "../../../store/data/akari"
+import { AppState } from "@store/index"
+import { 
+    akariInformation, 
+    SetAkarisList, 
+    SetSelectedAkari 
+} from "store/data/akari"
 
-// (sub) components
-import AkariReadPanel from "./AkariReadPanel/AkariReadPanel"
-//import AkariCreatePanel from "./AkariCreatePanel/AkariCreatePanel"
+// (sub)component(s)
+import AkariReadPanel from "PuzzleSpecific/AkariContent/AkariPanel/AkariReadPanel/AkariReadPanel"
+import AkariCreatePanel from "PuzzleSpecific/AkariContent/AkariPanel/AkariCreatePanel/AkariCreatePanel"
 
-//mui
-import Tabs from "@mui/material/Tabs"
-import Tab from "@mui/material/Tab"
-import Box from "@mui/material/Box"
-import AkariCreatePanel from "./AkariCreatePanel/AkariCreatePanel"
+// mui - components
+import { 
+    Tabs, 
+    Tab, 
+    Box 
+} from "@mui/material"
 
 const mapStateToProps = (state: AppState) => ({
     akarisList: state.akariDataReducer.akarisList

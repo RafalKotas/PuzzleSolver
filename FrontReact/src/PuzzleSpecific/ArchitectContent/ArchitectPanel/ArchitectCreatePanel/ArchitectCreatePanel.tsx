@@ -2,31 +2,45 @@
 import React, { useEffect } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../store"
-import { AddArchitectDetail, architectInformation, ChangeArchitectDetail, RemoveArchitectDetail, SaveTemporaryArchitect } from "../../../../store/data/architect"
-import { modes, SetMode } from "../../../../store/display"
+import { AppState } from "@store/index"
+import { 
+    AddArchitectDetail, 
+    architectInformation, 
+    ChangeArchitectDetail, 
+    RemoveArchitectDetail, 
+    SaveTemporaryArchitect 
+} from "store/data/architect"
+import { 
+    modes, 
+    SetMode 
+} from "store/display"
 
 // (sub)component(s)
+import StringPropTextField from "CommonComponents/StringPropTextField/StringPropTextField"
+import ArchitectSliders from "PuzzleSpecific/ArchitectContent/ArchitectPanel/ArchitectCreatePanel/ArchitectSliders"
 
-//mui
-import { Button, ButtonProps, styled } from "@mui/material"
+// mui - components
+import { 
+    Button, 
+    ButtonProps, 
+    styled 
+} from "@mui/material"
 import { grey } from "@mui/material/colors"
 
-// fontawesome
+// fortawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 
-// sub(components)
-import StringPropTextField from "../../../../CommonComponents/StringPropTextField/StringPropTextField"
-import ArchitectSliders from "./ArchitectSliders"
-
 // other
-import { propDetails } from "../../../../CommonComponents/StringPropTextField/types"
-import { ArchitectStringProps } from "./types"
+import { propDetails } from "CommonComponents/StringPropTextField/types"
+import { ArchitectStringProps } from "PuzzleSpecific/ArchitectContent/ArchitectPanel/ArchitectCreatePanel/types"
 
 interface OwnArchitectCreatePanelProps {
 

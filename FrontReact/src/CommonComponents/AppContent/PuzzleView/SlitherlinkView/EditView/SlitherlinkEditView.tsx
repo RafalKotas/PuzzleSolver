@@ -2,15 +2,17 @@
 import { useEffect } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../store"
+import { AppState } from "@store/index"
 
-
-// sub(components)
-import SlitherlinkDisplay from "../SlitherlinkDisplay/SlitherlinkDisplay"
+// (sub)component(s)
+import SlitherlinkDisplay from "CommonComponents/AppContent/PuzzleView/SlitherlinkView/SlitherlinkDisplay/SlitherlinkDisplay"
 
 const mapStateToProps = (state: AppState) => ({
 

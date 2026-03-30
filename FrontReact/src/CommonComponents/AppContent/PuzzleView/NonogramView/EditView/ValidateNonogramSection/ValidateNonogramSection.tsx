@@ -2,17 +2,20 @@
 import React, { useEffect } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../store"
-import { SetEditMode} from "../../../../../../store/data/nonogram"
+import { AppState } from "@store/index"
+import { SetEditMode} from "store/data/nonogram"
 
-// (sub) components
-import PreviewButton from "./PreviewButton/PreviewButton"
-import CheckCorrectButton from "../../SolverView/NonogramActions/CheckCorrectButton/CheckCorrectButton"
-import SaveSection from "./SaveSection/SaveSection"
+// (sub)component(s)
+import PreviewButton from "CommonComponents/AppContent/PuzzleView/NonogramView/EditView/ValidateNonogramSection/PreviewButton/PreviewButton"
+import CheckCorrectButton from "CommonComponents/AppContent/PuzzleView/NonogramView/SolverView/NonogramActions/CheckCorrectButton/CheckCorrectButton"
+import SaveSection from "CommonComponents/AppContent/PuzzleView/NonogramView/EditView/ValidateNonogramSection/SaveSection/SaveSection"
 
 // styles
 import "./ValidateNonogramSection.css"

@@ -1,14 +1,22 @@
 // react
-import { Button } from "@mui/material"
 import { useEffect } from "react"
 
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../../store"
-import { ChangeSudokuDetail, CheckAndSetCorrectness } from "../../../../../../../store/data/sudoku"
+import { AppState } from "@store/index"
+import { 
+    ChangeSudokuDetail, 
+    CheckAndSetCorrectness 
+} from "store/data/sudoku"
+
+// mui - components
+import { Button } from "@mui/material"
 
 const mapStateToProps = (state: AppState) => ({
     isSudokuCorrect: state.sudokuDataReducer.sudokuCorrect,

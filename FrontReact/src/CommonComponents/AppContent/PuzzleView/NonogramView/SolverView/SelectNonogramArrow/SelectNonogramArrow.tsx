@@ -1,18 +1,25 @@
-// react
+// react - router
 import { useNavigate } from "react-router-dom"
 
-// (sub) components
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { IconDefinition } from "@fortawesome/free-solid-svg-icons"
-
 // redux
-import { connect, ConnectedProps } from "react-redux"
+import { 
+    connect, 
+    ConnectedProps 
+} from "react-redux"
 import { Dispatch } from "redux"
 
 // redux - store
-import { AppState } from "../../../../../../store"
-import { findNextNonogramName, findPreviousNonogramName, selectedNonogramDetails, SetSelectedNonogram } from "../../../../../../store/data/nonogram"
+import { AppState } from "@store/index"
+import { 
+    findNextNonogramName, 
+    findPreviousNonogramName, 
+    selectedNonogramDetails, 
+    SetSelectedNonogram 
+} from "store/data/nonogram"
 
+// fortawesome
+import { IconDefinition } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 interface OwnSelectNonogramArrowProps {
     arrowIcon: IconDefinition,
