@@ -6,7 +6,7 @@ public final class InitializerConstants {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
-    public static final String PUZZLE_RELATIVE_PATH = "./FrontReact/public/resources/";
+    public static final String PUZZLE_RELATIVE_PATH = "../FrontReact/public/resources/";
     public static final boolean PRINT_PUZZLE_STATUS_INFO = true;
     public static final String NONOGRAM_SOLUTIONS_PATH = "data/solutions/Nonograms/";
     public static final String PUZZLE_NAME = "sword";
