@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,6 +85,7 @@ public class NonogramsDataInitializer implements CommandLineRunner {
         filesToCorrect.forEach(file -> log.info("\"{}\" ", file));
 
         Set<String> existingFiles = commonService.listFilesUsingJavaIO(puzzlePath);
+        log.info("Existing files: {}", existingFiles);
         for (String nonogramFileName : existingFiles) {
             try {
                 NonogramFileDetails details = objectMapper.readValue(new File(puzzlePath + nonogramFileName), NonogramFileDetails.class);
@@ -105,7 +108,7 @@ public class NonogramsDataInitializer implements CommandLineRunner {
 
                 if (nonogramRepository.existsNonogramByGivenParamsFromFile(
                         nameWithoutExtension, details.getSource(), details.getYear(), details.getMonth(),
-                        details.getDifficulty(), details.getHeight(), details.getWidth()).isPresent()
+                        details.getDifficulty(), details.getHeight(), details.getWidth())
                 ) {
                     nonogramsRepeated++;
                 } else {
