@@ -189,7 +189,9 @@ public class NonogramService {
     }
 
     public List<Nonogram> getNonogramsList() {
-        return nonogramRepository.findAll();
+        List<Nonogram> nonogramList = nonogramRepository.findAll();
+        log.info("Found {} nonograms", nonogramList.size());
+        return nonogramList;
     }
 
     // TODO - only used in tests (remove/change)
