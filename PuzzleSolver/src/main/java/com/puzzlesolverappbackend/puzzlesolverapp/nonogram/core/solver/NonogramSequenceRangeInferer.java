@@ -19,6 +19,8 @@ import static com.puzzlesolverappbackend.puzzlesolverapp.nonogram.core.util.Coll
 @AllArgsConstructor
 public class NonogramSequenceRangeInferer {
 
+    private static final List<Integer> EMPTY_SEQUENCE_RANGE = List.of(-1, -1);
+
     private final NonogramRules nonogramRules;
     private final List<List<String>> nonogramSolutionBoardWithMarks;
 
@@ -36,7 +38,7 @@ public class NonogramSequenceRangeInferer {
         List<Integer> sequencesLengths = this.getNonogramRules().getRowSequencesLengths().get(rowIdx);
 
         if (sequencesLengths.size() == 1 && sequencesLengths.get(0) == 0) {
-            return List.of(List.of(-1, -1));
+            return List.of(EMPTY_SEQUENCE_RANGE);
         } else if (sequencesLengths.size() == 1 && sequencesLengths.get(0) == this.getNonogramRules().getWidth()) {
             return List.of(List.of(0, this.getNonogramRules().getWidth() - 1));
         } else {
@@ -170,7 +172,7 @@ public class NonogramSequenceRangeInferer {
         List<Integer> columnSequencesLengths = this.nonogramRules.getColumnSequencesLengths().get(columnIdx);
 
         if (columnSequencesLengths.size() == 1 && columnSequencesLengths.get(0) == 0) {
-            return List.of(List.of(-1, -1));
+            return List.of(EMPTY_SEQUENCE_RANGE);
         } else if (columnSequencesLengths.size() == 1 && columnSequencesLengths.get(0) == this.getNonogramRules().getHeight()) {
             return List.of(List.of(0, this.getNonogramRules().getHeight() - 1));
         } else {
