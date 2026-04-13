@@ -22,8 +22,8 @@ public class NonogramLogicFactory {
         NonogramLogic logic = new NonogramLogic();
 
         NonogramRules rules = new NonogramRules(
-                payload.getRowSequences(),
-                payload.getColumnSequences(),
+                payload.getNonogramRules().getRowSequencesLengths(),
+                payload.getNonogramRules().getColumnSequencesLengths(),
                 payload.getNonogramRules().getHeight(),
                 payload.getNonogramRules().getWidth()
         );
