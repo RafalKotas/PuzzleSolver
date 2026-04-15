@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -158,9 +159,13 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
      * @param colouredSeqs   list of currently identified colored sequences in the column
      * @return true if any field was colored as a result of this analysis; false otherwise
      */
-    private boolean handleTopMergeScenarios(int columnIdx, List<Integer> seqLens,
-                                            List<List<Integer>> sequencesRanges, List<List<Integer>> colouredSeqs) {
+    private boolean handleTopMergeScenarios(int columnIdx,
+                                            List<Integer> seqLens,
+                                            List<List<Integer>> sequencesRanges,
+                                            List<List<Integer>> colouredSeqs) {
         boolean anyFieldColoured = false;
+        List<Integer> initialColumnSequencesIdsNotToInclude = copyList(nonogramColumnLogic.getColumnsSequencesIdsNotToInclude().get(columnIdx));
+        List<Integer> initialColumnFieldsNotToInclude = copyList(nonogramColumnLogic.getColumnsFieldsNotToInclude().get(columnIdx));
 
         for (int i = 0; i < colouredSeqs.size() - 1; i++) {
             List<Integer> first = colouredSeqs.get(i);
@@ -192,6 +197,9 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
 
             nonogramColumnLogic.setColumnSequencesRanges(columnIdx, mutableClone2DList(sequencesRanges));
             nonogramColumnLogic.getNonogramFieldExclusionHelper().removeFieldFromExcludedInColumn(tempX);
+            nonogramColumnLogic.getColumnsSequencesIdsNotToInclude()
+                    .set(columnIdx, new ArrayList<>(initialColumnSequencesIdsNotToInclude));
+            nonogramColumnLogic.getColumnsFieldsNotToInclude().set(columnIdx, new ArrayList<>(initialColumnFieldsNotToInclude));
         }
 
         return anyFieldColoured;
@@ -209,9 +217,13 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
      * @param colouredSeqs   list of currently identified colored sequences in the column
      * @return true if any field was colored as a result of this analysis; false otherwise
      */
-    private boolean handleBottomMergeScenarios(int columnIdx, List<Integer> seqLens,
-                                               List<List<Integer>> sequencesRanges, List<List<Integer>> colouredSeqs) {
+    private boolean handleBottomMergeScenarios(int columnIdx,
+                                               List<Integer> seqLens,
+                                               List<List<Integer>> sequencesRanges,
+                                               List<List<Integer>> colouredSeqs) {
         boolean anyFieldColoured = false;
+        List<Integer> initialColumnSequencesIdsNotToInclude = copyList(nonogramColumnLogic.getColumnsSequencesIdsNotToInclude().get(columnIdx));
+        List<Integer> initialColumnFieldsNotToInclude = copyList(nonogramColumnLogic.getColumnsFieldsNotToInclude().get(columnIdx));
 
         for (int i = colouredSeqs.size() - 1; i > 0; i--) {
             List<Integer> second = colouredSeqs.get(i);
@@ -243,6 +255,9 @@ public class ColumnColouringHelperImpl implements ColumnColouringHelper, Refresh
 
             nonogramColumnLogic.setColumnSequencesRanges(columnIdx, mutableClone2DList(sequencesRanges));
             nonogramColumnLogic.getNonogramFieldExclusionHelper().removeFieldFromExcludedInColumn(tempX);
+            nonogramColumnLogic.getColumnsSequencesIdsNotToInclude()
+                    .set(columnIdx, new ArrayList<>(initialColumnSequencesIdsNotToInclude));
+            nonogramColumnLogic.getColumnsFieldsNotToInclude().set(columnIdx, initialColumnFieldsNotToInclude);
         }
 
         return anyFieldColoured;

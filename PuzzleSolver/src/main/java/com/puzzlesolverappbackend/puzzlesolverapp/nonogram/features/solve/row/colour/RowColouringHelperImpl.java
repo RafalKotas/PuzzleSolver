@@ -139,9 +139,13 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
         }
     }
 
-    private boolean handleLeftMergeScenarios(int rowIdx, List<Integer> seqLens, List<List<Integer>> sequencesRanges, List<List<Integer>> colouredSequences) {
+    private boolean handleLeftMergeScenarios(int rowIdx,
+                                             List<Integer> seqLens,
+                                             List<List<Integer>> sequencesRanges,
+                                             List<List<Integer>> colouredSequences) {
         boolean anyFieldColoured = false;
-        List<Integer> initialSequencesIdsNotToInclude = copyList(nonogramRowLogic.getRowsSequencesIdsNotToInclude().get(rowIdx));
+        List<Integer> initialRowSequencesIdsNotToInclude = copyList(nonogramRowLogic.getRowsSequencesIdsNotToInclude().get(rowIdx));
+        List<Integer> initialRowFieldsNotToInclude = copyList(nonogramRowLogic.getRowsFieldsNotToInclude().get(rowIdx));
 
         for (int i = 0; i < colouredSequences.size() - 1; i++) {
             List<Integer> first = colouredSequences.get(i);
@@ -173,15 +177,21 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
 
             nonogramRowLogic.getNonogramFieldExclusionHelper().removeFieldFromExcludedInRow(tempX);
             nonogramRowLogic.setRowSequencesRanges(rowIdx, mutableClone2DList(sequencesRanges));
-            nonogramRowLogic.getRowsSequencesIdsNotToInclude().set(rowIdx, new ArrayList<>(initialSequencesIdsNotToInclude));
+            nonogramRowLogic.getRowsSequencesIdsNotToInclude()
+                    .set(rowIdx, new ArrayList<>(initialRowSequencesIdsNotToInclude));
+            nonogramRowLogic.getRowsFieldsNotToInclude().set(rowIdx, new ArrayList<>(initialRowFieldsNotToInclude));
         }
 
         return anyFieldColoured;
     }
 
-    private boolean handleRightMergeScenarios(int rowIdx, List<Integer> seqLens, List<List<Integer>> sequencesRanges, List<List<Integer>> colouredSequences) {
+    private boolean handleRightMergeScenarios(int rowIdx,
+                                              List<Integer> seqLens,
+                                              List<List<Integer>> sequencesRanges,
+                                              List<List<Integer>> colouredSequences) {
         boolean anyFieldColoured = false;
-        List<Integer> initialSequencesIdsNotToInclude = copyList(nonogramRowLogic.getRowsSequencesIdsNotToInclude().get(rowIdx));
+        List<Integer> initialRowSequencesIdsNotToInclude = copyList(nonogramRowLogic.getRowsSequencesIdsNotToInclude().get(rowIdx));
+        List<Integer> initialRowFieldsNotToInclude = copyList(nonogramRowLogic.getRowsFieldsNotToInclude().get(rowIdx));
 
         for (int i = colouredSequences.size() - 1; i > 0; i--) {
             List<Integer> second = colouredSequences.get(i);
@@ -213,7 +223,8 @@ public class RowColouringHelperImpl implements RowColouringHelper, RefreshableRo
 
             nonogramRowLogic.setRowSequencesRanges(rowIdx, mutableClone2DList(sequencesRanges));
             nonogramRowLogic.getNonogramFieldExclusionHelper().removeFieldFromExcludedInRow(tempX);
-            nonogramRowLogic.getRowsSequencesIdsNotToInclude().set(rowIdx, new ArrayList<>(initialSequencesIdsNotToInclude));
+            nonogramRowLogic.getRowsSequencesIdsNotToInclude().set(rowIdx, new ArrayList<>(initialRowSequencesIdsNotToInclude));
+            nonogramRowLogic.getRowsFieldsNotToInclude().set(rowIdx, new ArrayList<>(initialRowFieldsNotToInclude));
         }
 
         return anyFieldColoured;
