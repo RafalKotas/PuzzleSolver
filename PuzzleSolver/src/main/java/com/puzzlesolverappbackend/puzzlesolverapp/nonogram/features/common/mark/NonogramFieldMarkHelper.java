@@ -204,7 +204,8 @@ public class NonogramFieldMarkHelper {
 
         sequences.getUpdateRangeConsumer().accept(board.getLineIdx(), seqIdx, updatedRange);
 
-        if (rangeLength(updatedRange) == seqLength) {
+        if (rangeLength(updatedRange) == seqLength
+                && allFieldsAreColouredInRowRange(board.getLineIdx(), updatedRange, board.getSolutionBoard())) {
             sequences.getExcludeSequenceConsumer().accept(board.getLineIdx(), seqIdx);
         }
 
