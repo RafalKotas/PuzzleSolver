@@ -222,6 +222,7 @@ public class NonogramRowLogic extends NonogramLogicParams implements RowActions 
                     List<String> updatedRow = getRowCopy(rowIdx);
 
                     actionScheduler.scheduleActionsBasedOnField(fieldToCheck, NonogramSolveAction.PLACE_XS_IF_COLOURING_FIELD_WILL_CAUSE_ASSIGNMENT_CONFLICT_IN_ROW);
+                    initialActionsToDoListSize = actionsToDoList.size();
 
                     ColouringGenerateLogBaseContext logContext = new ColouringGenerateLogBaseContext(
                             IS_ROW,
