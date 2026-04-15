@@ -314,10 +314,12 @@ public class ActionDependencyMap {
         ));
 
         actionDependencies.put(NonogramSolveAction.PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART_IN_ROW, List.of(
+                NonogramSolveAction.PLACE_XS_AT_UNREACHABLE_FIELDS_IN_ROW,
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_ROW
         ));
 
         actionDependencies.put(NonogramSolveAction.PREVENT_EXTENDING_COLOURED_SEQUENCE_TO_EXCESS_LENGTH_CORRECTING_RANGE_PART_IN_COLUMN, List.of(
+                NonogramSolveAction.PLACE_XS_AT_UNREACHABLE_FIELDS_IN_COLUMN,
                 NonogramSolveAction.MARK_AVAILABLE_FIELDS_IN_COLUMN
         ));
 
